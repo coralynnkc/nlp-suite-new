@@ -2,41 +2,34 @@
 
 Goal: single monorepo, Docker + start.sh, web UI for non-technical researchers.
 
+**Repo stats (scanned 2026-06-09):** 1,854 files · 336 directories · max nesting depth 6 · Python 347 files · HTML 40 · Markdown 16
+
 ---
 
 ## Phase 1 — Clone all repos (complete)
-All six repos committed to monorepo with `.git` removed from each.
 
-## Phase 2 — Restructure directories
-Move content into the agreed target layout:
+## Phase 2 — Restructure directories (complete)
 
-| From | To | Notes |
-|------|----|-------|
-| `nlp-suite-agent/` | `agent/` | FastAPI backend |
-| `nlp-suite-ui/` | `ui/` | Django frontend |
-| `stanford-corenlp-docker/` | `corenlp/` | Java container |
-| `MALLET-docker/` | `mallet/` | Java container |
-| `NLP-Suite/` | `NLP-Suite/` | Keep as reference |
-| `nlp-suite-runner/` | delete | Replaced by start.sh |
-| `agent/`, `ui/`, `corenlp/`, `mallet/`, `daily/` (empty stubs) | delete | |
+## Phase 3 — Wire up 6 agent endpoints (complete)
+All routes added to `agent/src/main.py`. Gender source files copied from `NLP-Suite/src/` to `agent/src/`.
 
-## Phase 3 — Wire up 6 missing agent endpoints
-All source logic exists in `NLP-Suite/src/`. Wrap each in a FastAPI route.
-
-| Endpoint | Source file | CoreNLP needed? |
-|----------|-------------|----------------|
-| `POST /ner` | `NER_main.py`, `BERT_util.py` | Yes (optional: spaCy/Stanza fallback) |
-| `POST /wordnet` | `knowledge_graphs_WordNet_main.py` | No (NLTK WordNet) |
-| `POST /gender_analysis` | `html_annotator_gender_main.py` | No (gender-guesser) |
-| `POST /shape_of_stories` | `shape_of_stories_main.py` | No (sentiment + sklearn) |
-| `POST /excel_plotly_charts` | `charts_Excel_main.py` | No (Plotly, openpyxl) |
-| `POST /boxplot` | `charts_matplotlib_seaborn_util.py` | No (matplotlib/seaborn) |
+| Endpoint | Source file |
+|----------|-------------|
+| `POST /ner` | `NER_main.py` |
+| `POST /wordnet` | `knowledge_graphs_WordNet_main.py` |
+| `POST /gender_analysis` | `html_annotator_gender_main.py` |
+| `POST /shape_of_stories` | `shape_of_stories_main.py` |
+| `POST /excel_plotly_charts` | `excel_plotly_charts.py` |
+| `POST /boxplot` | `boxplot_chart.py` |
 
 ## Phase 4 — API key management
 Settings page in UI with two fields:
 - **Google Maps API key** — if set, `/gis` uses `GIS_Google_Maps_util.py`; otherwise falls back to Nominatim
 - **NYT API key** — placeholder field, no backend wiring yet
+
 Keys stored in local `.env`, never committed.
+
+No `settings.html` template, no view, and no URL route exist in the UI. Phase 4 is entirely unstarted.
 
 ## Phase 5 — Docker + start.sh
 `docker-compose.yml` at repo root coordinates four services:
@@ -54,6 +47,8 @@ Keys stored in local `.env`, never committed.
 3. Wait for health checks
 4. Open browser to `http://localhost:8000`
 
+Neither `docker-compose.yml` nor `scripts/start.sh` exist yet. Individual `Dockerfile`s in each service dir are present.
+
 ## Phase 6 — Unit tests
 - Framework: pytest
 - Location: `agent/tests/`
@@ -62,32 +57,11 @@ Keys stored in local `.env`, never committed.
 - No mocks for NLP logic — tests call real processing functions
 - CoreNLP-dependent tests marked with `@pytest.mark.integration` and skipped unless CoreNLP service is up
 
+Existing `test_*.py` files are colocated with source in `agent/src/` instead of `agent/tests/`. No `agent/tests/fixtures/` directory exists. Tests need to be moved and fixtures added.
+
 ---
 
 ## Tech debt
-
-### Phase 3 — endpoints not yet wired
-All six source files exist in `agent/src/` but none have routes in `main.py`:
-
-| Endpoint | Source file | Blocker |
-|----------|-------------|---------|
-| `POST /ner` | `NER_main.py` | Route missing |
-| `POST /wordnet` | `knowledge_graphs_WordNet_main.py` | Route missing |
-| `POST /gender_analysis` | — | `html_annotator_gender_main.py` not copied to `agent/src/`; locate in original repo |
-| `POST /shape_of_stories` | `shape_of_stories_main.py` | Route missing |
-| `POST /excel_plotly_charts` | `excel_plotly_charts.py` | Route missing (plan named it `charts_Excel_main.py`; actual file differs) |
-| `POST /boxplot` | `boxplot_chart.py` | Route missing |
-
-### Phase 4 — settings page not started
-No `settings.html` template, no view, and no URL route exist in the UI. Phase 4 is entirely unstarted.
-
-### Phase 5 — Docker orchestration missing
-- `docker-compose.yml` does not exist at repo root
-- `scripts/start.sh` does not exist (`scripts/` directory absent)
-- Individual `Dockerfile`s in each service dir are present
-
-### Phase 6 — tests in wrong location
-Existing test files (`test_*.py`) are colocated with source in `agent/src/` instead of `agent/tests/`. No `agent/tests/fixtures/` directory exists. Tests need to be moved and fixtures added before Phase 6 is complete.
 
 ### `agent/src/main.py` — code issues
 - **`gender_guesser` silently ignored** (line 481): the `/style_analysis` route accepts `gender_guesser` as a form param but immediately overrides it to `False`; the param is dead weight and confusing.
@@ -95,3 +69,17 @@ Existing test files (`test_*.py`) are colocated with source in `agent/src/` inst
 - **CORS wildcard** (line 34): `allow_origins=["*", ...]` — the `"*"` makes all specific origins redundant; tighten for production.
 - **Commented-out error-handling block** (lines 55–63, 91–106): incomplete `app.worker_exception` design left in; either finish or remove.
 - **`app.worker` not thread-safe**: the boolean flag is read and set without a lock; concurrent requests could race.
+
+### Phase 2 — cleanup incomplete
+- `daily/` empty stub directory still exists at repo root; should be deleted per plan
+
+### Deferred — intentionally out of scope
+| Source file | What it does | Reason deferred |
+|-------------|-------------|-----------------|
+| `knowledge_graphs_DBpedia_YAGO_main.py` | DBpedia/YAGO entity linking via SPARQL | External dependency, brittle API |
+| `coreference_main.py` | Standalone coreference chain extraction | CoreNLP util migrated; standalone entrypoint deferred |
+| `file_spell_checker_main.py` + utils | Spell checking pipeline | Files in `agent/src/` but no UI page or endpoint |
+| Corpus profiler | Corpus-level statistics dashboard | No clear source file; was GUI-only |
+| PCACE DB | Specialized database interface | External DB dependency |
+| SENNA | Semantic role labeling via SENNA binary | External binary, Java-era tooling |
+| TensorFlow semantic analysis | Deep learning sentiment/semantic pipeline | Heavy dependency, superseded by BERT tools |
