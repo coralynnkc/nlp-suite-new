@@ -25,5 +25,11 @@ venv/
 .env
 .env.*
 
+# IDE
+**/.idea/
+
+# Django collectstatic output
+ui/static/
+
 # Docker
 *.log
