@@ -1,22 +1,23 @@
-
 import charts_util
 import IO_csv_util
 
 
-def run_excel_plotly_charts(inputFilename, outputDir,
-        csv_field_visualization_var,
-        X_axis_var,
-        csv_file_field_Y_axis_list,
-        #TODO: add these params:
-        charts_type_options, # A list, currently delimited by spaces
-        chart_package,
-        data_transformation,
-        inputFileData
-        ):
+def run_excel_plotly_charts(
+    inputFilename,
+    outputDir,
+    csv_field_visualization_var,
+    X_axis_var,
+    csv_file_field_Y_axis_list,
+    # TODO: add these params:
+    charts_type_options,  # A list, currently delimited by spaces
+    chart_package,
+    data_transformation,
+    inputFileData,
+):
 
     filesToOpen = []
 
-    outputFiles = ''
+    outputFiles = ""
     # if extra_GUIs_var.get()==False and csv_field_visualization_var == '':
     #     print("Warning, No csv file field to be used for visualization (Y-axis) has been selected.\n\nPlease, use the dropdown menu of the 'csv file field for visualization (Y-axis)' widget to select the desired field and try again.")
     #     return
@@ -29,42 +30,52 @@ def run_excel_plotly_charts(inputFilename, outputDir,
     #     print("Warning, No Y-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as Y-axis and try again.")
     #     return
 
-# Excel/Plotly charts --------------------------------------------------------------------------------
-    if X_axis_var == '':
-        print("Warning, No X-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as X-axis and try again.")
+    # Excel/Plotly charts --------------------------------------------------------------------------------
+    if X_axis_var == "":
+        print(
+            "Warning, No X-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as X-axis and try again."
+        )
         return
 
-    if 'bar' in charts_type_options.lower() or 'line' in charts_type_options.lower():
+    if "bar" in charts_type_options.lower() or "line" in charts_type_options.lower():
         # TODO: implement warnings in frontend
-        if X_axis_var=='' and len(csv_file_field_Y_axis_list) < 1:
-            #print('Warning, A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires ONE X-axis variable and AT LEAST ONE Y-axis variable.\n\nPlease, select the expected number of variables and try again.'))
+        if X_axis_var == "" and len(csv_file_field_Y_axis_list) < 1:
+            # print('Warning, A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires ONE X-axis variable and AT LEAST ONE Y-axis variable.\n\nPlease, select the expected number of variables and try again.'))
             return
-    if 'scatter' in charts_type_options.lower():
+    if "scatter" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 1:
-            #print('Warning, A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least TWO Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))
+            # print('Warning, A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least TWO Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))
             return
-    if 'bubble' in charts_type_options.lower() or 'radar' in charts_type_options.lower():
+    if "bubble" in charts_type_options.lower() or "radar" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 3:
-            #print(title='Warning',message='A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least THREE Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))
+            # print(title='Warning',message='A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least THREE Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))
             return
-    headers = IO_csv_util.get_csvfile_headers(inputFilename,inputFileData=inputFileData)
-    col_num = IO_csv_util.get_columnNumber_from_headerValue(headers, csv_field_visualization_var, inputFilename="", inputFileData=inputFileData)
+    headers = IO_csv_util.get_csvfile_headers(inputFilename, inputFileData=inputFileData)
+    col_num = IO_csv_util.get_columnNumber_from_headerValue(
+        headers, csv_field_visualization_var, inputFilename="", inputFileData=inputFileData
+    )
 
-    columns_to_be_plotted_yAxis=[[col_num,col_num]]
-    count_var=1
-    chart_type_list = [charts_type_options.split(' ')[0]]
-    outputFiles = charts_util.run_all(columns_to_be_plotted_yAxis, inputFilename, outputDir,
-                                                    outputFileLabel='',
-                                                    chartPackage=chart_package,
-                                                    dataTransformation=data_transformation,
-                                                    chart_type_list=chart_type_list,
-                                                    chart_title="Frequency Distribution of " + csv_field_visualization_var,
-                                                    column_xAxis_label_var=X_axis_var, #csv_field_visualization_var,
-                                                    hover_info_column_list=[],
-                                                    count_var=count_var,
-                                                    complete_sid=False, csv_field_Y_axis_list=csv_file_field_Y_axis_list, X_axis_var = X_axis_var,
-                                                    inputFileData=inputFileData)  # TODO to be changed
-    if outputFiles!=None:
+    columns_to_be_plotted_yAxis = [[col_num, col_num]]
+    count_var = 1
+    chart_type_list = [charts_type_options.split(" ")[0]]
+    outputFiles = charts_util.run_all(
+        columns_to_be_plotted_yAxis,
+        inputFilename,
+        outputDir,
+        outputFileLabel="",
+        chartPackage=chart_package,
+        dataTransformation=data_transformation,
+        chart_type_list=chart_type_list,
+        chart_title="Frequency Distribution of " + csv_field_visualization_var,
+        column_xAxis_label_var=X_axis_var,  # csv_field_visualization_var,
+        hover_info_column_list=[],
+        count_var=count_var,
+        complete_sid=False,
+        csv_field_Y_axis_list=csv_file_field_Y_axis_list,
+        X_axis_var=X_axis_var,
+        inputFileData=inputFileData,
+    )  # TODO to be changed
+    if outputFiles is not None:
         if isinstance(outputFiles, str):
             filesToOpen.append(outputFiles)
         else:
@@ -86,7 +97,6 @@ def main():
 7,Lady,Female,Yes,Black,Single breed,11,22,Small
 8,Leo,Male,Yes,Reddish,Single breed,15,14,Small"""
 
-
     run_excel_plotly_charts(
         inputFilename=inputFilename,
         outputDir=outputDir,
@@ -94,15 +104,13 @@ def main():
         csv_field_visualization_var="Color",
         X_axis_var="Heritage",
         csv_file_field_Y_axis_list=["Age, Fixed, Weight"],
-        #TODO: add these params:
+        # TODO: add these params:
         charts_type_options="Pie",
         chart_package="Excel",
         data_transformation="None",
-        inputFileData=inputFileData
-
+        inputFileData=inputFileData,
     )
+
 
 if __name__ == "__main__":
     main()
-
-

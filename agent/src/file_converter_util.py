@@ -9,7 +9,7 @@
 
 import csv
 
-#import tkinter.messagebox as mb
+# import tkinter.messagebox as mb
 import errno
 import os
 
@@ -151,17 +151,23 @@ from striprtf.striprtf import rtf_to_text
 #     if openOutputFiles and len(inputFilename)>0:
 #         IO_files_util.openFile(window, textFilename)
 
-def csv_converter(window,inputFilename,inputDir,outputDir,config_filename,openOutputFiles,chartPackage, dataTransformation):
-    if inputFilename!='':
-        if inputFilename[:2] != '~$' and inputFilename[-4:]=='.csv':
-            inputDocs=[inputFilename]
+
+def csv_converter(
+    window, inputFilename, inputDir, outputDir, config_filename, openOutputFiles, chartPackage, dataTransformation
+):
+    if inputFilename != "":
+        if inputFilename[:2] != "~$" and inputFilename[-4:] == ".csv":
+            pass
         else:
-            print(f"INFO: The input file {inputFilename} is not of type csv. Please select a csv type file for input and try again.")
+            print(
+                f"INFO: The input file {inputFilename} is not of type csv. Please select a csv type file for input and try again."
+            )
             return
-        inputDocs=[inputFilename]
     else:
-        if inputDir!='':
-            print("INFO: No input filename. The csv converter works only on a single csv file, rather than a whole directory. Please select an input csv file and try again.")
+        if inputDir != "":
+            print(
+                "INFO: No input filename. The csv converter works only on a single csv file, rather than a whole directory. Please select an input csv file and try again."
+            )
             return
         else:
             print("INFO: No input filename. Please select an input csv file and try again.")
@@ -179,42 +185,46 @@ def csv_converter(window,inputFilename,inputDir,outputDir,config_filename,openOu
         #   Could further ask if they want to embed the filename in special symbols (e.g., <@ @>, as in <@filename@>
         #       so that the files can also be easily split
 
-def rtf_converter(window,inputFilename,inputDir,outputDir,config_filename, openOutputFiles,chartPackage, dataTransformation):
-    textFilename=''
+
+def rtf_converter(
+    window, inputFilename, inputDir, outputDir, config_filename, openOutputFiles, chartPackage, dataTransformation
+):
+    textFilename = ""
     # replaced GUI prompt with default False (no)
     msgbox_subDir = False
-    if len(inputDir)>0:
+    if len(inputDir) > 0:
         # msgbox_subDir = tk.messagebox.askyesnocancel("Process sub-directories", "Do you want to process for files in subdirectories?")
         msgbox_subDir = False
         if msgbox_subDir:
-            inputRTFs = IO_files_util.getFileList_SubDir(inputFilename,inputDir,'.rtf')
+            inputRTFs = IO_files_util.getFileList_SubDir(inputFilename, inputDir, ".rtf")
 
-            inputRTFs = [f for f in inputRTFs if os.path.basename(f)[:2] != '~$' and  f[-4:] == '.rtf']
+            inputRTFs = [f for f in inputRTFs if os.path.basename(f)[:2] != "~$" and f[-4:] == ".rtf"]
         else:
-            inputRTFs = [os.path.join(inputDir,f) for f in os.listdir(inputDir) if f[:2]!='~$' and  f[-4:]=='.rtf']
-    elif len(inputFilename)>0:
-        if inputFilename[:2] != '~$' and inputFilename[-4:]=='.rtf':
-            inputRTFs=[inputFilename]
+            inputRTFs = [os.path.join(inputDir, f) for f in os.listdir(inputDir) if f[:2] != "~$" and f[-4:] == ".rtf"]
+    elif len(inputFilename) > 0:
+        if inputFilename[:2] != "~$" and inputFilename[-4:] == ".rtf":
+            inputRTFs = [inputFilename]
         else:
-            print(f"INFO: The input file {inputFilename} is not of type rtf. Please select a rtf type file for input and try again.")
+            print(
+                f"INFO: The input file {inputFilename} is not of type rtf. Please select a rtf type file for input and try again."
+            )
             return
-        inputRTFs=[inputFilename]
+        inputRTFs = [inputFilename]
     else:
         print("INFO: No input filename or directory specified. The program will exit.")
         return
     if len(inputRTFs) == 0:
         print("WARNING: There are no rtf files in the input directory. The program will exit.")
         return
-    numberOfDocs=len(inputRTFs)
+    numberOfDocs = len(inputRTFs)
 
     for docNum, doc in enumerate(inputRTFs):
         head, tail = os.path.split(doc)
-        print('Processing file ' + str(docNum+1) + "/" + str(numberOfDocs) + " " + tail)
-        fileExtension=doc.split(".")[-1]
-        #fileExtension = os.path.splitext(doc)[1]
-        if fileExtension =="rtf":
-            lines = []#list of each line in the txt files
-            fullText = open(doc, encoding='utf-8',errors='ignore').read()
+        print("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
+        fileExtension = doc.split(".")[-1]
+        # fileExtension = os.path.splitext(doc)[1]
+        if fileExtension == "rtf":
+            fullText = open(doc, encoding="utf-8", errors="ignore").read()
             # https://stackoverflow.com/questions/60897366/how-to-read-rtf-file-and-convert-into-python3-strings-and-can-be-stored-in-pyth
             # https://stackoverflow.com/questions/44580580/how-to-convert-rtf-string-to-plain-text-in-python-using-any-library
             # https://stackoverflow.com/questions/188545/regular-expression-for-extracting-text-from-an-rtf-string/188877#188877
@@ -230,27 +240,28 @@ def rtf_converter(window,inputFilename,inputDir,outputDir,config_filename, openO
                 except OSError as exc:
                     if exc.errno != errno.EEXIST:
                         raise
-            with open(textFilename,"w", encoding="utf-8",errors='ignore') as textFile:
+            with open(textFilename, "w", encoding="utf-8", errors="ignore") as textFile:
                 textFile.write(text)
-    if openOutputFiles and len(inputFilename)>0:
+    if openOutputFiles and len(inputFilename) > 0:
         IO_files_util.openFile(window, textFilename)
+
 
 # the tsv file (inputFilename) has the full path embedded
 # File Converter (tsv --> csv)
-def tsv_converter(window,inputFilename,outputDir, header):
+def tsv_converter(window, inputFilename, outputDir, header):
     # read a tab-separated file
-    with open(inputFilename,encoding="utf-8",errors='ignore') as fin:
-        cr = csv.reader(fin, delimiter='\t')
+    with open(inputFilename, encoding="utf-8", errors="ignore") as fin:
+        cr = csv.reader(fin, delimiter="\t")
         filecontents = [line for line in cr]
 
     # write comma-separated file (comma is the default delimiter)
-    inputFilename,extension = splitext(inputFilename)
-    with open(inputFilename+'.csv','w',newline='') as fou:
-        cw = csv.writer(fou, dialect = 'excel')
+    inputFilename, extension = splitext(inputFilename)
+    with open(inputFilename + ".csv", "w", newline="") as fou:
+        cw = csv.writer(fou, dialect="excel")
         cw.writerow(header)
         for item in filecontents:
             cw.writerow(item)
-    return inputFilename+'.csv'
+    return inputFilename + ".csv"
 
 
 # with given string of directory, this script will use pytesseract to convert all the pdfs
@@ -281,7 +292,7 @@ def convert_image_to_text(file):
 def get_text_from_any_pdf(pdf_file):
     images = convert_pdf_to_img(pdf_file)
     final_text = ""
-    for pg, img in enumerate(images):
+    for _pg, img in enumerate(images):
         final_text += convert_image_to_text(img)
 
     return final_text

@@ -4,25 +4,25 @@ from parsers_annotators import run
 
 
 def test_parsers_annotators():
-    inputFilename = '/Users/is2ac/nlp-suite/input/example.txt'
-    inputDir = os.path.join(os.path.expanduser("~"), "nlp-suite", "input")
-    outputDir = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    inputFilename = "/Users/is2ac/nlp-suite/input/example.txt"
+    os.path.join(os.path.expanduser("~"), "nlp-suite", "input")
+    os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
     openOutputFiles = False
     chartPackage = "Excel"
-    dataTransformation = ''
+    dataTransformation = ""
     manual_Coref = False
     parser_var = True  # Set to True to test the parser
-    parser_menu_var = 'Neural Network'  # Example parser option
+    parser_menu_var = "Neural Network"  # Example parser option
     single_quote = False
     CoNLL_table_analyzer_var = False
     annotators_var = True  # Set to True to test annotators
-    annotators_menu_var = 'NER annotator'
+    annotators_menu_var = "NER annotator"
 
     try:
         output_files = run(
             inputFilename=inputFilename,
-            inputDir = 'C:/Users/sherry/OneDrive/Desktop/QTM446W/Input', #inputDir=inputDir,
-            outputDir = 'C:/Users/sherry/OneDrive/Desktop/QTM446W/Output', #outputDir=outputDir,
+            inputDir="C:/Users/sherry/OneDrive/Desktop/QTM446W/Input",  # inputDir=inputDir,
+            outputDir="C:/Users/sherry/OneDrive/Desktop/QTM446W/Output",  # outputDir=outputDir,
             openOutputFiles=openOutputFiles,
             chartPackage=chartPackage,
             dataTransformation=dataTransformation,
@@ -45,6 +45,7 @@ def test_parsers_annotators():
 
     except Exception as e:
         print(f"Test failed with exception: {e}")
+
 
 if __name__ == "__main__":
     test_parsers_annotators()

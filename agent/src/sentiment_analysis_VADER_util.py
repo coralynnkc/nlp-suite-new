@@ -42,7 +42,7 @@ import time
 
 import IO_libraries_util
 
-IO_libraries_util.import_nltk_resource('vader_lexicon','vader_lexicon')
+IO_libraries_util.import_nltk_resource("vader_lexicon", "vader_lexicon")
 import charts_util
 
 # from nltk import tokenize
@@ -55,30 +55,33 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 # if VADER fails, run: "python -m nltk.downloader all"
 
-fin = open('../lib/wordLists/stopwords.txt')
+fin = open("../lib/wordLists/stopwords.txt")
 stops = set(fin.read().splitlines())
 
 vader = GUI_IO_util.sentiment_libPath + os.sep + "vader_lexicon.txt"
 if not os.path.isfile(vader):
-    print("The file './lib/vader_lexicon.txt' could not be found. The VADER sentiment analysis routine expects a txt dictionary file 'vader_lexicon.txt' in a directory 'lib' expected to be a subdirectory of the directory where the sentiment_analysis_VADER.py script is stored.\n\nPlease, check your lib directory and try again.")
+    print(
+        "The file './lib/vader_lexicon.txt' could not be found. The VADER sentiment analysis routine expects a txt dictionary file 'vader_lexicon.txt' in a directory 'lib' expected to be a subdirectory of the directory where the sentiment_analysis_VADER.py script is stored.\n\nPlease, check your lib directory and try again."
+    )
     sys.exit()
 
-#https://github.com/cjhutto/vaderSentiment/blob/master/vaderSentiment/vaderSentiment.py
+# https://github.com/cjhutto/vaderSentiment/blob/master/vaderSentiment/vaderSentiment.py
 # The vader_lexicon.txt file has four tab delimited columns as you said.
 # Column 1: The Token
 # Column 2: It is the Mean of the human Sentiment ratings
 # Column 3: It is the Standard Deviation of the token assuming it follows Normal Distribution
 # Column 4: It is the list of 10 human ratings taken during experiments
 
-#TODO change to txt vader
-#https://stackoverflow.com/questions/50882838/python-vader-lexicon-structure-for-sentiment-analysis
-#ONLY THE FIRST VALUE FOR EACH WORD IS USED
-#THUS, TAKE THE WORD OBLITERATE:
-#obliterate -2.9    0.83066 [-3, -4, -3, -3, -3, -3, -2, -1, -4, -3]
-#ONLY -2.9 IS USED
+# TODO change to txt vader
+# https://stackoverflow.com/questions/50882838/python-vader-lexicon-structure-for-sentiment-analysis
+# ONLY THE FIRST VALUE FOR EACH WORD IS USED
+# THUS, TAKE THE WORD OBLITERATE:
+# obliterate -2.9    0.83066 [-3, -4, -3, -3, -3, -3, -2, -1, -4, -3]
+# ONLY -2.9 IS USED
 
 # data = pd.read_csv(vader)
 # data_dict = {col: list(data[col]) for col in data.columns}
+
 
 # performs sentiment analysis on inputFile using the NLTK, outputting results to a new CSV file in outputDir
 def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Document):
@@ -91,17 +94,17 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
     :return:
     """
 
-    #TODO
-    #the output filename is reset in the specific script; must be passed as a parameter
-    #cannot use time in the filename or when re-generated n the main sentimen_concreteness_analysis.py it will have a different time stamp and the file will not be found
+    # TODO
+    # the output filename is reset in the specific script; must be passed as a parameter
+    # cannot use time in the filename or when re-generated n the main sentimen_concreteness_analysis.py it will have a different time stamp and the file will not be found
 
     # read file into string
-    with open(inputFilename,encoding='utf-8',errors='ignore') as myfile:
+    with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
-        print('File empty', 'The file ' + inputFilename + ' is empty.\n\nPlease, use another file and try again.')
-        print('Empty file ', inputFilename)
+        print("File empty", "The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+        print("Empty file ", inputFilename)
         return
 
     from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
@@ -121,12 +124,12 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
         #   negative = compound score < -0.05
         #   positive = compound score > 0.05
         #   neutral = (compound score > -0.05) and (compound score < 0.05)
-        label = 'neutral'
-        sentiment = ss['compound'] #for the whole sentence
-        if sentiment > 0.05 :
-            label = 'positive'
+        label = "neutral"
+        sentiment = ss["compound"]  # for the whole sentence
+        if sentiment > 0.05:
+            label = "positive"
         elif sentiment < -0.05:
-            label = 'negative'
+            label = "negative"
 
         # VADER, as is, cannot compute mean and median because compound refers to the value of the entire sentence
         #   look at hedonometer to compute separate values and word list of words found
@@ -162,11 +165,10 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
                 continue
 
             # check for negation in 3 words before current word
-            neg = False
-            j = index-1
-            while j >= 0 and j >= index-3:
-                if filtered_words[j] == 'not' or filtered_words[j] == 'no':
-                    neg = True
+            j = index - 1
+            while j >= 0 and j >= index - 3:
+                if filtered_words[j] == "not" or filtered_words[j] == "no":
+                    pass
                 j -= 1
 
             # lemmatize word
@@ -175,15 +177,18 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
             # lemma = lmtzr.lemmatize(w, pos='v')
             # if lemma == w:
             #     lemma = lmtzr.lemmatize(w, pos='n')
-            lemma = lemmatize_stanza(stanzaPipeLine(w))
+            lemmatize_stanza(stanzaPipeLine(w))
 
-        writer.writerow({
-                         Sentiment_measure: sentiment,
-                         Sentiment_label: label,
-                         'Sentence ID': i,
-                         'Sentence': s,
-                         'Document ID': Document_ID, 'Document': IO_csv_util.dressFilenameForCSVHyperlink(Document)
-        })
+        writer.writerow(
+            {
+                Sentiment_measure: sentiment,
+                Sentiment_label: label,
+                "Sentence ID": i,
+                "Sentence": s,
+                "Document ID": Document_ID,
+                "Document": IO_csv_util.dressFilenameForCSVHyperlink(Document),
+            }
+        )
 
         # if mode == 'mean' or mode == 'median':
         #     writer.writerow({'Sentence ID': i,
@@ -204,7 +209,8 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
     return outputFilename
 
-def main(inputFilename, inputDir, outputDir, mode,  chartPackage='Excel', dataTransformation='No transformation'):
+
+def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTransformation="No transformation"):
     """
     Runs analyzefile on the appropriate files, provided that the input paths are valid.
     :param inputFilename:
@@ -217,22 +223,26 @@ def main(inputFilename, inputDir, outputDir, mode,  chartPackage='Excel', dataTr
     filesToOpen = []
 
     # create output subdirectory
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label='sentiment_VADER',
-                                                       silent=True)
-    if outputDir == '':
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label="sentiment_VADER", silent=True
+    )
+    if outputDir == "":
         return
 
     if len(outputDir) < 0 or not os.path.exists(outputDir):
-        print('No output directory specified, or path does not exist.')
+        print("No output directory specified, or path does not exist.")
         sys.exit(1)
-    elif len(inputFilename) == 0 and len(inputDir)  == 0:
-        print('No input specified. Please, provide either a single file -- file or a directory of files to be analyzed --dir.')
+    elif len(inputFilename) == 0 and len(inputDir) == 0:
+        print(
+            "No input specified. Please, provide either a single file -- file or a directory of files to be analyzed --dir."
+        )
         sys.exit(1)
 
-    outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir,  outputDir, '.csv', 'VADER', '', '', '', '', False, True)
+    outputFilename = IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".csv", "VADER", "", "", "", "", False, True
+    )
 
-    with open(outputFilename, 'w', encoding='utf-8',errors='ignore', newline='') as csvfile:
-
+    with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
         # VADER, as is, cannot compute mean and median because compound refers to the value of the entire sentence
         #   look at hedonometer to compute separate values and word list of words found
         # if mode == 'both':
@@ -247,9 +257,9 @@ def main(inputFilename, inputDir, outputDir, mode,  chartPackage='Excel', dataTr
         #     fieldnames = ['Sentence ID', 'Sentence', Sentiment_measure, Sentiment_label]
 
         global Sentiment_measure, Sentiment_label
-        Sentiment_measure='Sentiment score'
-        Sentiment_label='Sentiment label'
-        fieldnames = [Sentiment_measure, Sentiment_label,'Sentence ID', 'Sentence', 'Document ID', 'Document']
+        Sentiment_measure = "Sentiment score"
+        Sentiment_label = "Sentiment label"
+        fieldnames = [Sentiment_measure, Sentiment_label, "Sentence ID", "Sentence", "Document ID", "Document"]
         global writer
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -258,7 +268,7 @@ def main(inputFilename, inputDir, outputDir, mode,  chartPackage='Excel', dataTr
             if os.path.exists(inputFilename):
                 filesToOpen.append(analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename))
                 analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename)
-                #print("Output Vader Sentiment " + outputFilename + " created")
+                # print("Output Vader Sentiment " + outputFilename + " created")
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(1)
@@ -270,30 +280,37 @@ def main(inputFilename, inputDir, outputDir, mode,  chartPackage='Excel', dataTr
                     filename = os.path.join(inputDir, os.fsdecode(file))
                     if filename.endswith(".txt"):
                         documentID += 1
-                        start_time = time.time()
+                        time.time()
                         # print("Started VADER sentiment analysis of " + filename + "...")
-                        filesToOpen.append(analyzefile(filename, outputDir, outputFilename,mode, documentID, filename))
+                        filesToOpen.append(analyzefile(filename, outputDir, outputFilename, mode, documentID, filename))
                         # print("Finished VADER sentiment analysis of " + filename + " in " + str((time.time() - start_time)) + " seconds")
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
                 sys.exit(1)
     csvfile.close()
 
-    if chartPackage!='No charts':
+    if chartPackage != "No charts":
         # VADER does not compute separate mean and median values
 
-        outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation, outputFilename, outputDir,
-                                                   columns_to_be_plotted_xAxis=[], columns_to_be_plotted_yAxis=['Sentiment score'],
-                                                   chart_title='Frequency of VADER Sentiment Scores',
-                                                   count_var=0, hover_label=[],
-                                                   outputFileNameType='VADER',  # 'line_bar',
-                                                   column_xAxis_label='Sentiment label',
-                                                   column_yAxis_label='Scores',
-                                                   groupByList=['Document'],
-                                                   plotList=['Sentiment Score'],
-                                                   chart_title_label='VADER Sentiment Scores')
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            outputFilename,
+            outputDir,
+            columns_to_be_plotted_xAxis=[],
+            columns_to_be_plotted_yAxis=["Sentiment score"],
+            chart_title="Frequency of VADER Sentiment Scores",
+            count_var=0,
+            hover_label=[],
+            outputFileNameType="VADER",  # 'line_bar',
+            column_xAxis_label="Sentiment label",
+            column_yAxis_label="Scores",
+            groupByList=["Document"],
+            plotList=["Sentiment Score"],
+            chart_title_label="VADER Sentiment Scores",
+        )
 
-        if outputFiles!=None:
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
@@ -301,20 +318,40 @@ def main(inputFilename, inputDir, outputDir, mode,  chartPackage='Excel', dataTr
 
     return filesToOpen
 
-if __name__ == '__main__':
-    # get arguments from command line
-    parser = argparse.ArgumentParser(description='Sentiment analysis with VADER')
-    parser.add_argument('--file', type=str, dest='inputFilename', default='',
-                        help='a string to hold the INPUT path and filename if only ONE txt file is processed; enter --file "" or eliminate --file flag to process ALL txt files in input directory; use "" if path and filenames contain spaces')
-    parser.add_argument('--dir', type=str, dest='inputDir', default='',
-                        help='a string to hold the INPUT path of the directory of ALL txt files to be processed; use "" if path contains spaces')
-    parser.add_argument('--out', type=str, dest='outputDir', default='',
-                        help='a string to hold the path of the OUTPUT directory; use "" if path contains spaces')
-    parser.add_argument('--outfile', type=str, dest='outputFilename', default='',
-                        help='output file')
 
-    parser.add_argument('--mode', type=str, dest='mode', default='mean',
-                        help='mode with which to calculate sentiment in the sentence: mean or median')
+if __name__ == "__main__":
+    # get arguments from command line
+    parser = argparse.ArgumentParser(description="Sentiment analysis with VADER")
+    parser.add_argument(
+        "--file",
+        type=str,
+        dest="inputFilename",
+        default="",
+        help='a string to hold the INPUT path and filename if only ONE txt file is processed; enter --file "" or eliminate --file flag to process ALL txt files in input directory; use "" if path and filenames contain spaces',
+    )
+    parser.add_argument(
+        "--dir",
+        type=str,
+        dest="inputDir",
+        default="",
+        help='a string to hold the INPUT path of the directory of ALL txt files to be processed; use "" if path contains spaces',
+    )
+    parser.add_argument(
+        "--out",
+        type=str,
+        dest="outputDir",
+        default="",
+        help='a string to hold the path of the OUTPUT directory; use "" if path contains spaces',
+    )
+    parser.add_argument("--outfile", type=str, dest="outputFilename", default="", help="output file")
+
+    parser.add_argument(
+        "--mode",
+        type=str,
+        dest="mode",
+        default="mean",
+        help="mode with which to calculate sentiment in the sentence: mean or median",
+    )
     args = parser.parse_args()
 
     # run main

@@ -30,7 +30,7 @@ filesToOpen = []  # Store all files that are to be opened once finished
 def find_children(sentence_children, ind_keyword, searchedCoNLLField):
     list_children = []
     list_children_index = []
-    for ind, tok in enumerate(sentence_children):
+    for _ind, tok in enumerate(sentence_children):
         head_num = int(tok[5])
         if head_num == ind_keyword:
             token_index = int(tok[0])
@@ -147,9 +147,10 @@ def search_governors(sentence_CoNLL_records, searchedCoNLLField, target, target_
 # Chen
 # NOT USED
 def deep_search(related_list):
-    #TODO: implement search for "conj".
+    # TODO: implement search for "conj".
     #      prevent infinite loop by adding a list.
     pass
+
 
 # return all indices of the input word
 
@@ -163,28 +164,43 @@ def deep_search(related_list):
 
 """
 The 11 indexed items are created in the function search_CoNLL_table:
-	item[0] form/lemma, item[1] postag, item[2] deprel, item[3] is_head, item[4] Document_ID, 
-	item[5] Sentence_ID, item[6] Document, item[7] whole_sent, 
-	item[8] keyword[1]/SEARCHED TOKEN, 
-	item[9] keyword[3]/SEARCHED TOKEN POSTAG, 
+	item[0] form/lemma, item[1] postag, item[2] deprel, item[3] is_head, item[4] Document_ID,
+	item[5] Sentence_ID, item[6] Document, item[7] whole_sent,
+	item[8] keyword[1]/SEARCHED TOKEN,
+	item[9] keyword[3]/SEARCHED TOKEN POSTAG,
 	item[10] keyword[6]/'SEARCHED TOKEN DEPREL'))
 """
 
 
 # Chen
-def filter_list_by_POStag(keyword_list, kw_desired_postag='*'):
-    if kw_desired_postag == '*':
+def filter_list_by_POStag(keyword_list, kw_desired_postag="*"):
+    if kw_desired_postag == "*":
         keyword_list = keyword_list
-    elif kw_desired_postag == 'NN*':
-        keyword_list = [keyword for keyword in keyword_list if
-                        keyword[SearchField.POSTAG.value] in ['NN', 'NNS', 'NNP', 'NNPS']]
-    elif kw_desired_postag == 'JJ*':
-        keyword_list = [keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] in ['JJ', 'JJR', 'JJS']]
-    elif kw_desired_postag == 'RB*':
-        keyword_list = [keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] in ['RB', 'RBR', 'RBS', ]]
-    elif kw_desired_postag == 'VB*':
-        keyword_list = [keyword for keyword in keyword_list if
-                        keyword[SearchField.POSTAG.value] in ['VB', 'VBN', 'VBG', 'VBZ', 'VBP', 'VBD']]
+    elif kw_desired_postag == "NN*":
+        keyword_list = [
+            keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] in ["NN", "NNS", "NNP", "NNPS"]
+        ]
+    elif kw_desired_postag == "JJ*":
+        keyword_list = [
+            keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] in ["JJ", "JJR", "JJS"]
+        ]
+    elif kw_desired_postag == "RB*":
+        keyword_list = [
+            keyword
+            for keyword in keyword_list
+            if keyword[SearchField.POSTAG.value]
+            in [
+                "RB",
+                "RBR",
+                "RBS",
+            ]
+        ]
+    elif kw_desired_postag == "VB*":
+        keyword_list = [
+            keyword
+            for keyword in keyword_list
+            if keyword[SearchField.POSTAG.value] in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]
+        ]
     else:
         keyword_list = [keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] == kw_desired_postag]
 
@@ -192,8 +208,8 @@ def filter_list_by_POStag(keyword_list, kw_desired_postag='*'):
 
 
 # Chen
-def filter_list_by_deprel(keyword_list, kw_desired_deprel='*'):
-    if kw_desired_deprel == '*':
+def filter_list_by_deprel(keyword_list, kw_desired_deprel="*"):
+    if kw_desired_deprel == "*":
         keyword_list = keyword_list
     else:
         keyword_list = [keyword for keyword in keyword_list if keyword[SearchField.DEPREL.value] == kw_desired_deprel]
@@ -222,14 +238,14 @@ def filter_output_list(list_queried, header, related_token_DEPREL="*", Sentence_
     if "*" not in related_token_POSTAG:
         postag_list_queried = list(filter(lambda tok: tok[1] == related_token_POSTAG, list_queried))
     elif related_token_POSTAG == "NN*":
-        postag_list_queried = [token for token in list_queried if token[6] in ['NN', 'NNS', 'NNP', 'NNPS']]
-    elif related_token_POSTAG == 'JJ*':
-        postag_list_queried = [token for token in list_queried if token[6] in ['JJ', 'JJR', 'JJS']]
-    elif related_token_POSTAG == 'RB*':
-        postag_list_queried = [token for token in list_queried if token[6] in ['RB', 'RBR', 'RBS']]
+        postag_list_queried = [token for token in list_queried if token[6] in ["NN", "NNS", "NNP", "NNPS"]]
+    elif related_token_POSTAG == "JJ*":
+        postag_list_queried = [token for token in list_queried if token[6] in ["JJ", "JJR", "JJS"]]
+    elif related_token_POSTAG == "RB*":
+        postag_list_queried = [token for token in list_queried if token[6] in ["RB", "RBR", "RBS"]]
     # postag_list_queried = list(filter(lambda tok:tok[1] in ['RB','RBR','RBS'],list_queried))
-    elif related_token_POSTAG == 'VB*':
-        postag_list_queried = [token for token in list_queried if token[6] in ['VB', 'VBN', 'VBG', 'VBZ', 'VBP', 'VBD']]
+    elif related_token_POSTAG == "VB*":
+        postag_list_queried = [token for token in list_queried if token[6] in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]]
     # postag_list_queried = list(filter(lambda tok:tok[1] in ['VB','VBN','VBG','VBZ','VBP','VBD'],list_queried))
     else:
         postag_list_queried = list_queried
@@ -238,13 +254,15 @@ def filter_output_list(list_queried, header, related_token_DEPREL="*", Sentence_
     else:
         deprel_list_queried = postag_list_queried
     # re-insert the header filtered out
-    deprel_list_queried.insert(0,header)
+    deprel_list_queried.insert(0, header)
     return deprel_list_queried
 
 
 # Chen
 # sentence_CoNLL_records is a list of all the CoNLL table records for a given sentence
-def search_in_sentence(searched_token, sentence_CoNLL_records, __field__='FORM', kw_desired_postag='*', kw_desired_deprel='*'):
+def search_in_sentence(
+    searched_token, sentence_CoNLL_records, __field__="FORM", kw_desired_postag="*", kw_desired_deprel="*"
+):
     """
     Search related words in the input sentence_CoNLL_records
 
@@ -263,12 +281,12 @@ def search_in_sentence(searched_token, sentence_CoNLL_records, __field__='FORM',
     keyword_list = []
     list_indices_related_word = []
     # compare term: form or lemma
-    if __field__ == 'FORM':
+    if __field__ == "FORM":
         compare_term = 1  # field position of FORM in CoNLL
     else:
         compare_term = 2  # field position of LEMMA in CoNLL
 
-    if searched_token == '*':
+    if searched_token == "*":
         keyword_list = sentence_CoNLL_records
         # in each sentence, obtain the keyword tokens
         keyword_list = filter_list_by_POStag(keyword_list, kw_desired_postag)
@@ -276,7 +294,7 @@ def search_in_sentence(searched_token, sentence_CoNLL_records, __field__='FORM',
         # if desired form is not *, need to search governor word
         keyword_list = [keyword for keyword in sentence_CoNLL_records if keyword[compare_term] == searched_token]
 
-    if len(keyword_list)==0:
+    if len(keyword_list) == 0:
         return list_indices_related_word
 
     keyword_list = filter_list_by_POStag(keyword_list, kw_desired_postag)
@@ -312,10 +330,12 @@ class SearchType(Enum):
         return list(map(lambda c: c.name, SearchType))
 
     def satisfies(self, word: builtins.list[str], index, searched_term):
-        return (self.value == 1 and word[index] == searched_term) or \
-               (self.value == 2 and word[index].startswith(searched_term)) or \
-               (self.value == 3 and word[index].endswith(searched_term)) or \
-               (self.value == 4 and searched_term in word[index])
+        return (
+            (self.value == 1 and word[index] == searched_term)
+            or (self.value == 2 and word[index].startswith(searched_term))
+            or (self.value == 3 and word[index].endswith(searched_term))
+            or (self.value == 4 and searched_term in word[index])
+        )
 
 
 class SearchField(Enum):
@@ -359,9 +379,12 @@ def do_include_word(word: list[str], filters: list[CoNLLFilter]) -> bool:
     is_and = do_include
     search_filter: CoNLLFilter
     for search_filter in filters:
-        if search_filter.search_type.satisfies(word,
-                                               search_filter.search_field.get_index(),
-                                               search_filter.searched_term) ^ search_filter.should_be_false:
+        if (
+            search_filter.search_type.satisfies(
+                word, search_filter.search_field.get_index(), search_filter.searched_term
+            )
+            ^ search_filter.should_be_false
+        ):
             # The condition is met.
             if not is_and:
                 do_include = True
@@ -374,29 +397,52 @@ def do_include_word(word: list[str], filters: list[CoNLLFilter]) -> bool:
 
 
 # Chen
-def search_CoNLL_table(inputFilename, outputDir, config_filename, chartPackage, dataTransformation, CoNLL_records, form_of_token,
-                       _field_='FORM',
-                       related_token_POSTAG="*",
-                       related_token_DEPREL="*",
-                       Sentence_ID="*", _tok_postag_='*', _tok_deprel_='*'):
+def search_CoNLL_table(
+    inputFilename,
+    outputDir,
+    config_filename,
+    chartPackage,
+    dataTransformation,
+    CoNLL_records,
+    form_of_token,
+    _field_="FORM",
+    related_token_POSTAG="*",
+    related_token_DEPREL="*",
+    Sentence_ID="*",
+    _tok_postag_="*",
+    _tok_deprel_="*",
+):
 
     # create a subdirectory of the output directory
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, '', outputDir, label='CoNLL_search',
-                                                       silent=True)
-    if outputDir == '':
+    outputDir = IO_files_util.make_output_subdirectory(inputFilename, "", outputDir, label="CoNLL_search", silent=True)
+    if outputDir == "":
         return outputDir, filesToOpen
 
-    if _field_ == 'FORM':
+    if _field_ == "FORM":
         compare_term = 1  # field position of FORM in CoNLL
     else:
         compare_term = 2  # field position of LEMMA in CoNLL
 
-    header = ["Searched Token/Word", "ID of Searched Token/Word", "POS Tag of Searched Token/Word", "DepRel of Searched Token/Word" , "Co-occurring Token/Word", " ID of Co-occurring Token/Word", "POS Tag of Co-occurring Token/Word", "DepRel of Co-occurring Token/Word", "Head ID", "Sentence ID", "Sentence", "Document ID", "Document"]
+    header = [
+        "Searched Token/Word",
+        "ID of Searched Token/Word",
+        "POS Tag of Searched Token/Word",
+        "DepRel of Searched Token/Word",
+        "Co-occurring Token/Word",
+        " ID of Co-occurring Token/Word",
+        "POS Tag of Co-occurring Token/Word",
+        "DepRel of Co-occurring Token/Word",
+        "Head ID",
+        "Sentence ID",
+        "Sentence",
+        "Document ID",
+        "Document",
+    ]
     list_queried = []
     deprel_list_queried = []
     # record is a list of all the CoNLL table records for a given sentence
     for sentence_record in CoNLL_records:
-        if len(sentence_record)==0:
+        if len(sentence_record) == 0:
             continue
         # obtain the full sentence
         # left strip punctuation (remove blank BEFORE) !,.:;?@`/)
@@ -431,21 +477,35 @@ def search_CoNLL_table(inputFilename, outputDir, config_filename, chartPackage, 
             tok_deprel = row[6]
             tok_Sentence_ID = row[10]
             tok_Document_ID = row[11]
-            if 'hyperlink' not in row[12]:
+            if "hyperlink" not in row[12]:
                 tok_Document = IO_csv_util.dressFilenameForCSVHyperlink(row[12])
             else:
                 tok_Document = row[12]
-            token_id = str(tok_Document_ID)[:-2] + str("-" + tok_Sentence_ID)
+            str(tok_Document_ID)[:-2] + str("-" + tok_Sentence_ID)
             searched_keyword = keyword[compare_term]
-            list_queried.append((searched_keyword, searched_token_ID, keyword[3], keyword[6], tok_form, co_token_ID, tok_postag,
-                                 tok_deprel, is_head,
-                                 tok_Sentence_ID, whole_sent, tok_Document_ID,
-                                 tok_Document
-                                 ))
-    list_queried.insert(0,header)
+            list_queried.append(
+                (
+                    searched_keyword,
+                    searched_token_ID,
+                    keyword[3],
+                    keyword[6],
+                    tok_form,
+                    co_token_ID,
+                    tok_postag,
+                    tok_deprel,
+                    is_head,
+                    tok_Sentence_ID,
+                    whole_sent,
+                    tok_Document_ID,
+                    tok_Document,
+                )
+            )
+    list_queried.insert(0, header)
 
     # filter the output list
-    deprel_list_queried = filter_output_list(list_queried, header, related_token_DEPREL, Sentence_ID, related_token_POSTAG)
+    deprel_list_queried = filter_output_list(
+        list_queried, header, related_token_DEPREL, Sentence_ID, related_token_POSTAG
+    )
 
     if len(deprel_list_queried) == 0:
         print(noResults)
@@ -453,12 +513,12 @@ def search_CoNLL_table(inputFilename, outputDir, config_filename, chartPackage, 
         # mb.showwarning(title='Empty query results', message=noResults)
         # return outputDir, filesToOpen
 
-    if form_of_token == '*':
-        srcField_kw = 'astrsk'
+    if form_of_token == "*":
+        pass
     else:
-        srcField_kw = form_of_token
+        pass
 
-    if len(deprel_list_queried)==1: # only headers, list empty
+    if len(deprel_list_queried) == 1:  # only headers, list empty
         print(noResults)
         raise Exception("Empty query results")
         # mb.showwarning(title='Empty query results',message=noResults)
@@ -466,122 +526,144 @@ def search_CoNLL_table(inputFilename, outputDir, config_filename, chartPackage, 
 
     # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv',
     #                                                            '', srcField_kw, _field_)
-    outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv','search')
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "search")
 
     # convert list to dataframe and save
     df = pd.DataFrame(deprel_list_queried)
     # headers=['list_queried, related_token_DEPREL, Sentence_ID, related_token_POSTAG']
     # header = ["Searched Token/Word", "ID of Searched Token/Word", "POS Tag of Searched Token/Word", "DepRel of Searched Token/Word" , "Co-occurring Token/Word", " ID of Co-occurring Token/Word", "POS Tag of Co-occurring Token/Word", "DepRel of Co-occurring Token/Word", "Head ID", "Sentence ID", "Sentence", "Document ID", "Document"]
-    IO_csv_util.df_to_csv(df, outputFilename, headers=None, index=False,
-                          language_encoding='utf-8')
+    IO_csv_util.df_to_csv(df, outputFilename, headers=None, index=False, language_encoding="utf-8")
 
     filesToOpen.append(outputFilename)
 
     """
     The 15 indexed items are created in the function query_the_table:
-        item[0] form/lemma, item[1] postag, item[2] deprel, item[3] is_head, item[4] Document_ID, 
-        item[5] Sentence_ID, item[6] Document, item[7] whole_sent, 
-        item[8] keyword[1]/SEARCHED TOKEN, 
-        item[9] keyword[3]/SEARCHED TOKEN POSTAG, 
+        item[0] form/lemma, item[1] postag, item[2] deprel, item[3] is_head, item[4] Document_ID,
+        item[5] Sentence_ID, item[6] Document, item[7] whole_sent,
+        item[8] keyword[1]/SEARCHED TOKEN,
+        item[9] keyword[3]/SEARCHED TOKEN POSTAG,
         item[10] keyword[6]/'SEARCHED TOKEN DEPREL'))
     """
-    if chartPackage!='No charts':
-
+    if chartPackage != "No charts":
         count_var = 1
 
-        columns_to_be_plotted_xAxis = ['POS Tag of Searched Token/Word']
-        columns_to_be_plotted_yAxis = ['POS Tag of Searched Token/Word']
-        outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation,
-                                                           outputFilename, outputDir,
-                                                           columns_to_be_plotted_xAxis, columns_to_be_plotted_yAxis,
-                                                           chart_title="Frequency Distribution of ' + _tok_postag_ + ' POS Tag of Searched Token/Word",
-                                                           outputFileNameType='',
-                                                           column_xAxis_label=_tok_postag_ + ' POS Tag for the word "' + form_of_token + '"',
-                                                           count_var=count_var,
-                                                           hover_label=[],
-                                                           groupByList=[],  # ['Document ID', 'Document'],
-                                                           plotList=[],  # ['Concreteness (Mean score)'],
-                                                           chart_title_label='')  # 'Concreteness Statistics')
-        if outputFiles!=None:
+        columns_to_be_plotted_xAxis = ["POS Tag of Searched Token/Word"]
+        columns_to_be_plotted_yAxis = ["POS Tag of Searched Token/Word"]
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            outputFilename,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of ' + _tok_postag_ + ' POS Tag of Searched Token/Word",
+            outputFileNameType="",
+            column_xAxis_label=_tok_postag_ + ' POS Tag for the word "' + form_of_token + '"',
+            count_var=count_var,
+            hover_label=[],
+            groupByList=[],  # ['Document ID', 'Document'],
+            plotList=[],  # ['Concreteness (Mean score)'],
+            chart_title_label="",
+        )  # 'Concreteness Statistics')
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
 
-            columns_to_be_plotted_xAxis = ['DepRel of Searched Token/Word']
-            columns_to_be_plotted_yAxis = ['DepRel of Searched Token/Word']
+            columns_to_be_plotted_xAxis = ["DepRel of Searched Token/Word"]
+            columns_to_be_plotted_yAxis = ["DepRel of Searched Token/Word"]
             # @@@
-            outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation,
-                                                               outputFilename, outputDir,
-                                                               columns_to_be_plotted_xAxis, columns_to_be_plotted_yAxis,
-                                                               chart_title="Frequency Distribution of " + _tok_deprel_ + " DepRel of Searched Token/Word",
-                                                               outputFileNameType='',
-                                                               column_xAxis_label=_tok_deprel_ + ' DepRel Tag for the word "' + form_of_token + '"',
-                                                               count_var=count_var,
-                                                               hover_label=[],
-                                                               groupByList=[],  # ['Document ID', 'Document'],
-                                                               plotList=[],  # ['Concreteness (Mean score)'],
-                                                               chart_title_label='')  # 'Concreteness Statistics')
-            if outputFiles!=None:
+            outputFiles = charts_util.visualize_chart(
+                chartPackage,
+                dataTransformation,
+                outputFilename,
+                outputDir,
+                columns_to_be_plotted_xAxis,
+                columns_to_be_plotted_yAxis,
+                chart_title="Frequency Distribution of " + _tok_deprel_ + " DepRel of Searched Token/Word",
+                outputFileNameType="",
+                column_xAxis_label=_tok_deprel_ + ' DepRel Tag for the word "' + form_of_token + '"',
+                count_var=count_var,
+                hover_label=[],
+                groupByList=[],  # ['Document ID', 'Document'],
+                plotList=[],  # ['Concreteness (Mean score)'],
+                chart_title_label="",
+            )  # 'Concreteness Statistics')
+            if outputFiles is not None:
                 if isinstance(outputFiles, str):
                     filesToOpen.append(outputFiles)
                 else:
                     filesToOpen.extend(outputFiles)
 
-
-        columns_to_be_plotted_xAxis = ['Co-occurring Token/Word']
-        columns_to_be_plotted_yAxis = ['Co-occurring Token/Word']
-        outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation,
-                                                           outputFilename, outputDir,
-                                                           columns_to_be_plotted_xAxis, columns_to_be_plotted_yAxis,
-                                                           chart_title="Frequency Distribution of Co-occurring " + related_token_POSTAG + " words/tokens",
-                                                           outputFileNameType='',
-                                                           column_xAxis_label=related_token_POSTAG  + ' Co-occurring words for the word "' + form_of_token + '"',
-                                                           count_var=count_var,
-                                                           hover_label=[],
-                                                           groupByList=[],  # ['Document ID', 'Document'],
-                                                           plotList=[],  # ['Concreteness (Mean score)'],
-                                                           chart_title_label='')  # 'Concreteness Statistics')
-        if outputFiles!=None:
+        columns_to_be_plotted_xAxis = ["Co-occurring Token/Word"]
+        columns_to_be_plotted_yAxis = ["Co-occurring Token/Word"]
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            outputFilename,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Co-occurring " + related_token_POSTAG + " words/tokens",
+            outputFileNameType="",
+            column_xAxis_label=related_token_POSTAG + ' Co-occurring words for the word "' + form_of_token + '"',
+            count_var=count_var,
+            hover_label=[],
+            groupByList=[],  # ['Document ID', 'Document'],
+            plotList=[],  # ['Concreteness (Mean score)'],
+            chart_title_label="",
+        )  # 'Concreteness Statistics')
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
 
-        columns_to_be_plotted_xAxis = ['POS Tag of Co-occurring Token/Word']
-        columns_to_be_plotted_yAxis = ['POS Tag of Co-occurring Token/Word']
-        outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation,
-                                                           outputFilename, outputDir,
-                                                           columns_to_be_plotted_xAxis, columns_to_be_plotted_yAxis,
-                                                           chart_title="Frequency Distribution of Co-occurring " + related_token_POSTAG + " POS Tags",
-                                                           outputFileNameType='search_CoOc_POS',
-                                                           column_xAxis_label= related_token_POSTAG  + ' POS Tag co-occurring with the word "' + form_of_token + '"',
-                                                           count_var=count_var,
-                                                           hover_label=[],
-                                                           groupByList=[],  # ['Document ID', 'Document'],
-                                                           plotList=[],  # ['Concreteness (Mean score)'],
-                                                           chart_title_label='')  # 'Concreteness Statistics')
-        if outputFiles!=None:
+        columns_to_be_plotted_xAxis = ["POS Tag of Co-occurring Token/Word"]
+        columns_to_be_plotted_yAxis = ["POS Tag of Co-occurring Token/Word"]
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            outputFilename,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Co-occurring " + related_token_POSTAG + " POS Tags",
+            outputFileNameType="search_CoOc_POS",
+            column_xAxis_label=related_token_POSTAG + ' POS Tag co-occurring with the word "' + form_of_token + '"',
+            count_var=count_var,
+            hover_label=[],
+            groupByList=[],  # ['Document ID', 'Document'],
+            plotList=[],  # ['Concreteness (Mean score)'],
+            chart_title_label="",
+        )  # 'Concreteness Statistics')
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
 
-        columns_to_be_plotted_xAxis = ['DepRel of Co-occurring Token/Word']
-        columns_to_be_plotted_yAxis = ['DepRel of Co-occurring Token/Word']
+        columns_to_be_plotted_xAxis = ["DepRel of Co-occurring Token/Word"]
+        columns_to_be_plotted_yAxis = ["DepRel of Co-occurring Token/Word"]
 
-        outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation,
-                                                           outputFilename, outputDir,
-                                                           columns_to_be_plotted_xAxis, columns_to_be_plotted_yAxis,
-                                                           chart_title="Frequency Distribution of Co-occurring " + related_token_DEPREL + " DepRel Tags",
-                                                           outputFileNameType='search_CoOc_DepRel',
-                                                           column_xAxis_label=related_token_DEPREL + ' DepRel Tag co-occurring with the word "' + form_of_token + '"',
-                                                           count_var=count_var,
-                                                           hover_label=[],
-                                                           groupByList=[],  # ['Document ID', 'Document'],
-                                                           plotList=[],  # ['Concreteness (Mean score)'],
-                                                           chart_title_label='')  # 'Concreteness Statistics')
-        if outputFiles!=None:
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            outputFilename,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Co-occurring " + related_token_DEPREL + " DepRel Tags",
+            outputFileNameType="search_CoOc_DepRel",
+            column_xAxis_label=related_token_DEPREL + ' DepRel Tag co-occurring with the word "' + form_of_token + '"',
+            count_var=count_var,
+            hover_label=[],
+            groupByList=[],  # ['Document ID', 'Document'],
+            plotList=[],  # ['Concreteness (Mean score)'],
+            chart_title_label="",
+        )  # 'Concreteness Statistics')
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
@@ -590,11 +672,16 @@ def search_CoNLL_table(inputFilename, outputDir, config_filename, chartPackage, 
         # Gephi network graphs _________________________________________________
 
         fileBase = os.path.basename(outputFilename)[0:-4]
-        outputFiles = Gephi_util.create_gexf(fileBase, outputDir, outputFilename,
-                                        'Searched Token/Word',
-                                        'POS Tag of Searched Token/Word',
-                                        'Co-occurring Token/Word', 'Sentence ID')
-        if outputFiles!=None:
+        outputFiles = Gephi_util.create_gexf(
+            fileBase,
+            outputDir,
+            outputFilename,
+            "Searched Token/Word",
+            "POS Tag of Searched Token/Word",
+            "Co-occurring Token/Word",
+            "Sentence ID",
+        )
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
@@ -603,26 +690,42 @@ def search_CoNLL_table(inputFilename, outputDir, config_filename, chartPackage, 
         # wordclouds graphs _________________________________________________
 
         import wordclouds_util
+
         # run with all default values;
-        prefer_horizontal = .9
+        prefer_horizontal = 0.9
         doNotListIndividualFiles = True
         collocation = False
         transformed_image_mask = []
-        stopwords = ''
-        column_name='Co-occurring Token/Word'
-        textToProcess = IO_csv_util.get_csv_field_values(outputFilename, column_name, uniqueValues=False, returnList=False)
+        stopwords = ""
+        column_name = "Co-occurring Token/Word"
+        textToProcess = IO_csv_util.get_csv_field_values(
+            outputFilename, column_name, uniqueValues=False, returnList=False
+        )
 
-        outputFiles = wordclouds_util.display_wordCloud(outputFilename, '', outputDir, textToProcess, doNotListIndividualFiles,
-                              transformed_image_mask, stopwords, collocation, prefer_horizontal, bg_image=None,
-                              bg_image_flag=True, font=None, max_words=100)
+        outputFiles = wordclouds_util.display_wordCloud(
+            outputFilename,
+            "",
+            outputDir,
+            textToProcess,
+            doNotListIndividualFiles,
+            transformed_image_mask,
+            stopwords,
+            collocation,
+            prefer_horizontal,
+            bg_image=None,
+            bg_image_flag=True,
+            font=None,
+            max_words=100,
+        )
 
-        if outputFiles!=None:
+        if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
 
     return outputDir, filesToOpen
+
 
 # %%
 
@@ -651,8 +754,8 @@ put all the output in a csv file.
 """
 The 11 indexed items are created in the function search_CoNLL_table:
 
-			#item[8] keyword[1]/SEARCHED TOKEN 
-			#item[9] keyword[3]/SEARCHED TOKEN POSTAG, 
+			#item[8] keyword[1]/SEARCHED TOKEN
+			#item[9] keyword[3]/SEARCHED TOKEN POSTAG,
 			#item[10] keyword[6]/'SEARCHED TOKEN DEPREL')
 			list_queried.append((tok_form,tok_postag,tok_deprel,is_head,str(tok_Document_ID)[:-2],
 				tok_Sentence_ID,tok_Document,
@@ -662,12 +765,12 @@ The 11 indexed items are created in the function search_CoNLL_table:
 	item[1] postag
 	item[2] deprel
 	item[3] is_head
-	item[4] Document_ID 
+	item[4] Document_ID
 	item[5] Sentence_ID
 	item[6] Document
-	item[7] whole_sent 
-	item[8] keyword[1]/SEARCHED TOKEN 
-	item[9] keyword[3]/SEARCHED TOKEN POSTAG 
+	item[7] whole_sent
+	item[8] keyword[1]/SEARCHED TOKEN
+	item[9] keyword[3]/SEARCHED TOKEN POSTAG
 	item[10] keyword[6]/'SEARCHED TOKEN DEPREL'
 """
 
@@ -675,19 +778,45 @@ The 11 indexed items are created in the function search_CoNLL_table:
 def output_list(list_queried, searchedCoNLLField, documentId_position):
     if len(list_queried) != 0:
         # to the 11 fields 4 postag and deprel descriptions are headed
-        output_list = [['SEARCHED TOKEN (' + searchedCoNLLField + ')', 'SEARCHED TOKEN POSTAG',
-                        'SEARCHED TOKEN POSTAG-DESCRIPTION', 'SEARCHED TOKEN DEPREL',
-                        'SEARCHED TOKEN DEPREL-DESCRIPTION', 'Co-occurring token (' + searchedCoNLLField + ')',
-                        'Co-occurring token POSTAG', 'Co-occurring token POSTAG-DESCRIPTION',
-                        'Co-occurring token DEPREL', 'Co-occurring token DEPREL-DESCRIPTION', 'is_HEAD',
-                        'Sentence ID', 'Sentence', 'Document ID', 'Document']]
+        output_list = [
+            [
+                "SEARCHED TOKEN (" + searchedCoNLLField + ")",
+                "SEARCHED TOKEN POSTAG",
+                "SEARCHED TOKEN POSTAG-DESCRIPTION",
+                "SEARCHED TOKEN DEPREL",
+                "SEARCHED TOKEN DEPREL-DESCRIPTION",
+                "Co-occurring token (" + searchedCoNLLField + ")",
+                "Co-occurring token POSTAG",
+                "Co-occurring token POSTAG-DESCRIPTION",
+                "Co-occurring token DEPREL",
+                "Co-occurring token DEPREL-DESCRIPTION",
+                "is_HEAD",
+                "Sentence ID",
+                "Sentence",
+                "Document ID",
+                "Document",
+            ]
+        ]
         for item in list_queried:
-            output_list.append([item[8], item[9], CoNLL_util.find_full_postag(item[8], item[9]), item[10],
-                                CoNLL_util.find_full_deprel(item[8],
-                                                               item[10]), item[0], item[1],
-                                CoNLL_util.find_full_postag(item[0], item[1]), item[2],
-                                CoNLL_util.find_full_deprel(item[0], item[2]),
-                                item[3], item[5], item[7], item[4], item[6]])
+            output_list.append(
+                [
+                    item[8],
+                    item[9],
+                    CoNLL_util.find_full_postag(item[8], item[9]),
+                    item[10],
+                    CoNLL_util.find_full_deprel(item[8], item[10]),
+                    item[0],
+                    item[1],
+                    CoNLL_util.find_full_postag(item[0], item[1]),
+                    item[2],
+                    CoNLL_util.find_full_deprel(item[0], item[2]),
+                    item[3],
+                    item[5],
+                    item[7],
+                    item[4],
+                    item[6],
+                ]
+            )
     return output_list
 
 

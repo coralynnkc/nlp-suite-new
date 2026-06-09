@@ -30,7 +30,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "."))
 
 # check if a directory exists, remove if it does, and create
 def make_directory(newDirectory, silent=True):
-    createDir = True
     # newDirectory=''
     # Got permission denied error if the folder is read-only.
     # Updates permission automatically
@@ -38,9 +37,7 @@ def make_directory(newDirectory, silent=True):
         if not silent:
             print(
                 "Directory already exists",
-                "There already exists a directory\n\n"
-                + newDirectory
-                + "\n\nThis directory will be replaced",
+                "There already exists a directory\n\n" + newDirectory + "\n\nThis directory will be replaced",
             )
         shutil.rmtree(newDirectory)
     try:
@@ -59,9 +56,7 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
     if inputFilename != "":
         # process file
         inputFileBase = os.path.basename(inputFilename)[0:-4]  # without .txt
-        outputSubDir = os.path.join(
-            outputDir, label + "_" + inputFileBase
-        )  # + "_CoRefed_files")
+        outputSubDir = os.path.join(outputDir, label + "_" + inputFileBase)  # + "_CoRefed_files")
     elif inputDir != "":
         # processing a directory
         inputDirBase = os.path.basename(inputDir)
@@ -72,7 +67,7 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
         outputSubDir = outputDir
     if os.path.exists(outputSubDir):
         if not silent:
-            result = print(
+            print(
                 "Directory already exists",
                 "The algorithms will create a new directory\n\n"
                 + outputSubDir
@@ -226,15 +221,11 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                 filename1 = filename1.split(compare_split)
                 filename2 = filename2.split(compare_split)
                 i = 0
-                q = complete_order(
-                    len(filename1), [int(x) for x in sort_order.split(",")]
-                )
+                q = complete_order(len(filename1), [int(x) for x in sort_order.split(",")])
 
                 while i <= len(filename1) - 1:
                     if q[i] + 1 == date_loc:
-                        if help_date(
-                            filename1, filename2, date_loc - 1, file_end, date_format
-                        ):
+                        if help_date(filename1, filename2, date_loc - 1, file_end, date_format):
                             return -1
                         else:
                             return 1
@@ -267,9 +258,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
     return sorted(input_list, key=functools.cmp_to_key(compare))
 
 
-def getFileList(
-    inputFile, inputDir, fileType=".*", silent=False, configFileName=""
-):  # New
+def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName=""):  # New
     files = []
 
     if inputDir != "":
@@ -280,10 +269,7 @@ def getFileList(
         if len(files) == 0:
             print(
                 "Input files error",
-                "No files of type "
-                + fileType
-                + " found in the directory\n\n"
-                + inputDir,
+                "No files of type " + fileType + " found in the directory\n\n" + inputDir,
             )
     else:
         if not checkFile(inputFile):
@@ -307,9 +293,7 @@ def getFileList(
         import pandas as pd
 
         try:
-            a = pd.read_csv(
-                configFileName, index_col=False, encoding="utf-8", on_bad_lines="skip"
-            )
+            a = pd.read_csv(configFileName, index_col=False, encoding="utf-8", on_bad_lines="skip")
         except Exception as e:
             print(str(e))
             if configFileName == "NLP_default_IO_config.csv":
@@ -377,18 +361,14 @@ def getFileList(
         #     separator=' '
 
         try:
-            files = do_compare(
-                files, fileType, sort_order, separator, date_format, date_pos
-            )
+            files = do_compare(files, fileType, sort_order, separator, date_format, date_pos)
         except:
             files.sort()
         return files
 
 
 # returns date, dateStr
-def getDateFromFileName(
-    file_name, date_format="mm-dd-yyyy", sep="_", date_field_position=2, errMsg=True
-):
+def getDateFromFileName(file_name, date_format="mm-dd-yyyy", sep="_", date_field_position=2, errMsg=True):
 
     # configFile_basename is the filename w/o the full path
     file_name = ntpath.basename(file_name)
@@ -472,7 +452,7 @@ def getDateFromFileName(
                 year = dateStr[:4]
             dateStr = dateStr.replace("/", "-")
         except ValueError:
-            if errMsg == True:
+            if errMsg:
                 # mb.showwarning(title='Date format error in filename', message='You have selected the option that your input filename ('+file_name+') embeds a date.\n\nBut... you may have provided\n\n   1. the wrong date format (' + date_format + ')\n   2. the wrong date in the input filename (' + raw_date + ')\n   3. the wrong date position in the filename ('+str(date_field_position)+')\n   4. the wrong date character separator in the filename ('+sep+').\n\nPlease, check your filename and/or the date options in the GUI.\n\nThe date will be set to blank in the output CoNLL table.')
                 # print('\nDate format error in filename. You have selected the option that your input filename ('+file_name+') embeds a date.\n\nBut... you may have provided\n\n   1. the wrong date format (' + date_format + ')\n   2. the wrong date in the input filename (' + raw_date + ')\n   3. the wrong date position in the filename ('+str(date_field_position)+')\n   4. the wrong date character separator in the filename ('+sep+').\n\nPlease, check your filename and/or the date options in the GUI.\n\nThe date will be set to blank in the output CoNLL table.\n')
                 print(
@@ -532,7 +512,7 @@ def checkFile(inputFilename, extension=None, silent=False):
                 + " could not be found.\n\nPlease, check the INPUT FILE PATH and try again.",
             )
         return False
-    if extension != None and not "." + inputFilename.rsplit(".", 1)[1] == extension:
+    if extension is not None and not "." + inputFilename.rsplit(".", 1)[1] == extension:
         if not silent:
             print("File has the wrong extension.")
             print(
@@ -603,9 +583,7 @@ def generate_output_file_name(
         inputfile = "Dir_" + Dir
         inputfile_noExtension = ""
     elif inputFilename != "":
-        inputfile, inputfile_noExtension, filename_no_hyperlink = getFilename(
-            inputFilename
-        )
+        inputfile, inputfile_noExtension, filename_no_hyperlink = getFilename(inputFilename)
         # use inputfile_noExtension for json
         inputfile = inputfile_noExtension
     else:
@@ -614,18 +592,12 @@ def generate_output_file_name(
     # do not add the NLP_ prefix if processing a file previously processed and with the prefix already added
     if inputfile[0:4] != "NLP_":  # "NLP_" not in inputfile:
         if label1 == "":
-            default_outputFilename_str = (
-                "NLP_" + inputfile
-            )  # adding to front of file name
+            default_outputFilename_str = "NLP_" + inputfile  # adding to front of file name
         else:
             if inputfile != "":
-                default_outputFilename_str = (
-                    "NLP_" + str(label1) + "_" + inputfile
-                )  # adding to front of file name
+                default_outputFilename_str = "NLP_" + str(label1) + "_" + inputfile  # adding to front of file name
             else:
-                default_outputFilename_str = "NLP_" + str(
-                    label1
-                )  # adding to front of file name
+                default_outputFilename_str = "NLP_" + str(label1)  # adding to front of file name
     else:
         if label1 == "":
             default_outputFilename_str = inputfile
@@ -633,10 +605,7 @@ def generate_output_file_name(
             if (
                 inputfile[0:4] == "NLP_"
             ):  # only replace first 4 characters since NLP may occur elsewhere in the filename
-                default_outputFilename_str = (
-                    inputfile[0:4].replace("NLP_", "NLP_" + label1 + "_")
-                    + inputfile[4:]
-                )
+                default_outputFilename_str = inputfile[0:4].replace("NLP_", "NLP_" + label1 + "_") + inputfile[4:]
     if len(str(label2)) > 0:
         default_outputFilename_str = default_outputFilename_str + "_" + str(label2)
     if len(str(label3)) > 0:
@@ -645,7 +614,7 @@ def generate_output_file_name(
         default_outputFilename_str = default_outputFilename_str + "_" + str(label4)
     if len(str(label5)) > 0:
         default_outputFilename_str = default_outputFilename_str + "_" + str(label5)
-    if useTime == True:
+    if useTime:
         default_outputFilename_str = (
             default_outputFilename_str
             + "_"
@@ -657,7 +626,7 @@ def generate_output_file_name(
         )
     default_outputFilename_str = default_outputFilename_str + outputExtension
     # checking if file with that name exists, if so adding _ and integer to end
-    if disable_suffix == False:
+    if not disable_suffix:
         if os.path.isfile(default_outputFilename_str):
             for i in range(
                 1, 1000
@@ -666,14 +635,10 @@ def generate_output_file_name(
                 default_outputFilename_str = default_outputFilename_str + "_" + str(i)
                 if os.path.isfile(default_outputFilename_str + outputExtension):
                     # clearing that end integer so it can increment
-                    default_outputFilename_str = default_outputFilename_str.split(
-                        "_" + str(i)
-                    )[0]
+                    default_outputFilename_str = default_outputFilename_str.split("_" + str(i))[0]
                     continue
                 else:
-                    default_outputFilename_str = (
-                        default_outputFilename_str + outputExtension
-                    )
+                    default_outputFilename_str = default_outputFilename_str + outputExtension
                     break  # file name found, end loop
     outFilename = os.path.join(outputDir, default_outputFilename_str)
 
@@ -709,9 +674,7 @@ def GetNumberOfDocumentsInDirectory(inputDirectory, extension=""):
         )
         return numberOfDocs
     if extension == "":  # count any document
-        numberOfDocs = len(
-            [os.path.join(inputDirectory, f) for f in os.listdir(inputDirectory)]
-        )
+        numberOfDocs = len([os.path.join(inputDirectory, f) for f in os.listdir(inputDirectory)])
     else:  # count documents by specific document type
         extensionLength = len(extension)
         numberOfDocs = len(
@@ -732,9 +695,7 @@ def openCSVFile(inputfile, open_type, encoding_type="utf-8"):
         print("File error", "The input file is blank.")
         return ""
     try:
-        csvfile = open(
-            inputfile, open_type, newline="", encoding=encoding_type, errors="ignore"
-        )
+        csvfile = open(inputfile, open_type, newline="", encoding=encoding_type, errors="ignore")
         return csvfile
     except OSError:
         print(
@@ -817,7 +778,7 @@ def getScript(pydict, script):
     # RF return
     # IO_values is 0 when an internet program is used; do not check software in the software dir
     if IO_values != 0:
-        if IO_libraries_util.check_inputPythonJavaProgramFile(scriptName) == False:
+        if not IO_libraries_util.check_inputPythonJavaProgramFile(scriptName):
             return script_to_run, IO_values
     # passed to NLP.py
     script_to_run = val[0]
@@ -834,14 +795,10 @@ def run_jar_script(
     chartPackage,
     dataTransformation,
 ):
-    filesToOpen = []
-    if IO_libraries_util.check_inputPythonJavaProgramFile(scriptName) == False:
+    if not IO_libraries_util.check_inputPythonJavaProgramFile(scriptName):
         return
 
-    if (
-        visualization_tools
-        == "Sentence visualization: Dynamic sentence network viewer (Gephi graphs)"
-    ):
+    if visualization_tools == "Sentence visualization: Dynamic sentence network viewer (Gephi graphs)":
         # TODO the script does not work even in command line using the arguments in the ReadMe file; it seems to want two more parameters
         """
         Error in input parameters
@@ -880,7 +837,7 @@ def runScript_fromMenu_option(
             return filesToOpen
         print("http://www.hackerfactor.com/GenderGuesser.php#About")
     elif script_to_run.endswith(".py"):  # with GUI
-        if IO_libraries_util.check_inputPythonJavaProgramFile(script_to_run) == False:
+        if not IO_libraries_util.check_inputPythonJavaProgramFile(script_to_run):
             return filesToOpen
         call("python " + script_to_run, shell=True)
     elif script_to_run.endswith(".jar"):  # with GUI
@@ -900,10 +857,7 @@ def runScript_fromMenu_option(
         pythonFile = importlib.import_module(script[0])
         # script[0] contains the Python file name
         # script[1] contains the function name inside a specific Python file
-        if (
-            IO_libraries_util.check_inputPythonJavaProgramFile(script[0] + ".py")
-            == False
-        ):
+        if not IO_libraries_util.check_inputPythonJavaProgramFile(script[0] + ".py"):
             return filesToOpen
         func = getattr(pythonFile, script[1])
         # # correct values are checked in NLP_GUI
@@ -953,9 +907,7 @@ def detectCsvHeader (csvFile):
 # function written by Jian Chen for NVA but not used but very helpful to generalize for all scripts
 # Gather any user provided arguments. If incorrect number to run from CL, return False
 def gatherCLAs():
-    parser = argparse.ArgumentParser(
-        description="Process command line arguments for noun verb analysis"
-    )
+    parser = argparse.ArgumentParser(description="Process command line arguments for noun verb analysis")
     parser.add_argument("--inputFile", help="CoNLL file input")
     parser.add_argument("--outputDir", help="Directory to save output excel/csv files")
     parser.add_argument(
@@ -974,4 +926,3 @@ def gatherCLAs():
         else:
             openOut = False
         return args.inputFile, args.outputDir, openOut
-

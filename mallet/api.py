@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
+
 @app.post("/run")
 async def run_mallet(request: Request):
     data = await request.json()
@@ -24,7 +25,6 @@ async def run_mallet(request: Request):
 
     try:
         subprocess.run(cmd, check=True)
-        return JSONResponse(content= {'status':'success', 'cmd': cmd})
+        return JSONResponse(content={"status": "success", "cmd": cmd})
     except subprocess.CalledProcessError as e:
-        return JSONResponse(content= {'status':'error', 'cmd': cmd, 'details': str(e)}, status_code=500)
-
+        return JSONResponse(content={"status": "error", "cmd": cmd, "details": str(e)}, status_code=500)

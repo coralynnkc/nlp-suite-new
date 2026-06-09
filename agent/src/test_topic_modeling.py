@@ -4,8 +4,8 @@ import os
 from topic_modeling import run_topic_modeling
 
 # Replace with your input and output directories
-inputDir = '/Users/aidenamaya/nlp-suite/input'
-outputDir = '/Users/aidenamaya/nlp-suite/output'
+inputDir = "/Users/aidenamaya/nlp-suite/input"
+outputDir = "/Users/aidenamaya/nlp-suite/output"
 
 
 # Ensure the directories exist
@@ -13,21 +13,20 @@ os.makedirs(inputDir, exist_ok=True)
 os.makedirs(outputDir, exist_ok=True)
 
 # Set parameters
-chartPackage='Excel'
-dataTransformation=''
+chartPackage = "Excel"
+dataTransformation = ""
 num_topics = 10
-#BERT_var = True
+# BERT_var = True
 BERT_var = False
 split_docs_var = True
 MALLET_var = True
-#MALLET_var = False
+# MALLET_var = False
 optimize_intervals_var = 0
 Gensim_var = False
 remove_stopwords_var = False
 lemmatize_var = False
 nounsOnly_var = False
 Gensim_MALLET_var = False
-
 
 
 # Run the topic modeling function
@@ -45,5 +44,5 @@ run_topic_modeling(
     remove_stopwords_var=remove_stopwords_var,
     lemmatize_var=lemmatize_var,
     nounsOnly_var=nounsOnly_var,
-    Gensim_MALLET_var=Gensim_MALLET_var
+    Gensim_MALLET_var=Gensim_MALLET_var,
 )

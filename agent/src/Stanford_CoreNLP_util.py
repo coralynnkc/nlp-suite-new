@@ -45,8 +45,7 @@ from pycorenlp import StanfordCoreNLP
 
 url = "https://stanfordnlp.github.io/CoreNLP/human-languages.html"
 CoreNLP_web = (
-    "\n\nLanguage and annotator options for Stanford CoreNLP are listed at the Stanford CoreNLP website\n\n"
-    + url
+    "\n\nLanguage and annotator options for Stanford CoreNLP are listed at the Stanford CoreNLP website\n\n" + url
 )
 
 
@@ -119,40 +118,35 @@ def check_CoreNLP_annotator_availability(config_filename, annotator, language):
         if language != "English":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP LEMMA annotator is only available for English."
-                + CoreNLP_web,
+                "The Stanford CoreNLP LEMMA annotator is only available for English." + CoreNLP_web,
             )
             not_available = True
     elif "normalized" in annotator:
         if language != "English":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP NORMALIZED NER annotator is only available for English."
-                + CoreNLP_web,
+                "The Stanford CoreNLP NORMALIZED NER annotator is only available for English." + CoreNLP_web,
             )
             not_available = True
     elif "gender" in annotator:
         if language != "English":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP GENDER annotator is only available for English."
-                + CoreNLP_web,
+                "The Stanford CoreNLP GENDER annotator is only available for English." + CoreNLP_web,
             )
             not_available = True
     elif "quote" in annotator:
         if language != "English":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP QUOTE annotator is only available for English."
-                + CoreNLP_web,
+                "The Stanford CoreNLP QUOTE annotator is only available for English." + CoreNLP_web,
             )
             not_available = True
     elif "OpenIE" in annotator:
         if language != "English":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP OPENIE annotator is only available for English."
-                + CoreNLP_web,
+                "The Stanford CoreNLP OPENIE annotator is only available for English." + CoreNLP_web,
             )
             not_available = True
     elif "sentiment" in annotator:
@@ -175,24 +169,21 @@ def check_CoreNLP_annotator_availability(config_filename, annotator, language):
         if language == "English" or language == "German":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP PCFG PARSER is not available for German and Hungarian."
-                + CoreNLP_web,
+                "The Stanford CoreNLP PCFG PARSER is not available for German and Hungarian." + CoreNLP_web,
             )
             not_available = True
     elif "neural network" in annotator:  # parser
         if language == "Arabic" or language == "Hungarian":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP NEURAL NETWORK PARSER is not available for Arabic and Hungarian."
-                + CoreNLP_web,
+                "The Stanford CoreNLP NEURAL NETWORK PARSER is not available for Arabic and Hungarian." + CoreNLP_web,
             )
             not_available = True
     elif "SVO" in annotator:  # parser
         if language == "Arabic" or language == "Hungarian":
             print(
                 str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP SVO annotator is not available for Arabic and Hungarian."
-                + CoreNLP_web,
+                "The Stanford CoreNLP SVO annotator is not available for Arabic and Hungarian." + CoreNLP_web,
             )
             not_available = True
     if not_available:
@@ -203,9 +194,7 @@ def check_CoreNLP_annotator_availability(config_filename, annotator, language):
             reminders_util.message_CoreNLP_website,
             True,
         )
-        if (
-            reminder_status == "Yes" or reminder_status == "ON"
-        ):  # 'Yes' the old way of saving reminders
+        if reminder_status == "Yes" or reminder_status == "ON":  # 'Yes' the old way of saving reminders
             # open website
             website_name = "CoreNLP website"
             message_title = "CoreNLP website"
@@ -257,7 +246,7 @@ def CoreNLP_annotate(
     sentence_length=1000,  # unless otherwise specified; sentence length limit does not seem to work for parsers only for NER and POS but then it is useless
     export_json_toTxt=True,
     silent=False,
-    **kwargs
+    **kwargs,
 ):
 
     # These values can be zero if the setup has specified e.g., spaCy but in SVO or other annotators, the user selects to run CoreNLP
@@ -286,9 +275,7 @@ def CoreNLP_annotate(
         return filesToOpen
 
     # check if selected language is available in CoreNLP
-    annotator_available = check_CoreNLP_annotator_availability(
-        config_filename, annotator_params, language
-    )
+    annotator_available = check_CoreNLP_annotator_availability(config_filename, annotator_params, language)
     if not annotator_available:
         return filesToOpen
 
@@ -302,26 +289,21 @@ def CoreNLP_annotate(
     extract_date_from_text_var = False
     filename_embeds_date_var = False
     single_quote_var = False
-    date_format = ""
-    items_separator_var = ""
-    date_position_var = 0
-    date_str = ""
     # language initialized here and reset later in language = value
-    NERs = []
 
     for key, value in kwargs.items():
-        if key == "extract_date_from_text_var" and value == True:
+        if key == "extract_date_from_text_var" and value:
             extract_date_from_text_var = True
         if key == "NERs":
-            NERs = value
-        if key == "filename_embeds_date_var" and value == True:
+            pass
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
         if key == "date_format":
-            date_format = value
+            pass
         if key == "items_separator_var":
-            items_separator_var = value
+            pass
         if key == "date_position_var":
-            date_position_var = value
+            pass
         if key == "single_quote_var":
             single_quote_var = value
 
@@ -331,15 +313,14 @@ def CoreNLP_annotate(
     else:
         language_encoding = "utf-8-sig"
 
-    produce_split_files = False
 
     # more annotators may be added to SVO later depending upon the annotators_params passed to SVO
     #   you do not want to add coref, quote, gender, unless required
     SVO_annotators = ["tokenize", "ssplit", "pos", "depparse", "natlog", "lemma", "ner"]
     for key, value in kwargs.items():
-        if key == "gender_var" and value == True:
+        if key == "gender_var" and value:
             SVO_annotators.append("coref")
-        if key == "quote_var" and value == True:
+        if key == "quote_var" and value:
             SVO_annotators.append("quote")
 
     params_option = {
@@ -580,7 +561,6 @@ def CoreNLP_annotate(
 
     if not isinstance(annotator_params, list):
         annotator_params = [annotator_params]
-    outputDirSV = outputDir
 
     startTime = IO_user_interface_util.timed_alert(
         2000,
@@ -599,11 +579,7 @@ def CoreNLP_annotate(
             reminders_util.message_CoreNLP_coref_timing,
             True,
         )
-    if (
-        "SVO" in str(annotator_params)
-        and "gender" in str(annotator_params)
-        and "quote" in str(annotator_params)
-    ):
+    if "SVO" in str(annotator_params) and "gender" in str(annotator_params) and "quote" in str(annotator_params):
         reminders_util.checkReminder(
             scriptName,
             reminders_util.title_options_CoreNLP_SVO_gender_quote_timing,
@@ -672,11 +648,10 @@ def CoreNLP_annotate(
         )
 
     lang_models = language_models(GUI_IO_util.external_software, language)
-    if lang_models == None:
+    if lang_models is None:
         return filesToOpen
     param_number = 0
     param_number_NN = 0
-    files = []  # storing names of txt files
     nDocs = 0  # number of input documents
 
     # collecting input txt files
@@ -696,16 +671,13 @@ def CoreNLP_annotate(
     #   annotator [0], e.g., NER
     #   output format [2]( headers), typically a single list [], and in the case of POS annotator for WordNet, a douuble list [[].[]]
     # Neural_Network = False
-    routine_list = (
-        []
-    )  # storing the annotator, output format (column titles of csv), output
+    routine_list = []  # storing the annotator, output format (column titles of csv), output
     # if not isinstance(annotator_params,list):
     #     annotator_params = [annotator_params]
     param_string = ""  # the input string of nlp annotator properties
     param_string_NN = ""
     # param_list = []
     # param_list_NN = []
-    corefed_pronouns = 0  # pronouns that are corefed
     Json_question_already_asked = False
     for annotator in annotator_params:
         # if not check_CoreNLP_annotator_availability(config_filename, annotator, language):
@@ -746,9 +718,7 @@ def CoreNLP_annotate(
         if neural_network:
             # param_number_NN = 0
             for param in annotators_:
-                if (
-                    param not in param_string_NN
-                ):  # the needed annotator property is not containted in the string
+                if param not in param_string_NN:  # the needed annotator property is not containted in the string
                     param_number_NN += 1
                     if param_string_NN == "":
                         param_string_NN = param
@@ -771,10 +741,8 @@ def CoreNLP_annotate(
                 return filesToOpen
             # when running the SVO annotator in combination with gender and quote,
             #   you want to put the gender and quote folders inside the SVO folder
-            if "SVO" in annotator and (
-                "gender" in annotator_params or "quote" in annotator_params
-            ):
-                outputDirSV = output_dir
+            if "SVO" in annotator and ("gender" in annotator_params or "quote" in annotator_params):
+                pass
             Json_question_already_asked = True
             routine_list.append(
                 [
@@ -789,9 +757,7 @@ def CoreNLP_annotate(
             )
         else:
             for param in annotators_:
-                if (
-                    param not in param_string
-                ):  # the needed annotator property is not containted in the string
+                if param not in param_string:  # the needed annotator property is not containted in the string
                     param_number += 1
                     if param_string == "":
                         param_string = param
@@ -813,10 +779,8 @@ def CoreNLP_annotate(
                 return filesToOpen
             # when running the SVO annotator in combination with gender and quote,
             #   you want to put the gender and quote folders inside the SVO folder
-            if "SVO" in annotator and (
-                "gender" in annotator_params or "quote" in annotator_params
-            ):
-                outputDirSV = output_dir
+            if "SVO" in annotator and ("gender" in annotator_params or "quote" in annotator_params):
+                pass
             Json_question_already_asked = True
             routine_list.insert(
                 0,
@@ -895,7 +859,6 @@ def CoreNLP_annotate(
     errorFound = False
     total_length = 0
     # record the time consumption before annotating text in each file
-    processing_doc = ""
 
     # The following options were tested to expedite processing time of CoreNLP
     # WORKED! 35% time reduction Test whether calling the local host inside or outside the for-loop is faster for various documents
@@ -906,14 +869,14 @@ def CoreNLP_annotate(
 
     # local test
     # nlp = StanfordCoreNLP("http://localhost:9000/")
-#     The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.
+    #     The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.
 
-# Please, select a different corpus directory and try again.
+    # Please, select a different corpus directory and try again.
     for docName in inputDocs:
         docID = docID + 1
         head, tail = os.path.split(docName)
         print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
-        docTitle = os.path.basename(docName)
+        os.path.basename(docName)
         sentenceID = 0
         # if the file is too long, it needs splitting to allow processing by the Stanford CoreNLP
         #   which has a maximum 100,000 characters doc size limit
@@ -922,31 +885,17 @@ def CoreNLP_annotate(
         #     if len(split_file)>1:
         #         split_file = IO_files_util.getFileList("", split_file[0], fileType=".txt")
         # else:
-        split_file = file_splitter_ByLength_util.splitDocument_byLength(
-            config_filename, docName, "", document_length
-        )
+        split_file = file_splitter_ByLength_util.splitDocument_byLength(config_filename, docName, "", document_length)
         nSplitDocs = len(split_file)
         split_docID = 0
         for doc_split in split_file:
             split_docID = split_docID + 1
-            annotated_length = 0  # the number of tokens
             # doc_start_time = time.time()
             model_switch = False
             head_split, tail_split = os.path.split(doc_split)
             if docName != doc_split:
-                print(
-                    "   Processing split file "
-                    + str(split_docID)
-                    + "/"
-                    + str(nSplitDocs)
-                    + " "
-                    + tail_split
-                )
-            text = (
-                open(doc_split, encoding=language_encoding, errors="ignore")
-                .read()
-                .replace("\n", " ")
-            )
+                print("   Processing split file " + str(split_docID) + "/" + str(nSplitDocs) + " " + tail_split)
+            text = open(doc_split, encoding=language_encoding, errors="ignore").read().replace("\n", " ")
             if "%" in text:
                 reminders_util.checkReminder(
                     scriptName,
@@ -962,10 +911,8 @@ def CoreNLP_annotate(
             if param_string != "":
                 annotator_start_time = time.time()
                 CoreNLP_output = nlp.annotate(text, properties=params)
-                errorFound, filesError, CoreNLP_output = (
-                    IO_user_interface_util.process_CoreNLP_error(
-                        CoreNLP_output, doc_split, nDocs, filesError, text, silent
-                    )
+                errorFound, filesError, CoreNLP_output = IO_user_interface_util.process_CoreNLP_error(
+                    CoreNLP_output, doc_split, nDocs, filesError, text, silent
                 )
                 if errorFound:
                     errorFound = False
@@ -1013,7 +960,7 @@ def CoreNLP_annotate(
                 #   charts output must go to the appropriate subdirectory
                 outputDir_chosen = run[5]
                 outputJsonDir = run[6]
-                if parse_model == "NN" and model_switch == False:
+                if parse_model == "NN" and not model_switch:
                     model_switch = True
                     params_NN = params
                     params_NN["parse.model"] = lang_models["nn"]
@@ -1023,10 +970,8 @@ def CoreNLP_annotate(
                         params_NN["quote.singleQuotes"] = True
                     NN_start_time = time.time()
                     CoreNLP_output = nlp.annotate(text, properties=params_NN)
-                    errorFound, filesError, CoreNLP_output = (
-                        IO_user_interface_util.process_CoreNLP_error(
-                            CoreNLP_output, doc_split, nDocs, filesError, text, silent
-                        )
+                    errorFound, filesError, CoreNLP_output = IO_user_interface_util.process_CoreNLP_error(
+                        CoreNLP_output, doc_split, nDocs, filesError, text, silent
                     )
                     if errorFound:
                         continue  # move to next document; this only continues to next routine_list
@@ -1062,62 +1007,26 @@ def CoreNLP_annotate(
                 if "parser" in annotator_chosen:
                     if "pcfg" in annotator_chosen:
                         sub_result, recordID = routine(
-                            config_filename,
-                            docID,
-                            docName,
-                            sentenceID,
-                            recordID,
-                            True,
-                            CoreNLP_output,
-                            **kwargs
+                            config_filename, docID, docName, sentenceID, recordID, True, CoreNLP_output, **kwargs
                         )
                     else:
                         # neural network parser does not contain clause tags
                         sub_result, recordID = routine(
-                            config_filename,
-                            docID,
-                            docName,
-                            sentenceID,
-                            recordID,
-                            False,
-                            CoreNLP_output,
-                            **kwargs
+                            config_filename, docID, docName, sentenceID, recordID, False, CoreNLP_output, **kwargs
                         )
                 elif "All POS" in annotator_chosen or "Lemma" in annotator_chosen:
                     sub_result, recordID = routine(
-                        config_filename,
-                        docID,
-                        docName,
-                        sentenceID,
-                        recordID,
-                        CoreNLP_output,
-                        **kwargs
+                        config_filename, docID, docName, sentenceID, recordID, CoreNLP_output, **kwargs
                     )
                 # elif "DepRel" in annotator_chosen or "All POS" in annotator_chosen or "Lemma" in annotator_chosen:
                 #      sub_result, recordID = routine(config_filename,docID, docName, sentenceID, recordID, CoreNLP_output, **kwargs)
-                elif (
-                    "SVO" in str(annotator_params) or "OpenIE" in str(annotator_params)
-                ) and "coref" in docName.split("_"):
-                    sub_result = routine(
-                        config_filename,
-                        split_docID,
-                        doc_split,
-                        sentenceID,
-                        CoreNLP_output,
-                        **kwargs
-                    )
+                elif ("SVO" in str(annotator_params) or "OpenIE" in str(annotator_params)) and "coref" in docName.split(
+                    "_"
+                ):
+                    sub_result = routine(config_filename, split_docID, doc_split, sentenceID, CoreNLP_output, **kwargs)
                 else:
-                    sub_result = routine(
-                        config_filename,
-                        docID,
-                        docName,
-                        sentenceID,
-                        CoreNLP_output,
-                        **kwargs
-                    )
-                if (
-                    output_format == "text"
-                ):  # this type of output format is for 'coref' annotator only
+                    sub_result = routine(config_filename, docID, docName, sentenceID, CoreNLP_output, **kwargs)
+                if output_format == "text":  # this type of output format is for 'coref' annotator only
                     # coreference produces a text output;
                     # the coreferenced document should not include the prefix NLP_CoreNLP_coref
                     # (if the filename contains a date; the date position would change as a result and the code would break)
@@ -1178,7 +1087,7 @@ def CoreNLP_annotate(
 
     # generate output csv files and write output -----------------------------------------------
 
-    output_start_time = time.time()
+    time.time()
     # print("Length of Files to Open after generating output: ", len(filesToOpen))
     outputFilename_tag = ""
     for run in routine_list:
@@ -1189,23 +1098,20 @@ def CoreNLP_annotate(
         #   charts output must go to the appropriate subdirectory
         outputDir_chosen = run[5]
         outputJsonDir = run[6]
-        if POS_WordNet == False:
+        if not POS_WordNet:
             run_output = run[3]
         # skip coreferenced file
         if output_format == "text":
             continue
         if isinstance(output_format[0], list):  # multiple outputs
-            for index, sub_output in enumerate(output_format):
+            for index, _sub_output in enumerate(output_format):
                 if POS_WordNet:
                     outputFilename = IO_files_util.generate_output_file_name(
                         inputFilename,
                         inputDir,
                         outputDir_chosen,
                         ".csv",
-                        "CoreNLP_"
-                        + annotator_chosen
-                        + "_lemma_"
-                        + output_format[index][0],
+                        "CoreNLP_" + annotator_chosen + "_lemma_" + output_format[index][0],
                     )
                 else:
                     # @@@
@@ -1214,10 +1120,7 @@ def CoreNLP_annotate(
                         inputDir,
                         outputDir_chosen,
                         ".csv",
-                        "CoreNLP_"
-                        + annotator_chosen
-                        + "_lemma"
-                        + output_format[index][0],
+                        "CoreNLP_" + annotator_chosen + "_lemma" + output_format[index][0],
                     )
                 filesToOpen.append(outputFilename)
                 df = pd.DataFrame(run_output[index], columns=output_format[index])
@@ -1248,9 +1151,7 @@ def CoreNLP_annotate(
                         and "PERCENT" in str(kwargs["NERs"])
                     ):
                         outputFilename_tag = "NUMBERS"
-                    elif "PERSON" in str(kwargs["NERs"]) and "ORGANIZATION" in str(
-                        kwargs["NERs"]
-                    ):
+                    elif "PERSON" in str(kwargs["NERs"]) and "ORGANIZATION" in str(kwargs["NERs"]):
                         outputFilename_tag = "ACTORS"
                     elif (
                         "DATE" in str(kwargs["NERs"])
@@ -1294,9 +1195,7 @@ def CoreNLP_annotate(
                     "CoreNLP_" + annotator_chosen,
                 )
             filesToOpen.append(outputFilename)
-            if output_format != "text" and not isinstance(
-                output_format[0], list
-            ):  # output is csv file
+            if output_format != "text" and not isinstance(output_format[0], list):  # output is csv file
                 # when NER tags (notably, locations) are extracted with the date option
                 #   for dynamic GIS maps (as called from GIS_main with date options)
                 if extract_date_from_text_var or filename_embeds_date_var:
@@ -1304,12 +1203,10 @@ def CoreNLP_annotate(
                     output_format.append("Date")
                 # save csv file with the expected header (i.e., output_format)
                 df = pd.DataFrame(run_output, columns=output_format)
-                IO_csv_util.df_to_csv(
-                    df, outputFilename, headers=output_format, index=False
-                )
+                IO_csv_util.df_to_csv(df, outputFilename, headers=output_format, index=False)
                 # count the number of corefed pronouns (COREF annotator)
                 if annotator_chosen == "coref table":
-                    corefed_pronouns = df.shape[0]
+                    df.shape[0]
 
     # print("Length of Files to Open after generating files: ", len(filesToOpen))
     # set filesToVisualize because filesToOpen will include xlsx files otherwise
@@ -1318,9 +1215,7 @@ def CoreNLP_annotate(
         IO_user_interface_util.timed_alert(
             2000,
             "Analysis end",
-            "Finished running Stanford CoreNLP "
-            + str(annotator_params)
-            + " annotator at",
+            "Finished running Stanford CoreNLP " + str(annotator_params) + " annotator at",
             True,
             "The coreference annotator produces a coref subdirectory inside the main output directory containing 2 separate subdirectories in turn containing, respectively, the coreferenced input text files, and statistics csv and chart files with coreference data.",
             True,
@@ -1330,9 +1225,7 @@ def CoreNLP_annotate(
         IO_user_interface_util.timed_alert(
             2000,
             "Analysis end",
-            "Finished running Stanford CoreNLP "
-            + str(annotator_params)
-            + " annotator at",
+            "Finished running Stanford CoreNLP " + str(annotator_params) + " annotator at",
             True,
             "",
             True,
@@ -1344,9 +1237,7 @@ def CoreNLP_annotate(
     for j in range(len(filesToVisualize)):
         # 02/27/2021; eliminate the value error when there's no information from certain annotators
         if filesToVisualize[j][-4:] == ".csv":
-            file_df = pd.read_csv(
-                filesToVisualize[j], encoding="utf-8", on_bad_lines="skip"
-            )
+            file_df = pd.read_csv(filesToVisualize[j], encoding="utf-8", on_bad_lines="skip")
             if not file_df.empty:
                 outputFilename = filesToVisualize[j]
                 # when multiple annotators are selected (e.g., quote, gender, normalized-date)
@@ -1363,7 +1254,7 @@ def CoreNLP_annotate(
                     chartPackage,
                     dataTransformation,
                 )
-                if outputFiles != None:
+                if outputFiles is not None:
                     if isinstance(outputFiles, str):
                         filesToOpen.append(outputFiles)
                     else:
@@ -1424,9 +1315,7 @@ def CoreNLP_annotate(
     return filesToOpen
 
 
-CoreNLP_available_lang = [
-    "Arabic, Chinese, English, French, German, Hungarian, Italian, Spanish"
-]
+CoreNLP_available_lang = ["Arabic, Chinese, English, French, German, Hungarian, Italian, Spanish"]
 
 # https://stanfordnlp.github.io/CoreNLP/human-languages.html
 # POS all languages
@@ -1456,9 +1345,7 @@ def language_models(CoreNLPdir, language: str):
         nn_model = "edu/stanford/nlp/models/parser/nndep/english_UD.gz"
     else:
         head, tail = os.path.split(CoreNLPdir)
-        language_file = os.path.join(
-            CoreNLPdir, tail + "-models-" + language.lower() + ".jar"
-        )
+        language_file = os.path.join(CoreNLPdir, tail + "-models-" + language.lower() + ".jar")
         CoreNLP_download = "https://stanfordnlp.github.io/CoreNLP/human-languages.html"
         if not os.path.isfile(language_file):
             print(
@@ -1476,9 +1363,7 @@ def language_models(CoreNLPdir, language: str):
                 + " and move it to the main Stanford CoreNLP directory.\n\nWould you like to do that now?",
             )
             return
-        pcfg_model = (
-            "edu/stanford/nlp/models/srparser/" + language.lower() + "SR.beam.ser.gz"
-        )
+        pcfg_model = "edu/stanford/nlp/models/srparser/" + language.lower() + "SR.beam.ser.gz"
         nn_model = "edu/stanford/nlp/models/parser/nndep/UD_" + language + ".gz"
 
     result = {}
@@ -1537,7 +1422,7 @@ def date_in_filename(document, **kwargs):
     date_str = ""
     # process the optional values in kwargs
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
         if key == "date_format":
             date_format = value
@@ -1556,11 +1441,7 @@ def date_in_filename(document, **kwargs):
 def date_get_tense(norm_date):
     tense = ""
     # print(norm_date)
-    if (
-        (len(norm_date) >= 9 and "PREV" in norm_date)
-        or "OFFSET person_list" in norm_date
-        or "PAST" in norm_date
-    ):
+    if (len(norm_date) >= 9 and "PREV" in norm_date) or "OFFSET person_list" in norm_date or "PAST" in norm_date:
         # print('past')
         tense = "PAST"
     elif (len(norm_date) >= 6 and "OFFSET" in norm_date) or "FUTURE" in norm_date:
@@ -1579,14 +1460,12 @@ def date_get_tense(norm_date):
 # def date_get_tense(norm_date):
 
 
-def process_json_normalized_date(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_normalized_date(config_filename, documentID, document, sentenceID, json, **kwargs):
     print("   Processing Json output file for NER NORMALIZED DATE annotator")
     filename_embeds_date_var = False
 
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -1709,13 +1588,10 @@ def date_get_info(norm_date):
     norm_date = norm_date.strip()
     tense = "OTHER"
     # print(norm_date)
-    if norm_date.isdigit() or (
-        norm_date[0] == "-" and norm_date.replace("-", "").isdigit()
-    ):
+    if norm_date.isdigit() or (norm_date[0] == "-" and norm_date.replace("-", "").isdigit()):
         tense = "YEAR"
     elif norm_date[-2:] == "XX" and (
-        norm_date[0:-2].isdigit()
-        or (norm_date[0] == "-" and norm_date[0:-2].replace("-", "").isdigit())
+        norm_date[0:-2].isdigit() or (norm_date[0] == "-" and norm_date[0:-2].replace("-", "").isdigit())
     ):
         tense = "CENTURY"
     elif len(norm_date) == 7 and norm_date[-2:].isdigit() and norm_date[4] == "-":
@@ -1723,19 +1599,14 @@ def date_get_info(norm_date):
     elif (
         norm_date.replace("-", "").isdigit()
         or norm_date.replace("/", "").isdigit()
-        or (
-            "XXXX" in norm_date
-            and norm_date.split("XXXX")[1].replace("-", "").isdigit()
-        )
+        or ("XXXX" in norm_date and norm_date.split("XXXX")[1].replace("-", "").isdigit())
     ):  # (len(norm_date) > 4 and norm_date[0:4] == 'XXXX' and norm_date[4:].replace("-", '').isdigit()):#specific year,month, day
         tense = "DATE"
         # print("date")
     elif "WXX" in norm_date or "WE" in norm_date:  # weekdays
         tense = "DAY"
         # print("day")
-    elif (
-        "SP" in norm_date or "SU" in norm_date or "FA" in norm_date or "WI" in norm_date
-    ):
+    elif "SP" in norm_date or "SU" in norm_date or "FA" in norm_date or "WI" in norm_date:
         tense = "SEASON"
         # print("season")
     # else:
@@ -1769,7 +1640,7 @@ def check_NER_tokenBegin_tokenEnd(NER):
         #   be of the same tag type (e.g., PERSON)
         #   unless LOCATION is the type; e.g., Denmark Street, is tagged as COUNTRY and LOCATION
         if (
-            ((endToken_currenRow == beginToken_nextRow) or (beginToken_nextRow == None))
+            ((endToken_currenRow == beginToken_nextRow) or (beginToken_nextRow is None))
             and (NERtag_currenRow == NERtag_nextRow)
             or (
                 (NERtag_currenRow != NERtag_nextRow)
@@ -1780,7 +1651,7 @@ def check_NER_tokenBegin_tokenEnd(NER):
                     or NERtag_currenRow == "LOCATION"
                 )
                 and (
-                    NERtag_nextRow == None
+                    NERtag_nextRow is None
                     or NERtag_nextRow == "COUNTRY"
                     or NERtag_nextRow == "STATE_OR_PROVINCE"
                     or NERtag_nextRow == "CITY"
@@ -1792,7 +1663,7 @@ def check_NER_tokenBegin_tokenEnd(NER):
                 currNERtag = currNERtag + " " + str(NER[index][0])
             else:
                 currNERtag = str(NER[index][0])
-            if beginToken_nextRow == None:
+            if beginToken_nextRow is None:
                 NER[index][0] = currNERtag
                 NER[index][2] = beginToken_currenRow
                 new_NER.append(NER[index])
@@ -1823,11 +1694,11 @@ def process_json_ner(config_filename, documentID, document, sentenceID, json, **
     # date_str = ''
     # process the optional values in kwargs
     for key, value in kwargs.items():
-        if key == "extract_date_from_text_var" and value == True:
+        if key == "extract_date_from_text_var" and value:
             extract_date_from_text_var = True
         if key == "NERs":
             request_NER = value
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
         # if key == 'date_format':
         #     date_format = value
@@ -1838,7 +1709,6 @@ def process_json_ner(config_filename, documentID, document, sentenceID, json, **
     # print("With date embed in titles: ", filename_embeds_date_var)
     # print("With date embed in text contents: ", extract_date_from_text_var)
     NER = []
-    result = []
     # get date string of this sub file
     date_str = date_in_filename(document, **kwargs)
     # if date_str!='':
@@ -1905,13 +1775,11 @@ def process_json_ner(config_filename, documentID, document, sentenceID, json, **
     return new_NER
 
 
-def process_json_sentiment(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_sentiment(config_filename, documentID, document, sentenceID, json, **kwargs):
     print("   Processing Json output file for SENTIMENT annotator")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -1954,18 +1822,14 @@ def process_json_sentiment(
     return sentiment
 
 
-def process_json_coref(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_coref(config_filename, documentID, document, sentenceID, json, **kwargs):
     print("   Processing Json output file for COREF annotator")
 
     def resolve(corenlp_output):
         """Transfer the word form of the antecedent to its associated pronominal anaphor(s)"""
         for coref in corenlp_output["corefs"]:
             mentions = corenlp_output["corefs"][coref]
-            antecedent = mentions[
-                0
-            ]  # the antecedent is the first mention in the coreference chain
+            antecedent = mentions[0]  # the antecedent is the first mention in the coreference chain
             for j in range(1, len(mentions)):
                 mention = mentions[j]
                 if mention["type"] == "PRONOMINAL":
@@ -1973,9 +1837,9 @@ def process_json_coref(
                     target_sentence = mention["sentNum"]
                     target_token = mention["startIndex"] - 1
                     # transfer the antecedent's word form to the appropriate token in the sentence
-                    corenlp_output["sentences"][target_sentence - 1]["tokens"][
-                        target_token
-                    ]["word"] = antecedent["text"]
+                    corenlp_output["sentences"][target_sentence - 1]["tokens"][target_token]["word"] = antecedent[
+                        "text"
+                    ]
 
     # when possessive pronouns are substituted by an antecedent noun, the noun must be followed by 's
     #   unless the noun already has the gerund 's
@@ -2061,9 +1925,7 @@ def process_json_coref(
 #     return nn
 
 
-def process_json_coref_table(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_coref_table(config_filename, documentID, document, sentenceID, json, **kwargs):
     result = []  # the collection of information of each coreference
     for coref in json["corefs"]:
         mentions = json["corefs"][coref]
@@ -2075,7 +1937,6 @@ def process_json_coref_table(
         ref_start_ID = reference["startIndex"]  # Referent Start ID in Sentence
         ref_text = reference["text"]  # first Referent
         for j in range(1, len(mentions)):
-
             mention = mentions[j]
 
             if mention["type"] == "PRONOMINAL":  # extract only pronouns
@@ -2102,16 +1963,14 @@ def process_json_coref_table(
 
 
 # December.10 Yi: Modify process_json_gender to provide one more column(complete sentence)
-def process_json_gender(
-    config_filename, documentID, document, start_sentenceID, json, **kwargs
-):
+def process_json_gender(config_filename, documentID, document, start_sentenceID, json, **kwargs):
 
     # print("CoreNLP output: ")
     # pprint.pprint(json)
     print("   Processing Json output file for GENDER annotator")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -2137,7 +1996,7 @@ def process_json_gender(
         sent_dict[sentenceID] = complete_sent
     # print("Coreference: ")
     # pprint.pprint(json['corefs'])
-    for num, res in json["corefs"].items():
+    for _num, res in json["corefs"].items():
         mentions.append(res)
     for mention in mentions:
         for elmt in mention:
@@ -2176,13 +2035,11 @@ def process_json_gender(
     )  # this function did not add each row in order of sentence, so the output needs sorting by sentenceID
 
 
-def process_json_quote(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_quote(config_filename, documentID, document, sentenceID, json, **kwargs):
     print("   Processing Json output file for QUOTE annotator")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -2241,9 +2098,7 @@ def process_json_quote(
     return result
 
 
-def process_json_sentence(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_sentence(config_filename, documentID, document, sentenceID, json, **kwargs):
     temp = []
     # [ 'Sentence ID', 'Sentence', 'Document ID', 'Document'],
     for sentence in json["sentences"]:  # traverse output of each sentence
@@ -2283,37 +2138,31 @@ def process_json_sentence(
 
 
 # Dec. 21
-def process_json_SVO_enhanced_dependencies(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_SVO_enhanced_dependencies(config_filename, documentID, document, sentenceID, json, **kwargs):
     # extract date from file name
     filename_embeds_date_var = False
     gender_var = False
     quote_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
-        if key == "gender_var" and value == True:
+        if key == "gender_var" and value:
             gender_var = True
-        if key == "quote_var" and value == True:
+        if key == "quote_var" and value:
             quote_var = True
 
     date_str = date_in_filename(document, **kwargs)
 
     # get gender information for this document
     if gender_var:
-        raw_gender_info = process_json_gender(
-            config_filename, documentID, document, 0, json, **kwargs
-        )
+        raw_gender_info = process_json_gender(config_filename, documentID, document, 0, json, **kwargs)
         gender_info = []
         for row in raw_gender_info:
             gender_info.append([row[0], row[1], row[3], row[4]])
 
     # get quote information for this document
     if quote_var:
-        raw_quote_info = process_json_quote(
-            config_filename, documentID, document, sentenceID, json, **kwargs
-        )
+        raw_quote_info = process_json_quote(config_filename, documentID, document, sentenceID, json, **kwargs)
         # TODO MINO: process quotes with pandas without for-loop, and rearrange the columns
         if filename_embeds_date_var:
             quote_columns = [
@@ -2335,15 +2184,11 @@ def process_json_SVO_enhanced_dependencies(
                 "Document",
             ]
         quote_df = pd.DataFrame(raw_quote_info, columns=quote_columns)
-        quote_df = quote_df[
-            ["Speakers", "Number of Quotes", "Sentence ID", "Document ID"]
-        ]
+        quote_df = quote_df[["Speakers", "Number of Quotes", "Sentence ID", "Document ID"]]
 
     SVO_enhanced_dependencies = []
     SVO_brief = []
     locations = []  # a list of [sentence, sentence id, [location_text, ner_value]]
-    persons = []
-    organizations = []
     for sentence in json["sentences"]:  # traverse output of each sentence
         sent_data = Stanford_CoreNLP_SVO_enhanced_dependencies_util.SVO_enhanced_dependencies_sent_data_reorg(
             sentence
@@ -2549,7 +2394,7 @@ def process_json_SVO_enhanced_dependencies(
         #     locations.append(NER_value)
 
     # TODO Mino
-    if "google_earth_var" in kwargs and kwargs["google_earth_var"] == True:
+    if "google_earth_var" in kwargs and kwargs["google_earth_var"]:
         visualize_GIS_maps(kwargs, locations, documentID, document, date_str)
 
     # merge gender information with SVO information
@@ -2570,17 +2415,13 @@ def process_json_SVO_enhanced_dependencies(
             gender_info,
             columns=["Subject (S)", "S Gender", "Sentence Set", "Document ID"],
         )
-        merge_df = pd.merge(
-            SVO_df, gender_df, on=["Subject (S)", "Document ID"], how="left"
-        )
+        merge_df = pd.merge(SVO_df, gender_df, on=["Subject (S)", "Document ID"], how="left")
 
         gender_df = pd.DataFrame(
             gender_info,
             columns=["Object (O)", "O Gender", "Sentence Set", "Document ID"],
         )
-        merge_df = pd.merge(
-            merge_df, gender_df, on=["Object (O)", "Document ID"], how="left"
-        )
+        merge_df = pd.merge(merge_df, gender_df, on=["Object (O)", "Document ID"], how="left")
 
         columns = [
             "Subject (S)",
@@ -2608,13 +2449,9 @@ def process_json_SVO_enhanced_dependencies(
         fn = kwargs["gender_filename"]
         # TODO MINO: properly read and save csv without additional row of headers
         if os.path.isfile(fn):
-            original_df = pd.read_csv(
-                fn, encoding=language_encoding, on_bad_lines="skip"
-            )
+            original_df = pd.read_csv(fn, encoding=language_encoding, on_bad_lines="skip")
             merge_df = pd.concat([original_df, merge_df], ignore_index=True)
-        outputFilename = IO_csv_util.df_to_csv(
-            merge_df, fn, columns, False, language_encoding
-        )
+        IO_csv_util.df_to_csv(merge_df, fn, columns, False, language_encoding)
         # merge_df.to_csv(fn, index=False, encoding=language_encoding)
 
     if quote_var:
@@ -2631,9 +2468,7 @@ def process_json_SVO_enhanced_dependencies(
             ],
         )
         # quote_df = pd.DataFrame(quote_info, columns=["Speakers", "Number of Quotes", "Sentence ID", "Document ID"])
-        merge_df = pd.merge(
-            SVO_df, quote_df, on=["Sentence ID", "Document ID"], how="left"
-        )
+        merge_df = pd.merge(SVO_df, quote_df, on=["Sentence ID", "Document ID"], how="left")
         columns = [
             "Subject (S)",
             "Verb (V)",
@@ -2661,24 +2496,18 @@ def process_json_SVO_enhanced_dependencies(
         fn = kwargs["quote_filename"]
         # TODO MINO: properly read and save csv without additional row of headers
         if os.path.isfile(fn):
-            original_df = pd.read_csv(
-                fn, encoding=language_encoding, on_bad_lines="skip"
-            )
+            original_df = pd.read_csv(fn, encoding=language_encoding, on_bad_lines="skip")
             merge_df = pd.concat([original_df, merge_df], ignore_index=True)
-        outputFilename = IO_csv_util.df_to_csv(
-            merge_df, fn, columns, False, language_encoding
-        )
+        IO_csv_util.df_to_csv(merge_df, fn, columns, False, language_encoding)
         # merge_df.to_csv(fn, index=False, encoding=language_encoding)
 
     return SVO_enhanced_dependencies
 
 
-def process_json_openIE(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_openIE(config_filename, documentID, document, sentenceID, json, **kwargs):
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
     date_str = date_in_filename(document, **kwargs)
 
@@ -2687,15 +2516,10 @@ def process_json_openIE(
     for sentence in json["sentences"]:
         entitymentions = sentence["entitymentions"]
         complete_sent = ""
-        N = []  # list that stores the Negation information appear in sentences
-        location_list = (
-            []
-        )  # list that stores the location information appear in sentences
+        location_list = []  # list that stores the location information appear in sentences
         NER_value = []
         T = []  # list that stores the time information appear in sentences
-        T_S = (
-            []
-        )  # list that stores normalized form of the time information appear in sentences
+        T_S = []  # list that stores normalized form of the time information appear in sentences
         person_list = []  # list that stores person names appear in sentences
         # CYNTHIA: get locations from entitymentions
         for item in entitymentions:
@@ -2740,9 +2564,7 @@ def process_json_openIE(
             for SVO_base in remainder:
                 SVO_value_str = SVO_value[0] + " " + SVO_value[1] + " " + SVO_value[2]
                 SVO_base_str = SVO_base[0] + " " + SVO_base[1] + " " + SVO_base[2]
-                if SVO_value[0] == SVO_base[0] and similar_string_floor_filter(
-                    SVO_value_str, SVO_base_str
-                ):
+                if SVO_value[0] == SVO_base[0] and similar_string_floor_filter(SVO_value_str, SVO_base_str):
                     redundant_flag = True
                     break
                 else:
@@ -2788,33 +2610,27 @@ def process_json_openIE(
                     )
                 # nidx += 1
         # for each sentence, get locations
-        if (
-            "google_earth_var" in kwargs
-            and kwargs["google_earth_var"] == True
-            and len(location_list) != 0
-        ):
+        if "google_earth_var" in kwargs and kwargs["google_earth_var"] and len(location_list) != 0:
             # produce an intermediate location file
             locations.append(
                 [
                     sentenceID,
                     complete_sent,
-                    [[x, y] for x, y in zip(location_list, NER_value)],
+                    [[x, y] for x, y in zip(location_list, NER_value, strict=False)],
                 ]
             )
 
-    if "google_earth_var" in kwargs and kwargs["google_earth_var"] == True:
+    if "google_earth_var" in kwargs and kwargs["google_earth_var"]:
         visualize_GIS_maps(kwargs, locations, documentID, document, date_str)
 
     return openIE
 
 
-def process_json_lemma(
-    config_filename, documentID, document, sentenceID, recordID, json, **kwargs
-):
+def process_json_lemma(config_filename, documentID, document, sentenceID, recordID, json, **kwargs):
     print("   Processing Json output file for Lemma")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -2855,9 +2671,7 @@ def process_json_lemma(
     return result, recordID
 
 
-def process_json_postag(
-    config_filename, documentID, document, sentenceID, json, **kwargs
-):
+def process_json_postag(config_filename, documentID, document, sentenceID, json, **kwargs):
     # only processes verbs and nouns
     Verbs = []
     Nouns = []
@@ -2880,13 +2694,11 @@ def process_json_postag(
 # (round-up average length of one English word, check this reference:
 # https://wolfgarbe.medium.com/the-average-word-length-in-english-language-is-4-7-35750344870f)
 # return True, which means the two strings are very similar
-def process_json_all_postag(
-    config_filename, documentID, document, sentenceID, recordID, json, **kwargs
-):
+def process_json_all_postag(config_filename, documentID, document, sentenceID, recordID, json, **kwargs):
     print("   Processing Json output file for All POS tags")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -2935,13 +2747,11 @@ def process_json_all_postag(
     return result, recordID
 
 
-def process_json_deprel(
-    config_filename, documentID, document, sentenceID, recordID, json, **kwargs
-):
+def process_json_deprel(config_filename, documentID, document, sentenceID, recordID, json, **kwargs):
     print("   Processing Json output file for DepRel")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -2995,19 +2805,12 @@ def process_json_deprel(
 
 # processes both lemma and POS
 def process_json_single_annotation(
-    config_filename,
-    documentID,
-    document,
-    sentenceID,
-    recordID,
-    annotation,
-    json,
-    **kwargs
+    config_filename, documentID, document, sentenceID, recordID, annotation, json, **kwargs
 ):
     print("   Processing Json output file for All POS tags and Lemma")
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -3049,14 +2852,11 @@ def process_json_single_annotation(
     return result, recordID
 
 
-def process_json_parser(
-    config_filename, documentID, document, sentenceID, recordID, pcfg, json, **kwargs
-):
+def process_json_parser(config_filename, documentID, document, sentenceID, recordID, pcfg, json, **kwargs):
     print("   Processing Json output file for Parser")
-    old_recordID = recordID
     filename_embeds_date_var = False
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
 
     # get date string of this sub file
@@ -3065,9 +2865,7 @@ def process_json_parser(
     # neural network parser does not contain clausal tags (e.g., NP, VP,...)
     if pcfg:
         sent_list_clause = [
-            Stanford_CoreNLP_clause_util.clausal_info_extract_from_string(
-                parsed_sent["parse"]
-            )
+            Stanford_CoreNLP_clause_util.clausal_info_extract_from_string(parsed_sent["parse"])
             for parsed_sent in json["sentences"]
         ]
     # else: a reminder is posted at the end
@@ -3094,9 +2892,7 @@ def process_json_parser(
 
             # create an enhanced dependency list
             if item["dependent"] in enhancedDepLib:
-                enhancedDepLib[item["dependent"]].append(
-                    (item["dep"], item["governor"])
-                )
+                enhancedDepLib[item["dependent"]].append((item["dep"], item["governor"]))
             else:
                 enhancedDepLib[item["dependent"]] = [(item["dep"], item["governor"])]
 
@@ -3158,12 +2954,8 @@ def exportJson(
     if not export_json_var:
         return
     if outputJsonDir != "":
-        jsonFilename = os.path.join(
-            outputJsonDir, inputFilename[:-4] + "_" + str(annotator_params) + ".txt"
-        )
-        with open(
-            jsonFilename, "a+", encoding=language_encoding, errors="ignore"
-        ) as json_out_nn:
+        jsonFilename = os.path.join(outputJsonDir, inputFilename[:-4] + "_" + str(annotator_params) + ".txt")
+        with open(jsonFilename, "a+", encoding=language_encoding, errors="ignore") as json_out_nn:
             json.dump(CoreNLP_output, json_out_nn, indent=4, ensure_ascii=False)
     # no need to open the Json file
     # if jsonFilename not in filesToOpen:
@@ -3193,12 +2985,8 @@ def visualize_GIS_maps(kwargs, locations, documentID, document, date_str):
     # columns: Location, NER, tokenBegin, tokenEnd, Sentence ID, Sentence, Document ID, Document
     to_write = []
     for sent in locations:
-        if (
-            "extract_date_from_text_var" in kwargs
-            and kwargs["extract_date_from_text_var"] == True
-        ) or (
-            "filename_embeds_date_var" in kwargs
-            and kwargs["filename_embeds_date_var"] == True
+        if ("extract_date_from_text_var" in kwargs and kwargs["extract_date_from_text_var"]) or (
+            "filename_embeds_date_var" in kwargs and kwargs["filename_embeds_date_var"]
         ):
             # [locs[0], locs[1], sent[0], sent[1], documentID, IO_csv_util.dressFilenameForCSVHyperlink(document), date_str]
             # we need to check sent[5] for tokenBegin & tokenEnd
@@ -3238,12 +3026,8 @@ def visualize_GIS_maps(kwargs, locations, documentID, document, date_str):
         "Document ID",
         "Document",
     ]
-    if (
-        "extract_date_from_text_var" in kwargs
-        and kwargs["extract_date_from_text_var"] == True
-    ) or (
-        "filename_embeds_date_var" in kwargs
-        and kwargs["filename_embeds_date_var"] == True
+    if ("extract_date_from_text_var" in kwargs and kwargs["extract_date_from_text_var"]) or (
+        "filename_embeds_date_var" in kwargs and kwargs["filename_embeds_date_var"]
     ):
         columns = [
             "Location",
@@ -3260,9 +3044,7 @@ def visualize_GIS_maps(kwargs, locations, documentID, document, date_str):
     df = pd.DataFrame(to_write, columns=columns)
     outputFilename = kwargs["location_filename"]
     if not os.path.exists(outputFilename):
-        outputFilename = IO_csv_util.df_to_csv(
-            df, outputFilename, columns, False, language_encoding
-        )
+        outputFilename = IO_csv_util.df_to_csv(df, outputFilename, columns, False, language_encoding)
     else:
         df.to_csv(
             outputFilename,
@@ -3372,14 +3154,10 @@ def check_pronouns(
     }
     for _, row in df.iterrows():
         if option == "SVO":
-            if (not pd.isna(row["Subject (S)"])) and (
-                str(row["Subject (S)"]).lower() in pronouns
-            ):
+            if (not pd.isna(row["Subject (S)"])) and (str(row["Subject (S)"]).lower() in pronouns):
                 total_count += 1
                 pronouns_count[str(row["Subject (S)"]).lower()] += 1
-            if (not pd.isna(row["Object (O)"])) and (
-                str(row["Object (O)"]).lower() in pronouns
-            ):
+            if (not pd.isna(row["Object (O)"])) and (str(row["Object (O)"]).lower() in pronouns):
                 total_count += 1
                 pronouns_count[str(row["Object (O)"]).lower()] += 1
         elif option == "CoNLL":
@@ -3424,12 +3202,8 @@ def check_pronouns(
                 + str(coref_rate),
             )
             # save to csv file and run visualization
-            outputFilename = IO_files_util.generate_output_file_name(
-                inputFilename, "", outputDir, ".csv", "coref-sum"
-            )
-            with open(
-                outputFilename, "w", newline="", encoding="utf-8", errors="ignore"
-            ) as csvFile:
+            outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "coref-sum")
+            with open(outputFilename, "w", newline="", encoding="utf-8", errors="ignore") as csvFile:
                 writer = csv.writer(csvFile)
                 writer.writerow(
                     [
@@ -3444,7 +3218,6 @@ def check_pronouns(
             # return_files.append(outputFilename)
 
             if chartPackage != "No charts":
-                columns_to_be_plotted_xAxis = []
                 columns_to_be_plotted_yAxis = [
                     "Number of Pronouns",
                     "Number of Coreferenced Pronouns",
@@ -3467,7 +3240,7 @@ def check_pronouns(
                     plotList=[],
                     chart_title_label="",
                 )
-                if outputFiles != None:
+                if outputFiles is not None:
                     if isinstance(outputFiles, str):
                         filesToOpen.append(outputFiles)
                     else:

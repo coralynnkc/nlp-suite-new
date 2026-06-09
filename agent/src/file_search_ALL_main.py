@@ -3,8 +3,10 @@
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
+
 def run():
-    print('Exit')
+    print("Exit")
+
 
 # # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 # run_script_command=lambda: run()
@@ -137,4 +139,3 @@ def run():
 # GUI_util.GUI_bottom(config_filename, config_input_output_numeric_options, y_multiplier_integer, readMe_command, videos_lookup, videos_options, TIPS_lookup, TIPS_options, IO_setup_display_brief, scriptName)
 
 # GUI_util.window.mainloop()
-

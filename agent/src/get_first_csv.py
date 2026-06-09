@@ -14,8 +14,6 @@ def first_csv(path):
 
         return None
 
-
     except Exception as e:
-
         print("Error", e, " has occurred")
         return None

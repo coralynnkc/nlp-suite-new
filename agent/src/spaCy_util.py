@@ -9,8 +9,7 @@ except Exception as e:
     # print(err)
     print(
         "Warning",
-        "The NLP Suite encountered an error in importing spacy, most likely due to tensorflow.\n\nERROR: "
-        + str(e),
+        "The NLP Suite encountered an error in importing spacy, most likely due to tensorflow.\n\nERROR: " + str(e),
     )
     sys.exit(0)
 
@@ -39,10 +38,7 @@ def list_all_languages():
 
 def open_spaCy_website(message, lang_list):
     url = "https://spacy.io/usage/models"
-    Stanza_web = (
-        "\n\nLanguage and annotator options for spaCy are listed at the spaCy website\n\n"
-        + url
-    )
+    Stanza_web = "\n\nLanguage and annotator options for spaCy are listed at the spaCy website\n\n" + url
     website_name = "spaCy website"
     message_title = "spaCy website"
     message = (
@@ -64,10 +60,7 @@ def open_spaCy_website(message, lang_list):
 def check_spaCy_available_languages(language):
     available_language = False
     lang_list = []
-    not_available_lang_list = []
-    language_list = (
-        list_all_languages()
-    )  # language_list available in spaCy as long names: English, Chinese, ...
+    language_list = list_all_languages()  # language_list available in spaCy as long names: English, Chinese, ...
     for short, long in constants_util.languages:
         if long == language[0]:
             if long in language_list:
@@ -76,9 +69,7 @@ def check_spaCy_available_languages(language):
                 break
     if not available_language:
         open_spaCy_website(
-            "The "
-            + str(language[0])
-            + " language is not available for NLP processing in spaCy.",
+            "The " + str(language[0]) + " language is not available for NLP processing in spaCy.",
             lang_list,
         )
     return available_language, lang_list
@@ -100,7 +91,7 @@ def spaCy_annotate(
     document_length=90000,
     sentence_length=1000,
     print_json=True,
-    **kwargs
+    **kwargs,
 ):
 
     # instantiate variables for input/output handling settings
@@ -151,15 +142,14 @@ def spaCy_annotate(
     )
 
     # iterate through kwarg items
-    extract_date_from_text_var = False
     filename_embeds_date_var = False
     google_earth_var = False
     for key, value in kwargs.items():
-        if key == "extract_date_from_text_var" and value == True:
-            extract_date_from_text_var = True
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "extract_date_from_text_var" and value:
+            pass
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
-        if key == "google_earth_var" and value == True:
+        if key == "google_earth_var" and value:
             google_earth_var = True
 
     # annotating each input file
@@ -188,9 +178,7 @@ def spaCy_annotate(
     # download selected spaCy language models
     model_default = "_core_web_sm"
     try:
-        subprocess.check_call(
-            [sys.executable, "-m", "spacy", "download", lang + model_default]
-        )
+        subprocess.check_call([sys.executable, "-m", "spacy", "download", lang + model_default])
         nlp = spacy.load(lang + model_default)
         if "sentiment" in annotator_params:
             nlp.add_pipe("spacytextblob")
@@ -236,11 +224,7 @@ def spaCy_annotate(
         print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
 
         # open file and extract text
-        text = (
-            open(doc, encoding=language_encoding, errors="ignore")
-            .read()
-            .replace("\n", " ")
-        )
+        text = open(doc, encoding=language_encoding, errors="ignore").read().replace("\n", " ")
 
         # process given text with spaCy annotator
         try:
@@ -254,11 +238,7 @@ def spaCy_annotate(
             )
             return
 
-        if (
-            "NER" in str(annotator_params)
-            or "parse" in str(annotator_params)
-            or "sentiment" in str(annotator_params)
-        ):
+        if "NER" in str(annotator_params) or "parse" in str(annotator_params) or "sentiment" in str(annotator_params):
             # convert Doc to DataFrame
             temp_df = convertSpacyDoctoDf(
                 Spacy_output,
@@ -290,14 +270,10 @@ def spaCy_annotate(
             if google_earth_var is True:
                 loc_df = visualize_GIS_maps_spaCy(svo_df)
                 loc_df_outputFilename = kwargs["location_filename"]
-                loc_df.to_csv(
-                    loc_df_outputFilename, index=False, encoding=language_encoding
-                )
+                loc_df.to_csv(loc_df_outputFilename, index=False, encoding=language_encoding)
                 filesToOpen.append(loc_df_outputFilename)
             # save dataframe to csv
-            svo_df.to_csv(
-                svo_df_outputFilename, index=False, encoding=language_encoding
-            )
+            svo_df.to_csv(svo_df_outputFilename, index=False, encoding=language_encoding)
             filesToOpen.append(svo_df_outputFilename)
 
     IO_user_interface_util.timed_alert(
@@ -314,9 +290,7 @@ def spaCy_annotate(
     for j in range(len(filesToVisualize)):
         # 02/27/2021; eliminate the value error when there's no information from certain annotators
         if filesToVisualize[j][-4:] == ".csv":
-            file_df = pd.read_csv(
-                filesToVisualize[j], encoding="utf-8", on_bad_lines="skip"
-            )
+            file_df = pd.read_csv(filesToVisualize[j], encoding="utf-8", on_bad_lines="skip")
             if not file_df.empty:
                 # inputFilename is the original file
                 # outputFilename is the csv file containing the fields to be visualized
@@ -332,7 +306,7 @@ def spaCy_annotate(
                     chartPackage,
                     dataTransformation,
                 )
-                if outputFiles != None:
+                if outputFiles is not None:
                     if isinstance(outputFiles, str):
                         filesToOpen.append(outputFiles)
                     else:
@@ -344,9 +318,8 @@ def spaCy_annotate(
 def get_mwe(out_df):
     # enter Record and Sentence IDs
     i = 0
-    sidx = 1
     max_idx = len(out_df) - 1
-    for row in out_df.iterrows():
+    for _row in out_df.iterrows():
         # if i != 0 and row[1]['is_sent_start'] == True:
         #     sidx+=1
         # # out_df.at[i, 'Record ID'] = int(row[1]['id'])
@@ -365,36 +338,26 @@ def get_mwe(out_df):
             if i == max_idx and out_df.at[i, "Multi-Word Expression"] == "B":
                 out_df.at[i, "Multi-Word Expression"] = out_df.at[i, "Form"]
                 # out_df.at[i, 'Multi-Word Expression'] = out_df.at[i, 'Word']
-            elif tmp_idx == i + 2 or (
-                i <= max_idx and out_df.at[i + 1, "Multi-Word Expression"] == "B"
-            ):
+            elif tmp_idx == i + 2 or (i <= max_idx and out_df.at[i + 1, "Multi-Word Expression"] == "B"):
                 out_df.at[i, "Multi-Word Expression"] = out_df.at[i, "Form"]
                 # out_df.at[i, 'Multi-Word Expression'] = out_df.at[i, 'Word']
             else:
                 # iterate reversely from the last tag to the first tag, and update the MWE
                 for j in reversed(range(i, tmp_idx - 1)):
                     if j == tmp_idx - 2:
-                        out_df.at[j, "Multi-Word Expression"] = (
-                            out_df.at[j - 1, "Form"] + " " + out_df.at[j, "Form"]
-                        )
+                        out_df.at[j, "Multi-Word Expression"] = out_df.at[j - 1, "Form"] + " " + out_df.at[j, "Form"]
                         # out_df.at[j, 'Multi-Word Expression'] = out_df.at[j - 1, 'Word'] + ' ' + out_df.at[j, 'Word']
                     elif out_df.at[j, "Multi-Word Expression"] == "B":
-                        out_df.at[j, "Multi-Word Expression"] = out_df.at[
-                            j + 1, "Multi-Word Expression"
-                        ]
+                        out_df.at[j, "Multi-Word Expression"] = out_df.at[j + 1, "Multi-Word Expression"]
                         # when finally reach the first tag (B), update existing MWE with complete MWE
                         for k in reversed(range(i, tmp_idx - 1)):
                             if k == i:
-                                out_df.at[k, "Multi-Word Expression"] = out_df.at[
-                                    j, "Multi-Word Expression"
-                                ]
+                                out_df.at[k, "Multi-Word Expression"] = out_df.at[j, "Multi-Word Expression"]
                             else:
                                 out_df.at[k, "Multi-Word Expression"] = "O"
                     elif out_df.at[j, "Multi-Word Expression"] == "I":
                         out_df.at[j, "Multi-Word Expression"] = (
-                            out_df.at[j - 1, "Form"]
-                            + " "
-                            + out_df.at[j + 1, "Multi-Word Expression"]
+                            out_df.at[j - 1, "Form"] + " " + out_df.at[j + 1, "Multi-Word Expression"]
                         )
                         # out_df.at[j, 'Multi-Word Expression'] = out_df.at[j - 1, 'Word'] + ' ' + out_df.at[
                         #     j + 1, 'Multi-Word Expression']
@@ -405,9 +368,7 @@ def get_mwe(out_df):
 
 
 # Convert spaCy doc to pandas dataframe
-def convertSpacyDoctoDf(
-    spacy_doc, inputFilename, inputDir, tail, docID, annotator_params, language
-):
+def convertSpacyDoctoDf(spacy_doc, inputFilename, inputDir, tail, docID, annotator_params, language):
 
     # output dataframe
     out_df = pd.DataFrame()
@@ -423,14 +384,14 @@ def convertSpacyDoctoDf(
             out_df.at[c, "Sentiment label"] = (
                 "positive"
                 if out_df.at[c, "Sentiment score"] > 0
-                else "negative" if out_df.at[c, "Sentiment score"] < 0 else "neutral"
+                else "negative"
+                if out_df.at[c, "Sentiment score"] < 0
+                else "neutral"
             )
             out_df.at[c, "Sentence ID"] = int(c + 1)
             out_df.at[c, "Sentence"] = sent.text
             out_df.at[c, "Document ID"] = int(docID)
-            out_df.at[c, "Document"] = IO_csv_util.dressFilenameForCSVHyperlink(
-                inputFilename
-            )
+            out_df.at[c, "Document"] = IO_csv_util.dressFilenameForCSVHyperlink(inputFilename)
             c += 1
         out_df = out_df[
             [
@@ -455,18 +416,13 @@ def convertSpacyDoctoDf(
                 out_df.at[rec_ID, "Sentence ID"] = sent_ID
                 out_df.at[rec_ID, "Sentence"] = sent.text
                 out_df["Document ID"] = docID
-                out_df["Document"] = IO_csv_util.dressFilenameForCSVHyperlink(
-                    inputFilename
-                )
+                out_df["Document"] = IO_csv_util.dressFilenameForCSVHyperlink(inputFilename)
                 rec_ID += 1
             sent_ID += 1
         # out_df = out_df[['ID', 'Form', 'NER', 'Multi-Word Expression','Record ID', 'Sentence ID', 'Document ID', 'Document']]
-        out_df = out_df[
-            ["Form", "NER", "Sentence ID", "Sentence", "Document ID", "Document"]
-        ]
+        out_df = out_df[["Form", "NER", "Sentence ID", "Sentence", "Document ID", "Document"]]
 
     if "parse" in str(annotator_params):
-
         out_df = pd.DataFrame()
         rec_ID = 0
         for i, sent in enumerate(spacy_doc.sents):
@@ -481,17 +437,13 @@ def convertSpacyDoctoDf(
                 out_df.at[rec_ID, "is_sent_start"] = token.is_sent_start
                 # if hasattr(token, 'ent_type_'): # check if NER is annotated for each token
                 out_df.at[rec_ID, "NER"] = token.ent_type_
-                out_df.at[rec_ID, "Multi-Word Expression"] = (
-                    token.ent_iob_
-                )  # add IOB tag of NERs to process later
+                out_df.at[rec_ID, "Multi-Word Expression"] = token.ent_iob_  # add IOB tag of NERs to process later
 
                 # add necessary columns after the loop
                 out_df.at[rec_ID, "Sentence ID"] = i + 1
                 out_df.at[rec_ID, "Sentence"] = sent.text
                 out_df.at[rec_ID, "Document ID"] = docID
-                out_df.at[rec_ID, "Document"] = (
-                    IO_csv_util.dressFilenameForCSVHyperlink(inputFilename)
-                )
+                out_df.at[rec_ID, "Document"] = IO_csv_util.dressFilenameForCSVHyperlink(inputFilename)
                 rec_ID += 1
             sent_ID += 1
 
@@ -586,17 +538,11 @@ def extractSVO(doc, docID, inputFilename, inputDir, tail, filename_embeds_date_v
             # extract NER tags
             if SVO_found is True or NER_found is True:
                 if token.ent_type_ in NER_LOCATION:
-                    svo_df, NER_found, loc_ent_iob_ = extractNER(
-                        token, svo_df, c, "Location", NER_found, loc_ent_iob_
-                    )
+                    svo_df, NER_found, loc_ent_iob_ = extractNER(token, svo_df, c, "Location", NER_found, loc_ent_iob_)
                 elif token.ent_type_ in NER_PERSON:
-                    svo_df, NER_found, per_ent_iob_ = extractNER(
-                        token, svo_df, c, "Person", NER_found, per_ent_iob_
-                    )
+                    svo_df, NER_found, per_ent_iob_ = extractNER(token, svo_df, c, "Person", NER_found, per_ent_iob_)
                 elif token.ent_type_ in NER_TIME:
-                    svo_df, NER_found, tim_ent_iob_ = extractNER(
-                        token, svo_df, c, "Time", NER_found, tim_ent_iob_
-                    )
+                    svo_df, NER_found, tim_ent_iob_ = extractNER(token, svo_df, c, "Time", NER_found, tim_ent_iob_)
         # check if SVO is found, then add Sentence ID
         if SVO_found:
             svo_df.at[c, "Sentence ID"] = c + 1
@@ -618,15 +564,9 @@ def extractSVO(doc, docID, inputFilename, inputDir, tail, filename_embeds_date_v
     svo_df["Document"] = IO_csv_util.dressFilenameForCSVHyperlink(inputFilename)
     # replace NaN values accordingly
     for index, row in svo_df.iterrows():
-        svo_df.at[index, "Subject (S)"] = (
-            "?" if pd.isna(row["Subject (S)"]) else row["Subject (S)"]
-        )
-        svo_df.at[index, "Verb (V)"] = (
-            "" if pd.isna(row["Verb (V)"]) else row["Verb (V)"]
-        )
-        svo_df.at[index, "Object (O)"] = (
-            "" if pd.isna(row["Object (O)"]) else row["Object (O)"]
-        )
+        svo_df.at[index, "Subject (S)"] = "?" if pd.isna(row["Subject (S)"]) else row["Subject (S)"]
+        svo_df.at[index, "Verb (V)"] = "" if pd.isna(row["Verb (V)"]) else row["Verb (V)"]
+        svo_df.at[index, "Object (O)"] = "" if pd.isna(row["Object (O)"]) else row["Object (O)"]
         # save empty verb indices
         if pd.isna(row["Verb (V)"]):
             empty_verb_idx.append(index)
@@ -699,7 +639,7 @@ def date_in_filename(document, **kwargs):
     date_str = ""
     # process the optional values in kwargs
     for key, value in kwargs.items():
-        if key == "filename_embeds_date_var" and value == True:
+        if key == "filename_embeds_date_var" and value:
             filename_embeds_date_var = True
         if key == "date_format":
             date_format = value
@@ -747,9 +687,7 @@ def create_output_directory(inputFilename, inputDir, outputDir, annotator):
     outputDirSV = GUI_util.output_dir_path.get()
     if outputDirSV != outputDir:
         # create output subdirectory
-        outputDir = IO_files_util.make_output_subdirectory(
-            "", "", outputDir, label=annotator, silent=True
-        )
+        outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label=annotator, silent=True)
     else:
         outputDir = IO_files_util.make_output_subdirectory(
             inputFilename, inputDir, outputDir, label=annotator + "_spaCy", silent=True

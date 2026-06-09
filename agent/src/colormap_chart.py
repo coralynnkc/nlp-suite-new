@@ -1,50 +1,51 @@
-
 import json
 
 import charts_util
 
 
-def run_colormap(inputFilename, outputDir,
-        csv_file_categorical_field_list,
-        max_rows_var,
-        color_1_style_var,
-        color_2_style_var,
-        normalize_var,
-        inputFileData
-        ):
-        filesToOpen = []
-        all_fields = []
-        intermediate_fields = []
-        csv_file_categorical_field_list = json.loads(csv_file_categorical_field_list)
-        print(csv_file_categorical_field_list)
-        for i in range(len(csv_file_categorical_field_list)):
-            if i >0 and i < len(csv_file_categorical_field_list)-1:
-                intermediate_fields.append(csv_file_categorical_field_list[i][0].split('|')[0])
-            all_fields.append(csv_file_categorical_field_list[i][0].split('|')[0])
+def run_colormap(
+    inputFilename,
+    outputDir,
+    csv_file_categorical_field_list,
+    max_rows_var,
+    color_1_style_var,
+    color_2_style_var,
+    normalize_var,
+    inputFileData,
+):
+    filesToOpen = []
+    all_fields = []
+    intermediate_fields = []
+    csv_file_categorical_field_list = json.loads(csv_file_categorical_field_list)
+    print(csv_file_categorical_field_list)
+    for i in range(len(csv_file_categorical_field_list)):
+        if i > 0 and i < len(csv_file_categorical_field_list) - 1:
+            intermediate_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
+        all_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
 
-        # mb.showwarning(title='Search values',
-        #                 message='You have entered ' + str(len(csv_file_categorical_field_list)) + \
-        #                         ' different search fields: "' + all_fields_str + '".' + \
-        #                         '\n\nThe first selected field "' + csv_file_categorical_field_list[0][0].split('|')[0] + '" will be used as the GroupBy field.' + \
-        #                         '\n\nThe last field "' + csv_file_categorical_field_list[len(csv_file_categorical_field_list)-1][0].split('|')[0] + '" will be used as the field whose values will be displayed.' + \
-        #                         '\n\nAll other intermediate fields "' + intermediate_fields_str + '" will be used as the conditional WHERE CLAUSE.')
+    # mb.showwarning(title='Search values',
+    #                 message='You have entered ' + str(len(csv_file_categorical_field_list)) + \
+    #                         ' different search fields: "' + all_fields_str + '".' + \
+    #                         '\n\nThe first selected field "' + csv_file_categorical_field_list[0][0].split('|')[0] + '" will be used as the GroupBy field.' + \
+    #                         '\n\nThe last field "' + csv_file_categorical_field_list[len(csv_file_categorical_field_list)-1][0].split('|')[0] + '" will be used as the field whose values will be displayed.' + \
+    #                         '\n\nAll other intermediate fields "' + intermediate_fields_str + '" will be used as the conditional WHERE CLAUSE.')
 
-        # if csv_field_categorical_var == '':
-        #     mb.showwarning("Warning",
-        #                     "The colormap/heatmap algorithm requires a value for 'csv file field.'\n\nPlease, select a value and try again.")
-        #     return
-        params = [max_rows_var, color_1_style_var, color_2_style_var, normalize_var]
-        outputFiles = charts_util.colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=inputFileData)
+    # if csv_field_categorical_var == '':
+    #     mb.showwarning("Warning",
+    #                     "The colormap/heatmap algorithm requires a value for 'csv file field.'\n\nPlease, select a value and try again.")
+    #     return
+    params = [max_rows_var, color_1_style_var, color_2_style_var, normalize_var]
+    outputFiles = charts_util.colormap(
+        inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=inputFileData
+    )
 
-        if outputFiles != None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+    if outputFiles is not None:
+        if isinstance(outputFiles, str):
+            filesToOpen.append(outputFiles)
+        else:
+            filesToOpen.extend(outputFiles)
 
-        return outputFiles
-
-
+    return outputFiles
 
 
 def main():
@@ -83,12 +84,12 @@ def main():
             color_1_style_var,
             color_2_style_var,
             normalize_var,
-            inputFileData=inputFileData
+            inputFileData=inputFileData,
         )
         print("Output files generated:", output_files)
     except Exception as e:
         print("An error occurred during testing:", e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

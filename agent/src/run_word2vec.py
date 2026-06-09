@@ -5,19 +5,18 @@ from word2vec import run_word2vec
 
 
 class TestWord2Vec(unittest.TestCase):
-
     def setUp(self):
-        self.inputDir = '/Users/aidenamaya/nlp-suite/input'
-        self.outputDir = '/Users/aidenamaya/nlp-suite/output'
+        self.inputDir = "/Users/aidenamaya/nlp-suite/input"
+        self.outputDir = "/Users/aidenamaya/nlp-suite/output"
         os.makedirs(self.inputDir, exist_ok=True)
         os.makedirs(self.outputDir, exist_ok=True)
 
         # TODO: need inputFilename?
-        self.inputFilename = "" #"Conrad_Lord Jim_01.txt"
+        self.inputFilename = ""  # "Conrad_Lord Jim_01.txt"
 
     def test_run_word2vec_basic(self):
         # Test with minimal settings
-        filesToOpen = run_word2vec(
+        run_word2vec(
             inputFilename=self.inputFilename,
             inputDir=self.inputDir,
             outputDir=self.outputDir,
@@ -40,15 +39,13 @@ class TestWord2Vec(unittest.TestCase):
             keywordInput="pigs",
             range4=2,
             range6=3,
-            range20 = 5,
-            ngramsDropDown="1-gram"
+            range20=5,
+            ngramsDropDown="1-gram",
         )
 
         # self.assertTrue(len(filesToOpen) > 0, "No output files were generated.")
         # for file in filesToOpen:
         #     self.assertTrue(os.path.exists(file), f"Output file {file} does not exist.")
-
-
 
     # def tearDown(self):
     #     if os.path.exists(os.path.join(self.inputDir, self.inputFilename)):
@@ -63,6 +60,7 @@ class TestWord2Vec(unittest.TestCase):
     #                 os.rmdir(os.path.join(root, name))
     #         os.rmdir(self.outputDir)
 
+
 if __name__ == "__main__":
     unittest.main()
-    #WSI_util.get_cluster_sentences("C:/Users/sherry/OneDrive/Desktop/QTM446W/Ouput/Word2Vec_Gensim_Input")
+    # WSI_util.get_cluster_sentences("C:/Users/sherry/OneDrive/Desktop/QTM446W/Ouput/Word2Vec_Gensim_Input")
