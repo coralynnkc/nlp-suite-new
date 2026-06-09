@@ -22,20 +22,17 @@
 <body>
   <header class="site-header" id="siteHeader">
     <div class="container header-inner">
-      <a class="logo">
-        <img src="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/lib/images/logo.jpg?raw=True" style = "height: 36px";>
+      <a class="logo" href="{% url 'home' %}">
+        <img src="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/lib/images/logo.jpg?raw=True" style="height: 36px">
         <span>NLP Suite</span>
-        <a class="nav-link"
-          href = "{% url 'home' %}">Home</a> 
-        </a>
       </a>
-
       <nav class="nav" aria-label="Primary">
         <a class="nav-link" href="https://github.com/NLP-Suite/NLP-Suite/wiki" target="_blank" rel="noopener noreferrer">Wiki</a>
         <a class="nav-link" href="https://www.youtube.com/@NLPsuite" target="_blank" rel="noopener noreferrer">YouTube</a>
         <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-        <a class="nav-link" href="{% url 'settings' %}">Settings</a>
+        <a class="nav-link settings" href="{% url 'settings' %}">Settings</a>
       </nav>
+    </div>
   </header>
 
   <main>
