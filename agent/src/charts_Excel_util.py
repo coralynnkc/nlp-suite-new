@@ -4,15 +4,16 @@
 
 import os
 
+import openpyxl
+import pandas as pd
+from openpyxl import Workbook
+
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
-import openpyxl
-import pandas as pd
 import reminders_util
-from openpyxl import Workbook
 
 
 # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)

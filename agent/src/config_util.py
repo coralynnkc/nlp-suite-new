@@ -12,9 +12,10 @@ import csv
 import os
 from subprocess import call
 
+import pandas as pd
+
 import GUI_IO_util
 import IO_user_interface_util
-import pandas as pd
 
 defaultConfigFilename = "NLP_default_IO_config.csv"
 

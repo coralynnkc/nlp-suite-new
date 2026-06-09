@@ -37,7 +37,9 @@ class Gexf:
         self.graphs = []
         self.xmlns = "http://www.gephi.org/gexf/1.2draft"
         self.xsi = "http://www.w3.org/2001/XMLSchema-instance"
-        self.schemaLocation = "http://www.gephi.org/gexf/1.1draft http://gephi.org/gexf/1.2draft.xsd"
+        self.schemaLocation = (
+            "http://www.gephi.org/gexf/1.1draft http://gephi.org/gexf/1.2draft.xsd"
+        )
         self.viz = "http://www.gexf.net/1.2draft/viz"
         self.version = "1.2"
 
@@ -48,7 +50,9 @@ class Gexf:
 
     def getXML(self):
         gexfXML = etree.Element(
-            "{" + self.xmlns + "}gexf", version=self.version, nsmap={None: self.xmlns, "viz": self.viz, "xsi": self.xsi}
+            "{" + self.xmlns + "}gexf",
+            version=self.version,
+            nsmap={None: self.xmlns, "viz": self.viz, "xsi": self.xsi},
         )
         gexfXML.set("{xsi}schemaLocation", self.schemaLocation)
         meta = etree.SubElement(gexfXML, "meta")
@@ -61,7 +65,11 @@ class Gexf:
         return gexfXML
 
     def write(self, file, print_stat=True):
-        file.write(etree.tostring(self.getXML(), pretty_print=True, encoding="utf-8", xml_declaration=True))
+        file.write(
+            etree.tostring(
+                self.getXML(), pretty_print=True, encoding="utf-8", xml_declaration=True
+            )
+        )
         if print_stat is True:
             self.print_stat()
 
@@ -160,7 +168,9 @@ class Graph:
     ):
         if spells is None:
             spells = []
-        self._nodes[str(id)] = Node(self, id, label, start, end, pid, r, g, b, size, spells, startopen, endopen)
+        self._nodes[str(id)] = Node(
+            self, id, label, start, end, pid, r, g, b, size, spells, startopen, endopen
+        )
         return self._nodes[str(id)]
 
     def nodeExists(self, id):
@@ -188,13 +198,30 @@ class Graph:
         if spells is None:
             spells = []
         self._edges[str(id)] = Edge(
-            self, id, source, target, weight, start, end, label, r, g, b, spells, startopen, endopen
+            self,
+            id,
+            source,
+            target,
+            weight,
+            start,
+            end,
+            label,
+            r,
+            g,
+            b,
+            spells,
+            startopen,
+            endopen,
         )
         return self._edges[str(id)]
 
-    def addNodeAttribute(self, title, defaultValue=None, type="integer", mode="static", force_id=""):
+    def addNodeAttribute(
+        self, title, defaultValue=None, type="integer", mode="static", force_id=""
+    ):
         # add to NodeAttributes
-        return self._attributes.declareAttribute("node", type, defaultValue, title, mode, force_id)
+        return self._attributes.declareAttribute(
+            "node", type, defaultValue, title, mode, force_id
+        )
 
     def addDefaultAttributesToNode(self, node):
         """deprecated"""
@@ -207,8 +234,12 @@ class Graph:
         #  if id in self._nodesAttributes.keys() :
         #             if self._nodesAttributes[id]["mode"]=="static" and ( not start=="" or not end=="") :
 
-    def addEdgeAttribute(self, title, defaultValue, type="integer", mode="static", force_id=""):
-        return self._attributes.declareAttribute("edge", type, defaultValue, title, mode, force_id)
+    def addEdgeAttribute(
+        self, title, defaultValue, type="integer", mode="static", force_id=""
+    ):
+        return self._attributes.declareAttribute(
+            "edge", type, defaultValue, title, mode, force_id
+        )
 
     def addDefaultAttributesToEdge(self, edge):
         """deprecated"""
@@ -225,7 +256,11 @@ class Graph:
     def getXML(self):
         # return lxml etree element
         graphXML = etree.Element(
-            "graph", defaultedgetype=self.type, mode=self.mode, label=self.label, timeformat=self.time_format
+            "graph",
+            defaultedgetype=self.type,
+            mode=self.mode,
+            label=self.label,
+            timeformat=self.time_format,
         )
 
         for attributesElement in self.attributes.getAttributesDeclarationXML():
@@ -264,7 +299,9 @@ class Graph:
             if attr == "timeformat":
                 timeformat = graph_xml.attrib[attr]
         # create and attache the graph object to the Gexf object
-        graph_obj = gexf_obj.addGraph(type=type, mode=mode, label=label, timeformat=timeformat)
+        graph_obj = gexf_obj.addGraph(
+            type=type, mode=mode, label=label, timeformat=timeformat
+        )
 
         for child in graph_xml:
             tag = ns_clean(child.tag).lower()
@@ -284,7 +321,17 @@ class Graph:
                 Edge.importXML(edges_xml, graph_obj)
 
     def print_stat(self):
-        print(self.label + " " + self.type + " " + self.mode + " " + self.start + " " + self.end)
+        print(
+            self.label
+            + " "
+            + self.type
+            + " "
+            + self.mode
+            + " "
+            + self.start
+            + " "
+            + self.end
+        )
         print("number of nodes : " + str(len(self._nodes)))
         print("number of edges : " + str(len(self._edges)))
 
@@ -303,13 +350,23 @@ class Attributes(dict):
     """
 
     def __init__(self):
-        self.type_choices = ["integer", "string", "float", "double", "boolean", "date", "URI"]
+        self.type_choices = [
+            "integer",
+            "string",
+            "float",
+            "double",
+            "boolean",
+            "date",
+            "URI",
+        ]
         self.attClass_choices = ["node", "edge"]
         self.mode_choices = ["static", "dynamic"]
         for attClass in self.attClass_choices:
             self[attClass] = {}
 
-    def declareAttribute(self, attClass, type, defaultValue, title="", mode="static", id=None):
+    def declareAttribute(
+        self, attClass, type, defaultValue, title="", mode="static", id=None
+    ):
         """
         add a new attribute declaration to the graph
         """
@@ -318,13 +375,31 @@ class Attributes(dict):
             # if no id given generating a numerical one based on dict length
             if not id:
                 id = str(len(self[attClass]))
-            self[attClass][id] = {"id": id, "type": type, "defaultValue": defaultValue, "mode": mode, "title": title}
+            self[attClass][id] = {
+                "id": id,
+                "type": type,
+                "defaultValue": defaultValue,
+                "mode": mode,
+                "title": title,
+            }
             return id
         else:
-            raise Exception("wrong attClass : " + str(attClass) + " Should be in " + str(self.type_choices))
+            raise Exception(
+                "wrong attClass : "
+                + str(attClass)
+                + " Should be in "
+                + str(self.type_choices)
+            )
 
     def makeAttributeInstance(
-        self, attClass, id=None, value=None, start=None, end=None, startopen=False, endopen=False
+        self,
+        attClass,
+        id=None,
+        value=None,
+        start=None,
+        end=None,
+        startopen=False,
+        endopen=False,
     ):
         """
         generate an attribute to be include to a node or edge.
@@ -346,9 +421,16 @@ class Attributes(dict):
                         att["endopen"] = endopen
                 return att
             else:
-                raise Exception(f"wrong attribute id ({id}), declare the attribute first with declareAttribute")
+                raise Exception(
+                    f"wrong attribute id ({id}), declare the attribute first with declareAttribute"
+                )
         else:
-            raise Exception("wrong attClass : " + str(attClass) + " Should be in " + str(self.type_choices))
+            raise Exception(
+                "wrong attClass : "
+                + str(attClass)
+                + " Should be in "
+                + str(self.type_choices)
+            )
 
     def getAttributesDeclarationXML(self):
         """generate attributes declaration XML"""
@@ -361,7 +443,9 @@ class Attributes(dict):
                 def key_mode(att):
                     return att["mode"]
 
-                atts_sorted_by_mode = sorted(list(atts.values()), key=key_mode, reverse=True)
+                atts_sorted_by_mode = sorted(
+                    list(atts.values()), key=key_mode, reverse=True
+                )
                 for mode, atts in itertools.groupby(atts_sorted_by_mode, key_mode):
                     # generate on attributes by mode
                     attributesXML = etree.Element("attributes")
@@ -374,7 +458,9 @@ class Attributes(dict):
                         attributeXML.set("title", att["title"])
                         attributeXML.set("type", att["type"])
                         if att["defaultValue"]:
-                            etree.SubElement(attributeXML, "default").text = att["defaultValue"]
+                            etree.SubElement(attributeXML, "default").text = att[
+                                "defaultValue"
+                            ]
                     allAttributesXML.append(attributesXML)
         return allAttributesXML
 
@@ -389,11 +475,21 @@ class Attributes(dict):
                 attValueXML.set("value", att["value"])
                 if "start" in att.keys() and not att["start"] == "":
                     attValueXML.set(
-                        "start" if "startopen" not in att.keys() or not att["startopen"] else "startopen", att["start"]
+                        (
+                            "start"
+                            if "startopen" not in att.keys() or not att["startopen"]
+                            else "startopen"
+                        ),
+                        att["start"],
                     )
                 if "end" in att.keys() and not att["end"] == "":
                     attValueXML.set(
-                        "end" if "endopen" not in att.keys() or not att["endopen"] else "endopen", att["end"]
+                        (
+                            "end"
+                            if "endopen" not in att.keys() or not att["endopen"]
+                            else "endopen"
+                        ),
+                        att["end"],
                     )
             return attValuesXML
         else:
@@ -466,7 +562,11 @@ class Attributes(dict):
                             end = attvalue_xml.attrib[attr]
                             endopen = True
 
-                    atts.append(self.makeAttributeInstance(attClass, id, value, start, end, startopen, endopen))
+                    atts.append(
+                        self.makeAttributeInstance(
+                            attClass, id, value, start, end, startopen, endopen
+                        )
+                    )
         return atts
 
 
@@ -534,7 +634,9 @@ class Node:
 
         if not self.pid == "":
             if not self._graph.nodeExists(self.pid):
-                raise Exception("pid " + self.pid + " node unknown, add nodes to graph first")
+                raise Exception(
+                    "pid " + self.pid + " node unknown, add nodes to graph first"
+                )
 
         self._attributes = []
         self.attributes = self._attributes
@@ -542,7 +644,9 @@ class Node:
 
     def addAttribute(self, id, value, start="", end="", startopen=False, endopen=False):
         self._attributes.append(
-            self._graph.attributes.makeAttributeInstance("node", id, value, start, end, startopen, endopen)
+            self._graph.attributes.makeAttributeInstance(
+                "node", id, value, start, end, startopen, endopen
+            )
         )
 
     def getXML(self):
@@ -567,13 +671,17 @@ class Node:
 
             if not self.r == "" and not self.g == "" and not self.b == "":
                 # color : <viz:color r="239" g="173" b="66"/>
-                colorXML = etree.SubElement(nodeXML, "{http://www.gexf.net/1.1draft/viz}color")
+                colorXML = etree.SubElement(
+                    nodeXML, "{http://www.gexf.net/1.1draft/viz}color"
+                )
                 colorXML.set("r", str(self.r))
                 colorXML.set("g", str(self.g))
                 colorXML.set("b", str(self.b))
 
             if not self.size == "":
-                sizeXML = etree.SubElement(nodeXML, "{http://www.gexf.net/1.1draft/viz}size")
+                sizeXML = etree.SubElement(
+                    nodeXML, "{http://www.gexf.net/1.1draft/viz}size"
+                )
                 sizeXML.set("value", self.size)
 
             return nodeXML
@@ -656,7 +764,9 @@ class Node:
                     b=b,
                     spells=spells,
                 )
-                node_obj._attributes = graph_obj.attributes.importAttributesValuesXML("node", attvalues_xml)
+                node_obj._attributes = graph_obj.attributes.importAttributesValuesXML(
+                    "node", attvalues_xml
+                )
 
     def setColor(self, r, g, b):
         self.r = r
@@ -695,13 +805,17 @@ class Edge:
             self._source = source
             self.source = self._source
         else:
-            raise Exception("source " + source + " node unknown, add nodes to graph first")
+            raise Exception(
+                "source " + source + " node unknown, add nodes to graph first"
+            )
 
         if self._graph.nodeExists(target):
             self._target = target
             self.target = self._target
         else:
-            raise Exception("target " + target + " node unknown, add nodes to graph first")
+            raise Exception(
+                "target " + target + " node unknown, add nodes to graph first"
+            )
 
         self.start = start
         self.startopen = startopen
@@ -721,13 +835,20 @@ class Edge:
 
     def addAttribute(self, id, value, start="", end="", startopen=False, endopen=False):
         self._attributes.append(
-            self._graph.attributes.makeAttributeInstance("edge", id, value, start, end, startopen, endopen)
+            self._graph.attributes.makeAttributeInstance(
+                "edge", id, value, start, end, startopen, endopen
+            )
         )
 
     def getXML(self):
         # return lxml etree element
         try:
-            edgeXML = etree.Element("edge", id=str(self.id), source=str(self._source), target=str(self._target))
+            edgeXML = etree.Element(
+                "edge",
+                id=str(self.id),
+                source=str(self._source),
+                target=str(self._target),
+            )
             if not self.start == "":
                 edgeXML.set("start" if not self.startopen else "startopen", self.start)
             if not self.end == "":
@@ -748,7 +869,9 @@ class Edge:
             # COLOR on edges is supported in GEXF since 1.2
             if not self.r == "" and not self.g == "" and not self.b == "":
                 # color : <viz:color r="239" g="173" b="66"/>
-                colorXML = etree.SubElement(edgeXML, "{http://www.gexf.net/1.2draft/viz}color")
+                colorXML = etree.SubElement(
+                    edgeXML, "{http://www.gexf.net/1.2draft/viz}color"
+                )
                 colorXML.set("r", str(self.r))
                 colorXML.set("g", str(self.g))
                 colorXML.set("b", str(self.b))
@@ -838,7 +961,9 @@ class Edge:
                     b=b,
                     spells=spells,
                 )
-                edge_obj._attributes = graph_obj.attributes.importAttributesValuesXML("edge", attvalues_xml)
+                edge_obj._attributes = graph_obj.attributes.importAttributesValuesXML(
+                    "edge", attvalues_xml
+                )
 
     # COLOR on edges is supported in GEXF since 1.2
     def setColor(self, r, g, b):
@@ -904,7 +1029,9 @@ class GexfImport:
             if attr == "timeformat":
                 timeformat = graph_xml.attrib[attr]
 
-        self.graph_obj = self.gexf_obj.addGraph(type=type, mode=mode, label=label, timeformat=timeformat)
+        self.graph_obj = self.gexf_obj.addGraph(
+            type=type, mode=mode, label=label, timeformat=timeformat
+        )
 
         for child in graph_xml:
             tag = self.ns_clean(child.tag).lower()
@@ -1060,7 +1187,14 @@ class GexfImport:
             if attr == "endopen":
                 end = attvalue_xml.attrib[attr]
                 endopen = True
-        self.node_obj.addAttribute(id=id, value=value, start=start, end=end, startopen=startopen, endopen=endopen)
+        self.node_obj.addAttribute(
+            id=id,
+            value=value,
+            start=start,
+            end=end,
+            startopen=startopen,
+            endopen=endopen,
+        )
 
     def extract_edges(self, edges_xml):
         for child in edges_xml:
@@ -1166,7 +1300,14 @@ class GexfImport:
             if attr == "endopen":
                 endopen = attvalue_xml.attrib[attr]
 
-        self.edge_obj.addAttribute(id=id, value=value, start=start, end=end, startopen=startopen, endopen=endopen)
+        self.edge_obj.addAttribute(
+            id=id,
+            value=value,
+            start=start,
+            end=end,
+            startopen=startopen,
+            endopen=endopen,
+        )
 
     def gexf(self):
         return self.gexf_obj
@@ -1179,7 +1320,17 @@ class GexfImport:
 # returns a gexf file
 
 
-def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="", logic="default", inputFileData=None):
+def create_gexf(
+    fileBase,
+    OutputDir,
+    inputFilename,
+    col1,
+    col2,
+    col3,
+    spellCol="",
+    logic="default",
+    inputFileData=None,
+):
     """
     Create a GEXF format file that can be used in Gephi to visualize results dynamically.
     :param fileBase: Base name for the output GEXF file.
@@ -1227,7 +1378,9 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
 
                             dateutil.parser.parse(date_str)
                         except Exception as e:
-                            raise Exception(f"Error parsing date '{date_str}' in column '{spellCol}': {e}") from e
+                            raise Exception(
+                                f"Error parsing date '{date_str}' in column '{spellCol}': {e}"
+                            ) from e
                 else:
                     if spellCol != "":
                         date_str = row[spellCol]
@@ -1235,7 +1388,9 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                         try:
                             datetime.datetime.strptime(date_str, date_format)
                         except Exception as e:
-                            raise Exception(f"Error parsing date '{date_str}' in column '{spellCol}': {e}") from e
+                            raise Exception(
+                                f"Error parsing date '{date_str}' in column '{spellCol}': {e}"
+                            ) from e
 
                 # Create the node with dynamic spells if spellCol is provided
                 if spellCol != "":
@@ -1253,8 +1408,12 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                                 size="50",
                                 spells=[
                                     {
-                                        "start": dateutil.parser.parse(row[spellCol]).strftime(date_format),
-                                        "end": dateutil.parser.parse(row[spellCol]).strftime(date_format),
+                                        "start": dateutil.parser.parse(
+                                            row[spellCol]
+                                        ).strftime(date_format),
+                                        "end": dateutil.parser.parse(
+                                            row[spellCol]
+                                        ).strftime(date_format),
                                     }
                                 ],
                             )
@@ -1269,17 +1428,25 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                                 size="50",
                                 spells=[
                                     {
-                                        "start": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])))).strftime(
-                                            date_format
-                                        ),
+                                        "start": (
+                                            EPOCH
+                                            + datetime.timedelta(
+                                                days=int(float(row[spellCol]))
+                                            )
+                                        ).strftime(date_format),
                                         "end": (
-                                            EPOCH + datetime.timedelta(days=int(float(row[spellCol])) + 1)
+                                            EPOCH
+                                            + datetime.timedelta(
+                                                days=int(float(row[spellCol])) + 1
+                                            )
                                         ).strftime(date_format),
                                     }
                                 ],
                             )
                     except Exception as e:
-                        raise Exception(f"Error creating node for '{row[col1]}': {e}") from e
+                        raise Exception(
+                            f"Error creating node for '{row[col1]}': {e}"
+                        ) from e
                 else:
                     node = Node(
                         graph,
@@ -1299,19 +1466,27 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
 
                         graph.nodes[row[col1]].spells.append(
                             {
-                                "start": dateutil.parser.parse(row[spellCol]).strftime(date_format),
-                                "end": dateutil.parser.parse(row[spellCol]).strftime(date_format),
+                                "start": dateutil.parser.parse(row[spellCol]).strftime(
+                                    date_format
+                                ),
+                                "end": dateutil.parser.parse(row[spellCol]).strftime(
+                                    date_format
+                                ),
                             }
                         )
                     else:
                         graph.nodes[row[col1]].spells.append(
                             {
-                                "start": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])))).strftime(
-                                    date_format
-                                ),
-                                "end": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])) + 1)).strftime(
-                                    date_format
-                                ),
+                                "start": (
+                                    EPOCH
+                                    + datetime.timedelta(days=int(float(row[spellCol])))
+                                ).strftime(date_format),
+                                "end": (
+                                    EPOCH
+                                    + datetime.timedelta(
+                                        days=int(float(row[spellCol])) + 1
+                                    )
+                                ).strftime(date_format),
                             }
                         )
 
@@ -1331,8 +1506,12 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                             size="50",
                             spells=[
                                 {
-                                    "start": dateutil.parser.parse(row[spellCol]).strftime(date_format),
-                                    "end": dateutil.parser.parse(row[spellCol]).strftime(date_format),
+                                    "start": dateutil.parser.parse(
+                                        row[spellCol]
+                                    ).strftime(date_format),
+                                    "end": dateutil.parser.parse(
+                                        row[spellCol]
+                                    ).strftime(date_format),
                                 }
                             ],
                         )
@@ -1347,12 +1526,18 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                             size="50",
                             spells=[
                                 {
-                                    "start": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])))).strftime(
-                                        date_format
-                                    ),
-                                    "end": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])) + 1)).strftime(
-                                        date_format
-                                    ),
+                                    "start": (
+                                        EPOCH
+                                        + datetime.timedelta(
+                                            days=int(float(row[spellCol]))
+                                        )
+                                    ).strftime(date_format),
+                                    "end": (
+                                        EPOCH
+                                        + datetime.timedelta(
+                                            days=int(float(row[spellCol])) + 1
+                                        )
+                                    ).strftime(date_format),
                                 }
                             ],
                         )
@@ -1375,19 +1560,27 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
 
                         graph.nodes[row[col3]].spells.append(
                             {
-                                "start": dateutil.parser.parse(row[spellCol]).strftime(date_format),
-                                "end": dateutil.parser.parse(row[spellCol]).strftime(date_format),
+                                "start": dateutil.parser.parse(row[spellCol]).strftime(
+                                    date_format
+                                ),
+                                "end": dateutil.parser.parse(row[spellCol]).strftime(
+                                    date_format
+                                ),
                             }
                         )
                     else:
                         graph.nodes[row[col3]].spells.append(
                             {
-                                "start": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])))).strftime(
-                                    date_format
-                                ),
-                                "end": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])) + 1)).strftime(
-                                    date_format
-                                ),
+                                "start": (
+                                    EPOCH
+                                    + datetime.timedelta(days=int(float(row[spellCol])))
+                                ).strftime(date_format),
+                                "end": (
+                                    EPOCH
+                                    + datetime.timedelta(
+                                        days=int(float(row[spellCol])) + 1
+                                    )
+                                ).strftime(date_format),
                             }
                         )
 
@@ -1405,8 +1598,12 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                             row[col3],
                             spells=[
                                 {
-                                    "start": dateutil.parser.parse(row[spellCol]).strftime(date_format),
-                                    "end": dateutil.parser.parse(row[spellCol]).strftime(date_format),
+                                    "start": dateutil.parser.parse(
+                                        row[spellCol]
+                                    ).strftime(date_format),
+                                    "end": dateutil.parser.parse(
+                                        row[spellCol]
+                                    ).strftime(date_format),
                                 }
                             ],
                             label=row[col2],
@@ -1419,12 +1616,18 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                             row[col3],
                             spells=[
                                 {
-                                    "start": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])))).strftime(
-                                        date_format
-                                    ),
-                                    "end": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])) + 1)).strftime(
-                                        date_format
-                                    ),
+                                    "start": (
+                                        EPOCH
+                                        + datetime.timedelta(
+                                            days=int(float(row[spellCol]))
+                                        )
+                                    ).strftime(date_format),
+                                    "end": (
+                                        EPOCH
+                                        + datetime.timedelta(
+                                            days=int(float(row[spellCol])) + 1
+                                        )
+                                    ).strftime(date_format),
                                 }
                             ],
                             label=row[col2],
@@ -1439,19 +1642,27 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
 
                         graph.edges[edge_id].spells.append(
                             {
-                                "start": dateutil.parser.parse(row[spellCol]).strftime(date_format),
-                                "end": dateutil.parser.parse(row[spellCol]).strftime(date_format),
+                                "start": dateutil.parser.parse(row[spellCol]).strftime(
+                                    date_format
+                                ),
+                                "end": dateutil.parser.parse(row[spellCol]).strftime(
+                                    date_format
+                                ),
                             }
                         )
                     else:
                         graph.edges[edge_id].spells.append(
                             {
-                                "start": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])))).strftime(
-                                    date_format
-                                ),
-                                "end": (EPOCH + datetime.timedelta(days=int(float(row[spellCol])) + 1)).strftime(
-                                    date_format
-                                ),
+                                "start": (
+                                    EPOCH
+                                    + datetime.timedelta(days=int(float(row[spellCol])))
+                                ).strftime(date_format),
+                                "end": (
+                                    EPOCH
+                                    + datetime.timedelta(
+                                        days=int(float(row[spellCol])) + 1
+                                    )
+                                ).strftime(date_format),
                             }
                         )
 
@@ -1462,6 +1673,8 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
 
     endTime = datetime.datetime.now()
     elapsedTime = endTime - startTime
-    print(f"Finished running Gephi network graphs in {elapsedTime.total_seconds()} seconds.")
+    print(
+        f"Finished running Gephi network graphs in {elapsedTime.total_seconds()} seconds."
+    )
 
     return output_path

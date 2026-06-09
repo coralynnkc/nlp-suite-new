@@ -1,9 +1,10 @@
 import os
 import sys
 
-import IO_csv_util
 import pandas as pd
 import simplekml
+
+import IO_csv_util
 
 # icon_type are the different types of icon, like pushpin, paddle teardrop, paddle square....
 # 	Expected input will be a string, for example: icon_type == "pushpin"
@@ -22,25 +23,45 @@ def pin_icon_select(icon_type, icon_style):
         if icon_style == "none":
             icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-none.png"
         elif icon_style == "North (track 0)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-0.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-0.png"
+            )
         elif icon_style == "Northeast (track 1)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-1.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-1.png"
+            )
         elif icon_style == "Northeast (track 2)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-2.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-2.png"
+            )
         elif icon_style == "Northeast (track 3)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-3.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-3.png"
+            )
         elif icon_style == "East (track 4)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-4.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-4.png"
+            )
         elif icon_style == "Southeast (track 5)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-5.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-5.png"
+            )
         elif icon_style == "Southeast (track 6)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-6.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-6.png"
+            )
         elif icon_style == "Southeast (track 7)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-7.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-7.png"
+            )
         elif icon_style == "South (track 8)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-8.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-8.png"
+            )
         elif icon_style == "Southwest (track 9)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-9.png"
+            icon_url = (
+                "http://earth.google.com/images/kml-icons/track-directional/track-9.png"
+            )
         elif icon_style == "Southwest (track 10)":
             icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-10.png"
         elif icon_style == "Southwest (track 11)":
@@ -298,7 +319,9 @@ def pin_icon_select(icon_type, icon_style):
         elif icon_style == "purple-circle":
             icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-circle-lv.png"
         elif icon_style == "purple-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-diamond-lv.png"
+            icon_url = (
+                "http://maps.google.com/mapfiles/kml/paddle/purple-diamond-lv.png"
+            )
         elif icon_style == "purple-square":
             icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-square-lv.png"
         elif icon_style == "purple-stars":
@@ -384,11 +407,15 @@ def pin_icon_select(icon_type, icon_style):
         elif icon_style == "capital_big":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/capital_big.png"
         elif icon_style == "capital_big_highlight":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/capital_big_highlight.png"
+            icon_url = (
+                "http://maps.google.com/mapfiles/kml/shapes/capital_big_highlight.png"
+            )
         elif icon_style == "capital_small":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/capital_small.png"
         elif icon_style == "capital_small_highlight":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/capital_small_highlight.png"
+            icon_url = (
+                "http://maps.google.com/mapfiles/kml/shapes/capital_small_highlight.png"
+            )
         elif icon_style == "caution":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/caution.png"
         elif icon_style == "church":
@@ -400,7 +427,9 @@ def pin_icon_select(icon_type, icon_style):
         elif icon_style == "cross-hairs":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/cross-hairs.png"
         elif icon_style == "cross-hairs_highlight":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/cross-hairs_highlight.png"
+            icon_url = (
+                "http://maps.google.com/mapfiles/kml/shapes/cross-hairs_highlight.png"
+            )
         elif icon_style == "cycling":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/cycling.png"
         elif icon_style == "dining":
@@ -440,7 +469,9 @@ def pin_icon_select(icon_type, icon_style):
         elif icon_style == "hiker":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/hiker.png"
         elif icon_style == "homegardenbusiness":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png"
+            icon_url = (
+                "http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png"
+            )
         elif icon_style == "horsebackriding":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/horsebackriding.png"
         elif icon_style == "hospitals":
@@ -552,7 +583,9 @@ def pin_icon_select(icon_type, icon_style):
         elif icon_style == "webcam":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/webcam.png"
         elif icon_style == "wheel_chair_accessible":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/wheel_chair_accessible.png"
+            icon_url = (
+                "http://maps.google.com/mapfiles/kml/shapes/wheel_chair_accessible.png"
+            )
         elif icon_style == "woman":
             icon_url = "http://maps.google.com/mapfiles/kml/shapes/woman.png"
         elif icon_style == "yen":
@@ -625,8 +658,12 @@ def pin_customizer(
     if group_values is None:
         group_values = [""]
     if data is None:
-        withHeader_var = IO_csv_util.csvFile_has_header(inputFilename)  # check if the file has header
-        data, headers = IO_csv_util.get_csv_data(inputFilename, withHeader_var)  # get the data and header
+        withHeader_var = IO_csv_util.csvFile_has_header(
+            inputFilename
+        )  # check if the file has header
+        data, headers = IO_csv_util.get_csv_data(
+            inputFilename, withHeader_var
+        )  # get the data and header
 
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'GIS kml pin customizer', 'Started running kml pin customizer at',
     # 											   True, '', True, '', silent=True)
@@ -742,7 +779,9 @@ def pin_description(
     if group_values is None:
         group_values = [""]
     if "Document ID" in headers:
-        IO_csv_util.GetMaxValueInCSVField(inputFilename, "GIS_Google_pin", "Document ID")
+        IO_csv_util.GetMaxValueInCSVField(
+            inputFilename, "GIS_Google_pin", "Document ID"
+        )
 
     if description_location_var_name == "NER":
         description_location_var_name = "Location"
@@ -756,7 +795,9 @@ def pin_description(
         for a in range(len(headers)):
             if "Document" == headers[a]:
                 pass
-            if description_csv_field_var == headers[a]:  # description_csv_field_var is typically set to sentence
+            if (
+                description_csv_field_var == headers[a]
+            ):  # description_csv_field_var is typically set to sentence
                 pass
             if description_location_var_name == headers[a]:
                 pass
@@ -901,14 +942,26 @@ def pin_description(
                     )
                 elif bold_var == 1:
                     pnt.description = (
-                        "<b>Group Label</b>: " + group_label + "<br/><br/><b>Group Value</b>: " + group_value
+                        "<b>Group Label</b>: "
+                        + group_label
+                        + "<br/><br/><b>Group Value</b>: "
+                        + group_value
                     )
                 elif italic_var == 1:
                     pnt.description = (
-                        "<i>Group Label</i>: " + group_label + "<br/><br/><i>Group Value</i>: " + group_value
+                        "<i>Group Label</i>: "
+                        + group_label
+                        + "<br/><br/><i>Group Value</i>: "
+                        + group_value
                     )
                 else:
-                    pnt.description = "Group Label: " + group_label + "<br/><br/>" + "Group Value: " + group_value
+                    pnt.description = (
+                        "Group Label: "
+                        + group_label
+                        + "<br/><br/>"
+                        + "Group Value: "
+                        + group_value
+                    )
             else:
                 if italic_var == 1 and bold_var == 1:
                     pnt.description = (
@@ -1091,7 +1144,12 @@ def pin_description(
 
             else:
                 pnt.description = (
-                    description_csv_field_var + ": " + description[index - 1] + "Document" + ": " + documents[index - 1]
+                    description_csv_field_var
+                    + ": "
+                    + description[index - 1]
+                    + "Document"
+                    + ": "
+                    + documents[index - 1]
                 )
 
     return pnt
@@ -1115,7 +1173,16 @@ def pin_description(
 # Expected format: color_style_var = (255, 255, 255) is white
 
 
-def pin_name(pnt, data, headers, geo_index, description_location_var_name, scale_var, color_var, color_style_var):
+def pin_name(
+    pnt,
+    data,
+    headers,
+    geo_index,
+    description_location_var_name,
+    scale_var,
+    color_var,
+    color_style_var,
+):
     names = []
 
     for i in range(len(headers)):
@@ -1136,6 +1203,8 @@ def pin_name(pnt, data, headers, geo_index, description_location_var_name, scale
     g_value = rgb_value[1]
     b = rgb_value[2].split(")")
     b_value = b[0]
-    pnt.style.labelstyle.color = simplekml.Color.rgb(int(r_value), int(g_value), int(b_value))
+    pnt.style.labelstyle.color = simplekml.Color.rgb(
+        int(r_value), int(g_value), int(b_value)
+    )
 
     return pnt

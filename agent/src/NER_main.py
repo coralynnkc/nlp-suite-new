@@ -48,8 +48,14 @@ def run_NER(
     language_list = [language]
 
     # get the date options from filename
-    filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = (
-        config_util.get_date_options(config_filename, config_input_output_numeric_options)
+    (
+        filename_embeds_date_var,
+        date_format_var,
+        items_separator_var,
+        date_position_var,
+        config_file_exists,
+    ) = config_util.get_date_options(
+        config_filename, config_input_output_numeric_options
     )
     extract_date_from_text_var = 0
 
@@ -60,7 +66,9 @@ def run_NER(
         return
 
     if len(NER_list) == 0 and "CoreNLP" in NER_package:
-        print("No NER tag selected, No NER tag has been selected.\n\nPlease, select an NER tag and try again.")
+        print(
+            "No NER tag selected, No NER tag has been selected.\n\nPlease, select an NER tag and try again."
+        )
         return
 
     # BERT -------------------------------------------------------------------------
@@ -76,7 +84,13 @@ def run_NER(
 
         NER_list = BERT_util.NER_dict
         outputFiles = BERT_util.NER_tags_BERT(
-            inputFilename, inputDir, outputDir, config_filename, "", chartPackage, dataTransformation
+            inputFilename,
+            inputDir,
+            outputDir,
+            config_filename,
+            "",
+            chartPackage,
+            dataTransformation,
         )
         if outputFiles is not None:
             if isinstance(outputFiles, str):

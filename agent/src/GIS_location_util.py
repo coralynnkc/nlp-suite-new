@@ -1,6 +1,7 @@
+import pandas as pd
+
 import CoNLL_util
 import IO_csv_util
-import pandas as pd
 
 # convert string to list
 
@@ -19,7 +20,9 @@ def extract_index(inputFilename, InputCodedCsvFile, encodingValue, location_var_
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'GIS extract_index ', 'Started running extract_index algorithm at',
     # 											   True, '', True, '', silent=True)
 
-    inputfile = pd.read_csv(InputCodedCsvFile, encoding=encodingValue, on_bad_lines="skip")
+    inputfile = pd.read_csv(
+        InputCodedCsvFile, encoding=encodingValue, on_bad_lines="skip"
+    )
     data = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
     headers = data.columns.values.tolist()
     if len(inputfile) == 0:
@@ -61,19 +64,32 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
     tempLocation = ""
     # loop through all records of the CoNLL table
     for index, row in dt.iterrows():
-        if row[4] in ["LOCATION", "STATE_OR_PROVINCE", "CITY", "COUNTRY"]:  # col 4 is NER
+        if row[4] in [
+            "LOCATION",
+            "STATE_OR_PROVINCE",
+            "CITY",
+            "COUNTRY",
+        ]:  # col 4 is NER
             # do NOT compute the same sentence for the same document
-            if (sentenceID == 1 and documentID == 1) or (row[10] != sentenceID and row[11] == documentID):
-                currentRecord, sentence_str = CoNLL_util.compute_sentence(conllFile, currentRecord, row[10], row[11])
+            if (sentenceID == 1 and documentID == 1) or (
+                row[10] != sentenceID and row[11] == documentID
+            ):
+                currentRecord, sentence_str = CoNLL_util.compute_sentence(
+                    conllFile, currentRecord, row[10], row[11]
+                )
             if row[filenamePositionInCoNLLTable] in currList:
                 # No need to display the filename in Description when only one file is processed
                 # A blank value for the filename will be checked in Description to avoid displaying it
                 if numDocs != 1:
                     if "=dressforhyperlink" in str(row[filenamePositionInCoNLLTable]):
-                        currList.append(row[filenamePositionInCoNLLTable])  # append filename
+                        currList.append(
+                            row[filenamePositionInCoNLLTable]
+                        )  # append filename
                     else:
                         currList.append(
-                            IO_csv_util.dressFilenameForCSVHyperlink(row[filenamePositionInCoNLLTable])
+                            IO_csv_util.dressFilenameForCSVHyperlink(
+                                row[filenamePositionInCoNLLTable]
+                            )
                         )  # append filename
             elif len(currList) == 0:
                 # # A blank value for the filename will be checked in Description to avoid displaying it
@@ -83,7 +99,9 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
                     continue
                 else:
                     if tempLocation != "":  # we are on the next row
-                        currList.append(tempLocation + " " + row[1])  # col 1 is the FORM value
+                        currList.append(
+                            tempLocation + " " + row[1]
+                        )  # col 1 is the FORM value
                         currList.append(row[4])  # append NER tag (e.g., COUNTRY)
                         tempLocation = ""
                     else:
@@ -96,10 +114,14 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
 
                 # A blank value for the filename will be checked in Description to avoid displaying it
                 if "=hyperlink" in str(row[filenamePositionInCoNLLTable]):
-                    currList.append(row[filenamePositionInCoNLLTable])  # append filename
+                    currList.append(
+                        row[filenamePositionInCoNLLTable]
+                    )  # append filename
                 else:
                     currList.append(
-                        IO_csv_util.dressFilenameForCSVHyperlink(row[filenamePositionInCoNLLTable])
+                        IO_csv_util.dressFilenameForCSVHyperlink(
+                            row[filenamePositionInCoNLLTable]
+                        )
                     )  # col 11 is the filename
 
                 # years before 1900 cannot be used
@@ -111,7 +133,9 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
                         currList.append(row[13])  # col 12 is the date, IFF present
                     else:
                         currList.append("")
-            if currList != [""] and len(currList) > 1:  # sometimes only the filename is printed; no location
+            if (
+                currList != [""] and len(currList) > 1
+            ):  # sometimes only the filename is printed; no location
                 locList.append(currList)
             print(
                 "Processing NER location "
@@ -147,9 +171,19 @@ def save_location(datePresent, currLocation, sentence, document, row):
     if datePresent:
         try:
             # NER may not be present when an external input csv file of locations is passed
-            locList.append([currLocation, row["Date"], row["NER"], row["Sentence"], row["Document"]])
+            locList.append(
+                [
+                    currLocation,
+                    row["Date"],
+                    row["NER"],
+                    row["Sentence"],
+                    row["Document"],
+                ]
+            )
         except Exception:
-            locList.append([currLocation, row["Date"], row["Sentence"], row["Document"]])
+            locList.append(
+                [currLocation, row["Date"], row["Sentence"], row["Document"]]
+            )
     else:
         locList.append([currLocation, row["NER"], row["Sentence"], row["Document"]])
     return locList
@@ -158,7 +192,12 @@ def save_location(datePresent, currLocation, sentence, document, row):
 # called from GIS_Google_util
 # locationColumnNumber where locations are stored in the csv file; any changes to the columns will result in error
 def extract_csvFile_locations(
-    inputFilename, withHeader, locationColumnNumber, encodingValue, datePresent, dateColumnNumber
+    inputFilename,
+    withHeader,
+    locationColumnNumber,
+    encodingValue,
+    datePresent,
+    dateColumnNumber,
 ):
     global multi_word_location_prefix
     # startTime=IO_user_interface_util.timed_alert(window, 2000, 'csv file locations extraction', "Started extracting locations from csv file at",
@@ -230,7 +269,11 @@ def extract_csvFile_locations(
                         except Exception:
                             currLocation = row["Location"]
                             pass
-                        locList.append(save_location(datePresent, currLocation, sentence, document, row)[0])
+                        locList.append(
+                            save_location(
+                                datePresent, currLocation, sentence, document, row
+                            )[0]
+                        )
                         currLocation = ""
                 except Exception:
                     currLocation = row["Location"]

@@ -36,10 +36,14 @@ def run_search_byWord(
     extra_GUIs_var = False
 
     if not extra_GUIs_var and not search_by_dictionary and not search_by_keyword:
-        print("Input error, No search options have been selected.\n\nPlease, select a search option and try again.")
+        print(
+            "Input error, No search options have been selected.\n\nPlease, select a search option and try again."
+        )
         return
 
-    if search_options_menu_var != "" and search_options_menu_var not in str(search_options_list):
+    if search_options_menu_var != "" and search_options_menu_var not in str(
+        search_options_list
+    ):
         print(
             "Warning, There is a search value '"
             + str(search_options_menu_var.get())

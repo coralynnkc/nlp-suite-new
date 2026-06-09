@@ -2,13 +2,14 @@
 # Modified by Cynthia Dong (Fall 2019-Spring 2020)
 # Wordnet_bySentenceID and get_case_initial_row written by Yi Wang (April 2020)
 
+import pandas as pd
+
 import config_util
 import CoNLL_util
 import html_annotator_dictionary_util
 import IO_files_util
 import IO_libraries_util
 import knowledge_graphs_WordNet_util
-import pandas as pd
 import Stanford_CoreNLP_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
@@ -61,8 +62,14 @@ def run_kg_wordnet(
 
     language_var = "English"  # WordNet works only for English language
 
-    WordNetDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
-        "knowledge_graphs_WordNet_util", "WordNet", "", silent=False, errorFound=False
+    WordNetDir, existing_software_config, errorFound = (
+        IO_libraries_util.external_software_install(
+            "knowledge_graphs_WordNet_util",
+            "WordNet",
+            "",
+            silent=False,
+            errorFound=False,
+        )
     )
     if WordNetDir is None:
         return filesToOpen
@@ -126,7 +133,10 @@ def run_kg_wordnet(
         bold_var = True
         color_palette_dict_var = "red"  # default color, if forgotten
 
-        tagAnnotations = ['<span style="color: ' + color_palette_dict_var + '; font-weight: bold">', "</span>"]
+        tagAnnotations = [
+            '<span style="color: ' + color_palette_dict_var + '; font-weight: bold">',
+            "</span>",
+        ]
 
         filesToOpen = html_annotator_dictionary_util.dictionary_annotate(
             inputFilename,
@@ -174,9 +184,13 @@ def run_kg_wordnet(
             )
             return
         if extract_proper_nouns:
-            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(csv_file, outputDir, sel_col, True)
+            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(
+                csv_file, outputDir, sel_col, True
+            )
         if extract_improper_nouns:
-            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(csv_file, outputDir, sel_col, False)
+            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(
+                csv_file, outputDir, sel_col, False
+            )
 
     if aggregate_lemmatized_var:
         if len(csv_file) == 0:
@@ -222,8 +236,8 @@ def run_kg_wordnet(
         # check that input file is a CoNLL table
         if not CoNLL_util.check_CoNLL(csv_file):
             return
-        noun_form_csv, noun_lemma_csv, verb_form_csv, verb_lemma_csv = CoNLL_util.get_nouns_verbs_CoNLL(
-            csv_file, outputDir
+        noun_form_csv, noun_lemma_csv, verb_form_csv, verb_lemma_csv = (
+            CoNLL_util.get_nouns_verbs_CoNLL(csv_file, outputDir)
         )
         filesToOpen.append(noun_form_csv)
         filesToOpen.append(noun_lemma_csv)
@@ -309,7 +323,9 @@ def run_kg_wordnet(
         # check that input file is a CoNLL table
         if not CoNLL_util.check_CoNLL(csv_file):
             return
-        outputFilename = IO_files_util.generate_output_file_name(csv_file, outputDir, ".csv", "WordNet", "conll")
+        outputFilename = IO_files_util.generate_output_file_name(
+            csv_file, outputDir, ".csv", "WordNet", "conll"
+        )
         filesToOpen.append(outputFilename)
         outputFiles = knowledge_graphs_WordNet_util.Wordnet_bySentenceID(
             csv_file,

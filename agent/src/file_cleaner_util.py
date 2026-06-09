@@ -123,7 +123,10 @@ def add_full_stop_to_paragraph(
         else:
             msgString = "No documents have been edited for added full stops."
     else:
-        msgString = f"{nDocs} documents out of {count} have been edited for full stops." + f"\n\nThe percentage of documents processed is {(float(count) / nDocs) * 100:.2f}"
+        msgString = (
+            f"{nDocs} documents out of {count} have been edited for full stops."
+            + f"\n\nThe percentage of documents processed is {(float(count) / nDocs) * 100:.2f}"
+        )
     if count > 0:
         if inputFilename != "":
             msgString = (
@@ -1100,7 +1103,10 @@ def newspaper_titles(
         else:
             msgString = "No documents have generated separate titles."
     else:
-        msgString = f"{NUM_DOCUMENT} documents out of {count} have generated titles." + f"\n\nThe percentage of documents processed is {(float(count) / nDocs) * 100:.2f}"
+        msgString = (
+            f"{NUM_DOCUMENT} documents out of {count} have generated titles."
+            + f"\n\nThe percentage of documents processed is {(float(count) / nDocs) * 100:.2f}"
+        )
     if count > 0:
         if inputFilename != "":
             msgString = (

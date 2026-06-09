@@ -3,6 +3,12 @@ import os  # TODO MINO GIS create kml record
 from datetime import datetime  # TODO MINO GIS date option
 
 import dateutil
+import pandas as pd
+import simplekml  # TODO MINO GIS create kml record
+from geopy import Nominatim
+from geopy.exc import GeocoderTimedOut
+from geopy.geocoders import GoogleV3
+
 import GIS_file_check_util
 import GIS_Google_pin_util  # TODO MINO GIS create kml record
 import GIS_location_util
@@ -12,17 +18,14 @@ import IO_csv_util  # TODO MINO GIS create kml record
 import IO_files_util
 import IO_internet_util
 import IO_user_interface_util
-import pandas as pd
-import simplekml  # TODO MINO GIS create kml record
-from geopy import Nominatim
-from geopy.exc import GeocoderTimedOut
-from geopy.geocoders import GoogleV3
 
 filesToOpen = []
 
 # multi_name_locations is provided in the NLP Suite lib/wordLists to make sure that multiple name locations are processed correctly
 # e.g., China, People's Republic of China, US, U.S., United States, United States of America
-multi_name_locations = pd.read_csv(os.path.join(GUI_IO_util.wordLists_libPath, "multi_name_locations.csv"))
+multi_name_locations = pd.read_csv(
+    os.path.join(GUI_IO_util.wordLists_libPath, "multi_name_locations.csv")
+)
 
 # TODO
 # Return a location point by address.
@@ -70,7 +73,15 @@ def get_geolocator(geocoder, Google_API=""):
 
 
 # Country specification; uses 2-digit lowercase ISO_3166 country codes
-def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=False, timeout=4, featuretype=None):
+def nominatim_geocode(
+    geolocator,
+    loc,
+    country_bias="",
+    box_tuple="",
+    restrict=False,
+    timeout=4,
+    featuretype=None,
+):
     # https://geopy.readthedocs.io/en/stable/#geopy.geocoders.options
     # this will renew the SSL certificate indefinitely
     # pip install pyOpenSSL
@@ -100,7 +111,9 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
         box_tuple = None
     else:
         box_tuple = box_tuple.replace(" ", "")
-        box_tuple = [tuple(map(float, t.strip("()").split(","))) for t in box_tuple.split("),(")]
+        box_tuple = [
+            tuple(map(float, t.strip("()").split(","))) for t in box_tuple.split("),(")
+        ]
         # georgia viewbox 	34.98527546066368, -85.59790207354965 (upper left);
         # 					30.770444751951388, -81.5219744485591 (lower right)
 
@@ -132,7 +145,10 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
             except Exception:
                 return None
         else:
-            print("Maximum number of retries to access Nominatim server exceeded in geocoding " + loc)
+            print(
+                "Maximum number of retries to access Nominatim server exceeded in geocoding "
+                + loc
+            )
             raise
 
 
@@ -156,7 +172,9 @@ def google_geocode(geolocator, loc, region=None, timeout=10):
 # filenames are '' if empty, perhaps for a permission error
 
 
-def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationColumnName, encodingValue, geocoder):
+def process_geocoded_data_for_kml(
+    locations, inputFilename, outputDir, locationColumnName, encodingValue, geocoder
+):
     if "Google" in geocoder:
         GIS_pipeline_util.getGoogleAPIkey("Google-geocode-API_config.csv", False)
         # if Google_API == '':
@@ -169,9 +187,14 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
     # 	but in the regular output directory
     kmloutputFilename = outputDir + os.sep + tail
 
-    inputIsCoNLL, inputIsGeocoded, withHeader, headers, datePresent, filenamePositionInCoNLLTable = (
-        GIS_file_check_util.CoNLL_checker(inputFilename)
-    )
+    (
+        inputIsCoNLL,
+        inputIsGeocoded,
+        withHeader,
+        headers,
+        datePresent,
+        filenamePositionInCoNLLTable,
+    ) = GIS_file_check_util.CoNLL_checker(inputFilename)
     input_df = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
     input_df = input_df.reset_index()
     for index, row in input_df.iterrows():
@@ -216,16 +239,44 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
             sentence = input_df.at[index - 1, label]
             description = "<i><b>Location</b></i>: " + location + "<br/><br/>"
             if datePresent:
-                description = description + "\n" + "<i><b>Date</b></i>: " + str(date) + "<br/><br/>"
+                description = (
+                    description
+                    + "\n"
+                    + "<i><b>Date</b></i>: "
+                    + str(date)
+                    + "<br/><br/>"
+                )
             if document != "":
-                description = description + "\n" + "<i><b>Document</b></i>: " + document + "<br/><br/>"
+                description = (
+                    description
+                    + "\n"
+                    + "<i><b>Document</b></i>: "
+                    + document
+                    + "<br/><br/>"
+                )
             if summary != "":
-                description = description + "\n" + "<i><b>Summary</b></i>: " + summary + "<br/><br/>"
+                description = (
+                    description
+                    + "\n"
+                    + "<i><b>Summary</b></i>: "
+                    + summary
+                    + "<br/><br/>"
+                )
             if sentence != "":
-                description = description + "\n" + "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
+                description = (
+                    description
+                    + "\n"
+                    + "<i><b>Sentence</b></i>: "
+                    + sentence
+                    + "<br/><br/>"
+                )
             pnt.description = description
         except Exception:
-            print("Error processing ", location.upper(), ". No sentence available for description field.")
+            print(
+                "Error processing ",
+                location.upper(),
+                ". No sentence available for description field.",
+            )
         # TODO MINO GIS date option
         if datePresent:
             try:
@@ -239,11 +290,15 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
     try:
         kml.save(kmloutputFilename)
     except Exception:
-        print("kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).")
+        print(
+            "kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters)."
+        )
         # Save kml regardless of validity. Let the user find any bad characters.
         kml.save(kmloutputFilename, False)
         # Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
-        with open(kmloutputFilename, "r+", encoding="utf_8", errors="ignore") as kmlfile:
+        with open(
+            kmloutputFilename, "r+", encoding="utf_8", errors="ignore"
+        ) as kmlfile:
             content = kmlfile.read()
             content = content.replace("\u000b", "")
             content = content.replace("\u001f", "")
@@ -254,7 +309,15 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
 
 
 def geocode(
-    locations, inputFilename, outputDir, locationColumnName, geocoder, country_bias, area, restrict, encodingValue
+    locations,
+    inputFilename,
+    outputDir,
+    locationColumnName,
+    geocoder,
+    country_bias,
+    area,
+    restrict,
+    encodingValue,
 ):
 
     if not IO_internet_util.check_internet_availability_warning("GIS geocoder"):
@@ -275,9 +338,14 @@ def geocode(
     kml = simplekml.Kml()
     icon_url = GIS_Google_pin_util.pin_icon_select("Pushpins", "red")
 
-    inputIsCoNLL, inputIsGeocoded, withHeader, headers, datePresent, filenamePositionInCoNLLTable = (
-        GIS_file_check_util.CoNLL_checker(inputFilename)
-    )
+    (
+        inputIsCoNLL,
+        inputIsGeocoded,
+        withHeader,
+        headers,
+        datePresent,
+        filenamePositionInCoNLLTable,
+    ) = GIS_file_check_util.CoNLL_checker(inputFilename)
     pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
 
     startTime = IO_user_interface_util.timed_alert(
@@ -294,24 +362,46 @@ def geocode(
 
     geoName = "geo-" + str(geocoder[:3])
     geocodedLocationsOutputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "GIS", geoName, locationColumnName, "", "", False, True
-    )
-    locationsNotFoundoutputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "GIS", geoName, "LOCATIONS_not-found", locationColumnName, "", False, True
-    )
-
-    locationsNotFoundNonDistinctoutputFilename = IO_files_util.generate_output_file_name(
         inputFilename,
         "",
         outputDir,
         ".csv",
         "GIS",
         geoName,
-        "LOCATIONS_Not-Found-Non-Distinct",
+        locationColumnName,
+        "",
+        "",
+        False,
+        True,
+    )
+    locationsNotFoundoutputFilename = IO_files_util.generate_output_file_name(
+        inputFilename,
+        "",
+        outputDir,
+        ".csv",
+        "GIS",
+        geoName,
+        "LOCATIONS_not-found",
         locationColumnName,
         "",
         False,
         True,
+    )
+
+    locationsNotFoundNonDistinctoutputFilename = (
+        IO_files_util.generate_output_file_name(
+            inputFilename,
+            "",
+            outputDir,
+            ".csv",
+            "GIS",
+            geoName,
+            "LOCATIONS_Not-Found-Non-Distinct",
+            locationColumnName,
+            "",
+            False,
+            True,
+        )
     )
     # TODO MINO GIS create kml record
     kmloutputFilename = geocodedLocationsOutputFilename.replace(".csv", ".kml")
@@ -319,9 +409,21 @@ def geocode(
     if locations == "":
         if inputIsCoNLL:
             IO_files_util.generate_output_file_name(
-                inputFilename, "", outputDir, ".csv", "GIS", "NER_locations", "", "", "", False, True
+                inputFilename,
+                "",
+                outputDir,
+                ".csv",
+                "GIS",
+                "NER_locations",
+                "",
+                "",
+                "",
+                False,
+                True,
             )
-            locations = GIS_location_util.extract_NER_locations(inputFilename, encodingValue, datePresent)
+            locations = GIS_location_util.extract_NER_locations(
+                inputFilename, encodingValue, datePresent
+            )
         else:
             # locations is a list of names of locations
             locations = GIS_location_util.extract_csvFile_locations(
@@ -334,10 +436,14 @@ def geocode(
     # define variable
     NER_Tag = ""
 
-    csvfile = IO_files_util.openCSVFile(geocodedLocationsOutputFilename, "w", encodingValue)
+    csvfile = IO_files_util.openCSVFile(
+        geocodedLocationsOutputFilename, "w", encodingValue
+    )
     if csvfile == "":  # permission error
         return "", "", "", ""  # empty output files
-    csvfileNotFound = IO_files_util.openCSVFile(locationsNotFoundoutputFilename, "w", encodingValue)
+    csvfileNotFound = IO_files_util.openCSVFile(
+        locationsNotFoundoutputFilename, "w", encodingValue
+    )
     if csvfileNotFound == "":  # permission error
         return "", "", "", ""  # empty output files
     csvfileNotFoundNonDistinct = IO_files_util.openCSVFile(
@@ -469,12 +575,16 @@ def geocode(
                     NER_Tag_Nominatim = "city"
                 if datePresent:
                     sentence = item[3]
-                    document = os.path.split(IO_csv_util.undressFilenameForCSVHyperlink(item[4]))[1]
+                    document = os.path.split(
+                        IO_csv_util.undressFilenameForCSVHyperlink(item[4])
+                    )[1]
                 else:
                     # code breaks when geocoding PC-ACE_data
                     try:
                         sentence = item[2]
-                        document = os.path.split(IO_csv_util.undressFilenameForCSVHyperlink(item[3]))[1]
+                        document = os.path.split(
+                            IO_csv_util.undressFilenameForCSVHyperlink(item[3])
+                        )[1]
                     except Exception:
                         sentence = ""
                         document = ""
@@ -483,7 +593,10 @@ def geocode(
             if itemToGeocode in distinctGeocodedList:
                 # multi_name_locations is provided in the NLP Suite lib/wordLists to make sure that multiple name locations are processed correctly
                 # e.g., China, People's Republic of China, US, U.S., United States, United States of America
-                for _index, row in multi_name_locations.iterrows():  # For every row in the ConLL
+                for (
+                    _index,
+                    row,
+                ) in multi_name_locations.iterrows():  # For every row in the ConLL
                     multi_name_location = row[0]
                     multi_name_location = multi_name_location.split(", ")
                     for loc_name in multi_name_location:  # "Location multiple names"
@@ -497,7 +610,9 @@ def geocode(
                 if itemToGeocode in notGeocodedList:
                     notGeocodedList.append(itemToGeocode)
                     notGeocodedFull.append((itemToGeocode, NER_Tag))
-                    lat = lng = 0  # TODO set 0 for lat and lng since itemToGeocode is in notGeocodedList
+                    lat = lng = (
+                        0  # TODO set 0 for lat and lng since itemToGeocode is in notGeocodedList
+                    )
                 else:
                     lat = distinctGeocodedLocations[itemToGeocode][0]
                     lng = distinctGeocodedLocations[itemToGeocode][1]
@@ -506,7 +621,10 @@ def geocode(
                     country_geocoder = address_list[-1].strip()
             else:
                 print("   Geocoding DISTINCT location: " + itemToGeocode)
-                for _index1, row1 in multi_name_locations.iterrows():  # For every row in the ConLL
+                for (
+                    _index1,
+                    row1,
+                ) in multi_name_locations.iterrows():  # For every row in the ConLL
                     multi_name_location = row1[0]
                     multi_name_location = multi_name_location.split(", ")
                     for loc_name in multi_name_location:  # "Location multiple names"
@@ -546,14 +664,22 @@ def geocode(
                 # location is None when not found
                 if geocoder == "Nominatim":
                     try:
-                        lat, lng, address = location.latitude, location.longitude, location.address
+                        lat, lng, address = (
+                            location.latitude,
+                            location.longitude,
+                            location.address,
+                        )
                     except Exception:
                         lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
                         locationsNotFound = locationsNotFound + 1
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
                         notGeocodedList.append(itemToGeocode)
                         notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        print(currRecord, "     LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
+                        print(
+                            currRecord,
+                            "     LOCATION NOT FOUND BY " + geocoder,
+                            itemToGeocode,
+                        )
                 else:  # Google
                     try:  # use a try/except in case requests do not give results
                         lat, lng, address = (
@@ -567,7 +693,11 @@ def geocode(
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
                         notGeocodedList.append(itemToGeocode)
                         notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        print(currRecord, "     LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
+                        print(
+                            currRecord,
+                            "     LOCATION NOT FOUND BY " + geocoder,
+                            itemToGeocode,
+                        )
                 if lat != 0 and lng != 0:
                     distinctGeocodedLocations[itemToGeocode] = (lat, lng, address)
                     lat = distinctGeocodedLocations[itemToGeocode][0]
@@ -611,9 +741,28 @@ def geocode(
                         )
                 else:
                     if datePresent:
-                        geowriter.writerow([itemToGeocode, NER_Tag, lat, lng, address, country_geocoder, date])
+                        geowriter.writerow(
+                            [
+                                itemToGeocode,
+                                NER_Tag,
+                                lat,
+                                lng,
+                                address,
+                                country_geocoder,
+                                date,
+                            ]
+                        )
                     else:
-                        geowriter.writerow([itemToGeocode, NER_Tag, lat, lng, address, country_geocoder])
+                        geowriter.writerow(
+                            [
+                                itemToGeocode,
+                                NER_Tag,
+                                lat,
+                                lng,
+                                address,
+                                country_geocoder,
+                            ]
+                        )
 
                 # TODO MINO GIS create kml record
                 print("   Processing geocoded record for kml file for Google Earth Pro")
@@ -626,7 +775,9 @@ def geocode(
                     if date != "":
                         try:
                             pnt.description = (
-                                "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
+                                "<i><b>Location</b></i>: "
+                                + itemToGeocode
+                                + "<br/><br/>"
                                 "<i><b>Date</b></i>: "
                                 + str(date)
                                 + "<br/><br/>"
@@ -636,7 +787,11 @@ def geocode(
                                 "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
                             )
                         except Exception:
-                            pnt.description = "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
+                            pnt.description = (
+                                "<i><b>Location</b></i>: "
+                                + itemToGeocode
+                                + "<br/><br/>"
+                            )
                     else:
                         pnt.description = (
                             "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
@@ -644,7 +799,9 @@ def geocode(
                             "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
                         )
                 except Exception:
-                    pnt.description = "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
+                    pnt.description = (
+                        "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
+                    )
 
                 # create the date values for the slide bar in Google Earth Pro for dynamic time
                 if datePresent:
@@ -656,7 +813,10 @@ def geocode(
                     pnt.timespan.begin = GEPdateFormat
                     pnt.timespan.end = GEPdateFormat
 
-    [geowriterNotFoundNonDistinct.writerow([item[0], item[1]]) for item in notGeocodedFull]
+    [
+        geowriterNotFoundNonDistinct.writerow([item[0], item[1]])
+        for item in notGeocodedFull
+    ]
     csvfile.close()
     csvfileNotFound.close()
     csvfileNotFoundNonDistinct.close()
@@ -664,11 +824,15 @@ def geocode(
     try:
         kml.save(kmloutputFilename)
     except Exception:
-        print("kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).")
+        print(
+            "kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters)."
+        )
         # Save kml regardless of validity. Let the user find any bad characters.
         kml.save(kmloutputFilename, False)
         # Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
-        with open(kmloutputFilename, "r+", encoding="utf_8", errors="ignore") as kmlfile:
+        with open(
+            kmloutputFilename, "r+", encoding="utf_8", errors="ignore"
+        ) as kmlfile:
             content = kmlfile.read()
             content = content.replace("\u000b", "")
             content = content.replace("\u001f", "")
@@ -677,15 +841,25 @@ def geocode(
             kmlfile.truncate()
 
     if locationsNotFound == 0:
-        locationsNotFoundoutputFilename = ""  # used NOT to open the file since there are NO errors
+        locationsNotFoundoutputFilename = (
+            ""  # used NOT to open the file since there are NO errors
+        )
     else:
-        if locationsNotFound == index_locations or locationsNotFound == len(distinctGeocodedList):
-            geocodedLocationsOutputFilename = ""  # used NOT to open the file since there are no records
+        if locationsNotFound == index_locations or locationsNotFound == len(
+            distinctGeocodedList
+        ):
+            geocodedLocationsOutputFilename = (
+                ""  # used NOT to open the file since there are no records
+            )
             # this warning is already given
     IO_user_interface_util.timed_alert(
         2000,
         "GIS geocoder",
-        "Finished geocoding " + str(len(locations)) + " locations via the online service '" + geocoder + "' at",
+        "Finished geocoding "
+        + str(len(locations))
+        + " locations via the online service '"
+        + geocoder
+        + "' at",
         True,
         str(locationsNotFound)
         + " location(s) was/were NOT geocoded out of "
@@ -711,9 +885,13 @@ def convertToGEP(date):
     # if 'float' in str(type(date)): # this occurs when dealing with an integer YEAR only
     # if 'int' in str(type(date)): # this occurs when dealing with an integer YEAR only
     if not pd.isna(date) and date != "":
-        if "float" in str(type(date)):  # this occurs when dealing with an integer YEAR only
+        if "float" in str(
+            type(date)
+        ):  # this occurs when dealing with an integer YEAR only
             date = str(float(date))
-        if "int" in str(type(date)):  # this occurs when dealing with an integer YEAR only
+        if "int" in str(
+            type(date)
+        ):  # this occurs when dealing with an integer YEAR only
             date = str(int(date))
         fmts = (
             "%Y",
@@ -760,11 +938,15 @@ def convertToGEP(date):
         try:
             currentDateFormat = dateutil.parser.parse(date)
         except Exception:
-            print(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
+            print(
+                f"Date error: There was an error in processing the date '{date}' with format '{fmt}'."
+            )
         # years before 1900 cannot be used
         # pre 1900 dates may give a problem in Windows: ValueError: format %y requires year >= 1900 on Windows
         try:
             GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
         except Exception:
-            print(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
+            print(
+                f"Date error: There was an error in processing the date '{date}' with format '{fmt}'."
+            )
         return GEPdateFormat

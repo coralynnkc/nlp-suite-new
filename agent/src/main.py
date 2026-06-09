@@ -3,13 +3,14 @@ from threading import Lock, Thread
 from typing import Annotated
 
 import uvicorn
+from fastapi import FastAPI, Form, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, PlainTextResponse
+
 from boxplot_chart import run as run_boxplot
 from colormap_chart import run_colormap
 from CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
 from excel_plotly_charts import run_excel_plotly_charts
-from fastapi import FastAPI, Form, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, PlainTextResponse
 from file_manager_main import run_file_manager
 from file_search_byWord_main import run_search_byWord
 from GIS_main import run_GIS
@@ -92,7 +93,9 @@ def run(app, method):
 @app.middleware("http")
 async def single_runner(request: Request, call_next):
     if not _worker_lock.acquire(blocking=False):
-        return PlainTextResponse("The agent is currently busy running another job", status_code=503)
+        return PlainTextResponse(
+            "The agent is currently busy running another job", status_code=503
+        )
 
     app.worker = True
     response = await call_next(request)

@@ -5,9 +5,10 @@
 import os
 import time
 
+import pandas as pd
+
 import IO_csv_util
 import IO_user_interface_util
-import pandas as pd
 import Stanford_CoreNLP_tags_util
 
 global sentenceID_position, documentID_position, document_position

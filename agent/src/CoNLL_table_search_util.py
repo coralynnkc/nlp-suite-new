@@ -10,12 +10,13 @@ import os
 #                                           ['os', 'tkinter', 'enum', 'typing']) == False:
 from enum import Enum
 
+import pandas as pd
+
 import charts_util
 import CoNLL_util
 import Gephi_util
 import IO_csv_util
 import IO_files_util
-import pandas as pd
 import Stanford_CoreNLP_tags_util
 
 dict_POSTAG, dict_DEPREL = (

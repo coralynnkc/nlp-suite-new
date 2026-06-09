@@ -2,11 +2,12 @@ import datetime
 import glob
 import os
 
+import pandas as pd
+
 import config_util
 import IO_csv_util
 import IO_files_util
 import NGrams_CoOccurrences_util
-import pandas as pd
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -75,8 +76,14 @@ def run_ngrams(
     #     if 'Word search' in extra_GUIs_menu_var.get():
 
     # get the date options from filename
-    filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = (
-        config_util.get_date_options(config_filename, config_input_output_numeric_options)
+    (
+        filename_embeds_date_var,
+        date_format_var,
+        items_separator_var,
+        date_position_var,
+        config_file_exists,
+    ) = config_util.get_date_options(
+        config_filename, config_input_output_numeric_options
     )
 
     if (
@@ -86,7 +93,9 @@ def run_ngrams(
         and not ngrams_viewer_var
         and not CoOcc_Viewer_var
     ):
-        print("Warning, there are no options selected.\n\nPlease, select one of the available options and try again.")
+        print(
+            "Warning, there are no options selected.\n\nPlease, select one of the available options and try again."
+        )
         return
     if inputDir == "" and (ngrams_viewer_var or CoOcc_Viewer_var):
         print(
@@ -150,7 +159,9 @@ def run_ngrams(
         ):
             print("Warning, the selected option is not available yet.\n\nSorry!")
             if "Repetition" in str(ngrams_options_list):
-                print("Warning, do check out the repetition finder algorithm in the CoNLL Table Analyzer GUI.")
+                print(
+                    "Warning, do check out the repetition finder algorithm in the CoNLL Table Analyzer GUI."
+                )
             return
 
         if ngrams_word_var or bySentenceIndex_word_var:
@@ -160,32 +171,36 @@ def run_ngrams(
                 hapax_words = True  # set it temporarily to True since we default to compute it every time
                 wordgram = ngrams_word_var  # true r false depending upon whether n-grams are for word or character
                 bySentenceID = bySentenceIndex_word_var
-                outputFiles, outputDir = statistics_txt_util.compute_character_word_ngrams(
-                    inputFilename,
-                    inputDir,
-                    outputDir,
-                    config_filename,
-                    ngrams_size,
-                    frequency,
-                    hapax_words,
-                    normalize,
-                    lemmatize,
-                    # case_sensitive,
-                    excludePunctuation,
-                    excludeArticles,
-                    excludeDeterminers,
-                    excludeStopWords,
-                    wordgram,
-                    openOutputFiles,
-                    chartPackage,
-                    dataTransformation,
-                    bySentenceID,
+                outputFiles, outputDir = (
+                    statistics_txt_util.compute_character_word_ngrams(
+                        inputFilename,
+                        inputDir,
+                        outputDir,
+                        config_filename,
+                        ngrams_size,
+                        frequency,
+                        hapax_words,
+                        normalize,
+                        lemmatize,
+                        # case_sensitive,
+                        excludePunctuation,
+                        excludeArticles,
+                        excludeDeterminers,
+                        excludeStopWords,
+                        wordgram,
+                        openOutputFiles,
+                        chartPackage,
+                        dataTransformation,
+                        bySentenceID,
+                    )
                 )
                 import statistics_csv_util
 
                 for file in outputFiles:
                     if "csv" in file:
-                        statistics_csv_util.data_transformation(file, dataTransformation).to_csv(file, index=False)
+                        statistics_csv_util.data_transformation(
+                            file, dataTransformation
+                        ).to_csv(file, index=False)
             if outputFiles is not None:
                 if isinstance(outputFiles, str):
                     filesToOpen.append(outputFiles)
@@ -255,7 +270,11 @@ def run_ngrams(
 
     if ngrams_viewer_var or CoOcc_Viewer_var:
         if date_options:
-            new_date_format = date_format_var.replace("yyyy", "%Y").replace("mm", "%m").replace("dd", "%d")
+            new_date_format = (
+                date_format_var.replace("yyyy", "%Y")
+                .replace("mm", "%m")
+                .replace("dd", "%d")
+            )
             for folder, _subs, files in os.walk(inputDir):
                 for filename in files:
                     if not filename.endswith(".txt"):
@@ -264,20 +283,29 @@ def run_ngrams(
                     total_file_number = total_file_number + 1
                     try:
                         date_text = ""
-                        date_text = filename.split(items_separator_var)[date_position_var - 1]
-                    except Exception:  # if a file in the folder has no date it will break the code
+                        date_text = filename.split(items_separator_var)[
+                            date_position_var - 1
+                        ]
+                    except (
+                        Exception
+                    ):  # if a file in the folder has no date it will break the code
                         pass
                     try:
                         datetime.datetime.strptime(date_text, new_date_format)
                     except ValueError:
                         error_file_number = error_file_number + 1
                         error_filenames.append(
-                            IO_csv_util.dressFilenameForCSVHyperlink(os.path.join(folder, filename + ".txt"))
+                            IO_csv_util.dressFilenameForCSVHyperlink(
+                                os.path.join(folder, filename + ".txt")
+                            )
                         )
                         error_flag = True
 
         if error_flag:
-            df = pd.DataFrame(error_filenames, columns=["File with date not in position " + str(date_position_var)])
+            df = pd.DataFrame(
+                error_filenames,
+                columns=["File with date not in position " + str(date_position_var)],
+            )
             error_output = IO_files_util.generate_output_file_name(
                 "", inputDir, outputDir, ".csv", "Date_position_errors_file"
             )

@@ -5,12 +5,13 @@ import io
 import math
 import os
 
-import IO_csv_util
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+import IO_csv_util
 
 ## NOTE:
 ## some graphing functions has a column placed at the end
@@ -123,7 +124,9 @@ def create_Plotly_chart(
                                 </html>
                                 """
 
-            def process_multiple(x_cols, y_cols, lst, df2, ops, types, data, _html_template=html_template):
+            def process_multiple(
+                x_cols, y_cols, lst, df2, ops, types, data, _html_template=html_template
+            ):
                 chart_htmls = []
                 for _ in lst:
                     print(df2)

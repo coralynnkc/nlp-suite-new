@@ -21,18 +21,26 @@ import reminders_util
 # gmaps_list is a list of lat/long values to be written in the java script html output file
 # then saves a new file that contains the html/js to display the heatmap
 def create_google_heatmap(outputFilename, gmaps_list):
-    api_key = os.environ.get("GOOGLE_MAPS_API_KEY") or GIS_pipeline_util.getGoogleAPIkey("Google-Maps-API_config.csv")
+    api_key = os.environ.get(
+        "GOOGLE_MAPS_API_KEY"
+    ) or GIS_pipeline_util.getGoogleAPIkey("Google-Maps-API_config.csv")
     if not api_key or len(api_key) < 5:
-        print("Google Maps API key error: The expected API key required by Google Maps is missing. Please enter it via the settings page. No Google Maps heatmap can be produced.")
+        print(
+            "Google Maps API key error: The expected API key required by Google Maps is missing. Please enter it via the settings page. No Google Maps heatmap can be produced."
+        )
         return
 
-    js_template_loc = GUI_IO_util.Google_heatmaps_libPath + os.sep + "heatmap_template.html"
+    js_template_loc = (
+        GUI_IO_util.Google_heatmaps_libPath + os.sep + "heatmap_template.html"
+    )
     open_js = open(js_template_loc)
     js_contents = open_js.readlines()
     js_template = "".join(js_contents)
     open_js.close()
 
-    js_to_write = js_template.split("//DO NOT REMOVE! PROGRAM INSERTS THE CORRECT JS HERE!")
+    js_to_write = js_template.split(
+        "//DO NOT REMOVE! PROGRAM INSERTS THE CORRECT JS HERE!"
+    )
     s = ""
     for item in gmaps_list:
         s += str(item + "\n")
@@ -63,11 +71,16 @@ def create_js(outputFilename, locations, geocoder, latLongList):
     else:
         latLongList = locations
     for item in latLongList:
-        gmaps_str = "".join(["new google.maps.LatLng(", str(item[0]), ", ", str(item[1]), "),"])
+        gmaps_str = "".join(
+            ["new google.maps.LatLng(", str(item[0]), ", ", str(item[1]), "),"]
+        )
         gmaps_list.append(gmaps_str)
         # gmaps_list geocoded values`
     create_google_heatmap(outputFilename, gmaps_list)
     head, scriptName = os.path.split(os.path.basename(__file__))
     reminders_util.checkReminder(
-        scriptName, reminders_util.title_options_Google_API, reminders_util.message_Google_API, True
+        scriptName,
+        reminders_util.title_options_Google_API,
+        reminders_util.message_Google_API,
+        True,
     )

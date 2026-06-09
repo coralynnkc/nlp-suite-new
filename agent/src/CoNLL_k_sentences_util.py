@@ -8,9 +8,10 @@ edited by Naman Sahni 9/23.2022
 
 import string
 
+import pandas as pd
+
 import charts_util
 import IO_files_util
-import pandas as pd
 import statistics_txt_util
 
 

@@ -1,11 +1,14 @@
-import CoNLL_util
-import IO_csv_util
 import numpy as np
 import pandas as pd
 
+import CoNLL_util
+import IO_csv_util
+
 
 # returns False if error found
-def geocoded_checker(numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue):
+def geocoded_checker(
+    numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue
+):
     # check that the file REALLY contains geocoded data, with float values for lat and long
     for i in range(len(headers)):
         if locationColumnValue == headers[i]:
@@ -86,7 +89,9 @@ def location_column_checker(inputFilename, locationColumnValue, encodingValue):
 
 
 # def restrictions_checker(inputFilename,inputIsCoNLL,inputIsGeocoded,numColumns,withHeader,headers,computeDistance_var,baselineLocation,locationColumnValue,locationColumnValue2,encodingValue):
-def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locationColumnValue):
+def restrictions_checker(
+    inputFilename, inputIsCoNLL, withHeader, headers, locationColumnValue
+):
     # Error messages -------------------------------------------------
 
     # Get minimum expected number of columns -------------------------------------------------
@@ -96,11 +101,18 @@ def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locat
     # Check location columns for string values -------------------------------------------------
 
     encodingValue = "utf-8"
-    IO_csv_util.get_columnNumber_from_headerValue(headers, locationColumnValue, inputFilename)
+    IO_csv_util.get_columnNumber_from_headerValue(
+        headers, locationColumnValue, inputFilename
+    )
     if not inputIsCoNLL:
         if len(locationColumnValue) > 0:
             # check that location column is a column of strings
-            if location_column_checker(inputFilename, locationColumnValue, encodingValue) is False:
+            if (
+                location_column_checker(
+                    inputFilename, locationColumnValue, encodingValue
+                )
+                is False
+            ):
                 return False
 
     else:
@@ -125,7 +137,14 @@ def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locat
             print("Input file warning, message = two few colms for geocoded.")
             return False
         # Check if the inputfile is REALLY geocoded or not for the two sets of locations
-        if not geocoded_checker(numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue):
+        if not geocoded_checker(
+            numColumns,
+            minColumns,
+            headers,
+            locationColumnValue,
+            inputFilename,
+            encodingValue,
+        ):
             return False
     return True
 
@@ -148,4 +167,11 @@ def CoNLL_checker(inputFilename):
     withHeader = True
     filenamePositionInCoNLLTable = 11
 
-    return inputIsCoNLL, inputIsGeocoded, withHeader, headers, datePresent, filenamePositionInCoNLLTable
+    return (
+        inputIsCoNLL,
+        inputIsGeocoded,
+        withHeader,
+        headers,
+        datePresent,
+        filenamePositionInCoNLLTable,
+    )

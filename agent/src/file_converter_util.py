@@ -14,8 +14,9 @@ import os
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
 from os.path import splitext
 
-import IO_files_util
 from striprtf.striprtf import rtf_to_text
+
+import IO_files_util
 
 # https://pdfminersix.readthedocs.io/en/latest/
 # # https://pypi.org/project/pdfminer/#description
@@ -239,11 +240,13 @@ def tsv_converter(window, inputFilename, outputDir, header):
 ################################################
 def convert_pdf_to_img(pdf_file):
     from pdf2image import convert_from_path
+
     return convert_from_path(pdf_file)
 
 
 def convert_image_to_text(file):
     from pytesseract import image_to_string
+
     text = image_to_string(file)
     return text
 

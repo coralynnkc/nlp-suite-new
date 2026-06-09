@@ -2,8 +2,9 @@
 
 import os.path
 
-import IO_files_util
 import pandas as pd
+
+import IO_files_util
 
 
 def listToString(s, sep):
