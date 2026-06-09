@@ -151,7 +151,8 @@ def dictionary_annotate(
         head, tail = os.path.split(file)
         i += 1
         logger.info("Processing file " + str(i) + "/" + str(nFile) + " " + tail)
-        text = open(file, encoding="utf-8", errors="ignore").read()
+        with open(file, encoding="utf-8", errors="ignore") as _fh:
+            text = _fh.read()
         # put filename in bold
         tail = "<b>" + tail + "</b>"
         writeout.append(
@@ -296,7 +297,6 @@ def dictionary_annotate(
         for s in writeout:
             f.write(s)
         f.write("\n</div>\n</body>\n</html>")
-    f.close()
 
     IO_user_interface_util.timed_alert(
         2000,

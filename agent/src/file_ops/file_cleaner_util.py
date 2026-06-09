@@ -184,37 +184,37 @@ def check_typesetting_hyphenation(
         logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         hyphenated_lines = 0
         lines = []
-    with open(infile, encoding="utf-8", errors="ignore") as source:
-        for line in source.readlines():
-            line = line.rstrip("\n")
-            if line.endswith("-"):
-                if len(line) >= 2:
-                    if line[-2] == " ":
-                        continue
-                hyphenated_lines += 1
-                lin, _, e = line.rpartition(" ")
-                lines.append(line)
+        with open(infile, encoding="utf-8", errors="ignore") as source:
+            for line in source.readlines():
+                line = line.rstrip("\n")
+                if line.endswith("-"):
+                    if len(line) >= 2:
+                        if line[-2] == " ":
+                            continue
+                    hyphenated_lines += 1
+                    lin, _, e = line.rpartition(" ")
+                    lines.append(line)
 
-    if hyphenated_lines > 0:
-        logger.info(
-            "Warning: There are "
-            + str(hyphenated_lines)
-            + " typesetting hyphenated lines in the input file(s).\n\nPlease, check carefully the output csv file to make sure that there are no legitimate end-of-line hyphens (e.g., pretty-smart) that should not be joined together. In such legitimate cases, please, manually move the line end to the next line."
-        )
-        outputFilename = IO_files_util.generate_output_file_name(
-            inputFilename, inputDir, outputDir, ".csv", "lines with end hyphen"
-        )
-        lines.insert(0, "Line ending with -")
-        IO_error = IO_csv_util.list_to_csv(window, lines, outputFilename)
-        if not IO_error:
-            filesToOpen.append(outputFilename)
-        # if openOutputFiles:
-    else:
-        logger.info(
-            "Warning: There are "
-            + str(hyphenated_lines)
-            + " typesetting hyphenated lines in the input file(s)."
-        )
+        if hyphenated_lines > 0:
+            logger.info(
+                "Warning: There are "
+                + str(hyphenated_lines)
+                + " typesetting hyphenated lines in the input file(s).\n\nPlease, check carefully the output csv file to make sure that there are no legitimate end-of-line hyphens (e.g., pretty-smart) that should not be joined together. In such legitimate cases, please, manually move the line end to the next line."
+            )
+            outputFilename = IO_files_util.generate_output_file_name(
+                inputFilename, inputDir, outputDir, ".csv", "lines with end hyphen"
+            )
+            lines.insert(0, "Line ending with -")
+            IO_error = IO_csv_util.list_to_csv(window, lines, outputFilename)
+            if not IO_error:
+                filesToOpen.append(outputFilename)
+            # if openOutputFiles:
+        else:
+            logger.info(
+                "Warning: There are "
+                + str(hyphenated_lines)
+                + " typesetting hyphenated lines in the input file(s)."
+            )
 
 
 # replace - followed by a hard carriage return \r at the end of a line with a blank joined to the beginning of the next line

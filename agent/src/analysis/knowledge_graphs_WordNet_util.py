@@ -23,23 +23,12 @@ filesToOpen = []
 
 
 def process_keyword(wordNet_keyword_list, noun_verb, wn):
+    pos = wn.VERB if noun_verb == "VERB" else wn.NOUN
     for keyword in wordNet_keyword_list:
-        if noun_verb == "VERB":
-            synset = wn.synsets(keyword, pos=wn.VERB)
-            if len(synset) == 0:
-                continue
-            else:
-                synset = synset[
-                    0
-                ]  # get the synset of word with its most frequent meaning
-        else:
-            synset = wn.synsets(keyword, pos=wn.NOUN)
-            if len(synset) == 0:
-                continue
-            else:
-                synset = synset[
-                    0
-                ]  # get the synset of word with its most frequent meaning
+        synset = wn.synsets(keyword, pos=pos)
+        if not synset:
+            continue
+        synset = synset[0]  # most frequent meaning
         hyponynms = synset.hyponyms()
         logger.info("=======sub groups are: ======")
         # find the direct hyponynms

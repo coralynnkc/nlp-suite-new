@@ -13,8 +13,6 @@ import Stanford_CoreNLP_tags_util
 
 logger = logging.getLogger(__name__)
 
-global sentenceID_position, documentID_position, document_position
-
 clause_position = 8  # NEW CoNLL_U
 sentenceID_position = 10  # NEW CoNLL_U
 documentID_position = 11  # NEW CoNLL_U
@@ -50,7 +48,7 @@ def check_CoNLL(filename, skipWarning=False):
     headers = IO_csv_util.get_csvfile_headers(filename)
     numColumns = len(headers)
     # check the headers; 13 or 14 if date is available
-    if "ID" and "Form" and "Lemma" not in headers:
+    if not all(x in headers for x in ["ID", "Form", "Lemma"]):
         wrongFile = True
     else:
         if numColumns != 13 and numColumns != 14:
@@ -299,7 +297,7 @@ def compute_sentence(CoNLL_table, recordID, sentenceID, documentID):
     """
     # Open ConLL
     df = pd.read_csv(
-        open(CoNLL_table, "rb"),
+        CoNLL_table,
         sep=",",
         index_col=False,
         encoding="utf-8",

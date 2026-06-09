@@ -8,6 +8,7 @@ import os
 
 import charts_util
 import config_util
+from app_constants import CONTINENTS
 import GIS_file_check_util
 import GIS_geocode_util
 import GIS_Google_Maps_util
@@ -288,15 +289,7 @@ def GIS_pipeline(
             changed_idx = {}
             for i, row in nom_df.iterrows():
                 # if i!=0 and row[0] in constants_util.continents and nom_df.at[i-1, 'Location'] in constants_util.directions:
-                if i != 0 and (
-                    row[0] == "Africa"
-                    or row[0] == "Antarctica"
-                    or row[0] == "Asia"
-                    or row[0] == "Australia"
-                    or row[0] == "Europe"
-                    or row[0] == "Oceania"
-                    or row[0] == "America"
-                ):
+                if i != 0 and row[0] in CONTINENTS:
                     nom_df.at[i, "Location"] = (
                         nom_df.at[i - 1, "Location"] + " " + row[0]
                     )

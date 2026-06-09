@@ -9,9 +9,6 @@ _WORD_LISTS_DIR = Path(__file__).parent.parent.parent / "lib" / "wordLists"
 punctuation = string.punctuation
 import stanza
 
-global called
-global nlp
-
 called = 0
 
 #     if frequency==1: # hapax

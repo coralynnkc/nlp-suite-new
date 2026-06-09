@@ -194,31 +194,24 @@ def get_headerValue_from_columnNumber(headers, column_number=0):
 def get_csv_field_values(
     inputFilename, column_name, uniqueValues=True, returnList=True
 ):
-    if uniqueValues:
-        unique_values = set()
-    else:
-        unique_values = ""
     if inputFilename == "" or column_name == "":
         return [""]
 
+    unique_values: set | list = set() if uniqueValues else []
     with open(inputFilename, encoding="utf-8", errors="ignore") as f:
         csvreader = csv.reader(f)
         fields = next(csvreader)
-        # from the column header get the column number that we want to extract
         col_num = get_columnNumber_from_headerValue(fields, column_name, inputFilename)
         if col_num is None:
             return [""]
         for row in csvreader:
-            if uniqueValues:
-                unique_values.add(row[col_num])
-                # convert set to list; to obtain a string of values simply str(sorted_unique_values)
-                # the list is sorted with proper names, with capital initial first, then the improper names
-                sorted_unique_values = sorted(unique_values)
-                list(sorted_unique_values)
-            else:
-                if row[col_num] != "":
-                    unique_values = row[col_num] + ", " + unique_values
-    return unique_values
+            if row[col_num] != "":
+                unique_values.add(row[col_num]) if uniqueValues else unique_values.append(row[col_num])
+
+    if uniqueValues:
+        # sorted with proper names (capital initial) first
+        return sorted(unique_values)
+    return ", ".join(reversed(unique_values))
 
 
 # get the number of records and columns of a csv file
@@ -548,10 +541,8 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
         return
     if column is None and len(column_list) == 0:
         # reading csv file
-        text = open(inputFilename, encoding="utf-8", errors="ignore")
-
-        # joining with space content of text
-        text = " ".join([i for i in text])
+        with open(inputFilename, encoding="utf-8", errors="ignore") as _f:
+            text = " ".join(_f)
         # replacing ',' by space
         text = text.replace(",", " ")
         with open(

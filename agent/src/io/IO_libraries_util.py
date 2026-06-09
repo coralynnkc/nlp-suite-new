@@ -814,15 +814,11 @@ def ask_download_installation_questions(
         software_dir is not None and software_dir != ""
     ):  # and software_name.lower() in software_name.lower():
         if software_name != "":
-            answer = False
-            if download_install == "install":
-                if not silent:
-                    answer = print(software_name + " installation", message)
-            else:
-                if not silent:
-                    answer = print(software_name + " download", message)
-            if not answer:
-                cancel_download_install = True
+            if not silent:
+                if download_install == "install":
+                    logger.info(software_name + " installation: " + message)
+                else:
+                    logger.info(software_name + " download: " + message)
     return cancel_download_install
 
 

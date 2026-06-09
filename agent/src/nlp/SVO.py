@@ -718,11 +718,6 @@ def run_svo(
         filesToOpenSubset = []
         # add the SVO main files
         filesToOpenSubset.append(SVO_filename)
-        filter_subjects_var = False
-        filter_verbs_var = False
-        filter_objects_var = False
-        if filter_subjects_var or filter_verbs_var or filter_objects_var:
-            filesToOpenSubset.append(SVO_filtered_filename)
         for file in filesToOpen:
             # open all charts, all Google Earth and Google Maps maps, Gephi gexf network graph, html files, and wordclouds png files
             if file[-4:] == ".kml" or file[-5:] == ".html" or file[-4:] == ".png" or file[-5:] == ".gexf":  # or \

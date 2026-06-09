@@ -33,8 +33,8 @@ def select_csv(files: list, cols: list | None = None):
 def get_cols(dfs: list, headers: list):
     if len(headers) != len(dfs):
         return "Unmatching number of dataframes and headers"
-    for i in range(len(dfs)):
-        yield (dfs[i])[headers[i]]
+    for df, header in zip(dfs, headers):
+        yield df[header]
 
 
 def append(outputDir: str, operation_results_text_list: list) -> str:
@@ -69,14 +69,13 @@ def append(outputDir: str, operation_results_text_list: list) -> str:
 
 def concat(dfs: list, separator: str) -> pd.DataFrame:
     s = pd.DataFrame
-    for i in range(len(dfs)):
+    for i, df in enumerate(dfs):
         if i == 0:
-            s = dfs[i].astype(str) + separator
+            s = df.astype(str) + separator
+        elif i != len(dfs) - 1:
+            s = s + df.astype(str) + separator
         else:
-            if i != len(dfs) - 1:
-                s = s + dfs[i].astype(str) + separator
-            else:
-                s = s + dfs[i].astype(str)
+            s = s + df.astype(str)
     return s
 
 

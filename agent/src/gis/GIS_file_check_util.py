@@ -34,14 +34,14 @@ def geocoded_checker(
     check1 = True
     check2 = True
     for x in dt[latitude_name]:
-        if isinstance(x, float) is not True:
+        if not isinstance(x, float):
             check1 = False
             break
         elif x > 90 or x < -90:
             check1 = False
             break
     for y in dt[longitude_name]:
-        if isinstance(y, float) is not True:
+        if not isinstance(y, float):
             check2 = False
             break
         elif y > 180 or y < -180:
