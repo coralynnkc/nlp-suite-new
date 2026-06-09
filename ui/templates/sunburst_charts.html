@@ -1,0 +1,123 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+
+<div class="sentiment-analysis-container">
+    
+    <h1>Sunburst Charts</h1>
+    <form method="post" class="sentiment-analysis-form" action="{% url 'sunburst_charts' %}">
+        {% csrf_token %}
+
+        <!-- Input and Output Directories -->
+        <div class="form-row">
+            <label for="inputDirectory">Input Directory:</label>
+            <select name="inputDirectory" id="inputDirectory">
+                <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <label for="outputDirectory">Output Directory:</label>
+            <input type="text" name="outputDirectory" value="~/nlp-suite/output" />
+        </div>
+
+        <!-- CSV File Input and Search Field Selection -->
+        <div class="form-row">
+            <label for="search_field">Input CSV</label>
+            <input type="file" id="sunburst_file_input" name="sunburst_file_input" accept=".csv" required>
+            <select id="search_field" name="search_field">
+                <option value="" disabled selected hidden>Select a field</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>
+                Visualize Full Field
+            <label>
+        
+            <button type="button" id="visualize_full_field" name="visualize_full_field">Add Full Field</button>
+        </div>
+
+        <!-- Search Values Input -->
+        <div class="form-row">
+            <label>
+                Search Values
+                <link rel="stylesheet" href="{% static "css/tooltip.css" %}">
+
+                <span class="tooltip">
+                    <span class="tooltiptext">
+                        Enter a comma-separated list of specific words or values for the selected Column/Search Field (minimum of 3). (e.g., the, three, little, pigs)
+                    </span>
+                </span>
+                
+                <input type="text" id="keywordInput" name="keywordInput" autocomplete="off" style="position: relative;">
+                <div id="suggestion_dropdown" class="suggestion-dropdown"></div>
+            </label>
+            <div class="form-row">
+                <button type="button" id="add_pair_button">Add Pair</button>
+            </div>
+
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+            <label> Search Value Options </label>
+            <select name="search_value_dropdown" id= "search_value_dropdown">                
+            </select>
+        </div>
+
+    
+        
+        <div class="form-row">
+            <div class="form-row">
+                <label for="saved_pairs">Saved Pairs:</label>
+                <div id="saved_pairs_container">
+                </div>
+            </div>
+        </div>
+
+
+         <!-- Filter Options Selection -->
+        <div class="form-row">
+            <label for="filter_options_var">Filter Options</label>
+            <select id="filter_options_var" name="filter_options_var">
+                <option value="no_filtering">No filtering</option>
+                <option value="fixed_parameter">Fixed parameter</option>
+                <option value="propagating_parameter">Propagating Parameter</option>
+            </select>
+        </div>
+
+        <!-- Chart Options -->
+        <div class="form-row">
+            <label>
+                <input type="checkbox" name="piechart_var" checked>
+                Pie chart
+            </label>
+            <label style="margin-left: 20px;">
+                <input type="checkbox" name="treemap_var">
+                Tree map chart
+            </label>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="buttons-section">
+            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+
+            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Sunburst%20pie%20chart.pdf" target ="_blank" rel="noopener noreferrer"
+            class = "tipsfile-button">
+                <div class = "tipsfile-mask">
+                    <div class = "tipsfile-glow"></div>
+                </div>
+                Tips File
+            </a>
+
+            <button type="submit" class="run-button">Run</button>
+        </div>
+
+        <input type="hidden" id="savedPairsToSend" name="savedPairsToSend"></input>
+    </form>
+</div>
+
+<script src="{% static 'js/sunburst_charts.js' %}"></script>
+
+
+{% endblock %}

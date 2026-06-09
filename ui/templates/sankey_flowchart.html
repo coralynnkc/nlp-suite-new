@@ -1,0 +1,100 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+
+<div class="sentiment-analysis-container">
+    <h1>Sankey Flowchart</h1>
+    <form method="post" class="sentiment-analysis-form" action="{% url 'sankey_flowchart' %}">
+        {% csrf_token %}
+
+        <!-- Input and Output Directories -->
+        <div class="form-row">
+            <label for="inputDirectory">Input Directory:</label>
+            <select name="inputDirectory" id="inputDirectory">
+                <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <label for="outputDirectory">Output Directory:</label>
+            <input type="text" name="outputDirectory" value="~/nlp-suite/output" />
+        </div>
+
+        <!-- CSV file field -->
+        <div class="form-row">
+            <label for="search_field">Search field </label>
+            <input type="file" id="sankey_file_input" name="sankey_file_input" accept=".csv" required>
+            <select id="search_field" name="search_field">
+                <option value="" disabled selected>Select a field</option>
+            </select>
+            <button type="button" id="add_search_field" class="action-button">+</button>
+            <button type="button" id="reset_search_field" class="action-button">Reset</button>
+        </div>
+
+        <!-- Hidden input to store file data -->
+        {% comment %} <input type="hidden" name="file_data" id="file_data"> {% endcomment %}
+        <input type="hidden" name="selected_pairs_data" id="selected_pairs_data">
+
+        
+        <!-- Saved pairs container -->
+        <div class="form-row">
+            <div class="form-row">
+                <label>Saved Pairs (max 3):</label>
+                <div id="saved_pairs_container" class="saved-pairs-container"></div>
+            </div>
+        </div>
+
+        <!-- Variable dropdowns -->
+        <div class="form-row">
+            <label for="variable_1_max">Variable 1 max </label>
+            <select id="variable_1_categories" name="variable_1_max">
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label for="variable_2_max">Variable 2 max </label>
+            <select id="variable_2_categories" name="variable_2_max">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label for="variable_3_max">Variable 3 max </label>
+            <select id="variable_3_categories" name="variable_3_max">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+            </select>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="buttons-section">
+            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+
+            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Sankey%20chart.pdf" target ="_blank" rel="noopener noreferrer"
+            class = "tipsfile-button">
+                <div class = "tipsfile-mask">
+                    <div class = "tipsfile-glow"></div>
+                </div>
+                Tips File
+            </a>
+
+            <button type="submit" class="run-button">Run</button>
+        </div>
+    </form>
+</div>
+
+
+
+<!-- JavaScript for Dynamic Functionality -->
+<script src="{% static 'js/sankey_flowchart.js' %}"></script>
+<script src="{% static 'js/onlyone.js' %}"></script>
+{% endblock %}
+

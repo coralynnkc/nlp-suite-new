@@ -1,0 +1,136 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{%load static %}
+<div class="sentiment-analysis-container">
+    <h1>Shape of Stories</h1>
+    <form method="post" class="ngram-CoOcc-form">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <label for="inputDirectory">Input Directory:</label>
+            <div class="io-hover"><!--- using div to preserve format issues.-->
+                <select name="inputDirectory" id="inputDirectory">
+                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
+                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+                </select>
+                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
+                    more specifics on how to access these folders.
+                </span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label for="outputDirectory">Output Directory:</label>
+            <input type="text" name="outputDirectory" value="~/nlp-suite/output"/>
+        </div>
+        
+        <div class="form-row">
+            <button onclick="openPDFPopup()">Tips File</button>
+            
+            <script src = "{%static 'css/tips_files.js' %}"></script>
+            <script>
+                function openPDFPopup() {
+                    const base64PDF = shape_of_stories_tips();
+                    const pdfWindow = window.open('', 'pdfPopup', 'width=800,height=600');
+                    pdfWindow.document.write(`
+                        <html>
+                        <head><title>PDF Viewer</title></head>
+                        <body style="margin: 0; overflow: hidden;">
+                            <embed src="${base64PDF}" type="application/pdf" width="100%" height="100%">
+                        </body>
+                        </html>
+                    `);
+                }
+            </script>
+        </div>
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="sentiment_analysis" name="sentiment_analysis" checked>
+                Sentiment Analysis
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label for="algorithm">Select sentiment analysis algorithm:</label>
+                <select id="algorithm" name="algorithm">
+                    <optgroup label="Neural network approaches:">
+                        <option value="bert_english">BERT (English model)</option>
+                        <option value="bert_multilingual">BERT (Multilingual model)</option>
+                        <option value="spacy">spaCy</option>
+                        <option value="stanford_corenlp">Stanford CoreNLP</option>
+                        <option value="stanza">Stanza</option>
+                    </optgroup>
+                    <optgroup label="Dictionary approaches:">
+                        <option value="anew">ANEW</option>
+                        <option value="hedonometer">hedonometer</option>
+                        <option value="sentiwordnet">SentiWordNet</option>
+                        <option value="vader">VADER</option>
+                    </optgroup>
+                </select>
+        </div>
+
+        <div class ="form-row">
+            <label>
+                <input type="checkbox" id="compute-visualize" name="compute-visualize">
+                Compute & visualize corpus statistics
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="hierarchical-clustering" name="hierarchical-clustering">
+                Hierarchical Clustering (HC)
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="singular-value-decomp" name="singular-value-decomp">
+                Singular Value Decomposition (SVD)
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="non-negative-matrix-fact" name="non-negative-matrix-fact">
+                Non-Negative Matrix Factorization (NMF)
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="best-topic-est" name="best-topic-est">
+                Best topic estimation
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label for="dataTransformation">Transformation:</label>
+            <select id="dataTransformation" name="dataTransformation">
+                <option value="No transformation">No transformation</option>
+                <option value="Ln">Ln</option>
+                <option value="Log">Log</option>
+                <option value="Square">Square root</option>
+                <option value="Z score">Z score</option>
+            </select>
+        </div>
+        
+        <div class="buttons-section">
+            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+
+            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Shape%20of%20stories.pdf" target ="_blank" rel="noopener noreferrer"
+            class = "tipsfile-button">
+                <div class = "tipsfile-mask">
+                    <div class = "tipsfile-glow"></div>
+                </div>
+                Tips File
+            </a>
+
+            <button type="submit" class="run-button">Run</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

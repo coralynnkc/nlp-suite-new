@@ -1,0 +1,105 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{%load static %}
+
+<div class="sentiment-analysis-container">
+    <h1>Excel/Plotly Charts</h1>
+    <form method="post" class="sentiment-analysis-form">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <label for="inputDirectory">Input Directory:</label>
+            <div class="io-hover"><!--- using div to preserve format issues.-->
+                <select name="inputDirectory" id="inputDirectory">
+                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
+                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+                </select>
+                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
+                    more specifics on how to access these folders.
+                </span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label for="outputDirectory">Output Directory:</label>
+            <input type="text" name="outputDirectory" value="~/nlp-suite/output"/>
+        </div>
+
+        <div class="form-row">
+            <button type="button" onclick="openPDFPopup()">Tips File</button>
+            
+            <script src = "{%static 'css/tips_files.js' %}"></script>
+            <script>
+                function openPDFPopup() {
+                    const pdfUrl = "{% static 'css/TIPS_NLP_Sentiment analysis.pdf' %}"
+                    const pdfWindow = window.open('', 'pdfPopup', 'width=800,height=600');
+                    pdfWindow.document.write(`
+                        <html>
+                        <head><title>PDF Viewer</title></head>
+                        <body style="margin: 0; overflow: hidden;">
+                            <embed src="${pdfUrl}" type="application/pdf" width="100%" height="100%">
+                        </body>
+                        </html>
+                    `);
+                }
+            </script>
+        </div>
+
+        <div class="form-row">
+            <label for="x-axis">X-axis</label>
+                <select id="x-axis" name="x-axis" onchange="window.location.href=this.value;">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Term">Term</option>
+                    <option value="WordNetCategory">WordNet Category</option>
+                    <option value="SynsetDefinition">Synset Definition</option>
+                    <option value="Frequency">Frequency</option>
+                    <option value="SynsetExample">Synset Example</option>
+                </select>
+            <label for="y-axis">Additional Y-axis</label>
+                <select id="addY-axis" name="addY-axis" onchange="window.location.href=this.value;">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Term">Term</option>
+                    <option value="WordNetCategory">WordNet Category</option>
+                    <option value="SynsetDefinition">Synset Definition</option>
+                    <option value="Frequency">Frequency</option>
+                    <option value="SynsetExample">Synset Example</option> 
+                </select>
+                
+            <button type="button" class="addvar-button">+</button>
+            <button type="button" class="clear-button">Reset</button>
+            <button type="button" class="show-button">Show</button>
+        </div>
+
+   
+        <div class="form-row">
+            <label for="dataTransformation">Transformation:</label>
+            <select id="dataTransformation" name="dataTransformation">
+                <option value="No transformation">No transformation</option>
+                <option value="Ln">Ln</option>
+                <option value="Log">Log</option>
+                <option value="Square">Square root</option>
+                <option value="Z score">Z score</option>
+            </select>
+        </div>
+        
+        <div class="buttons-section">
+            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+
+            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Excel%20Charts.pdf" target ="_blank" rel="noopener noreferrer"
+            class = "tipsfile-button">
+                <div class = "tipsfile-mask">
+                    <div class = "tipsfile-glow"></div>
+                </div>
+                Tips File
+            </a>
+
+            <button type="submit" class="run-button">Run</button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
