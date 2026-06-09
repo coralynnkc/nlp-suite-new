@@ -28,6 +28,12 @@ from sentence_analysis import run_sentence_analysis
 from GIS_main import run_GIS
 
 from file_manager_main import run_file_manager
+from NER_main import run_NER
+from knowledge_graphs_WordNet_main import run_kg_wordnet
+from html_annotator_gender_main import run as run_gender_analysis
+from shape_of_stories_main import run as run_shape_of_stories
+from excel_plotly_charts import run_excel_plotly_charts
+from boxplot_chart import run as run_boxplot
 
 app = FastAPI(debug=True)
 origins = [
@@ -1004,6 +1010,251 @@ def gis(
     thread.start()
     return PlainTextResponse("", status_code=200)
     
+
+
+@app.post("/ner")
+def ner(
+    inputDirectory: Annotated[str, Form()],
+    inputFilename: Annotated[str, Form()] = "",
+    openOutputFiles: Annotated[bool, Form()] = False,
+    chartPackage: Annotated[str, Form()] = "Matplotlib",
+    dataTransformation: Annotated[str, Form()] = "No transformation",
+    config_filename: Annotated[str, Form()] = "NLP_default_IO_config.csv",
+    NER_package: Annotated[str, Form()] = "spaCy",
+    NER_list: Annotated[str, Form()] = "",
+):
+    inputDirectory = os.path.expanduser(inputDirectory)
+    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    ner_list = [t.strip() for t in NER_list.split(",") if t.strip()]
+    thread = Thread(
+        target=lambda: run(
+            app,
+            lambda: run_NER(
+                inputFilename=inputFilename,
+                inputDir=inputDirectory,
+                outputDir=outputDirectory,
+                openOutputFiles=openOutputFiles,
+                chartPackage=chartPackage,
+                dataTransformation=dataTransformation,
+                config_filename=config_filename,
+                NER_package=NER_package,
+                NER_list=ner_list,
+            ),
+        )
+    )
+    thread.start()
+    return PlainTextResponse("", status_code=200)
+
+
+@app.post("/wordnet")
+def wordnet(
+    inputDirectory: Annotated[str, Form()],
+    inputFilename: Annotated[str, Form()] = "",
+    openOutputFiles: Annotated[bool, Form()] = False,
+    chartPackage: Annotated[str, Form()] = "Excel",
+    dataTransformation: Annotated[str, Form()] = "No transformation",
+    csv_file: Annotated[str, Form()] = "",
+    aggregate_POS_var: Annotated[bool, Form()] = False,
+    noun_verb: Annotated[str, Form()] = "NOUN",
+    disaggregate_var: Annotated[bool, Form()] = False,
+    wordNet_keyword_list: Annotated[str, Form()] = "",
+    annotate_file_var: Annotated[bool, Form()] = False,
+    extract_proper_nouns: Annotated[bool, Form()] = False,
+    extract_improper_nouns: Annotated[bool, Form()] = False,
+    aggregate_lemmatized_var: Annotated[bool, Form()] = False,
+    extract_nouns_verbs_from_CoNLL_var: Annotated[bool, Form()] = False,
+    aggregate_bySentenceID_var: Annotated[bool, Form()] = False,
+    dict_WordNet_filename_var: Annotated[str, Form()] = "",
+    hidden_noun_lemma_csv: Annotated[str, Form()] = "",
+    hidden_verb_lemma_csv: Annotated[str, Form()] = "",
+    noun_verb_menu_var: Annotated[str, Form()] = "",
+):
+    inputDirectory = os.path.expanduser(inputDirectory)
+    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    keyword_list = [k.strip() for k in wordNet_keyword_list.split(",") if k.strip()]
+    thread = Thread(
+        target=lambda: run(
+            app,
+            lambda: run_kg_wordnet(
+                inputFilename=inputFilename,
+                inputDir=inputDirectory,
+                outputDir=outputDirectory,
+                openOutputFiles=openOutputFiles,
+                chartPackage=chartPackage,
+                dataTransformation=dataTransformation,
+                csv_file=csv_file,
+                aggregate_POS_var=aggregate_POS_var,
+                noun_verb=noun_verb,
+                disaggregate_var=disaggregate_var,
+                wordNet_keyword_list=keyword_list,
+                annotate_file_var=annotate_file_var,
+                extract_proper_nouns=extract_proper_nouns,
+                extract_improper_nouns=extract_improper_nouns,
+                aggregate_lemmatized_var=aggregate_lemmatized_var,
+                extract_nouns_verbs_from_CoNLL_var=extract_nouns_verbs_from_CoNLL_var,
+                aggregate_bySentenceID_var=aggregate_bySentenceID_var,
+                dict_WordNet_filename_var=dict_WordNet_filename_var,
+                hidden_noun_lemma_csv=hidden_noun_lemma_csv,
+                hidden_verb_lemma_csv=hidden_verb_lemma_csv,
+                noun_verb_menu_var=noun_verb_menu_var,
+            ),
+        )
+    )
+    thread.start()
+    return PlainTextResponse("", status_code=200)
+
+
+@app.post("/gender_analysis")
+def gender_analysis(
+    inputDirectory: Annotated[str, Form()],
+    inputFilename: Annotated[str, Form()] = "",
+    openOutputFiles: Annotated[bool, Form()] = False,
+    chartPackage: Annotated[str, Form()] = "Excel",
+    dataTransformation: Annotated[str, Form()] = "No transformation",
+    CoreNLP_gender_annotator_var: Annotated[bool, Form()] = False,
+    CoreNLP_download_gender_file_var: Annotated[bool, Form()] = False,
+    CoreNLP_upload_gender_file_var: Annotated[bool, Form()] = False,
+    annotator_dictionary_var: Annotated[bool, Form()] = False,
+    annotator_dictionary_file_var: Annotated[str, Form()] = "",
+    personal_pronouns_var: Annotated[bool, Form()] = False,
+    plot_var: Annotated[bool, Form()] = False,
+    year_state_var: Annotated[str, Form()] = "",
+    firstName_entry_var: Annotated[str, Form()] = "",
+    new_SS_folders: Annotated[str, Form()] = "",
+):
+    inputDirectory = os.path.expanduser(inputDirectory)
+    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    ss_folders = [f.strip() for f in new_SS_folders.split(",") if f.strip()]
+    thread = Thread(
+        target=lambda: run(
+            app,
+            lambda: run_gender_analysis(
+                inputFilename=inputFilename,
+                input_main_dir_path=inputDirectory,
+                outputDir=outputDirectory,
+                openOutputFiles=openOutputFiles,
+                chartPackage=chartPackage,
+                dataTransformation=dataTransformation,
+                CoreNLP_gender_annotator_var=CoreNLP_gender_annotator_var,
+                CoreNLP_download_gender_file_var=CoreNLP_download_gender_file_var,
+                CoreNLP_upload_gender_file_var=CoreNLP_upload_gender_file_var,
+                annotator_dictionary_var=annotator_dictionary_var,
+                annotator_dictionary_file_var=annotator_dictionary_file_var,
+                personal_pronouns_var=personal_pronouns_var,
+                plot_var=plot_var,
+                year_state_var=year_state_var,
+                firstName_entry_var=firstName_entry_var,
+                new_SS_folders=ss_folders,
+            ),
+        )
+    )
+    thread.start()
+    return PlainTextResponse("", status_code=200)
+
+
+@app.post("/shape_of_stories")
+def shape_of_stories(
+    inputDirectory: Annotated[str, Form()],
+    inputFilename: Annotated[str, Form()] = "",
+    openOutputFiles: Annotated[bool, Form()] = False,
+    chartPackage: Annotated[str, Form()] = "Excel",
+    dataTransformation: Annotated[str, Form()] = "No transformation",
+    sentimentAnalysis: Annotated[bool, Form()] = False,
+    sentimentAnalysisMethod: Annotated[str, Form()] = "BERT",
+    memory_var: Annotated[int, Form()] = 1,
+    corpus_analysis: Annotated[bool, Form()] = False,
+    hierarchical_clustering: Annotated[bool, Form()] = False,
+    SVD: Annotated[bool, Form()] = False,
+    NMF: Annotated[bool, Form()] = False,
+    best_topic_estimation: Annotated[bool, Form()] = False,
+):
+    inputDirectory = os.path.expanduser(inputDirectory)
+    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    thread = Thread(
+        target=lambda: run(
+            app,
+            lambda: run_shape_of_stories(
+                inputFilename=inputFilename,
+                inputDir=inputDirectory,
+                outputDir=outputDirectory,
+                openOutputFiles=openOutputFiles,
+                chartPackage=chartPackage,
+                dataTransformation=dataTransformation,
+                sentimentAnalysis=sentimentAnalysis,
+                sentimentAnalysisMethod=sentimentAnalysisMethod,
+                memory_var=memory_var,
+                corpus_analysis=corpus_analysis,
+                hierarchical_clustering=hierarchical_clustering,
+                SVD=SVD,
+                NMF=NMF,
+                best_topic_estimation=best_topic_estimation,
+            ),
+        )
+    )
+    thread.start()
+    return PlainTextResponse("", status_code=200)
+
+
+@app.post("/excel_plotly_charts")
+def excel_plotly_charts(
+    inputFilename: Annotated[str, Form()],
+    csv_field_visualization_var: Annotated[str, Form()] = "",
+    X_axis_var: Annotated[str, Form()] = "",
+    csv_file_field_Y_axis_list: Annotated[str, Form()] = "[]",
+    charts_type_options: Annotated[str, Form()] = "bar",
+    chart_package: Annotated[str, Form()] = "Plotly",
+    data_transformation: Annotated[str, Form()] = "No transformation",
+    inputFileData: Annotated[str, Form()] = "",
+):
+    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    thread = Thread(
+        target=lambda: run(
+            app,
+            lambda: run_excel_plotly_charts(
+                inputFilename=inputFilename,
+                outputDir=outputDirectory,
+                csv_field_visualization_var=csv_field_visualization_var,
+                X_axis_var=X_axis_var,
+                csv_file_field_Y_axis_list=csv_file_field_Y_axis_list,
+                charts_type_options=charts_type_options,
+                chart_package=chart_package,
+                data_transformation=data_transformation,
+                inputFileData=inputFileData,
+            ),
+        )
+    )
+    thread.start()
+    return PlainTextResponse("", status_code=200)
+
+
+@app.post("/boxplot")
+def boxplot(
+    inputFilename: Annotated[str, Form()],
+    csv_field_visualization_var: Annotated[str, Form()] = "",
+    points_var: Annotated[str, Form()] = "",
+    split_data_byCategory_var: Annotated[bool, Form()] = False,
+    csv_field_boxplot_var: Annotated[str, Form()] = "",
+    csv_field_boxplot_color_var: Annotated[str, Form()] = "",
+    inputFileData: Annotated[str, Form()] = "",
+):
+    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    thread = Thread(
+        target=lambda: run(
+            app,
+            lambda: run_boxplot(
+                inputFilename=inputFilename,
+                outputDir=outputDirectory,
+                csv_field_visualization_var=csv_field_visualization_var,
+                points_var=points_var,
+                split_data_byCategory_var=split_data_byCategory_var,
+                csv_field_boxplot_var=csv_field_boxplot_var,
+                csv_field_boxplot_color_var=csv_field_boxplot_color_var,
+                inputFileData=inputFileData,
+            ),
+        )
+    )
+    thread.start()
+    return PlainTextResponse("", status_code=200)
 
 
 if __name__ == "__main__":
