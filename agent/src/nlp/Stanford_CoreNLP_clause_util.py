@@ -1,3 +1,5 @@
+import logging
+
 #!/usr/bin/env Python
 """
 Created on Fri Apr 26 15:16:10 2019
@@ -6,6 +8,8 @@ Created on Fri Apr 26 15:16:10 2019
 """
 
 from nltk.tree import Tree
+
+logger = logging.getLogger(__name__)
 
 """
 param:
@@ -48,8 +52,8 @@ def clausal_info_extract(parsetree):
     try:
         return full_list
     except Exception:
-        print("\nERROR IN PARSE-TREE\n", parsetree)
-        print(
+        logger.info("\nERROR IN PARSE-TREE\n", parsetree)
+        logger.info(
             "ERROR IN PARSE-TREE",
             "There was an error in parsing the tree of a sentence for the full_list displayed in command line.",
         )
@@ -66,8 +70,8 @@ def clausal_info_extract_from_string(parse_tree_str):
         parse_tree = Tree.fromstring(parse_tree_str)
         return clausal_info_extract(parse_tree)
     except Exception:
-        print("\nERROR IN NLTK PARSE-TREE\n", parse_tree_str, parse_tree.flatten())
-        print(
+        logger.info("\nERROR IN NLTK PARSE-TREE\n", parse_tree_str, parse_tree.flatten())
+        logger.info(
             "ERROR IN PARSE-TREE",
             "There was an error in NLTK parsing of the sentence tree displayed in command line.\n\nSearch in your document for the words displayed in command line, edit your document for characters that may lead to this error, and try again.",
         )

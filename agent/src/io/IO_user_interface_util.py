@@ -85,14 +85,14 @@ def timed_alert(
         print_message_text = "\n" + print_message_text
         if "Opening" in print_message_text:
             print_message_text = print_message_text.replace("Opening", "\nOpening")
-        print(print_message_text)
+        logger.info(print_message_text)
     if not silent:
         if "Finished" not in message_text and "Opening" not in message_text:
             message_text = (
                 message_text + "\n\nYou can follow the algorithm in command line."
             )
 
-        print(message_title, message_text)
+        logger.info(message_title, message_text)
 
     return time.time()
 
@@ -168,7 +168,7 @@ def process_CoreNLP_error(
             msgPrint += " Processing will continue with the next file."
         if not silent:
             timed_alert(duration, "Stanford CoreNLP error", msg)
-        print("\n\n" + msgPrint)
+        logger.info("\n\n" + msgPrint)
         filesError.append(
             [
                 len(filesError),

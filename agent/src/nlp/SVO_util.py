@@ -1,3 +1,4 @@
+import logging
 import os
 
 import charts_util
@@ -6,6 +7,8 @@ import IO_files_util
 import IO_user_interface_util
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 #
 # # svo_CoreNLP_single_file is the individual file when processing a directory;
@@ -402,9 +405,9 @@ def lemmatize_filter_svo(
     filtered_svo = df.copy()
 
     lemmatize_s_SV = lemmatize_s
-    print(df.columns)
+    logger.info(df.columns)
     for idx, row in df.iterrows():
-        print("Processing SVO record " + str(idx) + "/" + str(len(df)))
+        logger.info("Processing SVO record " + str(idx) + "/" + str(len(df)))
         if lemmatize_s_SV:
             lemmatize_s = True
         # the tag suffix @# will have been added in the Stanford_CoreNLP_util function process_json_SVO_enhanced_dependencies
@@ -767,7 +770,7 @@ def normalize_date_svo(inputFilename, outputDir, chartPackage="Excel", dataTrans
     # read the file to make sure there are dates to visualize
     data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     if data["Date expression"].empty or data["Date expression"].isna().all():
-        print("There are no NER normalized dates for the extracted SVOs")
+        logger.info("There are no NER normalized dates for the extracted SVOs")
         return
 
     nEmtyCells = str(int(data["Date expression"].isna().sum()))

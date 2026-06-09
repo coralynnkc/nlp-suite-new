@@ -1,7 +1,6 @@
 # enable logging for gensim
 import logging
 import os
-import sys
 
 # necessary to avoid having to do Ctrl+C to kill pyLDAvis to continue running the code
 from pprint import pprint
@@ -43,6 +42,8 @@ IO_libraries_util.import_nltk_resource("corpora/stopwords", "stopwords")
 
 from nltk.corpus import stopwords
 
+logger = logging.getLogger(__name__)
+
 # https://spacy.io/usage/models OTHER LANGUAGES ARE AVAILABLE; CHECK WEBSITE!
 try:
     spacy.load("en_core_web_sm")
@@ -66,7 +67,7 @@ except Exception:
         "The Gensim tool could not find the English language spacy library. This needs to be installed. At command promp type:\npython -m spacy download en_core_web_sm\n\nYOU MAY HAVE TO RUN THE COMMAND AS ADMINISTRATOR.\n\nHOW DO YOU DO THAT?"
         + msg
     )
-    print(message)
+    logger.info(message)
     raise FileNotFoundError(title) from None
 
 
@@ -164,7 +165,7 @@ def malletModelling(
         "Compute Mallet LDA coherence values for each topic.\n\nPlease, be patient...",
     )
     coherence_ldamallet = coherence_model_ldamallet.get_coherence()
-    print("\nCoherence value: ", coherence_ldamallet)
+    logger.info("\nCoherence value: ", coherence_ldamallet)
     model_list, coherence_values = compute_coherence_values(
         MalletDir,
         dictionary=id2word,
@@ -197,7 +198,7 @@ def malletModelling(
         coherence_value = round(cv, 4)
         if coherence_value > optimal_coherence:
             optimal_index = index
-        print("Topic number", m, "has coherence value ", coherence_value)
+        logger.info("Topic number", m, "has coherence value ", coherence_value)
         index += 1
     # Select the model and print the topics
 
@@ -290,19 +291,19 @@ def malletModelling(
     # Topic distribution across documents
     # Number of Documents for Each Topic
     topic_counts = df_topic_sents_keywords["Dominant topic"].value_counts()
-    print("Topic counts: ")
-    print(topic_counts)
-    print("Type of topic count: ")
-    print(type(topic_counts))
-    print()
+    logger.info("Topic counts: ")
+    logger.info(topic_counts)
+    logger.info("Type of topic count: ")
+    logger.info(type(topic_counts))
+    logger.info()
 
     # Percentage of Documents for Each Topic
     topic_contribution = round(topic_counts / topic_counts.sum(), 4)
-    print("Topic contribution: ")
-    print(topic_contribution)
-    print("Type of topic contribution: ")
-    print(type(topic_contribution))
-    print()
+    logger.info("Topic contribution: ")
+    logger.info(topic_contribution)
+    logger.info("Type of topic contribution: ")
+    logger.info(type(topic_contribution))
+    logger.info()
 
     # Topic Number and Keywords
     topic_num_keywords = df_topic_sents_keywords[["Dominant topic", "Topic keywords"]]
@@ -339,8 +340,8 @@ def malletModelling(
     ]
     df_dominant_topics = df_dominant_topics.drop_duplicates()
 
-    print("Number of rows of topic_distribution.csv: ", df_dominant_topics.shape[0])
-    print("Number of columns of topic_distribution.csv: ", df_dominant_topics.shape[1])
+    logger.info("Number of rows of topic_distribution.csv: ", df_dominant_topics.shape[0])
+    logger.info("Number of columns of topic_distribution.csv: ", df_dominant_topics.shape[1])
     # Save csv file
     fileName = os.path.join(outputDir, "NLP_Gensim_topic_distribution.csv")
     df_dominant_topics.to_csv(fileName, encoding="utf-8", index=False)
@@ -380,7 +381,7 @@ def run_Gensim(
     if numFiles == 0:
         title = "Number of files error"
         message = "The selected input directory does NOT contain any file of txt type.\n\nPlease, select a different directory and try again."
-        print(message)
+        logger.info(message)
         raise ValueError(title) from None
         return
     elif numFiles == 1:
@@ -390,7 +391,7 @@ def run_Gensim(
             + str(numFiles)
             + " file of txt type.\n\nTopic modeling requires a large number of files to produce valid results. That is true even if the available file contains several different documents morged together."
         )
-        print(message)
+        logger.info(message)
         raise ValueError(title) from None
         return
     elif numFiles < 50:
@@ -556,7 +557,7 @@ def run_Gensim(
     )
 
     # Compute Perplexity; a measure of how good the model is. lower the better.
-    print("\nPerplexity Score: ", lda_model.log_perplexity(corpus))
+    logger.info("\nPerplexity Score: ", lda_model.log_perplexity(corpus))
 
     # TODO the coherence lines produce an error
     # Compute Coherence Score
@@ -578,7 +579,7 @@ def run_Gensim(
     except Exception:
         title = ("Output html file error",)
         message = "Gensim failed to generate the html output file."
-        print(message)
+        logger.info(message)
         raise ValueError(title) from None
         return
 

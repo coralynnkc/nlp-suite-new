@@ -1,3 +1,4 @@
+import logging
 import sys
 
 # import spacy will trigger tensorflow
@@ -21,6 +22,8 @@ import IO_user_interface_util
 import pandas as pd
 import parsers_annotators_visualization_util
 import reminders_util
+
+logger = logging.getLogger(__name__)
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -179,7 +182,7 @@ def spaCy_annotate(
         if "sentiment" in annotator_params:
             nlp.add_pipe("spacytextblob")
     except Exception as e:
-        print(
+        logger.info(
             "Warning",
             "spaCy encountered an error trying to download the language pack "
             + str(language)
@@ -217,7 +220,7 @@ def spaCy_annotate(
         if filename_embeds_date_var:
             global date_str
             date_str = date_in_filename(doc, **kwargs)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
 
         # open file and extract text
         text = open(doc, encoding=language_encoding, errors="ignore").read().replace("\n", " ")
@@ -226,7 +229,7 @@ def spaCy_annotate(
         try:
             Spacy_output = nlp(text)
         except Exception:
-            print(
+            logger.info(
                 "Warning",
                 "spaCy encountered an error trying to download the language pack "
                 + str(language)

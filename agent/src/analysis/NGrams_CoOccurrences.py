@@ -1,5 +1,6 @@
 import datetime
 import glob
+import logging
 import os
 
 import config_util
@@ -7,6 +8,8 @@ import IO_csv_util
 import IO_files_util
 import NGrams_CoOccurrences_util
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -45,14 +48,14 @@ def run_ngrams(
     filesToOpen = []
 
     if csv_file_var != "":
-        print(
+        logger.info(
             "Warning This is a reminder that you are now running the N-grams searches with the csv input file\n\n"
             + csv_file_var
             + "\n\nPress Cancel then Esc to clear the csv file widget if you want to run the N-grams functions using the input file(s) displayed in the I/O configuration and try again."
         )
         return
 
-    print("language_list", language_list)
+    logger.info("language_list", language_list)
 
     total_file_number = 0
     error_file_number = 0
@@ -61,7 +64,7 @@ def run_ngrams(
     ngrams_word_var = True
 
     if ngrams_viewer_var:
-        print(
+        logger.info(
             "Warning, the N-grams VIEWER is temporarily disconnected, while we develop the same fast approach done for the Co-occurrences function.\n\nPlease, check back soon."
         )
         return
@@ -92,12 +95,12 @@ def run_ngrams(
         and not ngrams_viewer_var
         and not CoOcc_Viewer_var
     ):
-        print(
+        logger.info(
             "Warning, there are no options selected.\n\nPlease, select one of the available options and try again."
         )
         return
     if inputDir == "" and (ngrams_viewer_var or CoOcc_Viewer_var):
-        print(
+        logger.info(
             "Warning, you have selected to run the Viewer option but... this option requires a directory of txt files in input. Your configuration specifies a single txt file in input.\n\nPlease, select a directory in input or deselect the Viewer option and try again."
         )
         return
@@ -105,7 +108,7 @@ def run_ngrams(
     # COMPUTE Ngrams ______________________________________________________________________________
 
     if Ngrams_compute_var:
-        print("N-grams options:", ngrams_options_list)
+        logger.info("N-grams options:", ngrams_options_list)
         ngrams_word_var = False
         lemmatize = False
         normalize = False
@@ -156,9 +159,9 @@ def run_ngrams(
             or "DEPREL" in str(ngrams_options_list)
             or "NER" in str(ngrams_options_list)
         ):
-            print("Warning, the selected option is not available yet.\n\nSorry!")
+            logger.info("Warning, the selected option is not available yet.\n\nSorry!")
             if "Repetition" in str(ngrams_options_list):
-                print(
+                logger.info(
                     "Warning, do check out the repetition finder algorithm in the CoNLL Table Analyzer GUI."
                 )
             return
@@ -220,8 +223,8 @@ def run_ngrams(
     # The following set of options apply to both csv-file search and viewer
 
     if Ngrams_search_var or (ngrams_viewer_var or CoOcc_Viewer_var):
-        print("Search/VIEWER options:", viewer_options_list)
-        print("Search word(s):", search_words)
+        logger.info("Search/VIEWER options:", viewer_options_list)
+        logger.info("Search word(s):", search_words)
 
         normalize = False
         useLemma = False
@@ -309,7 +312,7 @@ def run_ngrams(
                 "", inputDir, outputDir, ".csv", "Date_position_errors_file"
             )
             df.to_csv(error_output, encoding="utf-8", index=False)
-            print(
+            logger.info(
                 "Warning, there are "
                 + str(error_file_number)
                 + " files out of "
@@ -326,26 +329,26 @@ def run_ngrams(
             # if openOutputFiles == True:
 
         if (ngrams_viewer_var or CoOcc_Viewer_var) and (chartPackage == "No charts"):
-            print(
+            logger.info(
                 "Warning, the checkbox to compute Excel charts is unticked. Since the VIEWER produces Excel charts as output, the script will abort.\n\nPlease, tick the checkbox to produce Excel charts and try again."
             )
             return
 
         txtCounter = len(glob.glob1(inputDir, "*.txt"))
         if txtCounter == 0:
-            print(
+            logger.info(
                 "Warning, there are no files with txt extension in the selected directory.\n\nPlease, select a different directory and try again."
             )
             return
 
         if txtCounter == 1:
-            print(
+            logger.info(
                 "Warning, there is only one file with txt extension in the selected directory. The script requires at least two files.\n\nPlease, select a different directory and try again."
             )
             return
 
         if search_words != "" and not ngrams_viewer_var and not CoOcc_Viewer_var:
-            print(
+            logger.info(
                 "Warning, you have entered the string "
                 " + search_words + "
                 " in the Search widget but you have not selected which Viewer you wish to use, N-gram or Co-Occurrence.\n\nPlease, select an option and try again."
@@ -353,14 +356,14 @@ def run_ngrams(
             return
 
         if search_words == "" and (ngrams_viewer_var or CoOcc_Viewer_var):
-            print(
+            logger.info(
                 "Warning, you have selected to run a VIEWER but you have not entered any search strings in the Search widget.\n\nPlease, enter search values  and try again."
             )
             return
 
         if ngrams_viewer_var == 1 and len(search_words) > 0:
             if date_options == 0:
-                print(
+                logger.info(
                     "Warning, no Date options selected. The N-Grams routine requires date metadata (i.e., date information embedded in the document filenames, e.g., The New York Times_12-18-1899).\n\nPlease, tick the Date options checkbox, enter the appropariate date options and try again."
                 )
                 return

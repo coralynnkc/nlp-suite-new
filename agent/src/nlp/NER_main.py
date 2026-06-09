@@ -1,13 +1,13 @@
+import logging
+
 # Roberto Franzosi September 2020
-
-
 # IBM https://ibm.github.io/zshot/ "pip install zshot"
-
-
 import config_util
 import spaCy_util
 import Stanford_CoreNLP_util
 import Stanza_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -60,13 +60,13 @@ def run_NER(
     extract_date_from_text_var = 0
 
     if package_display_area_value == "":
-        print(
+        logger.info(
             "No setup for NLP package and language, The default NLP package and language has not been setup.\n\nPlease, click on the Setup NLP button and try again."
         )
         return
 
     if len(NER_list) == 0 and "CoreNLP" in NER_package:
-        print(
+        logger.info(
             "No NER tag selected, No NER tag has been selected.\n\nPlease, select an NER tag and try again."
         )
         return
@@ -75,7 +75,7 @@ def run_NER(
 
     if "*" in NER_package or "BERT" in NER_package:
         if language != "English":
-            print(
+            logger.info(
                 "Warning, NER in BERT is only available for the English language. Your currently selected language is ' + language + '.' "
                 + "\n\nYou can change the selected language using the Setup dropdown menu at the bottom of this GUI, select the 'Setup NLP package and corpus language' to open the GUI where you can change the language option."
             )

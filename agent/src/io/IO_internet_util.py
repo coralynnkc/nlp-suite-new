@@ -1,4 +1,7 @@
+import logging
 from urllib.request import urlopen  # to check internet connection
+
+logger = logging.getLogger(__name__)
 
 # check internet connection
 # if internet connection is available, return True #otherwise, return False
@@ -20,12 +23,12 @@ def internet_on():
 # script can be Gensim, Stanford CoreNLP or any script that requires internet cnnection to run
 def check_internet_availability_warning(script):
     if not internet_on():
-        print(
+        logger.info(
             "Internet is not available... The script '"
             + script
             + "' requires internet connection to run. Please, check internet connection and try again."
         )
-        print(
+        logger.info(
             "Warning",
             "Internet is not available... The script '"
             + script

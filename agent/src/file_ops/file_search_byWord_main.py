@@ -1,7 +1,9 @@
+import logging
+
 # written by Roberto Franzosi October 2019, edited Spring 2020
-
-
 import file_search_byWord_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -36,7 +38,7 @@ def run_search_byWord(
     extra_GUIs_var = False
 
     if not extra_GUIs_var and not search_by_dictionary and not search_by_keyword:
-        print(
+        logger.info(
             "Input error, No search options have been selected.\n\nPlease, select a search option and try again."
         )
         return
@@ -44,7 +46,7 @@ def run_search_byWord(
     if search_options_menu_var != "" and search_options_menu_var not in str(
         search_options_list
     ):
-        print(
+        logger.info(
             "Warning, There is a search value '"
             + str(search_options_menu_var.get())
             + "' that has not been added (using the + button) to the csv file fields to be processed.\n\nAre you sure you want to continue?"

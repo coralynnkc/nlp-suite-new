@@ -1,9 +1,13 @@
+import logging
+
 # written by Roberto Franzosi (Spring/summer 2020)
 import os
 
 import IO_files_util
 import IO_libraries_util
 import statistics_txt_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -37,7 +41,7 @@ def run_sentence_analysis(
         and not text_readability_var
         and not visualize_sentence_structure_var
     ):
-        print("No options have been selected.\n\nPlease, select an option and try again")
+        logger.info("No options have been selected.\n\nPlease, select an option and try again")
         return
 
     if compute_sentence_length_var:
@@ -92,7 +96,7 @@ def run_sentence_analysis(
                 return None
 
             except Exception as e:
-                print("Error ", e, " has occurred.")
+                logger.info("Error ", e, " has occurred.")
                 return None
 
         inputFilename = first_file(inputDir)

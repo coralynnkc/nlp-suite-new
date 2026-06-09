@@ -1,8 +1,12 @@
+import logging
+
 import IO_files_util
 import IO_internet_util
 import topic_modeling_bert_util
 import topic_modeling_gensim_util
 import topic_modeling_mallet_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -43,7 +47,7 @@ def run_topic_modeling(
         labels.append("Gensim")
 
     if not labels:
-        print(
+        logger.info(
             "Warning: No options selected. Please select at least one of the available options (BERTopic, MALLET, or Gensim) and try again."
         )
         return
@@ -57,7 +61,7 @@ def run_topic_modeling(
         return
 
     if num_topics == 20:
-        print(
+        logger.info(
             "Warning: The default number of topics is 20. If you would like to specify a different number of topics, please do so and try again. YOU ARE STRONGLY ADVISED to run the algorithm repeatedly with different number of topics (e.g., 50, 40 30, 20, 10). You should then select the number of topics that gives you the best set of topics with no or minimum word overlap across topics. When running Gensim, the topic circles displayed in the Intertopic Distance Map (via multidimensional scaling) should be scattered throughout the four quadrants and should not be overlapping."
         )
         # reminders_util.checkReminder(scriptName, reminders_util.title_options_topic_modelling_number_of_topics,

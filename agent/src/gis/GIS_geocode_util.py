@@ -1,4 +1,5 @@
 import csv
+import logging
 import os  # TODO MINO GIS create kml record
 from datetime import datetime  # TODO MINO GIS date option
 
@@ -17,6 +18,8 @@ import simplekml  # TODO MINO GIS create kml record
 from geopy import Nominatim
 from geopy.exc import GeocoderTimedOut
 from geopy.geocoders import GoogleV3
+
+logger = logging.getLogger(__name__)
 
 filesToOpen = []
 
@@ -128,7 +131,7 @@ def nominatim_geocode(
         )
         # https: // gis.stackexchange.com / questions / 173569 / avoid - time - out - error - nominatim - geopy - openstreetmap
     except Exception:
-        print("******************************************** Nominatim TIMEOUT", timeout)
+        logger.info("******************************************** Nominatim TIMEOUT", timeout)
         if timeout < 20:
             # try again, adding timeout
             try:
@@ -144,7 +147,7 @@ def nominatim_geocode(
             except Exception:
                 return None
         else:
-            print(
+            logger.info(
                 "Maximum number of retries to access Nominatim server exceeded in geocoding "
                 + loc
             )
@@ -222,7 +225,7 @@ def process_geocoded_data_for_kml(
             sentence = ""
 
         # TODO MINO GIS create kml record
-        print(
+        logger.info(
             "   Processing geocoded record for kml file for Google Earth Pro "
             + str(index + 1)
             + "/"
@@ -271,7 +274,7 @@ def process_geocoded_data_for_kml(
                 )
             pnt.description = description
         except Exception:
-            print(
+            logger.info(
                 "Error processing ",
                 location.upper(),
                 ". No sentence available for description field.",
@@ -281,7 +284,7 @@ def process_geocoded_data_for_kml(
             try:
                 GEPdateFormat = convertToGEP(date)
             except Exception:
-                print(date)
+                logger.info(date)
                 GEPdateFormat = ""
             pnt.timespan.begin = GEPdateFormat
             pnt.timespan.end = GEPdateFormat
@@ -289,7 +292,7 @@ def process_geocoded_data_for_kml(
     try:
         kml.save(kmloutputFilename)
     except Exception:
-        print(
+        logger.info(
             "kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters)."
         )
         # Save kml regardless of validity. Let the user find any bad characters.
@@ -539,7 +542,7 @@ def geocode(
             continue
         if not pd.isna(item[0]) and str(item[0]) != "":
             currRecord = str(index_locations) + "/" + str(len(locations))
-            print(
+            logger.info(
                 "Processing location "
                 + currRecord
                 + " for geocoding: "
@@ -619,7 +622,7 @@ def geocode(
                     address_list = address.split(",")
                     country_geocoder = address_list[-1].strip()
             else:
-                print("   Geocoding DISTINCT location: " + itemToGeocode)
+                logger.info("   Geocoding DISTINCT location: " + itemToGeocode)
                 for (
                     _index1,
                     row1,
@@ -674,7 +677,7 @@ def geocode(
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
                         notGeocodedList.append(itemToGeocode)
                         notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        print(
+                        logger.info(
                             currRecord,
                             "     LOCATION NOT FOUND BY " + geocoder,
                             itemToGeocode,
@@ -692,7 +695,7 @@ def geocode(
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
                         notGeocodedList.append(itemToGeocode)
                         notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        print(
+                        logger.info(
                             currRecord,
                             "     LOCATION NOT FOUND BY " + geocoder,
                             itemToGeocode,
@@ -764,7 +767,7 @@ def geocode(
                         )
 
                 # TODO MINO GIS create kml record
-                print("   Processing geocoded record for kml file for Google Earth Pro")
+                logger.info("   Processing geocoded record for kml file for Google Earth Pro")
                 pnt = kml.newpoint(coords=[(lng, lat)])
                 pnt.style.iconstyle.icon.href = icon_url
                 # putting the location on the map creates a VERY busy map
@@ -807,7 +810,7 @@ def geocode(
                     try:
                         GEPdateFormat = convertToGEP(date)
                     except Exception:
-                        print(date)
+                        logger.info(date)
                         GEPdateFormat = ""
                     pnt.timespan.begin = GEPdateFormat
                     pnt.timespan.end = GEPdateFormat
@@ -823,7 +826,7 @@ def geocode(
     try:
         kml.save(kmloutputFilename)
     except Exception:
-        print(
+        logger.info(
             "kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters)."
         )
         # Save kml regardless of validity. Let the user find any bad characters.
@@ -937,7 +940,7 @@ def convertToGEP(date):
         try:
             currentDateFormat = dateutil.parser.parse(date)
         except Exception:
-            print(
+            logger.info(
                 f"Date error: There was an error in processing the date '{date}' with format '{fmt}'."
             )
         # years before 1900 cannot be used
@@ -945,7 +948,7 @@ def convertToGEP(date):
         try:
             GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
         except Exception:
-            print(
+            logger.info(
                 f"Date error: There was an error in processing the date '{date}' with format '{fmt}'."
             )
         return GEPdateFormat

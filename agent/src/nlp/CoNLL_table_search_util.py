@@ -4,6 +4,7 @@
 # modified by Chen gong (December 2021)
 # ALL SEARCHES OCCUR WITHIN SENTENCES.
 import builtins
+import logging
 import os
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL table_search_util",
@@ -17,6 +18,8 @@ import IO_csv_util
 import IO_files_util
 import pandas as pd
 import Stanford_CoreNLP_tags_util
+
+logger = logging.getLogger(__name__)
 
 dict_POSTAG, dict_DEPREL = (
     Stanford_CoreNLP_tags_util.dict_POSTAG,
@@ -573,7 +576,7 @@ def search_CoNLL_table(
     )
 
     if len(deprel_list_queried) == 0:
-        print(noResults)
+        logger.info(noResults)
         raise Exception("Empty query results")
 
     if form_of_token == "*":
@@ -582,7 +585,7 @@ def search_CoNLL_table(
         pass
 
     if len(deprel_list_queried) == 1:  # only headers, list empty
-        print(noResults)
+        logger.info(noResults)
         raise Exception("Empty query results")
 
     # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv',
@@ -787,7 +790,7 @@ Print all the output.
 
 def print_result(_list_queried_):
     if len(_list_queried_) == 0:
-        print(noResults)
+        logger.info(noResults)
         raise Exception("No Results")
 
 

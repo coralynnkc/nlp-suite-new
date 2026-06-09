@@ -1,3 +1,4 @@
+import logging
 import os
 
 import config_util
@@ -6,11 +7,13 @@ import IO_files_util
 import IO_libraries_util
 import lib_util
 
+logger = logging.getLogger(__name__)
+
 
 def run_sentiment_analysis(
     inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, mean_var, median_var, SA_algorithm_var
 ):
-    print(
+    logger.info(
         inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, mean_var, median_var, SA_algorithm_var
     )
     # get the NLP package and language options
@@ -29,14 +32,14 @@ def run_sentiment_analysis(
     ) = config_util.read_NLP_package_language_config()
     language_var = language
     if package_display_area_value == "":
-        print(
+        logger.info(
             "No setup for NLP package and language",
             "The default NLP package and language has not been setup.\n\nPlease, click on the Setup NLP button and try again.",
         )
         return
 
     if SA_algorithm_var == "":
-        print("Warning", "No option has been selected.\n\nPlease, select a Sentiment analysis option and try again.")
+        logger.info("Warning", "No option has been selected.\n\nPlease, select a Sentiment analysis option and try again.")
         return
 
     mode = "both"
@@ -95,7 +98,7 @@ def run_sentiment_analysis(
     elif "VADER" in SA_algorithm_var:
         vader_var = 1
     else:
-        print(
+        logger.info(
             "Warning",
             SA_algorithm_var.lstrip() + " is not available yet. Sorry!\n\nPlease, select another option and try again.",
         )
@@ -225,9 +228,9 @@ def run_sentiment_analysis(
                 return
 
             sentiment_analysis_ANEW_util.main("", inputDir, outputDir, mode, chartPackage, dataTransformation)
-            print("Analysis end", "Finished running ANEW Sentiment Analysis at")
+            logger.info("Analysis end", "Finished running ANEW Sentiment Analysis at")
         else:
-            print(
+            logger.info(
                 "Warning",
                 "The ANEW algorithm is available only for the English language.\n\nYour currently selected language is "
                 + language
@@ -245,11 +248,11 @@ def run_sentiment_analysis(
         if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_hedonometer_util.py"):
             return
         if language == "English":
-            print("Analysis start", "Started running HEDONOMETER Sentiment Analysis at")
+            logger.info("Analysis start", "Started running HEDONOMETER Sentiment Analysis at")
             sentiment_analysis_hedonometer_util.main("", inputDir, outputDir, mode, chartPackage, dataTransformation)
-            print("Analysis end", "Finished running HEDONOMETER Sentiment Analysis at")
+            logger.info("Analysis end", "Finished running HEDONOMETER Sentiment Analysis at")
         else:
-            print(
+            logger.info(
                 "Warning",
                 "The HEDONOMETER algorithm is available only for the English language.\n\nYour currently selected language is "
                 + language
@@ -263,13 +266,13 @@ def run_sentiment_analysis(
         if language == "English":
             if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_SentiWordNet_util.py"):
                 return
-            print("Analysis start", "Started running SentiWordNet Sentiment Analysis at")
+            logger.info("Analysis start", "Started running SentiWordNet Sentiment Analysis at")
             sentiment_analysis_SentiWordNet_util.main(
                 "", inputDir, outputDir, GUI_IO_util.config_filename, mode, chartPackage, dataTransformation
             )
-            print("Analysis end", "Finished running SentiWordNet Sentiment Analysis at")
+            logger.info("Analysis end", "Finished running SentiWordNet Sentiment Analysis at")
         else:
-            print(
+            logger.info(
                 "Warning",
                 "The SentiWordNet algorithm is available only for the English language.\n\nYour currently selected language is "
                 + language
@@ -287,11 +290,11 @@ def run_sentiment_analysis(
                 return
             if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_VADER_util.py"):
                 return
-            print("Analysis start", "Started running VADER Sentiment Analysis at")
+            logger.info("Analysis start", "Started running VADER Sentiment Analysis at")
             sentiment_analysis_VADER_util.main("", inputDir, outputDir, mode, chartPackage, dataTransformation)
-            print("Analysis end", "Finished running VADER Sentiment Analysis at")
+            logger.info("Analysis end", "Finished running VADER Sentiment Analysis at")
         else:
-            print(
+            logger.info(
                 "Warning",
                 "The VADER algorithm is available only for the English language.\n\nYour currently selected language is "
                 + language

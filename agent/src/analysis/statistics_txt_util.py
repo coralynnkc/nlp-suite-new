@@ -24,28 +24,28 @@ try:
     os.makedirs(STANZA_RESOURCES_DIR, exist_ok=False)
 
 except Exception:
-    print("Stanza directory already exists")
+    logger.info("Stanza directory already exists")
 
 
 if not os.path.exists(EN_MODEL_PATH):
     try:
-        print("Stanza English models not found. Downloading...")
+        logger.info("Stanza English models not found. Downloading...")
         stanza.download("en", model_dir=STANZA_RESOURCES_DIR)
-        print("Download complete!")
+        logger.info("Download complete!")
     except Exception:
         # Handle no internet / failed download````
         import IO_internet_util
 
         IO_internet_util.check_internet_availability_warning("statistics_txt_util.py (stanza.download('en'))")
 else:
-    print("Englis.h model")
+    logger.info("Englis.h model")
 
 
 try:
     os.makedirs(NLTK_DATA_DIR, exist_ok=False)
 
 except Exception:
-    print("NLTK Directory already exists")
+    logger.info("NLTK Directory already exists")
 
 
 #
@@ -243,7 +243,7 @@ def compute_corpus_statistics(
         for doc in inputDocs:
             head, tail = os.path.split(doc)
             documentID = documentID + 1
-            print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
+            logger.info("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
             f = open(doc, encoding="utf-8", errors="ignore")
             docText = f.read()
             f.close()
@@ -405,7 +405,7 @@ def compute_sentence_length(inputFilename, inputDir, outputDir, configFileName, 
             sentenceID = 0
             fileID = fileID + 1
             head, tail = os.path.split(doc)
-            print("Processing file " + str(fileID) + "/" + str(Ndocs) + " " + tail)
+            logger.info("Processing file " + str(fileID) + "/" + str(Ndocs) + " " + tail)
             with open(doc, encoding="utf-8", errors="ignore") as inputFile:
                 text = inputFile.read().replace("\n", " ")
                 from Stanza_functions_util import (
@@ -416,7 +416,7 @@ def compute_sentence_length(inputFilename, inputDir, outputDir, configFileName, 
 
                 sentences = sent_tokenize_stanza(stanzaPipeLine(text))
                 if len(sentences) == 0:
-                    print(
+                    logger.info(
                         "Warning",
                         "The input file\n\n" + doc + "\n\nappears to be empty. Please, check the file and try again.",
                     )
@@ -493,22 +493,22 @@ def compute_line_length(
         for doc in inputDocs:
             head, tail = os.path.split(doc)
             documentID += 1
-            print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
+            logger.info("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
             with open(doc, encoding="utf-8", errors="ignore") as file:
                 lineID = 0
                 try:
                     line = file.readline()
                 except OSError as e:
-                    print(str(e))
+                    logger.info(str(e))
                     if "UnicodeDecodeError" in str(e):
-                        print(
+                        logger.info(
                             "Input file error",
                             "The file\n\n"
                             + doc
                             + "\n\ncontains an invalid character. Please, check the file and try again. You may need to run the script to clean apostrophes and quotes.",
                         )
                     line = "THE LINE CONTAINS ILLEGAL, NON UTF-8 CHARACTERS. PLEASE, CHECK."
-                    print("   ", line)
+                    logger.info("   ", line)
                     # continue
                 while line:
                     lineID += 1
@@ -594,7 +594,7 @@ def compute_character_word_ngrams(
     # hapax have ngramsNumber = 1 and frequency = 1
 
     if inputFilename == "" and inputDir == "":
-        print(
+        logger.info(
             "Input error",
             "No input file or input directory have been specified.\n\nThe function will exit.\n\nPlease, enter the required input options and try again.",
         )
@@ -723,7 +723,7 @@ def get_ngramlist(
         if hashfile.calculate_checksum(file) in hashmap:
             tokens_ = hashmap[hashfile.calculate_checksum(file)]
             head, tail = os.path.split(file)
-            print(" cache auto:  Processing file " + str(index + 1) + "/" + str(len(files)) + " " + tail)
+            logger.info(" cache auto:  Processing file " + str(index + 1) + "/" + str(len(files)) + " " + tail)
         else:
             tokens_ = NGrams_util.readandsplit(
                 file,
@@ -923,7 +923,7 @@ def yule(inputFilename, inputDir, outputDir, configFileName, hideMessage=False):
         head, tail = os.path.split(doc)
         d = {}
         index = index + 1
-        print("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
+        logger.info("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
         fullText = open(doc, encoding="utf-8", errors="ignore").read()
         words = filter(
             lambda w: len(w) > 0,
@@ -954,7 +954,7 @@ def yule(inputFilename, inputDir, outputDir, configFileName, hideMessage=False):
                 + str(result)
                 + "\n\nValue range: 0-100. The higher the value, the richer the vocabulary.",
             )
-            print(
+            logger.info(
                 "The value for the vocabulary richness statistics (word type/token ratio or Yule’s K) is: "
                 + str(result)
                 + "\n\nThe higher the value (0-100) and the richer is the vocabulary.\n\nValue range: 0-100. The higher the value, the richer the vocabulary."
@@ -979,7 +979,7 @@ def print_results(
 
     if not hideMessage:
         # do not count header
-        print(
+        logger.info(
             "Results",
             "Total word count "
             + stopMsg
@@ -992,10 +992,10 @@ def print_results(
             + ": "
             + str(len(class_word_list) - 1),
         )
-    print("\nTotal word count " + stopMsg + ": " + str(len(words)))
+    logger.info("\nTotal word count " + stopMsg + ": " + str(len(words)))
     # do not count header
-    print("Total word count for " + header + " " + stopMsg + ": " + str(len(class_word_list) - 1))
-    print("\n\nList of " + header + " " + stopMsg + "\n\n", class_word_list)
+    logger.info("Total word count for " + header + " " + stopMsg + ": " + str(len(class_word_list) - 1))
+    logger.info("\n\nList of " + header + " " + stopMsg + "\n\n", class_word_list)
     # if outputFilename != '':
 
 
@@ -1132,7 +1132,7 @@ def process_words(
     for doc in inputDocs:
         head, tail = os.path.split(doc)
         documentID = documentID + 1
-        print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
+        logger.info("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
 
         fullText = open(doc, encoding="utf-8", errors="ignore").read()
         fullText = fullText.replace("\n", " ")
@@ -1581,7 +1581,7 @@ def convert_txt_file(inputFilename, inputDir, outputDir, openOutputFiles, exclud
         for doc in inputDocs:
             head, tail = os.path.split(doc)
             documentID = documentID + 1
-            print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
+            logger.info("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
             fullText = open(doc, encoding="utf-8", errors="ignore").read()
 
             str(textstat.sentence_count(fullText))
@@ -1689,7 +1689,7 @@ def compute_sentence_text_readability(
 
             documentID = documentID + 1
             head, tail = os.path.split(file)
-            print("Processing file " + str(documentID) + "/" + str(nFile) + " " + tail)
+            logger.info("Processing file " + str(documentID) + "/" + str(nFile) + " " + tail)
 
             # write text files ____________________________________________
 
@@ -1949,7 +1949,7 @@ def compute_sentence_text_readability(
     )
 
     if len(inputDir) != 0:
-        print(
+        logger.info(
             "Warning",
             "The output filenames generated by Textstat readability contain the name of the directory processed in input, rather than the name of any individual file in the directory.\n\nBoth txt & csv files include all "
             + str(nFile)
@@ -1962,7 +1962,7 @@ def compute_sentence_text_readability(
 # edited by Roberto Franzosi October 2021
 def sentence_structure_tree(inputFilename, outputDir, num_sentences):
     if inputFilename == "":
-        print("No input file")
+        logger.info("No input file")
         return
         #     'Enter sentence                                                                               ', 'Enter', 1)
         # if len(sent) == 0:
@@ -1976,7 +1976,7 @@ def sentence_structure_tree(inputFilename, outputDir, num_sentences):
             return
 
         if maxNum >= 10:
-            print(
+            logger.info(
                 "Warning",
                 "The number of sentences entered is quite large. The tree graph algorithm will produce a png file for every sentence",
             )
@@ -2042,7 +2042,7 @@ def compute_sentence_complexity(
             with open(doc, encoding="utf-8", errors="ignore") as file:
                 dId += 1
                 head, tail = os.path.split(doc)
-                print("Processing file " + str(dId) + "/" + str(numFiles) + tail)
+                logger.info("Processing file " + str(dId) + "/" + str(numFiles) + tail)
                 text = file.read()
                 documentID.append(dId)
                 document.append(IO_csv_util.dressFilenameForCSVHyperlink(os.path.join(inputDir, doc)))
@@ -2064,7 +2064,7 @@ def compute_sentence_complexity(
                 head, tail = os.path.split(doc)
                 with open(os.path.join(inputDir, doc), encoding="utf-8", errors="ignore") as file:
                     dId += 1
-                    print("Importing filename " + str(dId) + "/" + str(numFiles) + " " + tail)
+                    logger.info("Importing filename " + str(dId) + "/" + str(numFiles) + " " + tail)
                     text = file.read()
                     documentID.append(dId)
                     document.append(IO_csv_util.dressFilenameForCSVHyperlink(os.path.join(inputDir, doc)))
@@ -2095,7 +2095,7 @@ def compute_sentence_complexity(
     for idx, txt in enumerate(all_input_docs.items()):
         doc = nlp(txt[1])
         tail = os.path.split(IO_csv_util.undressFilenameForCSVHyperlink(document[idx]))[1]
-        print("Processing file " + str(idx + 1) + "/" + str(numFiles) + " " + tail)
+        logger.info("Processing file " + str(idx + 1) + "/" + str(numFiles) + " " + tail)
         for i, sentence in enumerate(doc.sentences):
             sent = str(sentence.constituency)
             root1 = tree.make_tree(sent)

@@ -1,4 +1,5 @@
 import logging
+import os
 
 import config_util
 import CoNLL_table_analyzer_main
@@ -24,15 +25,11 @@ def run_parsers_annotators(
     annotators_menu_var,
     package,
 ):
-    print("started")
-    print(inputFilename)
-    print("parser_var", parser_var)
-    print("parser_menu_var", parser_menu_var)
-    print()
-    StanfordCoreNLP("http://172.16.0.12:9000")
-    # Set up logging
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
+    logger.info("started: inputFilename=%s parser_var=%s parser_menu_var=%s", inputFilename, parser_var, parser_menu_var)
+    corenlp_url = os.environ.get("CORENLP_URL", "http://corenlp:9000")
+    StanfordCoreNLP(corenlp_url)
 
     # Set the config filename
     config_filename = "NLP_default_IO_config.csv"
@@ -40,7 +37,7 @@ def run_parsers_annotators(
     filesToOpen = []
 
     if "--------------" in annotators_menu_var:
-        print("annotator is invalid")
+        logger.info("annotator is invalid")
         raise ValueError(
             "Your annotator selection is invalid. It is only a label to make readability of menu options easier. Please select a different option and try again."
         )
@@ -59,13 +56,13 @@ def run_parsers_annotators(
         document_length_var,
         limit_sentence_length_var,
     ) = config_util.read_NLP_package_language_config()  # package used to be _
-    print(package)
+    logger.info(package)
     language_list = [language]
     if package_display_area_value == "":
         raise ValueError(
             "The default NLP package and language has not been set up. Please set up the NLP package and language and try again."
         )
-    print("past1")
+    logger.info("past1")
     # Placeholder for date options (adjust as needed)
     filename_embeds_date_var = False
     date_format_var = ""
@@ -74,19 +71,19 @@ def run_parsers_annotators(
 
     # Check for invalid combinations
     if parser_var == 0 and CoNLL_table_analyzer_var == 1:
-        print(parser_var, CoNLL_table_analyzer_var, "Error1")
+        logger.info(parser_var, CoNLL_table_analyzer_var, "Error1")
         raise ValueError(
             "You have selected to open the CoNLL table analyser. This option expects to run the parser first. Please select the CoreNLP parser option and try again."
         )
 
     if annotators_var and annotators_menu_var == "":
-        print(annotators_var, annotators_menu_var, "Error2")
+        logger.info(annotators_var, annotators_menu_var, "Error2")
         raise ValueError(
             "You have selected to run an annotator but no annotator has been selected. Please select an annotator and try again."
         )
 
     if annotators_menu_var == "Word embeddings (Word2Vec)":
-        print("was word2vec")
+        logger.info("was word2vec")
         raise ValueError(
             'The "Word embeddings (Word2Vec)" annotator is not available yet for either BERT or spaCy. Please select a different annotator and try again.'
         )
@@ -125,7 +122,7 @@ def run_parsers_annotators(
                 elif "OpenIE" in annotators_menu_var:
                     annotator = ["OpenIE"]
                 elif "Coreference PRONOMINAL resolution" in annotators_menu_var:
-                    print("Stanford_CoreNLP_coreference_util")
+                    logger.info("Stanford_CoreNLP_coreference_util")
                     # Run Coreference resolution
                     outputFiles, error_indicator = Stanford_CoreNLP_coreference_util.run(
                         config_filename,
@@ -148,12 +145,12 @@ def run_parsers_annotators(
                         else:
                             filesToOpen.extend(outputFiles)
                 else:
-                    print("Selected annotator not available")
+                    logger.info("Selected annotator not available")
                     logger.warning("Selected annotator is not available. Please select a different option.")
                     return
 
             if len(annotator) > 0:
-                print("CoreNLP Annotate")
+                logger.info("CoreNLP Annotate")
                 # Run CoreNLP annotate
                 outputFiles = Stanford_CoreNLP_util.CoreNLP_annotate(
                     config_filename,

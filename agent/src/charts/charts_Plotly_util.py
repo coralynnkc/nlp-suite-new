@@ -1,7 +1,7 @@
 # Written by Tony Chen Gu in Feb 2022
 # https://plotly.com/python/
-
 import io
+import logging
 import math
 import os
 
@@ -11,6 +11,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+logger = logging.getLogger(__name__)
 
 ## NOTE:
 ## some graphing functions has a column placed at the end
@@ -50,10 +52,10 @@ def create_Plotly_chart(
             )
             inputFilename = None  # No need to refer to a file when using inputFileData
         except pd.errors.ParserError:
-            print("Error: failed to parse the provided inputFileData.")
+            logger.info("Error: failed to parse the provided inputFileData.")
             return
         except Exception as e:
-            print(f"Error: {e}")
+            logger.info(f"Error: {e}")
             return
     else:
         # Process inputFilename as usual
@@ -72,10 +74,10 @@ def create_Plotly_chart(
                     sep="delimiter",
                 )
             except Exception:
-                print("Error: failed to read the csv file: " + inputFilename)
+                logger.info("Error: failed to read the csv file: " + inputFilename)
                 return
         except Exception as e:
-            print(f"Error: {e}")
+            logger.info(f"Error: {e}")
             return
     # print on X-axis the filename w/o path
     headers = data.columns.tolist()
@@ -232,7 +234,7 @@ def create_Plotly_chart(
                 )
 
             else:
-                print("Bad for now!")
+                logger.info("Bad for now!")
 
             if len(file_list) == 1:
                 return file_list[0]
@@ -276,7 +278,7 @@ def create_Plotly_chart(
             )
             break
         else:
-            print(
+            logger.info(
                 i + " chart currently not supported in the NLP Suite. Check back soon!"
             )
             continue
@@ -611,7 +613,7 @@ def bubble_chart(
     import numpy as np
     from mpld3 import plugins
 
-    print(f"\nCHART PARAMETERS: {x} (X-axis) vs. {y} (Y-axis)")
+    logger.info(f"\nCHART PARAMETERS: {x} (X-axis) vs. {y} (Y-axis)")
     if inputFileData:
         df = pd.read_csv(io.StringIO(inputFileData))
     else:

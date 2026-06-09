@@ -1,5 +1,6 @@
 # Written by Roberto Franzosi Fall 2020
 import argparse
+import logging
 import math
 import ntpath  # to split the path from filename
 import os
@@ -34,7 +35,7 @@ def make_directory(newDirectory, silent=True):
     # Updates permission automatically
     if os.path.exists(newDirectory):
         if not silent:
-            print(
+            logger.info(
                 "Directory already exists",
                 "There already exists a directory\n\n"
                 + newDirectory
@@ -45,7 +46,7 @@ def make_directory(newDirectory, silent=True):
         os.chmod(Path(newDirectory).parent.absolute(), 0o755)
         os.mkdir(newDirectory, 0o755)
     except Exception as e:
-        print("error: ", e.__doc__)
+        logger.info("error: ", e.__doc__)
         newDirectory = ""
     return newDirectory
 
@@ -68,7 +69,7 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
         outputSubDir = outputDir
     if os.path.exists(outputSubDir):
         if not silent:
-            print(
+            logger.info(
                 "Directory already exists",
                 "The algorithms will create a new directory\n\n"
                 + outputSubDir
@@ -77,7 +78,7 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
         try:
             shutil.rmtree(outputSubDir)
         except Exception as e:
-            print(
+            logger.info(
                 "Directory error",
                 "Could not create the directory " + outputSubDir + "\n\n" + str(e),
             )
@@ -88,11 +89,11 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
             os.chmod(Path(outputSubDir).parent.absolute(), 0o755)
             os.mkdir(outputSubDir, 0o755)
     except Exception as e:
-        print(
+        logger.info(
             "Directory error",
             "Could not create the directory " + outputSubDir + "\n\n" + str(e),
         )
-        print("error: ", e.__doc__)
+        logger.info("error: ", e.__doc__)
         outputSubDir = ""
 
     return outputSubDir
@@ -117,7 +118,7 @@ def getFileList_SubDir(inputFilename, inputDir, fileType=".*", silent=False):
             files = [inputFilename]
         else:
             if not silent:
-                print(
+                logger.info(
                     "Input file error",
                     "The input file type expected by the algorithm is "
                     + fileType
@@ -137,6 +138,8 @@ def getFileList_SubDir(inputFilename, inputDir, fileType=".*", silent=False):
 
 import functools
 import os
+
+logger = logging.getLogger(__name__)
 
 # the below is to convert from self-defined date format to the correct datetime format
 rule_to_format = {
@@ -192,7 +195,7 @@ def complete_order(bb, c):
 def do_compare(input_list, file_end, sort_order, compare_split, date_format, date_loc):
     def compare(filename1, filename2):
         if compare_split not in filename1:
-            print(
+            logger.info(
                 "Non fatal filename error in filename separator. Error ignored.\nThe filename separator '"
                 + compare_split
                 + "' stored for the filenames in your corpus is not contained in the filename\n   "
@@ -202,7 +205,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
             return -1
         if compare_split not in filename2:
             #  The information may have been entered incorrectly when setting up INPUT/OUTPUT (I/O) configuration. Please, check and edit the information. The information may have been entered incorrectly when setting up INPUT/OUTPUT (I/O) configuration. Please, check and edit the information.
-            print(
+            logger.info(
                 "Non fatal filename error in filename separator. Error ignored.\nThe filename separator '"
                 + compare_split
                 + "' stored for the filenames in your corpus is not contained in the filename\n   "
@@ -246,7 +249,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                     return -1 if val1 < val2 else 1
         except Exception:
             # The following pair of filenames are incompatible with the
-            print(
+            logger.info(
                 "Non fatal filename error: date error. Error ignored.\nThe date format "
                 + date_format
                 + " and/or date location "
@@ -255,7 +258,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                 + filename2
                 + "\nYou should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration at the top of the GUI.\n\n"
             )
-            print(filename1, "\n", filename2)
+            logger.info(filename1, "\n", filename2)
             return -1
 
     return sorted(input_list, key=functools.cmp_to_key(compare))
@@ -272,7 +275,7 @@ def getFileList(
         for path in Path(inputDir).glob("*" + fileType):
             files.append(str(path))
         if len(files) == 0:
-            print(
+            logger.info(
                 "Input files error",
                 "No files of type "
                 + fileType
@@ -285,7 +288,7 @@ def getFileList(
         if inputFile.endswith(fileType):
             files = [inputFile]
         else:
-            print(
+            logger.info(
                 "Input file error",
                 "The input file type expected by the algorithm is "
                 + fileType
@@ -304,16 +307,16 @@ def getFileList(
                 configFileName, index_col=False, encoding="utf-8", on_bad_lines="skip"
             )
         except Exception as e:
-            print(str(e))
+            logger.info(str(e))
             if configFileName == "NLP_default_IO_config.csv":
-                print(
+                logger.info(
                     "Input config file error",
                     "The default I/O config file "
                     + configFileName
                     + ' does not exist.\n\nPlease, use the "Setup INPUT/OUTPUT configuration" button to setup the I/O config file and try again.',
                 )
             else:
-                print(
+                logger.info(
                     "Input config file error",
                     "The GUI-specific config file "
                     + configFileName
@@ -328,7 +331,7 @@ def getFileList(
 
         if str(sort_order) == "nan":
             sort_order = "1"
-            print(
+            logger.info(
                 "No sort order available. Files will be read without sorting.\nIf you wish to sort the input files in a specific order, you should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration' at the top of the GUI.\n\n",
                 False,
                 "",
@@ -457,7 +460,7 @@ def getDateFromFileName(
             dateStr = dateStr.replace("/", "-")
         except ValueError:
             if errMsg:
-                print(
+                logger.info(
                     "\nDate format error in filename: "
                     + file_name
                     + "\n   Date found: "
@@ -489,7 +492,7 @@ def checkDirectory(path, message=True):
         return True
     else:
         if message:
-            print(
+            logger.info(
                 "Directory error",
                 "The directory "
                 + path
@@ -506,8 +509,8 @@ def checkFile(inputFilename, extension=None, silent=False):
         reminders_util.generate_reminder_list(head)
     if not os.path.isfile(inputFilename):
         if not silent:
-            print("The file " + inputFilename + " could not be found.")
-            print(
+            logger.info("The file " + inputFilename + " could not be found.")
+            logger.info(
                 "Input file not found",
                 "Error in input filename and path.\n\nThe file "
                 + inputFilename
@@ -516,8 +519,8 @@ def checkFile(inputFilename, extension=None, silent=False):
         return False
     if extension is not None and not "." + inputFilename.rsplit(".", 1)[1] == extension:
         if not silent:
-            print("File has the wrong extension.")
-            print(
+            logger.info("File has the wrong extension.")
+            logger.info(
                 "Input file extension error",
                 "Error in input filename and path.\n\nThe file "
                 + inputFilename
@@ -664,7 +667,7 @@ def generate_output_file_name(
 
     if sys.platform == "win32":  # Windows
         if len(outFilename) > 255:
-            print(
+            logger.info(
                 "Warning",
                 "The length ("
                 + str(len(outFilename))
@@ -680,7 +683,7 @@ def generate_output_file_name(
 def GetNumberOfDocumentsInDirectory(inputDirectory, extension=""):
     numberOfDocs = 0
     if inputDirectory == "":
-        print(
+        logger.info(
             "No directory selected",
             "The directory passed to the GetNumberOfDocumentsInDirectory function is blank.\n\nFunction aborted.",
         )
@@ -706,7 +709,7 @@ def GetNumberOfDocumentsInDirectory(inputDirectory, extension=""):
 # return csvfile if opened up properly, or empty string if error occurs
 def openCSVFile(inputfile, open_type, encoding_type="utf-8"):
     if inputfile == "":
-        print("File error", "The input file is blank.")
+        logger.info("File error", "The input file is blank.")
         return ""
     try:
         csvfile = open(
@@ -714,7 +717,7 @@ def openCSVFile(inputfile, open_type, encoding_type="utf-8"):
         )
         return csvfile
     except OSError:
-        print(
+        logger.info(
             "File error",
             "Could not open the file "
             + inputfile
@@ -745,7 +748,7 @@ def getScript(pydict, script):
         val = pydict[script]
     except Exception:
         if "---------------------" in script or len(script) == 0:
-            print(
+            logger.info(
                 "Warning",
                 "The selected option '"
                 + script
@@ -754,7 +757,7 @@ def getScript(pydict, script):
             return script_to_run, IO_values
 
         # entry not in dic; programming error; must be added!
-        print(
+        logger.info(
             "Warning",
             "The selected option '"
             + script
@@ -763,7 +766,7 @@ def getScript(pydict, script):
         return script_to_run, IO_values
     # name of the python script
     if val[0] == "":
-        print(
+        logger.info(
             "Warning",
             "The selected option '" + script + "' is not available yet.\n\nSorry!",
         )
@@ -854,7 +857,7 @@ def runScript_fromMenu_option(
         # check internet connection
         if not IO_internet_util.check_internet_availability_warning("Gender guesser"):
             return filesToOpen
-        print("http://www.hackerfactor.com/GenderGuesser.php#About")
+        logger.info("http://www.hackerfactor.com/GenderGuesser.php#About")
     elif script_to_run.endswith(".py"):  # with GUI
         if not IO_libraries_util.check_inputPythonJavaProgramFile(script_to_run):
             return filesToOpen
@@ -919,7 +922,7 @@ def detectCsvHeader (csvFile):
         has_header = csv.Sniffer().sniff(csvf.read(2048))
         csvf.seek(0)
         reader=csv.reader(csvf, has_header)
-        print ("detectCsvHeader has_header ",has_header)
+        logger.info("detectCsvHeader has_header ",has_header)
 """
 
 

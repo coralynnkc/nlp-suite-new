@@ -1,4 +1,5 @@
 import csv
+import logging
 import os.path
 import re  # ANGEL
 
@@ -12,6 +13,8 @@ from scipy.linalg import svd as sp_svd
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.decomposition import NMF
 from tqdm import tqdm
+
+logger = logging.getLogger(__name__)
 
 
 class SVDClustering:
@@ -269,7 +272,7 @@ def update_Ct_St(sample, H, C_t, S_t):
             for idx_2 in cluster:
                 C_t[idx_1][idx_2] += 1
                 if S_t[idx_1][idx_2] == 0:
-                    print("ERROR" + "\n")
+                    logger.info("ERROR" + "\n")
     return C_t, S_t
 
 

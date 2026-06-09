@@ -1,3 +1,5 @@
+import logging
+
 import config_util
 import file_spell_checker_util
 import IO_files_util
@@ -5,6 +7,8 @@ import IO_libraries_util
 import Stanza_util
 import statistics_txt_util
 import style_analysis_abstract_concreteness_analysis_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -51,7 +55,7 @@ def run_style_analysis(
     #     config_filename, config_input_output_numeric_options)
 
     if package_display_area_value == "":
-        print(
+        logger.info(
             "No setup for NLP package and language, The default NLP package and language has not been setup. \nPlease, click on the Setup NLP button and try again."
         )
         return
@@ -65,7 +69,7 @@ def run_style_analysis(
         and not vocabulary_analysis_var
         and not gender_guesser_var
     ):
-        print("Warning, No options have been selected.\n\nPlease, select an option and try again.")
+        logger.info("Warning, No options have been selected.\n\nPlease, select an option and try again.")
         return
 
     # complexity_readability    ---------------------------------------------------------------------
@@ -85,7 +89,7 @@ def run_style_analysis(
             )
 
         if complexity_readability_analysis_menu_var == "":
-            print(
+            logger.info(
                 "Warning, No option has been selected for Complexity/readability analysis.\n\nPlease, select an option from the dropdown menu and try again."
             )
             return
@@ -96,7 +100,7 @@ def run_style_analysis(
         openOutputFilesSV = openOutputFiles
         openOutputFiles = False  # to make sure files are only opened at the end of this multi-tool script
         if vocabulary_analysis_menu_var == "":
-            print(
+            logger.info(
                 "Warning, No option has been selected for Vocabulary analysis.\n\nPlease, select an option and try again."
             )
             return
@@ -342,7 +346,7 @@ def run_style_analysis(
                         filesToOpen.extend(outputFiles)
             else:
                 if not "*" == vocabulary_analysis_menu_var:
-                    print(
+                    logger.info(
                         "Warning, The Abstract/concrete vocabulary analysis algorithm is only available for the English language."
                     )
 
@@ -368,7 +372,7 @@ def run_style_analysis(
                         filesToOpen.extend(outputFiles)
             else:
                 if not "*" == vocabulary_analysis_menu_var:
-                    print("Warning, The Iconicity analysis algorithm is only available for the English language.")
+                    logger.info("Warning, The Iconicity analysis algorithm is only available for the English language.")
 
         if "*" == vocabulary_analysis_menu_var or "Yule" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.yule(inputFilename, inputDir, outputDir, config_filename)

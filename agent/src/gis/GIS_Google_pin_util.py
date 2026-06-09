@@ -1,9 +1,12 @@
+import logging
 import os
 import sys
 
 import IO_csv_util
 import pandas as pd
 import simplekml
+
+logger = logging.getLogger(__name__)
 
 # icon_type are the different types of icon, like pushpin, paddle teardrop, paddle square....
 # 	Expected input will be a string, for example: icon_type == "pushpin"
@@ -670,7 +673,7 @@ def pin_customizer(
     # Assign description
     if description_var_list[j] == 1:
         if len(description_csv_field_var_list[j]) == 0:
-            print(
+            logger.info(
                 "No CSV Field Selected for Description for Group No."
                 + str(j + 1)
                 + "The description checkbox is ticked but no csv field was selected for the Group No."
@@ -681,7 +684,7 @@ def pin_customizer(
             sys.exit()
         if group_var == 1:
             if len(group_labels[j]) < 1:
-                print(
+                logger.info(
                     "No group labels specified for Group No. "
                     + str(j + 1)
                     + "There is no group label specified for Group No."

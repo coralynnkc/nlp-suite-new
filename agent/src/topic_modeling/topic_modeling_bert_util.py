@@ -1,9 +1,12 @@
 import json
+import logging
 import os
 
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
+
+logger = logging.getLogger(__name__)
 
 
 def get_docs(inputDir, split_docs_var):
@@ -32,7 +35,7 @@ def get_docs(inputDir, split_docs_var):
 
 
 def run_BERTopic(inputDir, outputDir, split_docs_var=False):  # split_docs_var=True
-    print(inputDir, outputDir)
+    logger.info(inputDir, outputDir)
     # Get documents
     docs = get_docs(inputDir, split_docs_var)
 

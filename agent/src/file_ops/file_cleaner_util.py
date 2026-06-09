@@ -97,7 +97,7 @@ def add_full_stop_to_paragraph(
     for filename in inputDocs:
         docID = docID + 1
         head, tail = os.path.split(filename)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         edited = False
         with open(filename, encoding="utf-8", errors="ignore") as fn:
             # add_full_stop_to_paragraph
@@ -141,7 +141,7 @@ def add_full_stop_to_paragraph(
                 + "\n\nAll edits were saved directly in all affected input files."
             )
 
-    print("End of paragraph punctuation" + msgString)
+    logger.info("End of paragraph punctuation" + msgString)
     # always open outputDir
     IO_files_util.openExplorer(window, head)
     IO_user_interface_util.timed_alert(
@@ -181,7 +181,7 @@ def check_typesetting_hyphenation(
     for infile in files:
         docID = docID + 1
         head, tail = os.path.split(infile)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         hyphenated_lines = 0
         lines = []
     with open(infile, encoding="utf-8", errors="ignore") as source:
@@ -196,7 +196,7 @@ def check_typesetting_hyphenation(
                 lines.append(line)
 
     if hyphenated_lines > 0:
-        print(
+        logger.info(
             "Warning: There are "
             + str(hyphenated_lines)
             + " typesetting hyphenated lines in the input file(s).\n\nPlease, check carefully the output csv file to make sure that there are no legitimate end-of-line hyphens (e.g., pretty-smart) that should not be joined together. In such legitimate cases, please, manually move the line end to the next line."
@@ -210,7 +210,7 @@ def check_typesetting_hyphenation(
             filesToOpen.append(outputFilename)
         # if openOutputFiles:
     else:
-        print(
+        logger.info(
             "Warning: There are "
             + str(hyphenated_lines)
             + " typesetting hyphenated lines in the input file(s)."
@@ -245,7 +245,7 @@ def remove_typeseting_hyphenation(
         outputDir = create_input_subdir(inputDir, "_NoHyph")
 
     message = "The input file(s) may contain legitimate end-of-line hyphens (e.g., pretty-smart with pretty- at the end of a line and smart at the beginning of the next line). In such legitimate cases, the two-parts of the hyphenated compound should not be joined together (rather, the line end, pretty- should be manually moved to the next line.\n\nDo you want to check, first, that there are no legitimate uses of end-of-line hyphens, before removing them all automatically, whether legitimate or not?"
-    print(message)
+    logger.info(message)
     answer = "yes"
     if answer:
         check_typesetting_hyphenation(
@@ -274,7 +274,7 @@ def remove_typeseting_hyphenation(
     for infile in files:
         docID = docID + 1
         head, tail = os.path.split(infile)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         removed_hyphens = 0
         # remove_typeseting_hyphenation
         if inputDir != "":
@@ -315,7 +315,7 @@ def remove_typeseting_hyphenation(
             )
     else:
         save_msg = ""
-    print(
+    logger.info(
         "Warning: "
         + str(removed_hyphens)
         + " end-line typesetting hyphens removed from the input file(s)."
@@ -363,7 +363,7 @@ def remove_hard_carriage_returns(
         outputDir = create_input_subdir(inputDir, label)
 
     message = "The input file(s) may contain legitimate hard-carriage returns at the end of pargraphs (e.g., pretty-smart with pretty- at the end of a line and smart at the beginning of the next line). In such legitimate cases, the two-parts of the hyphenated compound should not be joined together (rather, the line end, pretty- should be manually moved to the next line.\n\nDo you want to check, first, that there are no legitimate uses of end-of-line hyphens, before removing them all automatically, whether legitimate or not?"
-    print(message)
+    logger.info(message)
     answer = "yes"
     if answer:
         check_typesetting_hyphenation(
@@ -392,7 +392,7 @@ def remove_hard_carriage_returns(
     for infile in files:
         docID = docID + 1
         head, tail = os.path.split(infile)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         removed_hard_returns = 0
         if inputDir != "":
             # do not modify the filename when processing multiple files in a directory
@@ -424,7 +424,7 @@ def remove_hard_carriage_returns(
             )
     else:
         save_msg = ""
-    print(
+    logger.info(
         "Warning"
         + str(removed_hard_returns)
         + " hard-carriage returns removed from the input file(s)."
@@ -500,7 +500,7 @@ def add_missing_blank_after_punctuation(
     for infile in files:
         docID = docID + 1
         head, tail = os.path.split(infile)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         if inputDir != "":
             # do not modify the filename when processing multiple files in a directory
             #   this way, they can be copied directly over the inputDir
@@ -530,7 +530,7 @@ def add_missing_blank_after_punctuation(
             )
     else:
         save_msg = ""
-    print(
+    logger.info(
         "Warning, Missing blanks were inserted after punctuation in "
         + str(blanks_added)
         + " input file(s)."
@@ -589,13 +589,13 @@ def remove_characters_between_characters(
             "Enter the single start character (e.g., [)", "", 1, "", "", ""
         )
         if startCharacter == "":
-            print("Blank start character, No start character entered. Routine aborted.")
+            logger.info("Blank start character, No start character entered. Routine aborted.")
             return
         endCharacter, useless = GUI_IO_util.enter_value_widget(
             "Enter the single end character (e.g., ])", "", 1, "", "", ""
         )
         if endCharacter == "":
-            print("Blank end character, No end character entered. Routine aborted.")
+            logger.info("Blank end character, No end character entered. Routine aborted.")
             return
 
     No_files_edited = 0
@@ -617,7 +617,7 @@ def remove_characters_between_characters(
     for file in files:
         docID = docID + 1
         head, tail = os.path.split(file)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         with open(file, encoding="utf_8", errors="ignore") as infile:
             fullText = infile.read()
             number_of_characters_start = fullText.count(startCharacter)
@@ -720,7 +720,7 @@ def remove_characters_between_characters(
                         str(os.stat(file).st_size - os.stat(outfile).st_size),
                     ]
                 )
-                print(
+                logger.info(
                     "   FILE SIZES (in bytes) - ORIGINAL ",
                     os.stat(file).st_size,
                     " EDITED ",
@@ -747,7 +747,7 @@ def remove_characters_between_characters(
                         True,
                     )
                 else:
-                    print(
+                    logger.info(
                         "Edits saved: "
                         + str(i)
                         + " substrings contained between "
@@ -762,7 +762,7 @@ def remove_characters_between_characters(
 
     if inputDir != "":
         if No_files_edited > 0:
-            print(
+            logger.info(
                 "Warning"
                 + str(No_files_edited)
                 + " files were edited removing ALL substrings contained between "
@@ -774,7 +774,7 @@ def remove_characters_between_characters(
                 + "\n\nList of edited files:\n\n"
                 + str(edited_files_list)
             )
-            print(
+            logger.info(
                 str(No_files_edited)
                 + " files edited removing ALL substrings between "
                 + startCharacter
@@ -797,7 +797,7 @@ def remove_characters_between_characters(
             IO_files_util.openFile(window, outputDir + os.sep + "file_sizes.csv")
 
     if No_odd_pairs > 0:
-        print(
+        logger.info(
             "Warning, ODD PAIRS of start/end values "
             + startCharacter
             + " "
@@ -807,7 +807,7 @@ def remove_characters_between_characters(
             + " files.\n\nTHE FILES WERE SKIPPED FROM PROCESSING. PLEASE, CHECK THOSE FILES CAREFULLY.\n\n"
             + str(odd_pairs_files_list)
         )
-        print(
+        logger.info(
             "\n\nODD PAIRS of start/end values "
             + startCharacter
             + " "
@@ -879,7 +879,7 @@ def remove_blank_lines(
     for file in files:
         docID = docID + 1
         head, tail = os.path.split(file)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         withEmptyLines = False
         outputLines = ""
         with open(file, encoding="utf_8", errors="ignore") as infile:
@@ -901,21 +901,21 @@ def remove_blank_lines(
             filesWithEmptyLines += 1
     if inputFilename != "":
         if filesWithEmptyLines == 0:
-            print(
+            logger.info(
                 "Blank lines removed, No blank lines were removed from the input file."
             )
         else:
-            print("Blank lines removed, Blank lines were removed from the input file.")
+            logger.info("Blank lines removed, Blank lines were removed from the input file.")
     else:
         if filesWithEmptyLines == 0:
-            print(
+            logger.info(
                 "Blank lines removed, No files contained blank lines"
                 + " out of "
                 + str(nDocs)
                 + " files in the input directory."
             )
         else:
-            print(
+            logger.info(
                 "Blank lines removed, Blank lines were removed from "
                 + str(filesWithEmptyLines)
                 + " out of "
@@ -1024,11 +1024,11 @@ def newspaper_titles(
     docID = 0
     if nDocs == 0:
         return
-    print("\n\nProcessing documents with titles...\n\n")
+    logger.info("\n\nProcessing documents with titles...\n\n")
     for filename in inputDocs:
         docID = docID + 1
         head, tail = os.path.split(filename)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         with open(filename, encoding="utf-8", errors="ignore") as fn:
             # newspaper_titles
             paragraphs = get_paragraphs(fn)
@@ -1059,7 +1059,7 @@ def newspaper_titles(
     for filename in inputDocs:
         docID = docID + 1
         head, tail = os.path.split(filename)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         with open(filename, encoding="utf-8", errors="ignore") as fn:
             # newspaper_titles
             paragraphs = get_paragraphs(fn)
@@ -1128,7 +1128,7 @@ def newspaper_titles(
                 + inputDir
             )
 
-    print("Document titles" + msgString)
+    logger.info("Document titles" + msgString)
     # always open outputDir
     IO_files_util.openExplorer(window, head)
 
@@ -1189,7 +1189,7 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
     for doc in inputDocs:
         index = index + 1
         head, tail = os.path.split(doc)
-        print("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
+        logger.info("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
         with open(doc, "r+", encoding="utf_8", errors="ignore") as file:
             fullText = file.read()
             # https://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html
@@ -1221,7 +1221,7 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
 
     if docError > 0:
         if docError == 1:
-            print(
+            logger.info(
                 "Non-ASCII punctuations converted"
                 + str(Ndocs)
                 + " document(s) processed.\n\n"
@@ -1229,7 +1229,7 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
                 + " document was edited to convert non-ASCII apostrophes and/or quotes and % to percent.\n\nCHANGES WERE MADE DIRECTLY IN THE INPUT FILE."
             )
         else:
-            print(
+            logger.info(
                 "Non-ASCII punctuations converted"
                 + str(Ndocs)
                 + " document(s) processed.\n\n"
@@ -1237,7 +1237,7 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
                 + " documents were edited to convert non-ASCII apostrophes and/or quotes and % to percent.\n\nCHANGES WERE MADE DIRECTLY IN THE INPUT FILES."
             )
     else:
-        print(
+        logger.info(
             "Non-ASCII punctuations converted"
             + str(Ndocs)
             + " document(s) processed.\n\nNo documents were found with non-ASCII apostrophes or quotes and % to percent."
@@ -1320,12 +1320,12 @@ def find_replace_string(
     elif len(string_IN) != len(
         string_OUT
     ):  # make sure the list of FIND strings and REPLACE strings have same length, so that each can be matched
-        print(
+        logger.info(
             "Different number of FIND & REPLACE strings, The Find & Replace string function requires same number of FIND & REPLACE strings."
         )
         return
     if string_IN == []:  # if still empty
-        print(
+        logger.info(
             "Missing string, The Find & Replace string function requires a non-empty FIND string.\n\nPlease, enter the FIND string and try again."
         )
         return
@@ -1337,7 +1337,7 @@ def find_replace_string(
     for doc in inputDocs:
         index = index + 1
         head, tail = os.path.split(doc)
-        print("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
+        logger.info("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
 
         with open(doc, "r+", encoding="utf_8", errors="ignore") as file:
             fullText = file.read()
@@ -1384,7 +1384,7 @@ def find_replace_string(
             len(string_IN) == 1 and docError == 1
         ):  # if only one FIND string, it can be typed in the message box
             if not silent:
-                print(
+                logger.info(
                     "String edit"
                     + str(Ndocs)
                     + " document(s) processed.\n\n"
@@ -1396,7 +1396,7 @@ def find_replace_string(
                     + "\n\nCHANGES WERE MADE DIRECTLY IN THE INPUT FILE."
                 )
             else:
-                print(
+                logger.info(
                     str(Ndocs)
                     + " document(s) processed.\n\n"
                     + str(docError)
@@ -1408,7 +1408,7 @@ def find_replace_string(
                 )
         else:  # when the length of FIND / REPLACE strings > 1, no actual string will be typed in the message box or printout information
             if not silent:
-                print(
+                logger.info(
                     "String edit"
                     + str(Ndocs)
                     + " document(s) processed.\n\n"
@@ -1416,7 +1416,7 @@ def find_replace_string(
                     + " document(s) edited replacing strings.\n\nCHANGES WERE MADE DIRECTLY IN THE INPUT FILE(S)."
                 )
             else:
-                print(
+                logger.info(
                     str(Ndocs)
                     + " document(s) processed.\n\n"
                     + str(docError)
@@ -1424,13 +1424,13 @@ def find_replace_string(
                 )
     else:
         if not silent:
-            print(
+            logger.info(
                 title="String edit"
                 + str(Ndocs)
                 + " document(s) processed.\n\nNo documents were found with the input string(s)."
             )
         else:
-            print(str(Ndocs) + " document(s) processed but zero input string(s) found.")
+            logger.info(str(Ndocs) + " document(s) processed but zero input string(s) found.")
 
     if not IO_error:
         filesToOpen.append(outputFilename)

@@ -1,3 +1,5 @@
+import logging
+
 # util to create google maps from table data
 # jack hester September 2020
 
@@ -15,6 +17,8 @@ import GIS_pipeline_util
 import GUI_IO_util
 import reminders_util
 
+logger = logging.getLogger(__name__)
+
 
 # gathers the template html/js file to build a heat map,
 # inserts correct javascript containing all of the points to plot on heatmap_template
@@ -25,7 +29,7 @@ def create_google_heatmap(outputFilename, gmaps_list):
         "GOOGLE_MAPS_API_KEY"
     ) or GIS_pipeline_util.getGoogleAPIkey("Google-Maps-API_config.csv")
     if not api_key or len(api_key) < 5:
-        print(
+        logger.info(
             "Google Maps API key error: The expected API key required by Google Maps is missing. Please enter it via the settings page. No Google Maps heatmap can be produced."
         )
         return
