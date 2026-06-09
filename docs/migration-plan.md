@@ -49,15 +49,18 @@ No `settings.html` template, no view, and no URL route exist in the UI. Phase 4 
 
 Neither `docker-compose.yml` nor `scripts/start.sh` exist yet. Individual `Dockerfile`s in each service dir are present.
 
-## Phase 6 — Unit tests
+## Phase 6 — Unit tests (complete)
 - Framework: pytest
 - Location: `agent/tests/`
 - One test file per endpoint
-- Fixtures: small `.txt` sample files in `agent/tests/fixtures/`
+- Fixtures: `agent/tests/fixtures/sample.txt` (The Three Little Pigs) and `agent/tests/fixtures/sample.csv` (trimmed ANEW sentiment lexicon)
 - No mocks for NLP logic — tests call real processing functions
 - CoreNLP-dependent tests marked with `@pytest.mark.integration` and skipped unless CoreNLP service is up
+- `agent/pyproject.toml` registers the `integration` marker and sets `testpaths = ["tests"]`
+- `html_annotator_gender_main` imports tkinter via `GUI_util` at module level; `test_gender_analysis.py` uses `pytest.importorskip` so it auto-skips if the import fails
+- Existing manual `test_*.py` scripts in `agent/src/` left in place (dev team run scripts, not part of pytest suite)
 
-Existing `test_*.py` files are colocated with source in `agent/src/` instead of `agent/tests/`. No `agent/tests/fixtures/` directory exists. Tests need to be moved and fixtures added.
+Run: `cd agent && python -m pytest tests/ -v` (add `-m integration` to include CoreNLP tests)
 
 ---
 

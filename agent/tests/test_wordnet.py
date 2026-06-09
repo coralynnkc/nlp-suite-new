@@ -1,4 +1,9 @@
-from knowledge_graphs_WordNet_main import run_kg_wordnet
+import pytest
+
+try:
+    from knowledge_graphs_WordNet_main import run_kg_wordnet
+except (ImportError, SystemExit):
+    pytest.skip("knowledge_graphs_WordNet_main dependencies not available", allow_module_level=True)
 
 
 def test_wordnet_noun_extraction(fixture_txt, tmp_output):
