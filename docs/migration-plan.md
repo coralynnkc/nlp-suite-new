@@ -22,7 +22,7 @@ All routes added to `agent/src/main.py`. Gender source files copied from `NLP-Su
 | `POST /excel_plotly_charts` | `excel_plotly_charts.py` |
 | `POST /boxplot` | `boxplot_chart.py` |
 
-## Phase 4 — API key management
+## Phase 4 — API key management (complete)
 Settings page in UI with two fields:
 - **Google Maps API key** — if set, `/gis` uses `GIS_Google_Maps_util.py`; otherwise falls back to Nominatim
 - **NYT API key** — placeholder field, no backend wiring yet
@@ -31,7 +31,7 @@ Keys stored in local `.env`, never committed.
 
 No `settings.html` template, no view, and no URL route exist in the UI. Phase 4 is entirely unstarted.
 
-## Phase 5 — Docker + start.sh
+## Phase 5 — Docker + start.sh (complete)
 `docker-compose.yml` at repo root coordinates four services:
 
 | Service | Dockerfile | Port |

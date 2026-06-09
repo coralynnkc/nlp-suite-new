@@ -25,7 +25,7 @@ RUN wget $(grepurl -r 'english.*jar$' -a http://stanfordnlp.github.io/CoreNLP | 
 # only keep the things we need to run and test CoreNLP
 FROM alpine:3.19
 
-RUN apk update && apk add openjdk8-jre-base py3-pip && \
+RUN apk update && apk add openjdk8-jre-base py3-pip curl && \
   pip install pytest pexpect requests --break-system-packages
 
 WORKDIR /opt/corenlp

@@ -1,4 +1,5 @@
 import os
+import re
 from threading import Thread
 from typing import Annotated, List
 from enum import Enum
@@ -6,7 +7,7 @@ from enum import Enum
 import uvicorn
 from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import PlainTextResponse, RedirectResponse
+from fastapi.responses import PlainTextResponse, RedirectResponse, JSONResponse
 
 from parsers_annotators import run_parsers_annotators
 from sentiment_analysis import run_sentiment_analysis
@@ -34,6 +35,42 @@ from html_annotator_gender_main import run as run_gender_analysis
 from shape_of_stories_main import run as run_shape_of_stories
 from excel_plotly_charts import run_excel_plotly_charts
 from boxplot_chart import run as run_boxplot
+
+_ENV_PATH = os.path.join(os.path.expanduser("~"), "nlp-suite", ".env")
+
+def _load_env_file():
+    """Read key=value lines from ~/nlp-suite/.env into os.environ (does not override existing vars)."""
+    if not os.path.exists(_ENV_PATH):
+        return
+    with open(_ENV_PATH) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, _, v = line.partition("=")
+            if k not in os.environ:
+                os.environ[k] = v
+
+_load_env_file()
+
+GOOGLE_MAPS_API_KEY: str = os.environ.get("GOOGLE_MAPS_API_KEY", "")
+NYT_API_KEY: str = os.environ.get("NYT_API_KEY", "")
+
+
+def _write_env_file(google_maps_api_key: str, nyt_api_key: str):
+    os.makedirs(os.path.dirname(_ENV_PATH), exist_ok=True)
+    lines: list[str] = []
+    if os.path.exists(_ENV_PATH):
+        with open(_ENV_PATH) as f:
+            for line in f:
+                k = line.split("=")[0].strip()
+                if k not in ("GOOGLE_MAPS_API_KEY", "NYT_API_KEY"):
+                    lines.append(line.rstrip("\n"))
+    lines.append(f"GOOGLE_MAPS_API_KEY={google_maps_api_key}")
+    lines.append(f"NYT_API_KEY={nyt_api_key}")
+    with open(_ENV_PATH, "w") as f:
+        f.write("\n".join(lines) + "\n")
+
 
 app = FastAPI(debug=True)
 origins = [
@@ -1254,6 +1291,30 @@ def boxplot(
         )
     )
     thread.start()
+    return PlainTextResponse("", status_code=200)
+
+
+@app.get("/settings")
+def get_settings():
+    def mask(val: str) -> str:
+        return ("*" * (len(val) - 4) + val[-4:]) if len(val) > 4 else ("*" * len(val))
+    return JSONResponse({
+        "google_maps_api_key": mask(GOOGLE_MAPS_API_KEY),
+        "nyt_api_key": mask(NYT_API_KEY),
+    })
+
+
+@app.post("/settings")
+def save_settings(
+    google_maps_api_key: Annotated[str, Form()] = "",
+    nyt_api_key: Annotated[str, Form()] = "",
+):
+    global GOOGLE_MAPS_API_KEY, NYT_API_KEY
+    GOOGLE_MAPS_API_KEY = google_maps_api_key
+    NYT_API_KEY = nyt_api_key
+    os.environ["GOOGLE_MAPS_API_KEY"] = google_maps_api_key
+    os.environ["NYT_API_KEY"] = nyt_api_key
+    _write_env_file(google_maps_api_key, nyt_api_key)
     return PlainTextResponse("", status_code=200)
 
 
