@@ -6,6 +6,9 @@ nlp-suite-ui/
 stanford-corenlp-docker/
 MALLET-docker/
 
+# Internal dev notes
+docs/
+
 # Obsidian.nvim auto-created
 daily/
 
