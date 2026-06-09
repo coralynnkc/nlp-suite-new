@@ -18,11 +18,6 @@ def index(_: HttpRequest):
     return HttpResponse(template.render())
 
 
-def home(_: HttpRequest):
-    template = loader.get_template("../templates/home.html")
-    return HttpResponse(template.render())
-
-
 def install(_: HttpRequest):
     template = loader.get_template("../templates/install.html")
     return HttpResponse(template.render())
@@ -48,16 +43,6 @@ def sentiment_analysis(request: HttpRequest):
         else:
             messages.add_message(request, messages.ERROR, response.content.decode())
     return render(request, "sentiment_analysis.html")
-
-
-def set_up(_: HttpRequest):
-    template = loader.get_template("../templates/set_up.html")
-    return HttpResponse(template.render())
-
-
-def all_options_gui(_: HttpRequest):
-    template = loader.get_template("../templates/all_options_gui.html")
-    return HttpResponse(template.render())
 
 
 def SVO(request: HttpRequest):
@@ -180,16 +165,6 @@ def filesearchword(request: HttpRequest):
         else:
             messages.add_message(request, messages.ERROR, response.content.decode())
     return render(request, "filesearchword.html")
-
-
-def visual1(_: HttpRequest):
-    template = loader.get_template("../templates/visual1.html")
-    return HttpResponse(template.render())
-
-
-def visual2(_: HttpRequest):
-    template = loader.get_template("../templates/visual2.html")
-    return HttpResponse(template.render())
 
 
 def gis(request: HttpRequest):
