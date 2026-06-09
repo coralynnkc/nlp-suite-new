@@ -9,18 +9,10 @@ A monorepo for running a suite of text-analysis tools through a browser UI. Desi
 ```bash
 git clone https://github.com/coralynnkc/nlp-suite-new ~/nlp-suite-repo
 cd ~/nlp-suite-repo
-./scripts/start.sh
+./start.sh
 ```
 
 Opens `http://localhost:8000` automatically.
-
-### What `start.sh` does
-
-1. Checks Docker is running
-2. Creates `~/nlp-suite/input/`, `~/nlp-suite/output/`, and `~/nlp-suite/csvInput/` on your host machine
-3. Runs `docker compose up -d`
-4. Waits up to 60 seconds for the UI to respond
-5. Opens your browser to `http://localhost:8000`
 
 ### File directories
 
@@ -105,8 +97,7 @@ agent/      FastAPI backend + NLP processing source
 ui/         Django frontend
 corenlp/    Stanford CoreNLP Docker container
 mallet/     MALLET Docker container
-docs/       Migration plan and functionality audit
-scripts/    start.sh
+start.sh    Start all services
 ```
 
 ### Running tests
@@ -122,5 +113,3 @@ cd agent && python -m pytest tests/ -v -m integration
 ```
 
 Test fixtures are in `agent/tests/fixtures/`.
-
-See [`docs/migration-plan.md`](docs/migration-plan.md) for current status and known tech debt.
