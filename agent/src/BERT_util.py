@@ -6,6 +6,13 @@ import re
 import sys
 import time
 
+import pandas as pd
+import stanza
+from sentence_transformers import SentenceTransformer
+from sklearn.manifold import TSNE
+from summarizer import Summarizer
+from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
+
 import charts_util
 
 # Visualization
@@ -13,24 +20,34 @@ import IO_csv_util
 import IO_files_util
 import IO_internet_util
 import IO_user_interface_util
-import pandas as pd
-import stanza
 import statistics_txt_util
 import word2vec_distances_util
 import word2vec_tsne_plot_util
-from sentence_transformers import SentenceTransformer
-from sklearn.manifold import TSNE
-from summarizer import Summarizer
-from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
 
 
 # Provides NER tags per sentence for every doc and stores in a csv file
-def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, chartPackage, dataTransformation):
-    tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-large-finetuned-conll03-english")
-    model = AutoModelForTokenClassification.from_pretrained("xlm-roberta-large-finetuned-conll03-english")
+def NER_tags_BERT(
+    inputFilename,
+    inputDir,
+    outputDir,
+    configFileName,
+    mode,
+    chartPackage,
+    dataTransformation,
+):
+    tokenizer = AutoTokenizer.from_pretrained(
+        "xlm-roberta-large-finetuned-conll03-english"
+    )
+    model = AutoModelForTokenClassification.from_pretrained(
+        "xlm-roberta-large-finetuned-conll03-english"
+    )
 
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
 
     Ndocs = str(len(inputDocs))
@@ -38,11 +55,18 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
     result = []
     filesToOpen = []
 
-    if not IO_internet_util.check_internet_availability_warning("BERT_util.py (Function BERT NER)"):
+    if not IO_internet_util.check_internet_availability_warning(
+        "BERT_util.py (Function BERT NER)"
+    ):
         return
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running BERT for NER annotators at", True, "", True
+        2000,
+        "Analysis start",
+        "Started running BERT for NER annotators at",
+        True,
+        "",
+        True,
     )
 
     # create output subdirectory
@@ -71,7 +95,9 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
             sentenceID = sentenceID + 1
             # this model does not use BIEOS
             # aggregation_strategy="simple" ensures that multi word entities are looked at as one entity and instead of being tagged as B-LOC and I-LOC spearately, they are just tagged as LOC together
-            nlp = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+            nlp = pipeline(
+                "ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple"
+            )
             ner_result = nlp(s)
 
             for el in ner_result:
@@ -88,7 +114,9 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
 
     result.insert(0, header)
 
-    outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".csv", "NER_BERT")
+    outputFilename = IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".csv", "NER_BERT"
+    )
     IO_error = IO_csv_util.list_to_csv(result, outputFilename)
 
     if not IO_error:
@@ -96,16 +124,18 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
         import parsers_annotators_visualization_util
 
         kwargs = NER_dict
-        outputFiles = parsers_annotators_visualization_util.parsers_annotators_visualization(
-            configFileName,
-            inputFilename,
-            inputDir,
-            outputDir,
-            outputFilename,
-            ["NER"],
-            kwargs,
-            chartPackage,
-            dataTransformation,
+        outputFiles = (
+            parsers_annotators_visualization_util.parsers_annotators_visualization(
+                configFileName,
+                inputFilename,
+                inputDir,
+                outputDir,
+                outputFilename,
+                ["NER"],
+                kwargs,
+                chartPackage,
+                dataTransformation,
+            )
         )
         if outputFiles is not None:
             if isinstance(outputFiles, str):
@@ -114,21 +144,40 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
                 filesToOpen.extend(outputFiles)
 
         IO_user_interface_util.timed_alert(
-            2000, "Analysis end", "Finished running BERT NER annotator at", True, "", True, startTime, True
+            2000,
+            "Analysis end",
+            "Finished running BERT NER annotator at",
+            True,
+            "",
+            True,
+            startTime,
+            True,
         )
 
         return filesToOpen
 
 
 # provides summary of text per doc and stores in a csv file
-def doc_summary_BERT(inputFilename, inputDir, outputDir, mode, chartPackage, dataTransformation, configFileName):
+def doc_summary_BERT(
+    inputFilename,
+    inputDir,
+    outputDir,
+    mode,
+    chartPackage,
+    dataTransformation,
+    configFileName,
+):
 
     result_summary_list = []
 
     header = ["Document Name", "Summary", "Document ID", "Document"]
 
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
 
     Ndocs = str(len(inputDocs))
@@ -148,7 +197,12 @@ def doc_summary_BERT(inputFilename, inputDir, outputDir, mode, chartPackage, dat
         bert_summary = "".join(bert_model(fullText, min_length=60))
 
         result_summary_list.append(
-            [inputFilename, bert_summary, documentID, IO_csv_util.dressFilenameForCSVHyperlink(doc)]
+            [
+                inputFilename,
+                bert_summary,
+                documentID,
+                IO_csv_util.dressFilenameForCSVHyperlink(doc),
+            ]
         )
 
     result_summary_list.insert(0, header)
@@ -181,7 +235,11 @@ def word_embeddings_BERT(
 ):
     model = SentenceTransformer("sentence-transformers/all-distilroberta-v1")
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
     filesToOpen = []
     Ndocs = str(len(inputDocs))
@@ -309,7 +367,11 @@ def word_embeddings_BERT(
         )
         if not fig_words == "none":
             outputFilename = IO_files_util.generate_output_file_name(
-                inputFilename, inputDir, outputDir, "_words.html", "Word2Vec_vector_ALL_words"
+                inputFilename,
+                inputDir,
+                outputDir,
+                "_words.html",
+                "Word2Vec_vector_ALL_words",
             )
             fig_words.write_html(outputFilename)
             filesToOpen.append(outputFilename)
@@ -317,12 +379,18 @@ def word_embeddings_BERT(
             inputFilename, inputDir, outputDir, ".html", "Word2Vec_vector_ALL_words"
         )
         IO_files_util.generate_output_file_name(
-            inputFilename, inputDir, outputDir, ".csv", "Word2Vec_top_" + str(top_words_var) + "_Euclidean_dist"
+            inputFilename,
+            inputDir,
+            outputDir,
+            ".csv",
+            "Word2Vec_top_" + str(top_words_var) + "_Euclidean_dist",
         )
         fig.write_html(outputFilename)
         filesToOpen.append(outputFilename)
 
-    print(f"\nStarted preparing the csv vector file at {time.asctime(time.localtime(time.time()))}")
+    print(
+        f"\nStarted preparing the csv vector file at {time.asctime(time.localtime(time.time()))}"
+    )
 
     documentID = 0
     for doc in inputDocs:
@@ -457,24 +525,39 @@ def word_embeddings_BERT(
         # len(keywords_list)) + '_Keywords_Cos_Similarity')
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running BERT word embeddings at", True, "", True, startTime
+        2000,
+        "Analysis end",
+        "Finished running BERT word embeddings at",
+        True,
+        "",
+        True,
+        startTime,
     )
 
     return filesToOpen
 
 
 # Performs sentiment analysis using roBERTa model
-def sentiment_analysis_BERT(inputFilename, outputDir, outputFilename, mode, Document_ID, Document, model_path):
+def sentiment_analysis_BERT(
+    inputFilename, outputDir, outputFilename, mode, Document_ID, Document, model_path
+):
     # sentiment_task = pipeline("sentiment-analysis",
     #  model=model_path, tokenizer=model_path, max_length=512, truncation=True)
 
-    sentiment_task = pipeline("sentiment-analysis", model=model_path, tokenizer=model_path, truncation=True)
+    sentiment_task = pipeline(
+        "sentiment-analysis", model=model_path, tokenizer=model_path, truncation=True
+    )
 
     with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
-        print("File empty", "The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+        print(
+            "File empty",
+            "The file "
+            + inputFilename
+            + " is empty.\n\nPlease, use another file and try again.",
+        )
         print("Empty file ", inputFilename)
         return
 
@@ -523,7 +606,9 @@ def sentiment_main(
 
     """
 
-    if not IO_internet_util.check_internet_availability_warning("BERT_util.py (Function sentiment_analysis_BERT)"):
+    if not IO_internet_util.check_internet_availability_warning(
+        "BERT_util.py (Function sentiment_analysis_BERT)"
+    ):
         return
 
     filesToOpen = []
@@ -545,15 +630,34 @@ def sentiment_main(
         return
 
     outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, inputDir, outputDir, ".csv", "roBERTa", "", "", "", "", False, True
+        inputFilename,
+        inputDir,
+        outputDir,
+        ".csv",
+        "roBERTa",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     # check each word in sentence for sentiment and write to output_file
-    with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
+    with open(
+        outputFilename, "w", encoding="utf-8", errors="ignore", newline=""
+    ) as csvfile:
         global Sentiment_measure, Sentiment_label
         Sentiment_measure = "Sentiment score"
         Sentiment_label = "Sentiment label"
-        fieldnames = [Sentiment_measure, Sentiment_label, "Sentence ID", "Sentence", "Document ID", "Document"]
+        fieldnames = [
+            Sentiment_measure,
+            Sentiment_label,
+            "Sentence ID",
+            "Sentence",
+            "Document ID",
+            "Document",
+        ]
         global writer
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -561,10 +665,24 @@ def sentiment_main(
             if os.path.exists(inputFilename):
                 filesToOpen.append(
                     sentiment_analysis_BERT(
-                        inputFilename, outputDir, outputFilename, mode, 1, inputFilename, model_path
+                        inputFilename,
+                        outputDir,
+                        outputFilename,
+                        mode,
+                        1,
+                        inputFilename,
+                        model_path,
                     )
                 )
-                sentiment_analysis_BERT(inputFilename, outputDir, outputFilename, mode, 1, inputFilename, model_path)
+                sentiment_analysis_BERT(
+                    inputFilename,
+                    outputDir,
+                    outputFilename,
+                    mode,
+                    1,
+                    inputFilename,
+                    model_path,
+                )
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(1)
@@ -573,21 +691,38 @@ def sentiment_main(
             if os.path.isdir(inputDir):
                 os.fsencode(inputDir)
                 inputDocs = IO_files_util.getFileList(
-                    inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+                    inputFilename,
+                    inputDir,
+                    fileType=".txt",
+                    silent=False,
+                    configFileName=configFileName,
                 )
                 nDocs = len(inputDocs)
                 for file in inputDocs:
                     head, tail = os.path.split(file)
                     # sentiment analysis
                     documentID = documentID + 1
-                    print("Processing file " + str(documentID) + "/" + str(nDocs) + " " + tail)
+                    print(
+                        "Processing file "
+                        + str(documentID)
+                        + "/"
+                        + str(nDocs)
+                        + " "
+                        + tail
+                    )
                     filename = os.path.join(inputDir, os.fsdecode(file))
                     if filename.endswith(".txt"):
                         time.time()
                         documentID += 1
                         filesToOpen.append(
                             sentiment_analysis_BERT(
-                                filename, outputDir, outputFilename, mode, documentID, filename, model_path
+                                filename,
+                                outputDir,
+                                outputFilename,
+                                mode,
+                                documentID,
+                                filename,
+                                model_path,
                             )
                         )
             else:
@@ -677,7 +812,9 @@ if __name__ == "__main__":
         default="",
         help="a string to hold the path of the configFileName",
     )
-    parser.add_argument("--outfile", type=str, dest="outputFilename", default="", help="output file")
+    parser.add_argument(
+        "--outfile", type=str, dest="outputFilename", default="", help="output file"
+    )
 
     parser.add_argument(
         "--mode",
@@ -712,7 +849,11 @@ def split_into_sentences(text):
         text = text.replace("Ph.D.", "Ph<prd>D<prd>")
     text = re.sub(r"\s" + alphabets + "[.] ", " \\1<prd> ", text)
     text = re.sub(acronyms + " " + starters, "\\1<stop> \\2", text)
-    text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
+    text = re.sub(
+        alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]",
+        "\\1<prd>\\2<prd>\\3<prd>",
+        text,
+    )
     text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
     text = re.sub(" " + suffixes + "[.] " + starters, " \\1<stop> \\2", text)
     text = re.sub(" " + suffixes + "[.]", " \\1<prd>", text)

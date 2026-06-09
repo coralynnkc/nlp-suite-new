@@ -36,7 +36,10 @@ languages = [
     ("zh", "Chinese (Simplified)"),
     ("zh-hans", "Chinese (Simplified)"),
     ("zh-hant", "Chinese (Traditional)"),
-    ("cu", "Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic"),
+    (
+        "cu",
+        "Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic",
+    ),
     ("cv", "Chuvash"),
     ("kw", "Cornish"),
     ("co", "Corsican"),

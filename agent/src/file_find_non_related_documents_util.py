@@ -11,17 +11,20 @@ import GUI_util
 import IO_libraries_util
 
 if not IO_libraries_util.install_all_Python_packages(
-    GUI_util.window, "Find Non-related Documents", ["stanza", "stanfordcorenlp", "os", "tkinter", "glob"]
+    GUI_util.window,
+    "Find Non-related Documents",
+    ["stanza", "stanfordcorenlp", "os", "tkinter", "glob"],
 ):
     sys.exit(0)
 
 import os
 from glob import glob
 
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
+
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
-from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 filesToOpen = []
 
@@ -72,17 +75,26 @@ def get_article_soc_actors_NER(dir_path, soc_acts, nlp, keywords, num_doc):
                 if lemma_word in soc_acts:
                     # add into the list.
                     if lemma_word in keywords[fileName]:
-                        keywords[fileName][lemma_word] = keywords[fileName][lemma_word] + 1
+                        keywords[fileName][lemma_word] = (
+                            keywords[fileName][lemma_word] + 1
+                        )
                         # reduce the size that is needed to detect NER. save time
                     else:
                         postag_seen.add(lemma_word)
                         keywords[fileName][lemma_word] = 1
         for wordNER, pos in nlp.ner(fcontent):
-            if pos == "LOCATION" or pos == "DATE" or pos == "ORGANIZATION" or pos == "PERSON":
+            if (
+                pos == "LOCATION"
+                or pos == "DATE"
+                or pos == "ORGANIZATION"
+                or pos == "PERSON"
+            ):
                 lemma_NER = lemmatize_stanza_word(stanzaPipeLine(wordNER.lower()))
                 if lemma_NER not in postag_seen:
                     if lemma_NER in keywords[fileName]:
-                        keywords[fileName][lemma_NER] = keywords[fileName][lemma_NER] + 1
+                        keywords[fileName][lemma_NER] = (
+                            keywords[fileName][lemma_NER] + 1
+                        )
                         # reduce the size that is needed to detect NER. save time
                     else:
                         keywords[fileName][lemma_NER] = 1
@@ -162,7 +174,10 @@ def check(
             if (str(id)) not in id_list:
                 id_list.append(str(id))
     if keywords == {}:
-        print(id, ",No txt document in the input folder.,,,,,,**************************************")
+        print(
+            id,
+            ",No txt document in the input folder.,,,,,,**************************************",
+        )
     elif not has_intruder:
         return intruder_list, id_list, False, freq_intruder, num_doc
     else:
@@ -202,7 +217,15 @@ def check(
     return intruder_list, id_list, has_intruder, freq_intruder, num_doc
 
 
-def main(CoreNLPDir, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, similarityIndex_base):
+def main(
+    CoreNLPDir,
+    inputDir,
+    outputDir,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
+    similarityIndex_base,
+):
     ##
     ##This is just for evaluation purposes
     freq_intruded_folder = 0

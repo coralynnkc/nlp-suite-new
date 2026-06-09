@@ -9,14 +9,18 @@ modified by Siyan Pu November 2021
 # 										  ['csv', 'os', 'collections', 'tkinter']) == False:
 from collections import Counter
 
+import pandas as pd
+
 import charts_util
 import IO_csv_util
 import IO_files_util
-import pandas as pd
 import reminders_util
 import Stanford_CoreNLP_tags_util
 
-dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
+dict_POSTAG, dict_DEPREL = (
+    Stanford_CoreNLP_tags_util.dict_POSTAG,
+    Stanford_CoreNLP_tags_util.dict_DEPREL,
+)
 
 # global recordID_position, documentID_position #, data, data_divided_sents
 recordID_position = 9  # NEW CoNLL_U
@@ -26,7 +30,9 @@ documentID_position = 11  # NEW CoNLL_U
 # Following are used if running all analyses to prevent redundancy
 inputFilename = ""
 outputDir = ""
-cla_open_csv = False  # if run from command line, will check if they want to open the CSV
+cla_open_csv = (
+    False  # if run from command line, will check if they want to open the CSV
+)
 
 """
     SUPPORTING COMMANDS FOR MAIN FUNCTIONS
@@ -66,7 +72,16 @@ def compute_stats(data):
     lemma_counter = Counter(lemma_list)
     postag_counter = Counter(postag_list)
     deprel_counter = Counter(deprel_list)
-    return form_list, form_counter, lemma_list, lemma_counter, postag_list, postag_counter, deprel_list, deprel_counter
+    return (
+        form_list,
+        form_counter,
+        lemma_list,
+        lemma_counter,
+        postag_list,
+        postag_counter,
+        deprel_list,
+        deprel_counter,
+    )
 
 
 # VERB VOICE ----------------------------------------------------------------------------------------------
@@ -136,10 +151,14 @@ def verb_voice_data_preparation(data):
     try:
         verb_postags = ["VB", "VBN", "VBD", "VBG", "VBP", "VBZ"]
         verb_deprel = ["aux:pass", "aux"]
-        data_2 = [tok for tok in data if (tok[3] in verb_postags or tok[6] in verb_deprel)]
+        data_2 = [
+            tok for tok in data if (tok[3] in verb_postags or tok[6] in verb_deprel)
+        ]
         return data_2
     except:
-        print("ERROR: INPUT MUST BE THE CoNLL TABLE CONTAINING THE SENTENCE ID. Program will exit.")
+        print(
+            "ERROR: INPUT MUST BE THE CoNLL TABLE CONTAINING THE SENTENCE ID. Program will exit."
+        )
 
         # mb.showinfo("ERROR",
         # 			"INPUT MUST BE THE MERGED CoNLL TABLE CONTAINING THE SENTENCE ID. Please use the merge option when generating your CoNLL table in the StanfordCoreNLP.py routine. Program will exit.")
@@ -153,23 +172,41 @@ def voice_output(voice_word_list, data_divided_sents):
     voice = voice_pass + voice_act_aux + voice_act  # join
     # voice = [i + [IO_CoNLL_util.Sentence_searcher(data_divided_sents, i[documentID_position], i[sentenceID_position])] for i in
     # 		 voice]  # get full sentence
-    voice_sorted = sorted(voice, key=lambda x: int(x[recordID_position]))  # sort in ascending record id order
-    voice_pass = sorted(voice_pass, key=lambda x: int(x[recordID_position]))  # sort in ascending record id order
-    voice_act_aux = sorted(voice_act_aux, key=lambda x: int(x[recordID_position]))  # sort in ascending record id order
-    voice_act = sorted(voice_act, key=lambda x: int(x[recordID_position]))  # sort in ascending record id order
+    voice_sorted = sorted(
+        voice, key=lambda x: int(x[recordID_position])
+    )  # sort in ascending record id order
+    voice_pass = sorted(
+        voice_pass, key=lambda x: int(x[recordID_position])
+    )  # sort in ascending record id order
+    voice_act_aux = sorted(
+        voice_act_aux, key=lambda x: int(x[recordID_position])
+    )  # sort in ascending record id order
+    voice_act = sorted(
+        voice_act, key=lambda x: int(x[recordID_position])
+    )  # sort in ascending record id order
     return voice_sorted, voice_stats, voice_pass, voice_act_aux, voice_act
 
 
 def verb_voice_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     filesToOpen = []  # Store all files that are to be opened once finished
     data_prep = verb_voice_data_preparation(data)
 
-    verb_voice_list, voice_stats, voice_pass, voice_aux, voice_act = voice_output(data_prep, data_divided_sents)
+    verb_voice_list, voice_stats, voice_pass, voice_aux, voice_act = voice_output(
+        data_prep, data_divided_sents
+    )
     # output file names
     # NVA Noun Verb Analysis
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Verb Voice", "list")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "NVA", "Verb Voice", "list"
+    )
     verb_voice_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Verb Voice"
     )
@@ -209,7 +246,13 @@ def verb_voice_stats(
         "Verb Voice",
     ]
 
-    IO_csv_util.df_to_csv(df, verb_voice_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        verb_voice_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         columns_to_be_plotted_xAxis = []
@@ -294,9 +337,18 @@ def verb_modality_data_preparation(data):
         ["Low-value Modals", len(low_value_row)],
     ]
 
-    verb_modality_list = sorted(verb_modality_list, key=lambda x: int(x[recordID_position]))
-    verb_modality_value_list = sorted(verb_modality_value_list, key=lambda x: int(x[recordID_position]))
-    return verb_modality_list, verb_modality_stats, verb_modality_value_list, verb_modality_value_stats
+    verb_modality_list = sorted(
+        verb_modality_list, key=lambda x: int(x[recordID_position])
+    )
+    verb_modality_value_list = sorted(
+        verb_modality_value_list, key=lambda x: int(x[recordID_position])
+    )
+    return (
+        verb_modality_list,
+        verb_modality_stats,
+        verb_modality_value_list,
+        verb_modality_value_stats,
+    )
 
 
 # modality compute frequencies of modality categories
@@ -334,12 +386,17 @@ def verb_modality_stats(
 
     filesToOpen = []  # Store all files that are to be opened once finished
 
-    verb_modality_list, verb_modality_stats, verb_modality_value_list, verb_modality_value_stats = (
-        verb_modality_data_preparation(data)
-    )
+    (
+        verb_modality_list,
+        verb_modality_stats,
+        verb_modality_value_list,
+        verb_modality_value_stats,
+    ) = verb_modality_data_preparation(data)
     # output file names
     # NVA Noun Verb Analysis
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Verb Modality list")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "NVA", "Verb Modality list"
+    )
     verb_modality_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Verb Modality"
     )
@@ -382,7 +439,13 @@ def verb_modality_stats(
         "Verb Modality",
     ]
 
-    IO_csv_util.df_to_csv(df, verb_modality_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        verb_modality_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         columns_to_be_plotted_xAxis = []
@@ -448,7 +511,11 @@ def verb_modality_stats(
         ]
 
         IO_csv_util.df_to_csv(
-            df, verb_modality_value_stats_file_name, headers=headers, index=False, language_encoding="utf-8"
+            df,
+            verb_modality_value_stats_file_name,
+            headers=headers,
+            index=False,
+            language_encoding="utf-8",
         )
 
         columns_to_be_plotted_xAxis = []
@@ -542,14 +609,27 @@ def verb_tense_data_preparation(data):
 
 
 def verb_compute_frequencies(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     global postag_counter
     filesToOpen = []
     # must be sorted in descending order
-    form_list, form_counter, lemma_list, lemma_counter, postag_list, postag_counter, deprel_list, deprel_counter = (
-        compute_stats(data)
-    )
+    (
+        form_list,
+        form_counter,
+        lemma_list,
+        lemma_counter,
+        postag_list,
+        postag_counter,
+        deprel_list,
+        deprel_counter,
+    ) = compute_stats(data)
     verb_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Verb_ALL", "list"
     )
@@ -559,7 +639,13 @@ def verb_compute_frequencies(
     )
 
     df = pd.DataFrame({"Form": form_list, "Lemma": lemma_list})
-    IO_csv_util.df_to_csv(df, verb_file_name, headers=["Form", "Lemma"], index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        verb_file_name,
+        headers=["Form", "Lemma"],
+        index=False,
+        language_encoding="utf-8",
+    )
 
     form_df = pd.DataFrame(form_counter.items(), columns=["Form", "Form Frequency"])
     lemma_df = pd.DataFrame(lemma_counter.items(), columns=["Lemma", "Lemma Frequency"])
@@ -625,7 +711,13 @@ def verb_compute_frequencies(
 
 
 def verb_tense_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     global postag_counter
     filesToOpen = []  # Store all files that are to be opened once finished
@@ -675,7 +767,13 @@ def verb_tense_stats(
         "Verb Tense",
     ]
 
-    IO_csv_util.df_to_csv(df, verb_tense_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        verb_tense_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         columns_to_be_plotted_xAxis = []
@@ -731,14 +829,26 @@ def verb_stats(
     # 											   True, '', True, '', True)
 
     outputFiles = verb_compute_frequencies(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
 
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)
 
     outputFiles = verb_voice_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
 
     if outputFiles is not None:
@@ -758,7 +868,13 @@ def verb_stats(
         filesToOpen.extend(outputFiles)
 
     outputFiles = verb_tense_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)

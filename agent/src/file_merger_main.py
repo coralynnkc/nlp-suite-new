@@ -5,7 +5,9 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if not IO_libraries_util.install_all_Python_packages(GUI_util.window, "file_merger_main.py", ["os", "tkinter"]):
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_merger_main.py", ["os", "tkinter"]
+):
     sys.exit(0)
 
 import os
@@ -39,7 +41,15 @@ def run(
         return
 
     startTime = IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis start", "Started running 'File Merger' at", True, "", True, "", True
+        GUI_util.window,
+        2000,
+        "Analysis start",
+        "Started running 'File Merger' at",
+        True,
+        "",
+        True,
+        "",
+        True,
     )
 
     file_merger_util.file_merger(
@@ -58,7 +68,15 @@ def run(
     )
 
     IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis end", "Finished running 'File Merger' at", True, "", True, startTime, True
+        GUI_util.window,
+        2000,
+        "Analysis end",
+        "Finished running 'File Merger' at",
+        True,
+        "",
+        True,
+        startTime,
+        True,
     )
 
 
@@ -119,7 +137,9 @@ config_filename = GUI_util.config_filename_selected_config.get()
 #   output dir
 config_input_output_numeric_options = [0, 1, 0, 1]
 
-GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
+GUI_util.set_window(
+    GUI_size, GUI_label, config_filename, config_input_output_numeric_options
+)
 
 window = GUI_util.window
 config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
@@ -127,7 +147,12 @@ config_filename = GUI_util.config_filename
 input_main_dir_path = GUI_util.input_main_dir_path
 output_dir_path = GUI_util.output_dir_path
 
-GUI_util.GUI_top(config_input_output_numeric_options, config_filename, IO_setup_display_brief, scriptName)
+GUI_util.GUI_top(
+    config_input_output_numeric_options,
+    config_filename,
+    IO_setup_display_brief,
+    scriptName,
+)
 
 merge_subdir_var = tk.IntVar()
 merge_embed_subdir_name_var = tk.IntVar()
@@ -152,10 +177,18 @@ window.bind("<Escape>", clear)
 
 merge_save_fileName_var.set(0)
 merge_save_fileName_checkbox = tk.Checkbutton(
-    window, text="Save filename in output", variable=merge_save_fileName_var, onvalue=1, offvalue=0
+    window,
+    text="Save filename in output",
+    variable=merge_save_fileName_var,
+    onvalue=1,
+    offvalue=0,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, merge_save_fileName_checkbox, True
+    window,
+    GUI_IO_util.labels_x_coordinate,
+    y_multiplier_integer,
+    merge_save_fileName_checkbox,
+    True,
 )
 
 merge_embed_filenames_inStringSeparators_var.set(0)
@@ -174,8 +207,12 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
     True,
 )
 
-merge_separator_entry_begin = tk.Entry(window, width=10, textvariable=merge_separator_entry_begin_var)
-merge_separator_entry_end = tk.Entry(window, width=10, textvariable=merge_separator_entry_end_var)
+merge_separator_entry_begin = tk.Entry(
+    window, width=10, textvariable=merge_separator_entry_begin_var
+)
+merge_separator_entry_end = tk.Entry(
+    window, width=10, textvariable=merge_separator_entry_end_var
+)
 
 
 def display_merge_separator(y_multiplier_integer):
@@ -204,7 +241,12 @@ display_merge_separator(y_multiplier_integer)
 
 merge_embed_subdir_name_var.set(0)
 merge_embed_subdir_name_checkbox = tk.Checkbutton(
-    window, state="disabled", text="Embed subdirname", variable=merge_embed_subdir_name_var, onvalue=1, offvalue=0
+    window,
+    state="disabled",
+    text="Embed subdirname",
+    variable=merge_embed_subdir_name_var,
+    onvalue=1,
+    offvalue=0,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window,
@@ -216,18 +258,31 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 character_separator_lb = tk.Label(window, text="Character separator")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_merger_character_separator_lb_pos, y_multiplier_integer, character_separator_lb, True
+    window,
+    GUI_IO_util.file_merger_character_separator_lb_pos,
+    y_multiplier_integer,
+    character_separator_lb,
+    True,
 )
 
 merge_character_separator_var.set("__")
-merge_character_separator = tk.Entry(window, width=5, state="disabled", textvariable=merge_character_separator_var)
+merge_character_separator = tk.Entry(
+    window, width=5, state="disabled", textvariable=merge_character_separator_var
+)
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_merger_merge_character_separator_pos, y_multiplier_integer, merge_character_separator
+    window,
+    GUI_IO_util.file_merger_merge_character_separator_pos,
+    y_multiplier_integer,
+    merge_character_separator,
 )
 
 merge_subdir_var.set(0)
 merge_subdir_checkbox = tk.Checkbutton(
-    window, text="Process subdirectories", variable=merge_subdir_var, onvalue=1, offvalue=0
+    window,
+    text="Process subdirectories",
+    variable=merge_subdir_var,
+    onvalue=1,
+    offvalue=0,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, merge_subdir_checkbox
@@ -301,14 +356,24 @@ TIPS_options = (
 def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
     if not IO_setup_display_brief:
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, GUI_IO_util.msg_anyData
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            GUI_IO_util.msg_anyData,
         )
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, GUI_IO_util.msg_outputDirectory
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            GUI_IO_util.msg_outputDirectory,
         )
     else:
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_IO_setup
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_IO_setup,
         )
 
     y_multiplier_integer = GUI_IO_util.place_help_button(
@@ -326,7 +391,11 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
         "Please, tick the checkbox to process files in subdirectories.\n\nWhen processing subdirectories, if the filename is saved in the merged output, the filename will be saved without a path. You will, however, have the option to save the filename with the suffix of the subdirectory name.",
     )
     y_multiplier_integer = GUI_IO_util.place_help_button(
-        window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_openOutputFiles
+        window,
+        help_button_x_coordinate,
+        y_multiplier_integer,
+        "NLP Suite Help",
+        GUI_IO_util.msg_openOutputFiles,
     )
     return y_multiplier_integer - 1
 

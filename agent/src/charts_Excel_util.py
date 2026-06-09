@@ -4,15 +4,16 @@
 
 import os
 
+import openpyxl
+import pandas as pd
+from openpyxl import Workbook
+
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
-import openpyxl
-import pandas as pd
 import reminders_util
-from openpyxl import Workbook
 
 
 # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
@@ -20,7 +21,9 @@ def checkExcel_extension(output_file_name, hover_info_column_list):
 
     filename, file_extension = os.path.splitext(str(output_file_name))
     if filename != "":
-        if len(hover_info_column_list) > 0:  # there are hover over effects; must be an xlsm file
+        if (
+            len(hover_info_column_list) > 0
+        ):  # there are hover over effects; must be an xlsm file
             if file_extension != "xlsm":
                 output_file_name = filename + ".xlsm"
         else:
@@ -36,7 +39,9 @@ def prepare_hover_data(inputFilename, hover_info_column, index, inputFileData=""
     if inputFileData:
         # Use inputFileData if provided
         withHeader_var = IO_csv_util.csvFile_has_header("", inputFileData=inputFileData)
-        data, headers = IO_csv_util.get_csv_data("", withHeader_var, inputFileData=inputFileData)
+        data, headers = IO_csv_util.get_csv_data(
+            "", withHeader_var, inputFileData=inputFileData
+        )
     else:
         # Fallback to using inputFilename
         withHeader_var = IO_csv_util.csvFile_has_header(inputFilename)
@@ -71,7 +76,11 @@ def get_hover_column_numbers(withHeader_var, headers, hover_info_column_list):
             else:
                 if len(hover_info_column_list[i]) > 0:
                     print(
-                        "Series No." + str(i + 1) + " " + hover_info_column_list[i] + "Hover Data Warning",
+                        "Series No."
+                        + str(i + 1)
+                        + " "
+                        + hover_info_column_list[i]
+                        + "Hover Data Warning",
                         "The hover-over data column for series No."
                         + str(i + 1)
                         + " will be empty.\n\nYou may have entered a column name which does not exist in the input CSV file.\n\nPlease, exit the program, check your input and try again.",
@@ -82,7 +91,11 @@ def get_hover_column_numbers(withHeader_var, headers, hover_info_column_list):
                 x = int(hover_info_column_list[i])
             except:
                 print(
-                    "Series No." + str(i + 1) + " " + hover_info_column_list[i] + " Hover Data Header",
+                    "Series No."
+                    + str(i + 1)
+                    + " "
+                    + hover_info_column_list[i]
+                    + " Hover Data Header",
                     "The input csv file has no header so the expected hover-over column header should be numbers(o for A, 1 for B,...) but the ENTERED hover-over data column for series No."
                     + str(i + 1)
                     + " is not a number.\n\nPlease, exit the program, check your input and try again.",
@@ -161,7 +174,9 @@ def create_excel_chart(
     # ValueError: Row numbers must be between 1 and 1048576
     # 1048576 is simply 2 to the 20th power, and thus this number is the largest that can be represented in twenty bits.
     # https://stackoverflow.com/questions/33775423/how-to-set-a-data-type-for-a-column-with-closedxml
-    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(inputFilename, inputFileData=inputFileData)
+    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
+        inputFilename, inputFileData=inputFileData
+    )
     if nRecords > 1048575:
         IO_user_interface_util.timed_alert(
             2000,
@@ -203,7 +218,9 @@ def create_excel_chart(
     else:
         outputExtension = ".xlsx"
 
-    if "NLP" in scriptType and "_" + scriptType + "_" in inputFilename:  # do not repeat the same name
+    if (
+        "NLP" in scriptType and "_" + scriptType + "_" in inputFilename
+    ):  # do not repeat the same name
         scriptType = ""
     chart_outputFilename = IO_files_util.generate_output_file_name(
         inputFilename,
@@ -243,7 +260,9 @@ def create_excel_chart(
     # for color in bar charts depending upon value
 
     # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
-    if len(hover_info_column_list) > 0:  # hover-over effects are invoked and the Excel filename extension MUST be xlsm
+    if (
+        len(hover_info_column_list) > 0
+    ):  # hover-over effects are invoked and the Excel filename extension MUST be xlsm
         if len(chart_type_list) == 0:
             print(
                 "Chart type error",
@@ -252,14 +271,20 @@ def create_excel_chart(
             return
         fpath = ""
         first_chart_type = chart_type_list[0]
-        if chart_type_list and all(type == first_chart_type for type in chart_type_list):
+        if chart_type_list and all(
+            type == first_chart_type for type in chart_type_list
+        ):
             if first_chart_type == "bar":
                 chartName = BarChart()
-                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "barchartsample.xlsm"
+                fpath = (
+                    GUI_IO_util.Excel_charts_libPath + os.sep + "barchartsample.xlsm"
+                )
                 chartFile = "barchartsample.xlsm"
             elif first_chart_type == "pie":
                 chartName = BarChart()
-                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "piechartsample.xlsm"
+                fpath = (
+                    GUI_IO_util.Excel_charts_libPath + os.sep + "piechartsample.xlsm"
+                )
                 chartFile = "piechartsample.xlsm"
                 if len(chart_type_list) > 1:
                     print(
@@ -269,11 +294,17 @@ def create_excel_chart(
                     return
             elif first_chart_type == "line":
                 chartName = LineChart()
-                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "linechartsample.xlsm"
+                fpath = (
+                    GUI_IO_util.Excel_charts_libPath + os.sep + "linechartsample.xlsm"
+                )
                 chartFile = "linechartsample.xlsm"
             elif first_chart_type == "scatter":
                 chartName = ScatterChart()
-                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "scatterchartsample.xlsm"
+                fpath = (
+                    GUI_IO_util.Excel_charts_libPath
+                    + os.sep
+                    + "scatterchartsample.xlsm"
+                )
                 chartFile = "scatterchartsample.xlsm"
                 new_data_to_be_plotted = []
                 for l in range(len(data_to_be_plotted)):
@@ -308,8 +339,15 @@ def create_excel_chart(
             )
             return
 
-        if IO_libraries_util.check_inputPythonJavaProgramFile(chartFile, "lib" + os.sep + "sampleCharts") == 0:
-            print("Check input python java program file failed! Could not generate charts")
+        if (
+            IO_libraries_util.check_inputPythonJavaProgramFile(
+                chartFile, "lib" + os.sep + "sampleCharts"
+            )
+            == 0
+        ):
+            print(
+                "Check input python java program file failed! Could not generate charts"
+            )
             return
 
         wb = openpyxl.load_workbook(fpath, read_only=False, keep_vba=True)
@@ -340,8 +378,12 @@ def create_excel_chart(
             row = []
             index = 0
             for stats_list in data_to_be_plotted:  # Iterate through all the lists
-                if i < len(stats_list):  # if i is smaller than the length of the current series
-                    tail, tail_noExtension, filename_no_hyperlink = IO_files_util.getFilename(str(stats_list[i][0]))
+                if i < len(
+                    stats_list
+                ):  # if i is smaller than the length of the current series
+                    tail, tail_noExtension, filename_no_hyperlink = (
+                        IO_files_util.getFilename(str(stats_list[i][0]))
+                    )
                     stats_list[i][0] = tail
                     if index > 0:
                         row.append(stats_list[i][1])  # then we append the data
@@ -363,9 +405,13 @@ def create_excel_chart(
         data, headers = IO_csv_util.get_csv_data(
             inputFilename, withHeader_var, inputFileData=inputFileData
         )  # get the data and header
-        hover_column_numbers = get_hover_column_numbers(withHeader_var, headers, hover_info_column_list)
+        hover_column_numbers = get_hover_column_numbers(
+            withHeader_var, headers, hover_info_column_list
+        )
         for i in range(len(hover_column_numbers)):
-            hover_data = prepare_hover_data(inputFilename, hover_column_numbers[i], i, inputFileData=inputFileData)
+            hover_data = prepare_hover_data(
+                inputFilename, hover_column_numbers[i], i, inputFileData=inputFileData
+            )
             for j in range(len(hover_data)):
                 if j > 1048575:
                     print(
@@ -406,8 +452,12 @@ def create_excel_chart(
             for stats_list in data_to_be_plotted:  # Iterate through all the lists
                 # when X-axis values contain a document dressed for hyperlink and with full path
                 #   undressed the hyperlink and only display the tail of the document
-                if i < len(stats_list):  # if i is smaller than the length of the current series
-                    tail, tail_noExtension, filename_no_hyperlink = IO_files_util.getFilename(str(stats_list[i][0]))
+                if i < len(
+                    stats_list
+                ):  # if i is smaller than the length of the current series
+                    tail, tail_noExtension, filename_no_hyperlink = (
+                        IO_files_util.getFilename(str(stats_list[i][0]))
+                    )
                     stats_list[i][0] = tail
                     # if index > 0:
                     row += stats_list[i]  # then we append the data
@@ -464,7 +514,9 @@ def create_excel_chart(
                     chartName.x_axis.title = str(column_xAxis_label) + insertLines
 
                 if len(column_yAxis_label) > 0:
-                    chartName.y_axis.title = str(column_yAxis_label)  # displayed on the y-axis
+                    chartName.y_axis.title = str(
+                        column_yAxis_label
+                    )  # displayed on the y-axis
 
             if len(series_label_list) > n:
                 print(
@@ -477,8 +529,12 @@ def create_excel_chart(
                 )
 
             for i in range(n):  # iterate n times, n is the number of series
-                data = Reference(ws, min_col=i * 2 + 2, min_row=2, max_row=1 + num_label)
-                hover_over_values = Reference(ws, min_col=i * 2 + 1, min_row=2, max_row=1 + num_label)
+                data = Reference(
+                    ws, min_col=i * 2 + 2, min_row=2, max_row=1 + num_label
+                )
+                hover_over_values = Reference(
+                    ws, min_col=i * 2 + 1, min_row=2, max_row=1 + num_label
+                )
 
                 if (
                     chart_type_list[0].lower() == "line"
@@ -487,7 +543,9 @@ def create_excel_chart(
                     or chart_type_list[0].lower() == "scatter"
                 ):
                     if len(series_label_list) > 0 and len(series_label_list[i]) > 0:
-                        chartName.series.append(Series(data, title=series_label_list[i]))
+                        chartName.series.append(
+                            Series(data, title=series_label_list[i])
+                        )
                     else:
                         # the title_series is displayed to the right of the chart as the title of the series
                         # should NOT be displayed when you have only one series
@@ -519,7 +577,9 @@ def create_excel_chart(
                 ):
                     # https://stackoverflow.com/questions/35010050/setting-x-axis-label-to-bottom-in-openpyxl
                     chartName.x_axis.tickLblPos = "low"
-                    chartName.x_axis.tickLblSkip = 1  # changing to 2 would skip every other label; 3 every 3; etc.
+                    chartName.x_axis.tickLblSkip = (
+                        1  # changing to 2 would skip every other label; 3 every 3; etc.
+                    )
             ws_chart.add_chart(chartName, "A1")
         else:  # plotting with 2 y axes because using different scales
             # if there is no chart at all
@@ -578,7 +638,9 @@ def create_excel_chart(
                 chartName2.y_axis.title = str(second_yAxis_label)
 
             data = Reference(ws, min_col=2, min_row=2, max_row=1 + num_label)
-            hover_over_values = Reference(ws, min_col=1, min_row=2, max_row=1 + num_label)
+            hover_over_values = Reference(
+                ws, min_col=1, min_row=2, max_row=1 + num_label
+            )
 
             if len(series_label_list) > 2:
                 print(
@@ -602,7 +664,9 @@ def create_excel_chart(
 
             # Create a second chart
             data = Reference(ws, min_col=4, min_row=2, max_row=1 + num_label)
-            hover_over_values = Reference(ws, min_col=3, min_row=2, max_row=1 + num_label)
+            hover_over_values = Reference(
+                ws, min_col=3, min_row=2, max_row=1 + num_label
+            )
 
             if len(series_label_list) > 0 and len(series_label_list[1]) > 0:
                 chartName2.series.append(Series(data, title=series_label_list[1]))
@@ -626,7 +690,9 @@ def create_excel_chart(
             ):
                 # https://stackoverflow.com/questions/35010050/setting-x-axis-label-to-bottom-in-openpyxl
                 chartName1.x_axis.tickLblPos = "low"
-                chartName1.x_axis.tickLblSkip = 1  # changing to 2 would skip every other label; 3 every 3; etc.
+                chartName1.x_axis.tickLblSkip = (
+                    1  # changing to 2 would skip every other label; 3 every 3; etc.
+                )
 
             chartName1 += chartName2
 

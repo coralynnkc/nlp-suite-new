@@ -5,19 +5,22 @@ modified by Jack Hester and Roberto Franzosi, February, June 2019, November 2021
 modified by Tony Apr 2022
 """
 
-
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL Table Analyzer",
 #                                           ['csv', 'os', 'collections']) == False:
 
 from collections import Counter
 
+import pandas as pd
+
 import charts_util
 import IO_csv_util
 import IO_files_util
-import pandas as pd
 import Stanford_CoreNLP_tags_util
 
-dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
+dict_POSTAG, dict_DEPREL = (
+    Stanford_CoreNLP_tags_util.dict_POSTAG,
+    Stanford_CoreNLP_tags_util.dict_DEPREL,
+)
 
 recordID_position = 9  # NEW CoNLL_U
 sentenceID_position = 10  # NEW CoNLL_U
@@ -26,7 +29,9 @@ documentID_position = 11  # NEW CoNLL_U
 # Following are used if running all analyses to prevent redundancy
 inputFilename = ""
 outputDir = ""
-cla_open_csv = False  # if run from command line, will check if they want to open the CSV
+cla_open_csv = (
+    False  # if run from command line, will check if they want to open the CSV
+)
 
 """
     SUPPORTING COMMANDS FOR MAIN FUNCTIONS
@@ -63,7 +68,14 @@ def compute_stats(data):
     postag_counter = Counter(postag_list)
     deprel_counter = Counter(deprel_list)
     ner_counter = Counter(ner_list)
-    return postag_list, postag_counter, deprel_list, deprel_counter, ner_list, ner_counter
+    return (
+        postag_list,
+        postag_counter,
+        deprel_list,
+        deprel_counter,
+        ner_list,
+        ner_counter,
+    )
 
 
 # noun analysis; compute frequencies
@@ -78,7 +90,12 @@ def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
     list_nouns_postag = data_preparation(
         data,
         ["NN", "NNS", "NNP", "NNPS"],
-        ["Noun singular/mass (NN)", "Noun plural (NNS)", "Proper noun singular (NNP)", "Proper noun plural (NNPS)"],
+        [
+            "Noun singular/mass (NN)",
+            "Noun plural (NNS)",
+            "Proper noun singular (NNP)",
+            "Proper noun plural (NNPS)",
+        ],
         3,
     )
     noun_postag_stats = [
@@ -148,10 +165,25 @@ def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
     print("DEBUG STRING:", strings)
     noun_ner_stats = eval(strings)
     print(noun_ner_stats[1], noun_ner_stats[1][1], "THIS IS THE O COUNTER!!!!!!!!")
-    return list_nouns_postag, list_nouns_deprel, list_nouns_ner, noun_postag_stats, noun_deprel_stats, noun_ner_stats
+    return (
+        list_nouns_postag,
+        list_nouns_deprel,
+        list_nouns_ner,
+        noun_postag_stats,
+        noun_deprel_stats,
+        noun_ner_stats,
+    )
 
 
-def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation):
+def noun_stats(
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
+):
 
     filesToOpen = []  # Store all files that are to be opened once finished
 
@@ -159,19 +191,31 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
     #                                              True, '', True, '', True)
 
     # the following line is needed by the next line as it computes variables defined as general
-    noun_postag_list, noun_postag_stats, noun_deprel_list, noun_deprel_stats, noun_ner_list, noun_ner_stats = (
-        compute_stats(data)
-    )
+    (
+        noun_postag_list,
+        noun_postag_stats,
+        noun_deprel_list,
+        noun_deprel_stats,
+        noun_ner_list,
+        noun_ner_stats,
+    ) = compute_stats(data)
 
-    noun_postag_list, noun_deprel_list, noun_ner_list, noun_postag_stats, noun_deprel_stats, noun_ner_stats = (
-        noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents)
-    )
+    (
+        noun_postag_list,
+        noun_deprel_list,
+        noun_ner_list,
+        noun_postag_stats,
+        noun_deprel_stats,
+        noun_ner_stats,
+    ) = noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents)
 
     # output file names
     noun_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Noun-ALL", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "stats")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "stats"
+    )
 
     noun_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Noun", "POSTAG_list"
@@ -182,9 +226,15 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
     noun_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Noun", "DEPREL_list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "POSTAG_stats")
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "NER_stats")
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "DEPREL_stats")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "POSTAG_stats"
+    )
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "NER_stats"
+    )
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "DEPREL_stats"
+    )
 
     # save csv files -------------------------------------------------------------------------------------------------
     # ALL nouns
@@ -193,7 +243,11 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
     df1 = df.iloc[:, 1:4]
     df1.columns = ["Form", "Lemma", "POS"]
     IO_csv_util.df_to_csv(
-        df1, noun_list_file_name, headers=["Form", "Lemma", "POS"], index=False, language_encoding="utf-8"
+        df1,
+        noun_list_file_name,
+        headers=["Form", "Lemma", "POS"],
+        index=False,
+        language_encoding="utf-8",
     )
 
     # POS tags
@@ -233,7 +287,13 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
         "Noun POS Tags",
     ]
 
-    IO_csv_util.df_to_csv(df, noun_postag_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        noun_postag_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     # NER
 
@@ -272,7 +332,13 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
         "Noun NER Tags",
     ]
 
-    IO_csv_util.df_to_csv(df, noun_ner_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        noun_ner_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     # DepRel
 
@@ -311,7 +377,13 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
         "Noun DEPREL Tags",
     ]
 
-    IO_csv_util.df_to_csv(df, noun_deprel_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        noun_deprel_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         # bar charts -----------------------------------------------------------------------------------------------

@@ -5,18 +5,32 @@ import pandas as pd
 import seaborn as sns
 
 
-def MALLET_heatmap(composition_file, topics_file, outputDir, fig_set=None, show_topics=True):
+def MALLET_heatmap(
+    composition_file, topics_file, outputDir, fig_set=None, show_topics=True
+):
     if fig_set is None:
         fig_set = {"figure.figsize": (8, 6), "figure.dpi": 300}
     try:
-        topics = pd.read_csv(topics_file, names=["Topic", "Weight", "Keys"], encoding="utf-8", on_bad_lines="skip")
+        topics = pd.read_csv(
+            topics_file,
+            names=["Topic", "Weight", "Keys"],
+            encoding="utf-8",
+            on_bad_lines="skip",
+        )
     except:
-        topics = pd.read_csv(topics_file, names=["Topic", "Weight", "Keys"], encoding="ISO-8859-1", on_bad_lines="skip")
+        topics = pd.read_csv(
+            topics_file,
+            names=["Topic", "Weight", "Keys"],
+            encoding="ISO-8859-1",
+            on_bad_lines="skip",
+        )
 
     composition_names = ["Document ID", "Document"]
     for topic_num in range(1, len(topics.index) + 1):
         composition_names.append(f"Topic {topic_num}")
-    composition = pd.read_csv(composition_file, names=composition_names, encoding="utf-8", on_bad_lines="skip")
+    composition = pd.read_csv(
+        composition_file, names=composition_names, encoding="utf-8", on_bad_lines="skip"
+    )
 
     for index, row in composition.iterrows():
         try:

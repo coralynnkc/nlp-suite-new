@@ -7,7 +7,9 @@ import GUI_util
 import IO_libraries_util
 
 if not IO_libraries_util.install_all_Python_packages(
-    GUI_util.window, "Find Non-related Documents", ["stanza", "tkinter", "stanfordcorenlp", "os", "tkinter", "glob"]
+    GUI_util.window,
+    "Find Non-related Documents",
+    ["stanza", "tkinter", "stanfordcorenlp", "os", "tkinter", "glob"],
 ):
     sys.exit(0)
 
@@ -15,12 +17,13 @@ import os
 import tkinter.messagebox as mb
 from glob import glob
 
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
+
 import charts_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 
 # This fuction reads the social actor list from the same directory
@@ -71,17 +74,26 @@ def get_article_soc_actors_NER(dir_path, soc_acts, nlp, keywords, printing):
                 if lemma_word in soc_acts:
                     # add into the list.
                     if lemma_word in keywords[fileName]:
-                        keywords[fileName][lemma_word] = keywords[fileName][lemma_word] + 1
+                        keywords[fileName][lemma_word] = (
+                            keywords[fileName][lemma_word] + 1
+                        )
                         # reduce the size that is needed to detect NER. save time
                     else:
                         postag_seen.add(lemma_word)
                         keywords[fileName][lemma_word] = 1
         for wordNER, pos in nlp.ner(fcontent):
-            if pos == "LOCATION" or pos == "DATE" or pos == "ORGANIZATION" or pos == "PERSON":
+            if (
+                pos == "LOCATION"
+                or pos == "DATE"
+                or pos == "ORGANIZATION"
+                or pos == "PERSON"
+            ):
                 lemma_NER = lemmatize_stanza_word(stanzaPipeLine(wordNER.lower()))
                 if lemma_NER not in postag_seen:
                     if lemma_NER in keywords[fileName]:
-                        keywords[fileName][lemma_NER] = keywords[fileName][lemma_NER] + 1
+                        keywords[fileName][lemma_NER] = (
+                            keywords[fileName][lemma_NER] + 1
+                        )
                         # reduce the size that is needed to detect NER. save time
                     else:
                         keywords[fileName][lemma_NER] = 1
@@ -196,13 +208,26 @@ def find(doc_dir, soc_acts, nlp, compare, sim_base, f, terminal_output):
 # inputDir: the path to a folder that stores ungrouped documents in txt format.
 # inputTargetDir: the path to a folder that stores several folders which contains several documents of the same target
 def main(
-    window, inputDir, inputTargetDir, outputDir, openOutputFiles, chartPackage, dataTransformation, relativity_threshold
+    window,
+    inputDir,
+    inputTargetDir,
+    outputDir,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
+    relativity_threshold,
 ):
 
     filesToOpen = []
     # check that the CoreNLPdir has been setup
-    CoreNLPDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
-        "file_classifier_NER_util", "Stanford CoreNLP", "", silent=False, errorFound=False
+    CoreNLPDir, existing_software_config, errorFound = (
+        IO_libraries_util.external_software_install(
+            "file_classifier_NER_util",
+            "Stanford CoreNLP",
+            "",
+            silent=False,
+            errorFound=False,
+        )
     )
     if CoreNLPDir is None:
         return filesToOpen
@@ -220,14 +245,26 @@ def main(
     if inputDir[-1] != "/":
         inputDir = inputDir + "/"
     outputFilename = IO_files_util.generate_output_file_name(
-        "", inputTargetDir, outputDir, ".csv", "SSR", "NER_class", "", "", "", False, True
+        "",
+        inputTargetDir,
+        outputDir,
+        ".csv",
+        "SSR",
+        "NER_class",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
     filesToOpen.append(outputFilename)
     f = open(outputFilename, "w", encoding="utf-8", errors="ignore")
     terminal_output = sys.stdout
     sys.stdout = f
     print(
-        "Source document,Target directory,Highest index,Relativity index (>" + str(relativity_threshold) + "),Outcome"
+        "Source document,Target directory,Highest index,Relativity index (>"
+        + str(relativity_threshold)
+        + "),Outcome"
     )
     actors = load_soc_actors()
     dirs = glob(inputTargetDir + "/*/")
@@ -257,7 +294,9 @@ def main(
         )
         compare = get_NER_POSTAG(dir, actors, nlp, compare)
         num_folder += 1
-    print("Finished all " + str(num_folder) + " folders. Start to process documents now.")
+    print(
+        "Finished all " + str(num_folder) + " folders. Start to process documents now."
+    )
     sys.stdout = f
     # compare stores: key- folder id; value: a set of words
     num_doc, num_unclass, num_class, num_multiclass = find(
@@ -278,7 +317,10 @@ def main(
 
     print("Number of unclassified documents processed in input: " + str(num_doc))
     print("Number of classified documents in output: " + str(num_class))
-    print("Number of classified documents (with multiple targets) in output: " + str(num_multiclass))
+    print(
+        "Number of classified documents (with multiple targets) in output: "
+        + str(num_multiclass)
+    )
     print("Number of unclassified documents in output: " + str(num_unclass))
 
     nlp.close()
@@ -308,7 +350,9 @@ def main(
             filesToOpen.extend(outputFiles)
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir
+        )
         filesToOpen = []  # to avoid opening twice here and in calling fuunction
 
     return filesToOpen

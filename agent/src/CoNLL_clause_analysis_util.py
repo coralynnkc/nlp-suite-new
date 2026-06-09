@@ -6,11 +6,12 @@
 
 import os
 
+import pandas as pd
+
 import charts_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-import pandas as pd
 
 #
 clause_position = 8  # NEW CoNLL_U
@@ -41,21 +42,27 @@ def process_Json(inputFilename, outputDir):
             JsonDir = head + os.sep + JsonDir
             if not os.path.exists(JsonDir):
                 return None
-            inputDocs = IO_files_util.getFileList("", JsonDir, fileType=".txt", silent=True, configFileName="")
+            inputDocs = IO_files_util.getFileList(
+                "", JsonDir, fileType=".txt", silent=True, configFileName=""
+            )
             Ndocs = len(inputDocs)
             if Ndocs == 0:
                 return None
             for JsonFile in inputDocs:
                 json = open(JsonFile, encoding="utf-8", errors="ignore").read()
                 for parsed_sent in json["sentences"]:
-                    sent_list, sent_examples = Stanford_CoreNLP_clause_util.clausal_info_extract_from_string(
-                        parsed_sent["parse"]
+                    sent_list, sent_examples = (
+                        Stanford_CoreNLP_clause_util.clausal_info_extract_from_string(
+                            parsed_sent["parse"]
+                        )
                     )
                     sent_list_clause.append(sent_list)
                     subtree_string.append(sent_examples)
 
             if len(subtree_string) > 0:
-                IO_csv_util.list_to_csv(subtree_string, subtree_string_fileName, encoding="utf-8")
+                IO_csv_util.list_to_csv(
+                    subtree_string, subtree_string_fileName, encoding="utf-8"
+                )
 
     return subtree_string_fileName
 
@@ -81,15 +88,15 @@ def clause_data_preparation(data):
                 clause_col = "Sentence"
                 s_counter += 1
             elif clause == "SBAR":
-                clause_col = "Clause introduced by a (possibly empty) subordinating conjunction"
+                clause_col = (
+                    "Clause introduced by a (possibly empty) subordinating conjunction"
+                )
                 sbar_counter += 1
             elif clause == "SBARQ":
                 clause_col = "Direct question introduced by a wh-word or a wh-phrase"
                 sbarq_counter += 1
             elif clause == "SQ":
-                clause_col = (
-                    "Inverted yes/no question, or main clause of a wh-question, following the wh-phrase in SBARQ"
-                )
+                clause_col = "Inverted yes/no question, or main clause of a wh-question, following the wh-phrase in SBARQ"
                 sq_counter += 1
             elif clause == "SINV":
                 clause_col = "Inverted declarative sentence"
@@ -114,8 +121,14 @@ def clause_data_preparation(data):
     clause_stats = [
         ["Clause Tags", "Frequencies"],
         ["Clause-level (S - Sentence)", s_counter],
-        ["Clause-level (SBAR - Clause introduced by a (possibly empty) subordinating conjunction)", sbar_counter],
-        ["Clause-level (SBARQ - Direct question introduced by a wh-word or a wh-phrase)", sbarq_counter],
+        [
+            "Clause-level (SBAR - Clause introduced by a (possibly empty) subordinating conjunction)",
+            sbar_counter,
+        ],
+        [
+            "Clause-level (SBARQ - Direct question introduced by a wh-word or a wh-phrase)",
+            sbarq_counter,
+        ],
         [
             "Clause-level (SQ - Inverted yes/no question, or main clause of a wh-question, following the wh-phrase in SBARQ)",
             sq_counter,
@@ -135,18 +148,34 @@ def clause_data_preparation(data):
 
 
 def clause_stats(
-    inputFilename, inputDir, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    inputDir,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
 
     filesToOpen = []  # Store all files that are to be opened once finished
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running CLAUSE ANALYSES at", True, "", True, "", True
+        2000,
+        "Analysis start",
+        "Started running CLAUSE ANALYSES at",
+        True,
+        "",
+        True,
+        "",
+        True,
     )
 
     # output file names
     # clausal_analysis_file_name contains all the CoNLL table records that have a clausal tag
-    IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "list")
+    IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "list"
+    )
     # clausal_analysis_stats_file_name will contain a data sheet with the frequency distribution of all available clausal tags and a chart sheet with the pie chart visualization of the data
 
     # if 0:
@@ -176,7 +205,9 @@ def clause_stats(
     clausal_analysis_stats_file_name = IO_files_util.generate_output_file_name(
         inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "stats"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "CA", "Clause tags", "list")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "CA", "Clause tags", "list"
+    )
     # convert list to dataframe and save
     df = pd.DataFrame(clausal_list)
     df.columns = [
@@ -211,7 +242,13 @@ def clause_stats(
         "Document",
         "Tag",
     ]
-    IO_csv_util.df_to_csv(df, clausal_analysis_stats_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        clausal_analysis_stats_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         columns_to_be_plotted_xAxis = []
@@ -242,6 +279,13 @@ def clause_stats(
                 filesToOpen.extend(outputFiles)
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running CLAUSE ANALYSES at", True, "", True, startTime, True
+        2000,
+        "Analysis end",
+        "Finished running CLAUSE ANALYSES at",
+        True,
+        "",
+        True,
+        startTime,
+        True,
     )
     return filesToOpen

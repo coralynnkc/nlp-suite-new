@@ -16,7 +16,9 @@ def create_input_subdir(inputDir, label):
     # create a subdirectory of the input directory
     inputDirBase = os.path.basename(inputDir)
     outputDir = inputDir + os.sep + inputDirBase + label
-    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        "", "", outputDir, label="", silent=True
+    )
     return outputDir
 
 
@@ -58,7 +60,14 @@ def add_full_stop_to_paragraph(
     # if result==False:
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running the add fullstop function at", True, "", True, "", False
+        2000,
+        "Analysis start",
+        "Started running the add fullstop function at",
+        True,
+        "",
+        True,
+        "",
+        False,
     )
 
     label = "_FullStops"
@@ -67,7 +76,11 @@ def add_full_stop_to_paragraph(
 
     # collecting input txt files
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(inputDocs)
     docID = 0
@@ -113,18 +126,32 @@ def add_full_stop_to_paragraph(
         msgString = "%s documents out of %d have been edited for full stops." % (
             nDocs,
             count,
-        ) + "\n\nThe percentage of documents processed is %.2f" % ((float(count) / nDocs) * 100)
+        ) + "\n\nThe percentage of documents processed is %.2f" % (
+            (float(count) / nDocs) * 100
+        )
     if count > 0:
         if inputFilename != "":
-            msgString = msgString + "\n\nAll edits were saved directly in the input file."
+            msgString = (
+                msgString + "\n\nAll edits were saved directly in the input file."
+            )
         else:
-            msgString = msgString + "\n\nAll edits were saved directly in all affected input files."
+            msgString = (
+                msgString
+                + "\n\nAll edits were saved directly in all affected input files."
+            )
 
     print("End of paragraph punctuation" + msgString)
     # always open outputDir
     IO_files_util.openExplorer(window, head)
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running the add fullstop function at", True, "", True, startTime, False
+        2000,
+        "Analysis end",
+        "Finished running the add fullstop function at",
+        True,
+        "",
+        True,
+        startTime,
+        False,
     )
 
 
@@ -141,7 +168,11 @@ def check_typesetting_hyphenation(
     filesToOpen = []
     docID = 0
     files = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType="txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(files)
     if nDocs == 0:
@@ -178,7 +209,11 @@ def check_typesetting_hyphenation(
             filesToOpen.append(outputFilename)
         # if openOutputFiles:
     else:
-        print("Warning: There are " + str(hyphenated_lines) + " typesetting hyphenated lines in the input file(s).")
+        print(
+            "Warning: There are "
+            + str(hyphenated_lines)
+            + " typesetting hyphenated lines in the input file(s)."
+        )
 
 
 # replace - followed by a hard carriage return \r at the end of a line with a blank joined to the beginning of the next line
@@ -194,7 +229,14 @@ def remove_typeseting_hyphenation(
 ):
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running the typesetting hyphenation function at", True, "", True, "", False
+        2000,
+        "Analysis start",
+        "Started running the typesetting hyphenation function at",
+        True,
+        "",
+        True,
+        "",
+        False,
     )
 
     label = "_NoHyph"
@@ -219,7 +261,11 @@ def remove_typeseting_hyphenation(
 
     docID = 0
     files = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType="txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(files)
     if nDocs == 0:
@@ -256,14 +302,23 @@ def remove_typeseting_hyphenation(
     if removed_hyphens > 0:
         if inputDir != "":
             save_msg = (
-                "\n\nOutput files saved in the subdirectory " + outputDir + " of the same directory of input files."
+                "\n\nOutput files saved in the subdirectory "
+                + outputDir
+                + " of the same directory of input files."
             )
         else:
-            save_msg = "\n\nOutput file saved in the same directory of the input file with " + label + ".txt ending."
+            save_msg = (
+                "\n\nOutput file saved in the same directory of the input file with "
+                + label
+                + ".txt ending."
+            )
     else:
         save_msg = ""
     print(
-        "Warning: " + str(removed_hyphens) + " end-line typesetting hyphens removed from the input file(s)." + save_msg
+        "Warning: "
+        + str(removed_hyphens)
+        + " end-line typesetting hyphens removed from the input file(s)."
+        + save_msg
     )
     # always open outputDir
     IO_files_util.openExplorer(window, head)
@@ -292,7 +347,14 @@ def remove_hard_carriage_returns(
 ):
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running the hard-carriage returns function at", True, "", True, "", False
+        2000,
+        "Analysis start",
+        "Started running the hard-carriage returns function at",
+        True,
+        "",
+        True,
+        "",
+        False,
     )
 
     label = "_NoHcR"
@@ -317,7 +379,11 @@ def remove_hard_carriage_returns(
 
     docID = 0
     files = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType="txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(files)
     if nDocs == 0:
@@ -345,18 +411,36 @@ def remove_hard_carriage_returns(
     if removed_hard_returns > 0:
         if inputDir != "":
             save_msg = (
-                "\n\nOutput files saved in the subdirectory " + outputDir + " of the same directory of input files."
+                "\n\nOutput files saved in the subdirectory "
+                + outputDir
+                + " of the same directory of input files."
             )
         else:
-            save_msg = "\n\nOutput file saved in the same directory of the input file with " + label + ".txt ending."
+            save_msg = (
+                "\n\nOutput file saved in the same directory of the input file with "
+                + label
+                + ".txt ending."
+            )
     else:
         save_msg = ""
-    print("Warning" + str(removed_hard_returns) + " hard-carriage returns removed from the input file(s)." + save_msg)
+    print(
+        "Warning"
+        + str(removed_hard_returns)
+        + " hard-carriage returns removed from the input file(s)."
+        + save_msg
+    )
     # always open outputDir
     IO_files_util.openExplorer(window, head)
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running the hard-carriage returns function at", True, "", True, startTime, False
+        2000,
+        "Analysis end",
+        "Finished running the hard-carriage returns function at",
+        True,
+        "",
+        True,
+        startTime,
+        False,
     )
 
 
@@ -402,7 +486,11 @@ def add_missing_blank_after_punctuation(
 
     docID = 0
     files = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType="txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(files)
     if nDocs == 0:
@@ -429,14 +517,23 @@ def add_missing_blank_after_punctuation(
     if blanks_added > 0:
         if inputDir != "":
             save_msg = (
-                "\n\nOutput files saved in the subdirectory " + outputDir + " of the same directory of input files."
+                "\n\nOutput files saved in the subdirectory "
+                + outputDir
+                + " of the same directory of input files."
             )
         else:
-            save_msg = "\n\nOutput file saved in the same directory of the input file with " + label + ".txt ending."
+            save_msg = (
+                "\n\nOutput file saved in the same directory of the input file with "
+                + label
+                + ".txt ending."
+            )
     else:
         save_msg = ""
     print(
-        "Warning, Missing blanks were inserted after punctuation in " + str(blanks_added) + " input file(s)." + save_msg
+        "Warning, Missing blanks were inserted after punctuation in "
+        + str(blanks_added)
+        + " input file(s)."
+        + save_msg
     )
     # always open outputDir
     IO_files_util.openExplorer(window, head)
@@ -507,7 +604,11 @@ def remove_characters_between_characters(
     file_sizes = []
     docID = 0
     files = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType="txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(files)
     if nDocs == 0:
@@ -523,7 +624,11 @@ def remove_characters_between_characters(
                 IO_user_interface_util.timed_alert(
                     1000,
                     "Warning",
-                    "   No Start character " + startCharacter + " was found in the input file " + tail + ".",
+                    "   No Start character "
+                    + startCharacter
+                    + " was found in the input file "
+                    + tail
+                    + ".",
                     True,
                     "",
                     True,
@@ -536,7 +641,11 @@ def remove_characters_between_characters(
                 IO_user_interface_util.timed_alert(
                     1000,
                     "Warning",
-                    "   No End character " + endCharacter + " was found in the input file " + tail + ".",
+                    "   No End character "
+                    + endCharacter
+                    + " was found in the input file "
+                    + tail
+                    + ".",
                     True,
                     "",
                     True,
@@ -571,13 +680,19 @@ def remove_characters_between_characters(
                 number_of_characters_pairs = int(number_of_characters_start)
             i = 0
             while i < number_of_characters_pairs:
-                split_string_A = fullText.split(startCharacter, 1)  # Split into "ab" and "cd"
+                split_string_A = fullText.split(
+                    startCharacter, 1
+                )  # Split into "ab" and "cd"
                 split_string_A = split_string_A[0]
-                split_string_B = fullText.split(endCharacter, 1)  # Split into "ab" and "cd"
+                split_string_B = fullText.split(
+                    endCharacter, 1
+                )  # Split into "ab" and "cd"
                 if len(split_string_B) > 1:
                     split_string_B = split_string_B[1]
                     if startCharacter == endCharacter:
-                        split_string_B = split_string_B.split(endCharacter, 1)  # Split into "ab" and "cd"
+                        split_string_B = split_string_B.split(
+                            endCharacter, 1
+                        )  # Split into "ab" and "cd"
                         split_string_B = split_string_B[1]
                 else:
                     split_string_B = split_string_B[0]
@@ -610,7 +725,10 @@ def remove_characters_between_characters(
                     ]
                 )
                 print(
-                    "   FILE SIZES (in bytes) - ORIGINAL ", os.stat(file).st_size, " EDITED ", os.stat(outfile).st_size
+                    "   FILE SIZES (in bytes) - ORIGINAL ",
+                    os.stat(file).st_size,
+                    " EDITED ",
+                    os.stat(outfile).st_size,
                 )
 
                 if inputDir != "":
@@ -677,7 +795,9 @@ def remove_characters_between_characters(
                 "Difference in bytes (should be >0)",
             ]
             file_sizes.insert(0, header)
-            IO_csv_util.list_to_csv(window, file_sizes, outputDir + os.sep + "file_sizes.csv")
+            IO_csv_util.list_to_csv(
+                window, file_sizes, outputDir + os.sep + "file_sizes.csv"
+            )
             IO_files_util.openFile(window, outputDir + os.sep + "file_sizes.csv")
 
     if No_odd_pairs > 0:
@@ -732,7 +852,14 @@ def remove_blank_lines(
 ):
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running the remove blank lines function at", True, "", True, "", False
+        2000,
+        "Analysis start",
+        "Started running the remove blank lines function at",
+        True,
+        "",
+        True,
+        "",
+        False,
     )
 
     label = "_NoBlanks"
@@ -742,7 +869,11 @@ def remove_blank_lines(
     # if result==False:
 
     files = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType="txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(files)
     if nDocs == 0:
@@ -774,7 +905,9 @@ def remove_blank_lines(
             filesWithEmptyLines += 1
     if inputFilename != "":
         if filesWithEmptyLines == 0:
-            print("Blank lines removed, No blank lines were removed from the input file.")
+            print(
+                "Blank lines removed, No blank lines were removed from the input file."
+            )
         else:
             print("Blank lines removed, Blank lines were removed from the input file.")
     else:
@@ -797,7 +930,14 @@ def remove_blank_lines(
     IO_files_util.openExplorer(window, head)
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running the remove blank lines function at", True, "", True, startTime, False
+        2000,
+        "Analysis end",
+        "Finished running the remove blank lines function at",
+        True,
+        "",
+        True,
+        startTime,
+        False,
     )
 
 
@@ -818,7 +958,14 @@ def isTitle(sentence, Title_length_limit):
 
 
 def newspaper_titles(
-    window, inputFilename, inputDir, outputDir, configFileName, openOutputFiles, chartPackage, dataTransformation
+    window,
+    inputFilename,
+    inputDir,
+    outputDir,
+    configFileName,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
@@ -845,7 +992,14 @@ def newspaper_titles(
         titleness = False
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running the newspaper titles function at", True, "", True, "", False
+        2000,
+        "Analysis start",
+        "Started running the newspaper titles function at",
+        True,
+        "",
+        True,
+        "",
+        False,
     )
 
     # DOCUMENTS WITH TITLES
@@ -864,7 +1018,11 @@ def newspaper_titles(
 
     # collecting input txt files
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(inputDocs)
     docID = 0
@@ -955,7 +1113,9 @@ def newspaper_titles(
         msgString = "%s documents out of %d have generated titles." % (
             NUM_DOCUMENT,
             count,
-        ) + "\n\nThe percentage of documents processed is %.2f" % ((float(count) / nDocs) * 100)
+        ) + "\n\nThe percentage of documents processed is %.2f" % (
+            (float(count) / nDocs) * 100
+        )
     if count > 0:
         if inputFilename != "":
             msgString = (
@@ -979,7 +1139,14 @@ def newspaper_titles(
     IO_files_util.openExplorer(window, head)
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running the newspaper titles function at", True, "", True, startTime, False
+        2000,
+        "Analysis end",
+        "Finished running the newspaper titles function at",
+        True,
+        "",
+        True,
+        startTime,
+        False,
     )
 
 
@@ -1000,7 +1167,11 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
         return False
 
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
     Ndocs = len(inputDocs)
     index = 0
@@ -1012,7 +1183,14 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
 
     docError = 0
     IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running characters conversion at", True, "", True, "", True
+        2000,
+        "Analysis start",
+        "Started running characters conversion at",
+        True,
+        "",
+        True,
+        "",
+        True,
     )
     for doc in inputDocs:
         index = index + 1
@@ -1034,8 +1212,12 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
             ):
                 # u0027 apostrophe
                 fullText = str(fullText).replace("%", " percent")  # left single quote
-                fullText = str(fullText).replace("\u2018", "\u0027")  # left single quote
-                fullText = str(fullText).replace("\u2019", "\u0027")  # right single quote
+                fullText = str(fullText).replace(
+                    "\u2018", "\u0027"
+                )  # left single quote
+                fullText = str(fullText).replace(
+                    "\u2019", "\u0027"
+                )  # right single quote
                 fullText = str(fullText).replace("\u201c", '"')  # left double quote
                 fullText = str(fullText).replace("\u201d", '"')  # right double quote
                 docError = docError + 1
@@ -1107,12 +1289,18 @@ def find_replace_string(
         string_OUT = []
     if string_IN is None:
         string_IN = []
-    result = file_filename_util.backup_files(inputFilename, inputDir, "Find and replace string", ".txt", configFileName)
+    result = file_filename_util.backup_files(
+        inputFilename, inputDir, "Find and replace string", ".txt", configFileName
+    )
     if not result:
         return
 
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
     filesToOpen = []
     Ndocs = len(inputDocs)
@@ -1124,7 +1312,12 @@ def find_replace_string(
 
     if string_IN == []:  # if string_IN empty, string_IN and string_OUT will be typed in
         string_in, string_out = GUI_IO_util.enter_value_widget(
-            "Enter the FIND & REPLACE strings (CASE SENSITIVE)", "Find", 2, "", "Replace", ""
+            "Enter the FIND & REPLACE strings (CASE SENSITIVE)",
+            "Find",
+            2,
+            "",
+            "Replace",
+            "",
         )
 
         # put input strings into list so that they can be processed
@@ -1160,7 +1353,11 @@ def find_replace_string(
                     # # use regular expression replace to check for distinct words (e.g., he not in held)
                     # \b beginning and ending of word
                     # \w word character including numbers and characters
-                    fullText = re.sub(rf"\b(?=\w){str(string_IN[i])}\b(?!\w)", str(string_OUT[i]), fullText)
+                    fullText = re.sub(
+                        rf"\b(?=\w){str(string_IN[i])}\b(?!\w)",
+                        str(string_OUT[i]),
+                        fullText,
+                    )
                     # fullText = re.sub(rf”(?<=\w) {str(string_IN[i])} (?<=\W)”, str(string_OUT[i]), fullText)
                     if index != indexSV:
                         docError = docError + 1
@@ -1170,17 +1367,28 @@ def find_replace_string(
                     file.truncate(0)
                     file.write(fullText)
                     changed_values.append(
-                        [[string_IN[i], string_OUT[i], index, IO_csv_util.dressFilenameForCSVHyperlink(doc)]]
+                        [
+                            [
+                                string_IN[i],
+                                string_OUT[i],
+                                index,
+                                IO_csv_util.dressFilenameForCSVHyperlink(doc),
+                            ]
+                        ]
                     )
             file.close()
 
-    outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".csv", "find_replace")
+    outputFilename = IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".csv", "find_replace"
+    )
     header = ["Find string", "Replace string", "Document ID", "Document"]
     changed_values.insert(0, header)
     IO_error = IO_csv_util.list_to_csv(window, changed_values, outputFilename)
 
     if docError > 0:
-        if len(string_IN) == 1 and docError == 1:  # if only one FIND string, it can be typed in the message box
+        if (
+            len(string_IN) == 1 and docError == 1
+        ):  # if only one FIND string, it can be typed in the message box
             if not silent:
                 print(
                     "String edit"

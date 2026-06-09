@@ -5,7 +5,9 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if not IO_libraries_util.install_all_Python_packages(GUI_util.window, "file_matcher.py", ["csv", "tkinter", "os"]):
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_matcher.py", ["csv", "tkinter", "os"]
+):
     sys.exit(0)
 
 import os
@@ -39,7 +41,15 @@ def run(
     GUI_util.config_filename_selected_config.get()
 
     startTime = IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis start", "Started running File Matcher at", True, "", True, "", False
+        GUI_util.window,
+        2000,
+        "Analysis start",
+        "Started running File Matcher at",
+        True,
+        "",
+        True,
+        "",
+        False,
     )
 
     file_matcher_util.run_default(
@@ -66,7 +76,15 @@ def run(
     # files: Files in current root (not in subdirs) of type other than directory
 
     IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis end", "Finished running File matcher at", True, "", True, startTime, False
+        GUI_util.window,
+        2000,
+        "Analysis end",
+        "Finished running File matcher at",
+        True,
+        "",
+        True,
+        startTime,
+        False,
     )
 
     # if i > 0:
@@ -126,14 +144,21 @@ config_filename = GUI_util.config_filename_selected_config.get()
 #   output dir
 config_input_output_numeric_options = [0, 1, 0, 1]
 
-GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
+GUI_util.set_window(
+    GUI_size, GUI_label, config_filename, config_input_output_numeric_options
+)
 
 window = GUI_util.window
 config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
 config_filename = GUI_util.config_filename
 inputFilename = GUI_util.inputFilename
 
-GUI_util.GUI_top(config_input_output_numeric_options, config_filename, IO_setup_display_brief, scriptName)
+GUI_util.GUI_top(
+    config_input_output_numeric_options,
+    config_filename,
+    IO_setup_display_brief,
+    scriptName,
+)
 
 selectedCsvFile_var = tk.StringVar()
 find_var = tk.IntVar()
@@ -161,7 +186,9 @@ def add_csvFile(window, title, fileType):
     import os
 
     initialFolder = os.path.dirname(os.path.abspath(__file__))
-    filePath = tk.filedialog.askopenfilename(title=title, initialdir=initialFolder, filetypes=fileType)
+    filePath = tk.filedialog.askopenfilename(
+        title=title, initialdir=initialFolder, filetypes=fileType
+    )
     if len(filePath) > 0:
         selectedCsvFile.config(state="normal")
         selectedCsvFile_var.set(filePath)
@@ -170,7 +197,9 @@ def add_csvFile(window, title, fileType):
 add_file_button = tk.Button(
     window,
     text="Select csv file",
-    command=lambda: add_csvFile(window, "Select INPUT csv file", [("csv files", "*.csv")]),
+    command=lambda: add_csvFile(
+        window, "Select INPUT csv file", [("csv files", "*.csv")]
+    ),
 )
 # place widget with hover-over info
 y_multiplier_integer = GUI_IO_util.placeWidget(
@@ -209,21 +238,33 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 )
 
 selectedCsvFile = tk.Entry(
-    window, width=GUI_IO_util.widget_width_extra_long, state="disabled", textvariable=selectedCsvFile_var
+    window,
+    width=GUI_IO_util.widget_width_extra_long,
+    state="disabled",
+    textvariable=selectedCsvFile_var,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_selectedCsvFile_pos, y_multiplier_integer, selectedCsvFile
+    window,
+    GUI_IO_util.file_matcher_selectedCsvFile_pos,
+    y_multiplier_integer,
+    selectedCsvFile,
 )
 
 find_var.set(1)
-find_checkbox = tk.Checkbutton(window, text="Match files", variable=find_var, onvalue=1, offvalue=0)
+find_checkbox = tk.Checkbutton(
+    window, text="Match files", variable=find_var, onvalue=1, offvalue=0
+)
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, find_checkbox, True
 )
 
 source_file_type_menu_lb = tk.Label(window, text="Source file type ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.open_TIPS_x_coordinate, y_multiplier_integer, source_file_type_menu_lb, True
+    window,
+    GUI_IO_util.open_TIPS_x_coordinate,
+    y_multiplier_integer,
+    source_file_type_menu_lb,
+    True,
 )
 
 source_file_type_menu = tk.OptionMenu(
@@ -248,12 +289,20 @@ source_file_type_menu = tk.OptionMenu(
 )
 source_file_type_menu.configure(state="disabled")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_source_file_type_menu_pos, y_multiplier_integer, source_file_type_menu, True
+    window,
+    GUI_IO_util.file_matcher_source_file_type_menu_pos,
+    y_multiplier_integer,
+    source_file_type_menu,
+    True,
 )
 
 target_file_type_menu_lb = tk.Label(window, text="Target file type ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_target_file_type_menu_lb_pos, y_multiplier_integer, target_file_type_menu_lb, True
+    window,
+    GUI_IO_util.file_matcher_target_file_type_menu_lb_pos,
+    y_multiplier_integer,
+    target_file_type_menu_lb,
+    True,
 )
 
 target_file_type_menu = tk.OptionMenu(
@@ -278,7 +327,10 @@ target_file_type_menu = tk.OptionMenu(
 )
 target_file_type_menu.configure(state="disabled")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_target_file_type_menu_pos, y_multiplier_integer, target_file_type_menu
+    window,
+    GUI_IO_util.file_matcher_target_file_type_menu_pos,
+    y_multiplier_integer,
+    target_file_type_menu,
 )
 
 matching_var.set(1)
@@ -288,12 +340,19 @@ matching_checkbox = tk.Checkbutton(
     onvalue=1,
     offvalue=0,
     command=lambda: GUI_util.trace_checkbox_NoLabel(
-        matching_var, matching_checkbox, "Exact match", "Partial match (by number of embedded items)"
+        matching_var,
+        matching_checkbox,
+        "Exact match",
+        "Partial match (by number of embedded items)",
     ),
 )
 matching_checkbox.config(text="Exact match")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_indented_coordinate, y_multiplier_integer, matching_checkbox, True
+    window,
+    GUI_IO_util.labels_x_indented_coordinate,
+    y_multiplier_integer,
+    matching_checkbox,
+    True,
 )
 
 character_value_var.set("_")
@@ -305,18 +364,30 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 character_value = tk.Entry(window, width=2, textvariable=character_value_var)
 character_value.configure(state="disabled")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_character_value_pos, y_multiplier_integer, character_value, True
+    window,
+    GUI_IO_util.file_matcher_character_value_pos,
+    y_multiplier_integer,
+    character_value,
+    True,
 )
 
 number_of_items_lb = tk.Label(window, text="Number of items")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_number_of_items_lb_pos, y_multiplier_integer, number_of_items_lb, True
+    window,
+    GUI_IO_util.file_matcher_number_of_items_lb_pos,
+    y_multiplier_integer,
+    number_of_items_lb,
+    True,
 )
 
 number_of_items_value = tk.Entry(window, width=2, textvariable=number_of_items_var)
 number_of_items_value.configure(state="disabled")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_number_of_items_value_pos, y_multiplier_integer, number_of_items_value, True
+    window,
+    GUI_IO_util.file_matcher_number_of_items_value_pos,
+    y_multiplier_integer,
+    number_of_items_value,
+    True,
 )
 
 include_exclude_var.set(1)
@@ -326,11 +397,17 @@ include_exclude_checkbox = tk.Checkbutton(
     onvalue=1,
     offvalue=0,
     command=lambda: GUI_util.trace_checkbox_NoLabel(
-        include_exclude_var, include_exclude_checkbox, "Include first # items only", "Exclude first # items"
+        include_exclude_var,
+        include_exclude_checkbox,
+        "Include first # items only",
+        "Exclude first # items",
     ),
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.file_matcher_include_exclude_pos, y_multiplier_integer, include_exclude_checkbox
+    window,
+    GUI_IO_util.file_matcher_include_exclude_pos,
+    y_multiplier_integer,
+    include_exclude_checkbox,
 )
 include_exclude_checkbox.config(text="Include first # items only", state="disabled")
 
@@ -338,7 +415,11 @@ copy_var.set(0)
 copy_checkbox = tk.Checkbutton(window, variable=copy_var, onvalue=1, offvalue=0)
 copy_checkbox.config(text="COPY processed files")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_indented_coordinate, y_multiplier_integer, copy_checkbox, True
+    window,
+    GUI_IO_util.labels_x_indented_coordinate,
+    y_multiplier_integer,
+    copy_checkbox,
+    True,
 )
 
 move_var.set(0)
@@ -442,14 +523,26 @@ TIPS_options = (
 def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
     if not IO_setup_display_brief:
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_csvFile
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_csvFile,
         )
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_outputDirectory
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_outputDirectory,
         )
     else:
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_IO_setup
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_IO_setup,
         )
 
     y_multiplier_integer = GUI_IO_util.place_help_button(
@@ -481,7 +574,11 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
         "Please, tick one or the other checkboxes to COPY or MOVE the matched files from the INPUT directory to the OUTPUT directory.\n\nIn the OUTPUT directory, the algorithm will create a new sub-directory 'file_matcher_OUTPUT' (any previous 'file_matcher_OUTPUT' subdirectory will be overwritten). Inside this sub-directory, three sub-directories will be created: matched, unmatched, duplicates where matched, unmatched, and duplicate files will be copied/moved.\n\nLeave the checkboxes unticked if you just want to get a list of files.",
     )
     y_multiplier_integer = GUI_IO_util.place_help_button(
-        window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_openOutputFiles
+        window,
+        help_button_x_coordinate,
+        y_multiplier_integer,
+        "NLP Suite Help",
+        GUI_IO_util.msg_openOutputFiles,
     )
 
     return y_multiplier_integer - 1

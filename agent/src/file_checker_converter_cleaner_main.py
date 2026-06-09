@@ -43,7 +43,9 @@ def run(
             message="In a Mac OS, there is a simple way to batch convert a set of rtf files to txt. THIS ONLY APPLIES TO MAC OS!\n\nOpen the command prompt and change directory to where the rtf files are stored, then type:\n\nfind . -name \\*.rtf -print0 | xargs -0 textutil -convert txt\n\nHit return. All txt converted files will be found in the same input directory as the original rtf files.\n\nFor more information, see the post by Alexander Refsum Jensenius at:\nhttps://www.arj.no/2013/01/08/batch-convert-rtf-files-to-txt/.",
         )
 
-    if ((check_tools != "") and (clean_tools != "")) and ((inputDir == "") and (inputFilename == "")):
+    if ((check_tools != "") and (clean_tools != "")) and (
+        (inputDir == "") and (inputFilename == "")
+    ):
         mb.showwarning(
             title="Input error",
             message="The selected option - "
@@ -65,7 +67,9 @@ def run(
         # the func function will be executed (e.g., newspaper_titles in file_cleaner_util,
         #   if function_to_run contains "newspaper title"
         # correct values are checked in NLP_GUI
-        if not IO_libraries_util.check_inputPythonJavaProgramFile(script_to_run + ".py"):
+        if not IO_libraries_util.check_inputPythonJavaProgramFile(
+            script_to_run + ".py"
+        ):
             return
         outputFile = []
 
@@ -83,7 +87,14 @@ def run(
         ):
             func(GUI_util.window, inputFilename, inputDir, outputDir, config_filename)
         elif "sentence_length" in function_to_run:
-            outputFile = func(inputFilename, inputDir, outputDir, config_filename, chartPackage, dataTransformation)
+            outputFile = func(
+                inputFilename,
+                inputDir,
+                outputDir,
+                config_filename,
+                chartPackage,
+                dataTransformation,
+            )
         else:
             func(
                 GUI_util.window,
@@ -100,4 +111,6 @@ def run(
             filesToOpen.append(outputFile)
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName
+        )

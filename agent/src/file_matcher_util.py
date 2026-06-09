@@ -3,7 +3,9 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if not IO_libraries_util.install_all_Python_packages(GUI_util.window, "file_matcher_util", ["os", "pathlib"]):
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_matcher_util", ["os", "pathlib"]
+):
     sys.exit(0)
 
 import os
@@ -64,10 +66,35 @@ def run_default(
     duplicates_output = []
     filesToOpen = []
 
-    matched_output.append(["File_Name", "Extension", "File_Name_With_Path", "Folder", "Path_To_File", "Start_Folder"])
-    unmatched_output.append(["File_Name", "Extension", "File_Name_With_Path", "Folder", "Path_To_File", "Start_Folder"])
+    matched_output.append(
+        [
+            "File_Name",
+            "Extension",
+            "File_Name_With_Path",
+            "Folder",
+            "Path_To_File",
+            "Start_Folder",
+        ]
+    )
+    unmatched_output.append(
+        [
+            "File_Name",
+            "Extension",
+            "File_Name_With_Path",
+            "Folder",
+            "Path_To_File",
+            "Start_Folder",
+        ]
+    )
     duplicates_output.append(
-        ["File_Name", "Extension", "File_Name_With_Path", "Folder", "Path_To_File", "Start_Folder"]
+        [
+            "File_Name",
+            "Extension",
+            "File_Name_With_Path",
+            "Folder",
+            "Path_To_File",
+            "Start_Folder",
+        ]
     )
 
     # Dictionary to store all found files in the directory given.
@@ -93,7 +120,13 @@ def run_default(
     file_num = 1
     for path in Path(in_search_path[0]).rglob("*.*"):
         folder_set.add(path.parent)
-        print("Processing folder ", len(folder_set), "/", num_folders_count, os.path.split(path.parent)[1])
+        print(
+            "Processing folder ",
+            len(folder_set),
+            "/",
+            num_folders_count,
+            os.path.split(path.parent)[1],
+        )
         print("    Processing file ", file_num, "/", num_files_count, path.name)
         file_num += 1
         if path.stem in files_found:
@@ -120,7 +153,9 @@ def run_default(
                     # The group already exists, add suffix and paths to this group
                     for suffix in files_found[stem]:
                         if suffix in file_groups[head]:
-                            file_groups[head][suffix] = file_groups[head][suffix] + files_found[stem][suffix]
+                            file_groups[head][suffix] = (
+                                file_groups[head][suffix] + files_found[stem][suffix]
+                            )
                         else:
                             file_groups[head][suffix] = files_found[stem][suffix]
                 else:
@@ -150,7 +185,9 @@ def run_default(
                                 IO_csv_util.dressFilenameForCSVHyperlink(path),
                                 folder,
                                 IO_csv_util.dressFilenameForCSVHyperlink(path.parent),
-                                IO_csv_util.dressFilenameForCSVHyperlink(in_search_path[0]),
+                                IO_csv_util.dressFilenameForCSVHyperlink(
+                                    in_search_path[0]
+                                ),
                             ]
                         )
 
@@ -169,8 +206,12 @@ def run_default(
                                     extension,
                                     IO_csv_util.dressFilenameForCSVHyperlink(path),
                                     folder,
-                                    IO_csv_util.dressFilenameForCSVHyperlink(path.parent),
-                                    IO_csv_util.dressFilenameForCSVHyperlink(in_search_path[0]),
+                                    IO_csv_util.dressFilenameForCSVHyperlink(
+                                        path.parent
+                                    ),
+                                    IO_csv_util.dressFilenameForCSVHyperlink(
+                                        in_search_path[0]
+                                    ),
                                 ]
                             )
             else:
@@ -189,8 +230,12 @@ def run_default(
                                         extension,
                                         IO_csv_util.dressFilenameForCSVHyperlink(path),
                                         folder,
-                                        IO_csv_util.dressFilenameForCSVHyperlink(path.parent),
-                                        IO_csv_util.dressFilenameForCSVHyperlink(in_search_path[0]),
+                                        IO_csv_util.dressFilenameForCSVHyperlink(
+                                            path.parent
+                                        ),
+                                        IO_csv_util.dressFilenameForCSVHyperlink(
+                                            in_search_path[0]
+                                        ),
                                     ]
                                 )
 
@@ -209,7 +254,9 @@ def run_default(
                                 IO_csv_util.dressFilenameForCSVHyperlink(path),
                                 folder,
                                 IO_csv_util.dressFilenameForCSVHyperlink(path.parent),
-                                IO_csv_util.dressFilenameForCSVHyperlink(in_search_path[0]),
+                                IO_csv_util.dressFilenameForCSVHyperlink(
+                                    in_search_path[0]
+                                ),
                             ]
                         )
 
@@ -267,4 +314,6 @@ def run_default(
         filesToOpen.append(matched_filename)
         filesToOpen.append(unmatched_filename)
         filesToOpen.append(duplicates_filename)
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir
+        )

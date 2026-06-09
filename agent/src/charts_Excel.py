@@ -60,7 +60,11 @@ def run_excelCharts(
     if count_var == 1:  # counting y-axis
         if hover_var_list and all(check == 0 for check in hover_var_list):
             data_to_be_plotted = charts_util.prepare_data_to_be_plotted_inExcel(
-                inputFilename_name, selected_series, chart_type, 1, column_yAxis_field_list
+                inputFilename_name,
+                selected_series,
+                chart_type,
+                1,
+                column_yAxis_field_list,
             )
         else:
             print(

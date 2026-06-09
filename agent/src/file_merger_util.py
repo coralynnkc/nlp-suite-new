@@ -5,7 +5,9 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if not IO_libraries_util.install_all_Python_packages(GUI_util.window, "file_merger_util", ["os", "tkinter"]):
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_merger_util", ["os", "tkinter"]
+):
     sys.exit(0)
 
 import os
@@ -41,7 +43,8 @@ def file_merger(
     docNum = 0
     if processSubdir is None:
         processSubdir = tk.messagebox.askyesnocancel(
-            "Process sub-directories", "Do you want to process for files in subdirectories?"
+            "Process sub-directories",
+            "Do you want to process for files in subdirectories?",
         )
     if processSubdir is None:  # cancel
         return
@@ -50,13 +53,16 @@ def file_merger(
             "", inputdirectory, ".txt", silent=False, configFileName=configFileName
         )
     else:
-        tmpList = IO_files_util.getFileList("", inputdirectory, ".txt", silent=False, configFileName=configFileName)
+        tmpList = IO_files_util.getFileList(
+            "", inputdirectory, ".txt", silent=False, configFileName=configFileName
+        )
     docList = [f for f in tmpList if f[:2] != "~$" and f[-4:] == ".txt"]
     numberOfDocs = len(docList)
 
     if numberOfDocs == 0:
         tk.messagebox.showwarning(
-            title="Warning", message="There are no txt files in your input directory.\n\nThe program will exit."
+            title="Warning",
+            message="There are no txt files in your input directory.\n\nThe program will exit.",
         )
         return
 
@@ -84,12 +90,21 @@ def file_merger(
             outfile.write("Root directory processed " + inputdirectory + ".\n\n")
         # doc includes path
         for doc in docList:
-            if IO_files_util.checkDirectory(os.path.join(inputdirectory, doc), message=False):
+            if IO_files_util.checkDirectory(
+                os.path.join(inputdirectory, doc), message=False
+            ):
                 continue
             docNum = docNum + 1
             head, docName = os.path.split(doc)
             head, tail = os.path.split(doc)
-            print("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + docName)
+            print(
+                "Processing file "
+                + str(docNum + 1)
+                + "/"
+                + str(numberOfDocs)
+                + " "
+                + docName
+            )
             if saveFilenameInOutput:
                 if embedSubdir:
                     subDir = os.path.basename(os.path.normpath(head))

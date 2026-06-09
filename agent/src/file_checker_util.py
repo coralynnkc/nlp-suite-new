@@ -17,6 +17,7 @@ import tkinter as tk
 import tkinter.messagebox as mb
 
 import chardet
+
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
@@ -89,16 +90,29 @@ def detect_decoding_errors_line(l, _s=_surrogates.finditer):
 # https://stackoverflow.com/questions/19771751/how-to-use-unidecode-in-python-3-3
 # convert a non utf-8 to the closest ASCII value
 #   https://pypi.python.org/pypi/Unidecode
-def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutputFiles=False, silent=False):
+def check_utf8_compliance(
+    window, inputFilename, inputDir, outputDir, openOutputFiles=False, silent=False
+):
     if len(inputDir) > 0:
         silent = True
-        inputDocs = [os.path.join(inputDir, f) for f in os.listdir(inputDir) if f[:2] != "~$" and f[-4:] == ".txt"]
-        outFile = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".csv", "NLP", "non_utf8")
+        inputDocs = [
+            os.path.join(inputDir, f)
+            for f in os.listdir(inputDir)
+            if f[:2] != "~$" and f[-4:] == ".txt"
+        ]
+        outFile = IO_files_util.generate_output_file_name(
+            "", inputDir, outputDir, ".csv", "NLP", "non_utf8"
+        )
     elif len(inputFilename) > 0:
         inputDocs = [inputFilename]
-        outFile = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NLP", "non_utf8")
+        outFile = IO_files_util.generate_output_file_name(
+            inputFilename, "", outputDir, ".csv", "NLP", "non_utf8"
+        )
     else:
-        mb.showinfo("Utf-8 compliance", "No input inputFilename or directory specified. Routine will exit.")
+        mb.showinfo(
+            "Utf-8 compliance",
+            "No input inputFilename or directory specified. Routine will exit.",
+        )
         return
     if len(inputDocs) == 0:
         mb.showwarning(
@@ -107,19 +121,36 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
         )
         return
     startTime = IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis start", "Started running utf8 compliance test at", True, "", True, "", True
+        GUI_util.window,
+        2000,
+        "Analysis start",
+        "Started running utf8 compliance test at",
+        True,
+        "",
+        True,
+        "",
+        True,
     )
 
     nonUtf8CompliantNumber = 0
     numberOfDocs = len(inputDocs)
     nonUtf8CompliantList = [
-        ["Document ID", "Document", "Line number", "Line text", "Non utf-8 Character Position", "Non utf-8 Character"]
+        [
+            "Document ID",
+            "Document",
+            "Line number",
+            "Line text",
+            "Non utf-8 Character Position",
+            "Non utf-8 Character",
+        ]
     ]
 
     for docNum, doc in enumerate(inputDocs):
         docSV = doc
         head, tail = os.path.split(doc)
-        print("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
+        print(
+            "Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail
+        )
         # https://geek-tips.github.io/articles/494831/index.html
         # 'surrogateescape' will represent any invalid bytes as code points in the Unicode Private Use Range, ranging from U + DC80 to U + DCFF.
         with open(doc, encoding="utf-8", errors="surrogateescape") as f:
@@ -130,7 +161,14 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
                         nonUtf8CompliantNumber = nonUtf8CompliantNumber + 1
                         docSV = ""
                     nonUtf8CompliantList += [
-                        [docNum, IO_csv_util.dressFilenameForCSVHyperlink(doc), i, line, col, line[col]]
+                        [
+                            docNum,
+                            IO_csv_util.dressFilenameForCSVHyperlink(doc),
+                            i,
+                            line,
+                            col,
+                            line[col],
+                        ]
                     ]
     len(nonUtf8CompliantList) - 1
     if len(nonUtf8CompliantList) > 1:
@@ -158,17 +196,27 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
         if len(inputDir) == 0:
             if silent:
                 IO_user_interface_util.timed_alert(
-                    window, 700, "utf-8 compliance ", "The file\n\n" + inputFilename + "\n\nis utf-8 compliant."
+                    window,
+                    700,
+                    "utf-8 compliance ",
+                    "The file\n\n" + inputFilename + "\n\nis utf-8 compliant.",
                 )
             else:
-                tk.messagebox.showinfo("Warning", "The file\n\n" + inputFilename + "\n\nis utf-8 compliant.")
+                tk.messagebox.showinfo(
+                    "Warning",
+                    "The file\n\n" + inputFilename + "\n\nis utf-8 compliant.",
+                )
         else:
             if silent:
                 IO_user_interface_util.timed_alert(
                     window,
                     700,
                     "utf-8 compliance ",
-                    "All " + str(numberOfDocs) + " files in the directory " + inputDir + " are utf-8 compliant.",
+                    "All "
+                    + str(numberOfDocs)
+                    + " files in the directory "
+                    + inputDir
+                    + " are utf-8 compliant.",
                     False,
                     "",
                     True,
@@ -178,7 +226,11 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
             else:
                 tk.messagebox.showinfo(
                     "Warning",
-                    "All " + str(numberOfDocs) + " files in the directory\n\n" + inputDir + "\n\nare utf-8 compliant.",
+                    "All "
+                    + str(numberOfDocs)
+                    + " files in the directory\n\n"
+                    + inputDir
+                    + "\n\nare utf-8 compliant.",
                     False,
                     "",
                     True,
@@ -202,7 +254,11 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
 def check_empty_file(inputFilename, inputDir, configFileName):
     # collecting input txt files
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=".txt",
+        silent=False,
+        configFileName=configFileName,
     )
     nDocs = len(inputDocs)
     docID = 0

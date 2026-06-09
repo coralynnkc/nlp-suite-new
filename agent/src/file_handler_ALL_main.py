@@ -53,13 +53,20 @@ GUI_size, y_multiplier_integer, increment = GUI_IO_util.GUI_settings(
 #   output dir
 config_input_output_numeric_options = [0, 0, 0, 0]
 
-GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
+GUI_util.set_window(
+    GUI_size, GUI_label, config_filename, config_input_output_numeric_options
+)
 
 window = GUI_util.window
 config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
 config_filename = GUI_util.config_filename
 
-GUI_util.GUI_top(config_input_output_numeric_options, config_filename, IO_setup_display_brief, scriptName)
+GUI_util.GUI_top(
+    config_input_output_numeric_options,
+    config_filename,
+    IO_setup_display_brief,
+    scriptName,
+)
 
 # setup GUI widgets
 
@@ -251,9 +258,7 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
 y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate, 0)
 
 # change the value of the readMe_message
-readMe_message = (
-    "The GUI allows you to access all the specialized functions available in the NLP Suite for handling files."
-)
+readMe_message = "The GUI allows you to access all the specialized functions available in the NLP Suite for handling files."
 
 
 def readMe_command():

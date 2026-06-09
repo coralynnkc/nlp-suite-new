@@ -4,7 +4,13 @@ import pandas as pd
 
 
 def compute_word_class_frequencies(
-    inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    all_CoNLL_records,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     # Define POS tag categories
     content_words = {
@@ -80,10 +86,12 @@ def compute_word_class_frequencies(
 
     # Compute frequencies for content and junk words
     content_frequencies = {
-        category: sum(pos_counts[tag] for tag in tags if tag in pos_counts) for category, tags in content_words.items()
+        category: sum(pos_counts[tag] for tag in tags if tag in pos_counts)
+        for category, tags in content_words.items()
     }
     junk_frequencies = {
-        category: sum(pos_counts[tag] for tag in tags if tag in pos_counts) for category, tags in junk_words.items()
+        category: sum(pos_counts[tag] for tag in tags if tag in pos_counts)
+        for category, tags in junk_words.items()
     }
 
     # Include DepRel 'aux' in junk words
@@ -99,12 +107,17 @@ def compute_word_class_frequencies(
         for category, freq in content_frequencies.items()
     }
     junk_ratios = {
-        category: freq / total_junk_words if total_junk_words > 0 else 0 for category, freq in junk_frequencies.items()
+        category: freq / total_junk_words if total_junk_words > 0 else 0
+        for category, freq in junk_frequencies.items()
     }
 
     overall_ratios = {
-        "Total Content Words Ratio": total_content_words / total_words if total_words > 0 else 0,
-        "Total Junk Words Ratio": total_junk_words / total_words if total_words > 0 else 0,
+        "Total Content Words Ratio": (
+            total_content_words / total_words if total_words > 0 else 0
+        ),
+        "Total Junk Words Ratio": (
+            total_junk_words / total_words if total_words > 0 else 0
+        ),
     }
 
     # Create a summary DataFrame
@@ -117,12 +130,19 @@ def compute_word_class_frequencies(
         + [total_content_words]
         + list(junk_frequencies.values())
         + [total_junk_words],
-        "Ratio to Class": list(content_ratios.values()) + [1.0] + list(junk_ratios.values()) + [1.0],
+        "Ratio to Class": list(content_ratios.values())
+        + [1.0]
+        + list(junk_ratios.values())
+        + [1.0],
         "Ratio to Total Words": [
-            freq / total_words if total_words > 0 else 0 for freq in list(content_frequencies.values())
+            freq / total_words if total_words > 0 else 0
+            for freq in list(content_frequencies.values())
         ]
         + [overall_ratios["Total Content Words Ratio"]]
-        + [freq / total_words if total_words > 0 else 0 for freq in list(junk_frequencies.values())]
+        + [
+            freq / total_words if total_words > 0 else 0
+            for freq in list(junk_frequencies.values())
+        ]
         + [overall_ratios["Total Junk Words Ratio"]],
     }
 

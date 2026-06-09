@@ -8,16 +8,17 @@ import os
 import re
 from collections import Counter
 
-import charts_Excel_util
-import charts_Plotly_util
-import IO_csv_util
-import IO_user_interface_util
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import statistics_csv_util
 from plotly.subplots import make_subplots
+
+import charts_Excel_util
+import charts_Plotly_util
+import IO_csv_util
+import IO_user_interface_util
+import statistics_csv_util
 
 # Prepare the data (data_to_be_plotted) to be used in charts_Excel_util.create_excel_chart with the format:
 #   one series: [[['Name1','Frequency'], ['A', 7]]]
@@ -687,6 +688,7 @@ def run_all(
     inputFileData="",
 ):
     from io import StringIO
+
     # get the chart type from the GUI user selection
     # TODO:
 

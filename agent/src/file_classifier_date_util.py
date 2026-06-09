@@ -15,10 +15,11 @@ import shutil
 import tkinter.messagebox as mb
 from datetime import datetime, timedelta
 
+import pandas as pd
+
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-import pandas as pd
 
 
 def create_timedelta(date_distance_value, date_type):
@@ -60,7 +61,9 @@ def file_classifier_byDate_distance(
         True,
     )
     result = mb.askyesno(
-        "Output option", "Would you like to copy the SOURCE files to the TARGET subdirectories?", default="no"
+        "Output option",
+        "Would you like to copy the SOURCE files to the TARGET subdirectories?",
+        default="no",
     )
     folders = []
     filesToOpen = []
@@ -91,7 +94,9 @@ def file_classifier_byDate_distance(
             nDateErrors = nDateErrors + 1
             data.append(
                 [
-                    IO_csv_util.dressFilenameForCSVHyperlink(input_first_dir + os.sep + ungrouped),
+                    IO_csv_util.dressFilenameForCSVHyperlink(
+                        input_first_dir + os.sep + ungrouped
+                    ),
                     "",
                     "Error in Date Format! Source File not copied",
                     splitDuration,
@@ -114,11 +119,18 @@ def file_classifier_byDate_distance(
                         if abs(early - date) < duration:
                             if result:
                                 nCopies = nCopies + 1
-                                shutil.copy(input_first_dir + os.sep + ungrouped, folder + os.sep + ungrouped)
+                                shutil.copy(
+                                    input_first_dir + os.sep + ungrouped,
+                                    folder + os.sep + ungrouped,
+                                )
                                 data.append(
                                     [
-                                        IO_csv_util.dressFilenameForCSVHyperlink(input_first_dir + os.sep + ungrouped),
-                                        IO_csv_util.dressFilenameForCSVHyperlink(folder),
+                                        IO_csv_util.dressFilenameForCSVHyperlink(
+                                            input_first_dir + os.sep + ungrouped
+                                        ),
+                                        IO_csv_util.dressFilenameForCSVHyperlink(
+                                            folder
+                                        ),
                                         "Successfully Copied!",
                                         splitDuration,
                                     ]
@@ -126,15 +138,24 @@ def file_classifier_byDate_distance(
                             else:
                                 data.append(
                                     [
-                                        IO_csv_util.dressFilenameForCSVHyperlink(input_first_dir + os.sep + ungrouped),
-                                        IO_csv_util.dressFilenameForCSVHyperlink(folder),
+                                        IO_csv_util.dressFilenameForCSVHyperlink(
+                                            input_first_dir + os.sep + ungrouped
+                                        ),
+                                        IO_csv_util.dressFilenameForCSVHyperlink(
+                                            folder
+                                        ),
                                         "Processed but did not copy!",
                                         splitDuration,
                                     ]
                                 )
-    outputFilename = IO_files_util.generate_output_file_name("", input_first_dir, outputDir, ".csv")
+    outputFilename = IO_files_util.generate_output_file_name(
+        "", input_first_dir, outputDir, ".csv"
+    )
     filesToOpen.append(outputFilename)
-    df = pd.DataFrame(data, columns=["Source_file_path", "Target_directory", "File_status", "Date_range"])
+    df = pd.DataFrame(
+        data,
+        columns=["Source_file_path", "Target_directory", "File_status", "Date_range"],
+    )
     df.to_csv(outputFilename, encoding="utf-8", index=False)
 
     print("\n\nNumber of SOURCE input documents processed:", nDocs)
@@ -159,7 +180,9 @@ def file_classifier_byDate_distance(
     )
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir
+        )
         filesToOpen = []  # to avoid opening twice here and in calling fuunction
 
     return filesToOpen

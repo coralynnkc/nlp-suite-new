@@ -111,7 +111,12 @@ def run_file_manager(
 
     if options == 1:
         if count_file_manager_var:
-            if not list_var and not by_file_type_var and not by_prefix_var and not by_substring_var:
+            if (
+                not list_var
+                and not by_file_type_var
+                and not by_prefix_var
+                and not by_substring_var
+            ):
                 print(
                     "You have selected a file manager option, but no specific criteria for managing the files: By file type, By prefix value, or By substring value.\n\nPlease, select the file criteria to use and try again."
                 )
@@ -148,7 +153,9 @@ def run_file_manager(
 
     if by_embedded_items_var:
         if number_of_items_var > 0:
-            fieldnames = fieldnames + ["Embedded items count (" + embedded_item_character_value_var + ")"]
+            fieldnames = fieldnames + [
+                "Embedded items count (" + embedded_item_character_value_var + ")"
+            ]
             fieldnames = fieldnames + ["Count by document"]
     if fileName_embeds_date:
         fieldnames = fieldnames + ["Date"]
@@ -182,7 +189,9 @@ def run_file_manager(
     if count_file_manager_var:
         i = file_filename_util.get_count(inputDir, outputDir, outputFilename)
     else:
-        with open(outputDir + os.sep + outputFilename, "w", errors="ignore", newline="") as csvfile:
+        with open(
+            outputDir + os.sep + outputFilename, "w", errors="ignore", newline=""
+        ) as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames)
             writer.writeheader()
 
@@ -190,7 +199,12 @@ def run_file_manager(
         # You can in fact have a blank entry
         # if rename_new_entry=='' and string_entry_var=='':
         # if rename_new_entry=='':
-        if not by_prefix_var and not by_substring_var and not by_foldername_var and not by_embedded_items_var:
+        if (
+            not by_prefix_var
+            and not by_substring_var
+            and not by_foldername_var
+            and not by_embedded_items_var
+        ):
             print(
                 "You have selected the option to Rename files but you have not selected any of the available options for renaming the files.\n\nPlease, make a selection and enter the appropriate values and try again."
             )
@@ -272,90 +286,106 @@ def run_file_manager(
         for inputDir, _subdirs, files in os.walk(inputDir):
             for filename in files:
                 print(f"Processing file: {filename}")
-                fileFound, characterCount, creation_date, modification_date, author, date, dateStr = (
-                    file_filename_util.processFile(
-                        inputDir,
-                        outputDir,
-                        filename,
-                        outputFilename,
-                        fieldnames,
-                        selectedCsvFile_var,
-                        hasFullPath,
-                        utf8_var,
-                        ASCII_var,
-                        list_var,
-                        rename_var,
-                        copy_var,
-                        move_var,
-                        delete_var,
-                        split_var,
-                        rename_new_entry,
-                        file_type_menu_var,
-                        by_creation_date_var,
-                        by_author_var,
-                        by_prefix_var,
-                        by_substring_var,
-                        string_entry_var,
-                        by_foldername_var,
-                        folder_character_separator_var,
-                        by_embedded_items_var,
-                        comparison_var,
-                        number_of_items_var,
-                        embedded_item_character_value_var,
-                        include_exclude_var,
-                        character_count_file_manager_var,
-                        character_entry_var,
-                        include_subdir_var,
-                        fileName_embeds_date,
-                        date_format,
-                        date_separator,
-                        date_position,
-                    )
+                (
+                    fileFound,
+                    characterCount,
+                    creation_date,
+                    modification_date,
+                    author,
+                    date,
+                    dateStr,
+                ) = file_filename_util.processFile(
+                    inputDir,
+                    outputDir,
+                    filename,
+                    outputFilename,
+                    fieldnames,
+                    selectedCsvFile_var,
+                    hasFullPath,
+                    utf8_var,
+                    ASCII_var,
+                    list_var,
+                    rename_var,
+                    copy_var,
+                    move_var,
+                    delete_var,
+                    split_var,
+                    rename_new_entry,
+                    file_type_menu_var,
+                    by_creation_date_var,
+                    by_author_var,
+                    by_prefix_var,
+                    by_substring_var,
+                    string_entry_var,
+                    by_foldername_var,
+                    folder_character_separator_var,
+                    by_embedded_items_var,
+                    comparison_var,
+                    number_of_items_var,
+                    embedded_item_character_value_var,
+                    include_exclude_var,
+                    character_count_file_manager_var,
+                    character_entry_var,
+                    include_subdir_var,
+                    fileName_embeds_date,
+                    date_format,
+                    date_separator,
+                    date_position,
                 )
                 if fileFound:
                     i = i + 1
     else:
-        if hasFullPath:  # This is used when full paths are present in the CSV file, we ignore the input directory
-            print("Full path present, processing regardless of existence in input directory")
+        if (
+            hasFullPath
+        ):  # This is used when full paths are present in the CSV file, we ignore the input directory
+            print(
+                "Full path present, processing regardless of existence in input directory"
+            )
             for filename in fileList:
-                fileFound, characterCount, creation_date, modification_date, author, date, dateStr = (
-                    file_filename_util.processFile(
-                        inputDir,
-                        outputDir,
-                        filename,
-                        outputFilename,
-                        fieldnames,
-                        selectedCsvFile_var,
-                        hasFullPath,
-                        # utf8_var, ASCII_var,
-                        list_var,
-                        rename_var,
-                        copy_var,
-                        move_var,
-                        delete_var,
-                        split_var,
-                        rename_new_entry,
-                        file_type_menu_var,
-                        by_creation_date_var,
-                        by_author_var,
-                        by_prefix_var,
-                        by_substring_var,
-                        string_entry_var,
-                        by_foldername_var,
-                        folder_character_separator_var,
-                        by_embedded_items_var,
-                        comparison_var,
-                        number_of_items_var,
-                        embedded_item_character_value_var,
-                        include_exclude_var,
-                        character_count_file_manager_var,
-                        character_entry_var,
-                        include_subdir_var,
-                        fileName_embeds_date,
-                        date_format,
-                        date_separator,
-                        date_position,
-                    )
+                (
+                    fileFound,
+                    characterCount,
+                    creation_date,
+                    modification_date,
+                    author,
+                    date,
+                    dateStr,
+                ) = file_filename_util.processFile(
+                    inputDir,
+                    outputDir,
+                    filename,
+                    outputFilename,
+                    fieldnames,
+                    selectedCsvFile_var,
+                    hasFullPath,
+                    # utf8_var, ASCII_var,
+                    list_var,
+                    rename_var,
+                    copy_var,
+                    move_var,
+                    delete_var,
+                    split_var,
+                    rename_new_entry,
+                    file_type_menu_var,
+                    by_creation_date_var,
+                    by_author_var,
+                    by_prefix_var,
+                    by_substring_var,
+                    string_entry_var,
+                    by_foldername_var,
+                    folder_character_separator_var,
+                    by_embedded_items_var,
+                    comparison_var,
+                    number_of_items_var,
+                    embedded_item_character_value_var,
+                    include_exclude_var,
+                    character_count_file_manager_var,
+                    character_entry_var,
+                    include_subdir_var,
+                    fileName_embeds_date,
+                    date_format,
+                    date_separator,
+                    date_position,
                 )
                 if fileFound:
                     i = i + 1
@@ -371,45 +401,51 @@ def run_file_manager(
                     else:
                         processFile = True
                     if processFile:
-                        fileFound, characterCount, creation_date, modification_date, author, date, dateStr = (
-                            file_filename_util.processFile(
-                                inputDir,
-                                outputDir,
-                                filename,
-                                outputFilename,
-                                fieldnames,
-                                selectedCsvFile_var,
-                                hasFullPath,
-                                utf8_var,
-                                ASCII_var,
-                                list_var,
-                                rename_var,
-                                copy_var,
-                                move_var,
-                                delete_var,
-                                split_var,
-                                rename_new_entry,
-                                file_type_menu_var,
-                                by_creation_date_var,
-                                by_author_var,
-                                by_prefix_var,
-                                by_substring_var,
-                                string_entry_var,
-                                by_foldername_var,
-                                folder_character_separator_var,
-                                by_embedded_items_var,
-                                comparison_var,
-                                number_of_items_var,
-                                embedded_item_character_value_var,
-                                include_exclude_var,
-                                character_count_file_manager_var,
-                                character_entry_var,
-                                include_subdir_var,
-                                fileName_embeds_date,
-                                date_format,
-                                date_separator,
-                                date_position,
-                            )
+                        (
+                            fileFound,
+                            characterCount,
+                            creation_date,
+                            modification_date,
+                            author,
+                            date,
+                            dateStr,
+                        ) = file_filename_util.processFile(
+                            inputDir,
+                            outputDir,
+                            filename,
+                            outputFilename,
+                            fieldnames,
+                            selectedCsvFile_var,
+                            hasFullPath,
+                            utf8_var,
+                            ASCII_var,
+                            list_var,
+                            rename_var,
+                            copy_var,
+                            move_var,
+                            delete_var,
+                            split_var,
+                            rename_new_entry,
+                            file_type_menu_var,
+                            by_creation_date_var,
+                            by_author_var,
+                            by_prefix_var,
+                            by_substring_var,
+                            string_entry_var,
+                            by_foldername_var,
+                            folder_character_separator_var,
+                            by_embedded_items_var,
+                            comparison_var,
+                            number_of_items_var,
+                            embedded_item_character_value_var,
+                            include_exclude_var,
+                            character_count_file_manager_var,
+                            character_entry_var,
+                            include_subdir_var,
+                            fileName_embeds_date,
+                            date_format,
+                            date_separator,
+                            date_position,
                         )
                         if fileFound:
                             i = i + 1
@@ -435,7 +471,9 @@ def run_file_manager(
         chart_title_label="",
     )
     if outputFiles:
-        filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+        filesToOpen.extend(
+            outputFiles if isinstance(outputFiles, list) else [outputFiles]
+        )
 
     if i > 0:
         if rename_var == 1:

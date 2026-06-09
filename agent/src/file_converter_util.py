@@ -14,8 +14,9 @@ import os
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
 from os.path import splitext
 
-import IO_files_util
 from striprtf.striprtf import rtf_to_text
+
+import IO_files_util
 
 # https://pdfminersix.readthedocs.io/en/latest/
 # # https://pypi.org/project/pdfminer/#description
@@ -85,7 +86,14 @@ from striprtf.striprtf import rtf_to_text
 
 
 def csv_converter(
-    window, inputFilename, inputDir, outputDir, config_filename, openOutputFiles, chartPackage, dataTransformation
+    window,
+    inputFilename,
+    inputDir,
+    outputDir,
+    config_filename,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     if inputFilename != "":
         if inputFilename[:2] != "~$" and inputFilename[-4:] == ".csv":
@@ -102,7 +110,9 @@ def csv_converter(
             )
             return
         else:
-            print("INFO: No input filename. Please select an input csv file and try again.")
+            print(
+                "INFO: No input filename. Please select an input csv file and try again."
+            )
             return
         print("INFO: The function is still under construction.\nSorry!")
         return
@@ -119,7 +129,14 @@ def csv_converter(
 
 
 def rtf_converter(
-    window, inputFilename, inputDir, outputDir, config_filename, openOutputFiles, chartPackage, dataTransformation
+    window,
+    inputFilename,
+    inputDir,
+    outputDir,
+    config_filename,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     textFilename = ""
     # replaced GUI prompt with default False (no)
@@ -127,11 +144,21 @@ def rtf_converter(
     if len(inputDir) > 0:
         msgbox_subDir = False
         if msgbox_subDir:
-            inputRTFs = IO_files_util.getFileList_SubDir(inputFilename, inputDir, ".rtf")
+            inputRTFs = IO_files_util.getFileList_SubDir(
+                inputFilename, inputDir, ".rtf"
+            )
 
-            inputRTFs = [f for f in inputRTFs if os.path.basename(f)[:2] != "~$" and f[-4:] == ".rtf"]
+            inputRTFs = [
+                f
+                for f in inputRTFs
+                if os.path.basename(f)[:2] != "~$" and f[-4:] == ".rtf"
+            ]
         else:
-            inputRTFs = [os.path.join(inputDir, f) for f in os.listdir(inputDir) if f[:2] != "~$" and f[-4:] == ".rtf"]
+            inputRTFs = [
+                os.path.join(inputDir, f)
+                for f in os.listdir(inputDir)
+                if f[:2] != "~$" and f[-4:] == ".rtf"
+            ]
     elif len(inputFilename) > 0:
         if inputFilename[:2] != "~$" and inputFilename[-4:] == ".rtf":
             inputRTFs = [inputFilename]
@@ -145,13 +172,17 @@ def rtf_converter(
         print("INFO: No input filename or directory specified. The program will exit.")
         return
     if len(inputRTFs) == 0:
-        print("WARNING: There are no rtf files in the input directory. The program will exit.")
+        print(
+            "WARNING: There are no rtf files in the input directory. The program will exit."
+        )
         return
     numberOfDocs = len(inputRTFs)
 
     for docNum, doc in enumerate(inputRTFs):
         head, tail = os.path.split(doc)
-        print("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
+        print(
+            "Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail
+        )
         fileExtension = doc.split(".")[-1]
         if fileExtension == "rtf":
             fullText = open(doc, encoding="utf-8", errors="ignore").read()
@@ -161,7 +192,9 @@ def rtf_converter(
             text = rtf_to_text(fullText)
             common = os.path.commonprefix([doc, inputDir])
             relativePath = os.path.relpath(doc, common)
-            textFilename = os.path.join(outputDir, os.path.splitext(relativePath)[0] + ".txt")
+            textFilename = os.path.join(
+                outputDir, os.path.splitext(relativePath)[0] + ".txt"
+            )
             # TODO: if the subdirectory doesn't exist in output directory, create it
             if not os.path.exists(os.path.dirname(textFilename)):
                 try:

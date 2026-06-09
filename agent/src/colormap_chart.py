@@ -20,7 +20,9 @@ def run_colormap(
     print(csv_file_categorical_field_list)
     for i in range(len(csv_file_categorical_field_list)):
         if i > 0 and i < len(csv_file_categorical_field_list) - 1:
-            intermediate_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
+            intermediate_fields.append(
+                csv_file_categorical_field_list[i][0].split("|")[0]
+            )
         all_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
 
     # mb.showwarning(title='Search values',
@@ -34,7 +36,11 @@ def run_colormap(
     #                     "The colormap/heatmap algorithm requires a value for 'csv file field.'\n\nPlease, select a value and try again.")
     params = [max_rows_var, color_1_style_var, color_2_style_var, normalize_var]
     outputFiles = charts_util.colormap(
-        inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=inputFileData
+        inputFilename,
+        outputDir,
+        csv_file_categorical_field_list,
+        params,
+        inputFileData=inputFileData,
     )
 
     if outputFiles is not None:

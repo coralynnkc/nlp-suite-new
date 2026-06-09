@@ -1,12 +1,16 @@
 from collections import Counter
 
+import pandas as pd
+
 import charts_util
 import IO_csv_util
 import IO_files_util
-import pandas as pd
 import Stanford_CoreNLP_tags_util
 
-dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
+dict_POSTAG, dict_DEPREL = (
+    Stanford_CoreNLP_tags_util.dict_POSTAG,
+    Stanford_CoreNLP_tags_util.dict_DEPREL,
+)
 
 recordID_position = 9  # NEW CoNLL_U
 sentenceID_position = 10  # NEW CoNLL_U
@@ -15,7 +19,9 @@ documentID_position = 11  # NEW CoNLL_U
 # Following are used if running all analyses to prevent redundancy
 inputFilename = ""
 outputDir = ""
-cla_open_csv = False  # if run from command line, will check if they want to open the CSV
+cla_open_csv = (
+    False  # if run from command line, will check if they want to open the CSV
+)
 
 """
     SUPPORTING COMMANDS FOR MAIN FUNCTIONS
@@ -90,7 +96,10 @@ def adverb_POSTAG_DEPREL_compute_lists_frequencies(data, data_divided_sents):
     df = pd.DataFrame(data, columns=column_names)
 
     list_adverbs_postag = data_preparation(
-        data, ["RB", "RBR", "RBS"], ["Adverb (RB)", "Comparative Adverb (RBR)", "Superlative Adverb (RBS)"], 3
+        data,
+        ["RB", "RBR", "RBS"],
+        ["Adverb (RB)", "Comparative Adverb (RBR)", "Superlative Adverb (RBS)"],
+        3,
     )
 
     adverbs_postag_stats = [
@@ -100,7 +109,9 @@ def adverb_POSTAG_DEPREL_compute_lists_frequencies(data, data_divided_sents):
         ["Superlative Adverb (RBS)", postag_counter["RBS"]],
     ]
 
-    list_adverbs_deprel = data_preparation(data, ["advmod"], ["Adverbial Modifier (advmod)"], 6)
+    list_adverbs_deprel = data_preparation(
+        data, ["advmod"], ["Adverbial Modifier (advmod)"], 6
+    )
 
     adverbs_deprel_stats = [
         ["Adverb DEPREL Tags", "Frequencies"],
@@ -111,7 +122,12 @@ def adverb_POSTAG_DEPREL_compute_lists_frequencies(data, data_divided_sents):
 
     df[df["POS"].isin(included_tags)]
 
-    return list_adverbs_postag, list_adverbs_deprel, adverbs_postag_stats, adverbs_deprel_stats
+    return (
+        list_adverbs_postag,
+        list_adverbs_deprel,
+        adverbs_postag_stats,
+        adverbs_deprel_stats,
+    )
 
 
 def process_df_headers(df, word_type):
@@ -158,17 +174,33 @@ def process_df_headers(df, word_type):
     return df, df.columns
 
 
-def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation):
+def adverb_stats(
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
+):
     filesToOpen = []  # Store all files that are to be opened once finished
 
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Analysis start', 'Started running ADVERB ANALYSES at',
     #                                                True, '', True, '', True)
 
-    adverbs_postag_list, adverbs_postag_stats, adverbs_deprel_list, adverbs_deprel_stats = compute_stats(data)
+    (
+        adverbs_postag_list,
+        adverbs_postag_stats,
+        adverbs_deprel_list,
+        adverbs_deprel_stats,
+    ) = compute_stats(data)
 
-    adverbs_postag_list, adverbs_deprel_list, adverbs_postag_stats, adverbs_deprel_stats = (
-        adverb_POSTAG_DEPREL_compute_lists_frequencies(data, data_divided_sents)
-    )
+    (
+        adverbs_postag_list,
+        adverbs_deprel_list,
+        adverbs_postag_stats,
+        adverbs_deprel_stats,
+    ) = adverb_POSTAG_DEPREL_compute_lists_frequencies(data, data_divided_sents)
 
     ###debugging
     df = pd.DataFrame(adverbs_postag_list)
@@ -179,7 +211,9 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
     adverbs_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverbs-ALL", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "stats")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "stats"
+    )
 
     adverbs_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_list"
@@ -187,8 +221,12 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
     adverbs_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_stats")
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_stats")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_stats"
+    )
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_stats"
+    )
 
     df = pd.DataFrame(adverbs_postag_list)
 
@@ -196,20 +234,36 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
     df1.columns = ["Form", "Lemma", "POS"]
 
     IO_csv_util.df_to_csv(
-        df1, adverbs_list_file_name, headers=["Form", "Lemma", "POS"], index=False, language_encoding="utf-8"
+        df1,
+        adverbs_list_file_name,
+        headers=["Form", "Lemma", "POS"],
+        index=False,
+        language_encoding="utf-8",
     )
 
     df = pd.DataFrame(adverbs_postag_list)
     df, headers = process_df_headers(df, "Adverbs POS Tags")
     headers = list(headers) if not isinstance(headers, list) else headers
 
-    IO_csv_util.df_to_csv(df, adverbs_postag_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        adverbs_postag_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     df = pd.DataFrame(adverbs_deprel_list)
     df, headers = process_df_headers(df, "Adverb DEPREL Tags")
     headers = list(headers) if not isinstance(headers, list) else headers
 
-    IO_csv_util.df_to_csv(df, adverbs_deprel_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        adverbs_deprel_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         # Bar charts for Adverb Forms
@@ -232,7 +286,9 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Bar charts for Adverb Lemmas
         columns_to_be_plotted_xAxis = []
@@ -254,7 +310,9 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Adverb POS Tags Frequency Chart
         columns_to_be_plotted_xAxis = []
@@ -279,7 +337,9 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Adverb DEPREL Tags Frequency Chart
         columns_to_be_plotted_xAxis = []
@@ -304,7 +364,9 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
     # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Analysis end', 'Finished running ADVERB ANALYSES at',
     #                                    True, '', True, startTime, True)

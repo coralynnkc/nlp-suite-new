@@ -6,7 +6,9 @@ import GUI_util
 import IO_libraries_util
 
 if not IO_libraries_util.install_all_Python_packages(
-    GUI_util.window, "file_checker_pre_processing_pipeline_main", ["os", "tkinter", "subprocess"]
+    GUI_util.window,
+    "file_checker_pre_processing_pipeline_main",
+    ["os", "tkinter", "subprocess"],
 ):
     sys.exit(1)
 
@@ -15,13 +17,14 @@ import tkinter as tk
 import tkinter.messagebox as mb
 from subprocess import call
 
+import pandas as pd
+
 import config_util
 import file_checker_util
 import file_cleaner_util
 import file_spell_checker_util
 import GUI_IO_util
 import IO_files_util
-import pandas as pd
 import statistics_txt_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
@@ -41,12 +44,23 @@ def run_script_command():
 
 
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
-def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, utf8_var, ASCII_var):
+def run(
+    inputFilename,
+    inputDir,
+    outputDir,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
+    utf8_var,
+    ASCII_var,
+):
 
     config_filename = GUI_util.config_filename_selected_config.get()
 
     filesToOpen = []
-    openOutputFiles = False  # to make sure files are only opened at the end of this multi-tool script
+    openOutputFiles = (
+        False  # to make sure files are only opened at the end of this multi-tool script
+    )
 
     # get the NLP package and language options
     (
@@ -104,7 +118,9 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
         )
 
     if ASCII_var:
-        result = file_cleaner_util.convert_2_ASCII(GUI_util.window, inputFilename, inputDir, outputDir, config_filename)
+        result = file_cleaner_util.convert_2_ASCII(
+            GUI_util.window, inputFilename, inputDir, outputDir, config_filename
+        )
         if not result:
             return
 
@@ -169,7 +185,9 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
             inputFilename, inputDir, outputDir, ".csv", "spell_pyspellchecker"
         )
 
-        autocorrect_df = pd.DataFrame({"Original": [], "Corrected": [], "Document ID": [], "Document": []})
+        autocorrect_df = pd.DataFrame(
+            {"Original": [], "Corrected": [], "Document ID": [], "Document": []}
+        )
 
         pyspellchecker_df = autocorrect_df.copy()
         textblob_df = autocorrect_df.copy()
@@ -177,7 +195,9 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
         pyspellchecker_file_name = IO_files_util.generate_output_file_name(
             inputFilename, inputDir, outputDir, ".csv", "spell_pyspellchecker"
         )
-        pyspellchecker_df.to_csv(pyspellchecker_file_name, encoding="utf-8", index=False)
+        pyspellchecker_df.to_csv(
+            pyspellchecker_file_name, encoding="utf-8", index=False
+        )
         filesToOpen.append(pyspellchecker_file_name)
 
         textblob_file_name = IO_files_util.generate_output_file_name(
@@ -190,7 +210,14 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
 
     if NLTK_unusual_var.get():
         output = file_spell_checker_util.nltk_unusual_words(
-            window, inputFilename, inputDir, outputDir, config_filename, False, chartPackage, dataTransformation
+            window,
+            inputFilename,
+            inputDir,
+            outputDir,
+            config_filename,
+            False,
+            chartPackage,
+            dataTransformation,
         )
         if output is not None:
             if isinstance(output, str):
@@ -231,7 +258,12 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
 
     if sentence_length_var.get():
         output = statistics_txt_util.compute_sentence_length(
-            inputFilename, inputDir, outputDir, config_filename, chartPackage, dataTransformation
+            inputFilename,
+            inputDir,
+            outputDir,
+            config_filename,
+            chartPackage,
+            dataTransformation,
         )
         if output is not None:
             if isinstance(output, str):
@@ -241,7 +273,9 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
 
     openOutputFiles = True
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName
+        )
 
 
 GUI_util.run_button.configure(command=run_script_command)
@@ -261,9 +295,7 @@ GUI_size, y_multiplier_integer, increment = GUI_IO_util.GUI_settings(
     increment=1,
 )  # to be added for full display
 
-GUI_label = (
-    "Graphical User Interface (GUI) for a pre-processing set of tools for data checking and data cleaning - A Pipeline"
-)
+GUI_label = "Graphical User Interface (GUI) for a pre-processing set of tools for data checking and data cleaning - A Pipeline"
 config_filename = "NLP_default_IO_config.csv"
 head, scriptName = os.path.split(os.path.basename(__file__))
 
@@ -280,7 +312,9 @@ head, scriptName = os.path.split(os.path.basename(__file__))
 #   output dir
 config_input_output_numeric_options = [2, 1, 0, 1]
 
-GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
+GUI_util.set_window(
+    GUI_size, GUI_label, config_filename, config_input_output_numeric_options
+)
 
 window = GUI_util.window
 config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
@@ -288,7 +322,12 @@ config_filename = GUI_util.config_filename
 inputFilename = GUI_util.inputFilename
 input_main_dir_path = GUI_util.input_main_dir_path
 
-GUI_util.GUI_top(config_input_output_numeric_options, config_filename, IO_setup_display_brief, scriptName)
+GUI_util.GUI_top(
+    config_input_output_numeric_options,
+    config_filename,
+    IO_setup_display_brief,
+    scriptName,
+)
 
 utf8_var = tk.IntVar()
 ASCII_var = tk.IntVar()
@@ -328,15 +367,28 @@ extra_GUIs_menu_var.trace("w", open_GUI)
 
 extra_GUIs_var.set(0)
 extra_GUIs_checkbox = tk.Checkbutton(
-    window, text="GUIs available for more analyses ", variable=extra_GUIs_var, onvalue=1, offvalue=0
+    window,
+    text="GUIs available for more analyses ",
+    variable=extra_GUIs_var,
+    onvalue=1,
+    offvalue=0,
 )  # , command=lambda: activate_all_options())
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, extra_GUIs_checkbox, True
+    window,
+    GUI_IO_util.labels_x_coordinate,
+    y_multiplier_integer,
+    extra_GUIs_checkbox,
+    True,
 )
 
 extra_GUIs_menu_var.set("")
 extra_GUIs_menu = tk.OptionMenu(
-    window, extra_GUIs_menu_var, "File checker/converter/cleaner", "Spell checker", "File splitter", "File word search"
+    window,
+    extra_GUIs_menu_var,
+    "File checker/converter/cleaner",
+    "Spell checker",
+    "File splitter",
+    "File word search",
 )
 # place widget with hover-over info
 y_multiplier_integer = GUI_IO_util.placeWidget(
@@ -355,7 +407,11 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 utf8_var.set(1)
 utf8_checkbox = tk.Checkbutton(
-    window, text="Check input document(s) for utf-8 encoding", variable=utf8_var, onvalue=1, offvalue=0
+    window,
+    text="Check input document(s) for utf-8 encoding",
+    variable=utf8_var,
+    onvalue=1,
+    offvalue=0,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, utf8_checkbox
@@ -363,7 +419,11 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 ASCII_var.set(1)
 ASCII_checkbox = tk.Checkbutton(
-    window, text="Convert non-ASCII apostrophes & quotes and % to percent", variable=ASCII_var, onvalue=1, offvalue=0
+    window,
+    text="Convert non-ASCII apostrophes & quotes and % to percent",
+    variable=ASCII_var,
+    onvalue=1,
+    offvalue=0,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, ASCII_checkbox
@@ -371,7 +431,11 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 language_detect_var.set(1)
 language_detect_checkbox = tk.Checkbutton(
-    window, text="Language detection", variable=language_detect_var, onvalue=1, offvalue=0
+    window,
+    text="Language detection",
+    variable=language_detect_var,
+    onvalue=1,
+    offvalue=0,
 )
 # place widget with hover-over info
 y_multiplier_integer = GUI_IO_util.placeWidget(
@@ -390,7 +454,9 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 
 spelling_var.set(1)
-spelling_checkbox = tk.Checkbutton(window, text="Spelling checker", variable=spelling_var, onvalue=1, offvalue=0)
+spelling_checkbox = tk.Checkbutton(
+    window, text="Spelling checker", variable=spelling_var, onvalue=1, offvalue=0
+)
 # place widget with hover-over info
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window,
@@ -408,7 +474,11 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 spelling_auto_correct_var.set(0)
 spelling_auto_correct_checkbox = tk.Checkbutton(
-    window, text="Spelling auto-correct", variable=spelling_auto_correct_var, onvalue=1, offvalue=0
+    window,
+    text="Spelling auto-correct",
+    variable=spelling_auto_correct_var,
+    onvalue=1,
+    offvalue=0,
 )
 spelling_auto_correct_checkbox.configure(state="disabled")
 # place widget with hover-over info
@@ -470,7 +540,9 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 
 word_length_var.set(1)
-word_length_checkbox = tk.Checkbutton(window, text="Word length", variable=word_length_var, onvalue=1, offvalue=0)
+word_length_checkbox = tk.Checkbutton(
+    window, text="Word length", variable=word_length_var, onvalue=1, offvalue=0
+)
 # place widget with hover-over info
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window,
@@ -532,14 +604,26 @@ TIPS_options = (
 def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
     if not IO_setup_display_brief:
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_corpusData
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_corpusData,
         )
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_outputDirectory
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_outputDirectory,
         )
     else:
         y_multiplier_integer = GUI_IO_util.place_help_button(
-            window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_IO_setup
+            window,
+            help_button_x_coordinate,
+            y_multiplier_integer,
+            "NLP Suite Help",
+            GUI_IO_util.msg_IO_setup,
         )
 
     y_multiplier_integer = GUI_IO_util.place_help_button(
@@ -606,7 +690,11 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
         "Please, tick the checkbox to run the algorithm that computes sentence length.",
     )
     y_multiplier_integer = GUI_IO_util.place_help_button(
-        window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_openOutputFiles
+        window,
+        help_button_x_coordinate,
+        y_multiplier_integer,
+        "NLP Suite Help",
+        GUI_IO_util.msg_openOutputFiles,
     )
 
     return y_multiplier_integer - 1
@@ -638,9 +726,13 @@ GUI_util.GUI_bottom(
 config_filename = GUI_util.config_filename_selected_config.get()
 
 # if GUI_util.setup_IO_menu_var.get() == 'Default I/O configuration':
-filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = (
-    config_util.get_date_options(config_filename, config_input_output_numeric_options)
-)
+(
+    filename_embeds_date_var,
+    date_format_var,
+    items_separator_var,
+    date_position_var,
+    config_file_exists,
+) = config_util.get_date_options(config_filename, config_input_output_numeric_options)
 extract_date_from_text_var = 0
 
 GUI_util.window.mainloop()

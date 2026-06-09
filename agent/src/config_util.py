@@ -12,9 +12,10 @@ import csv
 import os
 from subprocess import call
 
+import pandas as pd
+
 import GUI_IO_util
 import IO_user_interface_util
-import pandas as pd
 
 defaultConfigFilename = "NLP_default_IO_config.csv"
 
@@ -110,7 +111,9 @@ def getFiletype(config_input_output_numeric_options):
     return fileType
 
 
-def write_external_software_config_file(config_filename, currently_selected_options, currently_selected_parsers):
+def write_external_software_config_file(
+    config_filename, currently_selected_options, currently_selected_parsers
+):
     # check that the config directory exists inside the NLP main directory
     if os.path.isdir(GUI_IO_util.configPath) is False:
         try:
@@ -130,13 +133,19 @@ def write_external_software_config_file(config_filename, currently_selected_opti
         csv_file = pd.DataFrame()
         csv_file.at[0, "Software"] = currently_selected_options["MAIN NLP PACKAGE"]
         csv_file.at[0, "Path"] = {currently_selected_parsers}
-        csv_file.at[0, "Download_link)"] = currently_selected_options["LEMMATIZER PACKAGE"]
+        csv_file.at[0, "Download_link)"] = currently_selected_options[
+            "LEMMATIZER PACKAGE"
+        ]
 
         csv_file.to_csv(config_filename_path, encoding="utf-8", index=False)
         csv_file.to_csv(config_filename_path, encoding="utf-8", index=False)
 
         IO_user_interface_util.timed_alert(
-            2000, "Warning", "NLP external software options have been saved to\n\n  " + config_filename_path, False
+            2000,
+            "Warning",
+            "NLP external software options have been saved to\n\n  "
+            + config_filename_path,
+            False,
         )
     except:
         print(
@@ -157,7 +166,9 @@ def read_NLP_package_language_config():
     memory_var = 4
     limit_document_length_var = 90000
     limit_sentence_length_var = 100
-    config_filename = GUI_IO_util.configPath + os.sep + "NLP_default_package_language_config.csv"
+    config_filename = (
+        GUI_IO_util.configPath + os.sep + "NLP_default_package_language_config.csv"
+    )
     error = False
     if not os.path.exists(config_filename):
         print(
@@ -167,7 +178,9 @@ def read_NLP_package_language_config():
         error = True
     else:
         try:
-            dataset = pd.read_csv(config_filename, encoding="utf-8", on_bad_lines="skip")
+            dataset = pd.read_csv(
+                config_filename, encoding="utf-8", on_bad_lines="skip"
+            )
             package = dataset.iat[0, 0]
             parsers = dataset.iat[0, 1].split(",")
             basics_package = dataset.iat[0, 2]
@@ -195,9 +208,7 @@ def read_NLP_package_language_config():
             # error must be set to true to display the next message after the entire GUI has been displayed
             # mb.showwarning(title='Warning',
             #                message="The config file 'NLP_default_package_language_config.csv' could not be found in the sub-directory 'config' of your main NLP Suite folder.\n\nPlease, setup the default NLP package and language options using the Setup button.")
-    package_display_area_value = (
-        f"MAIN NLP PACKAGE: {package}, LEMMATIZER PACKAGE: {basics_package}, LANGUAGE(S): {language}"
-    )
+    package_display_area_value = f"MAIN NLP PACKAGE: {package}, LEMMATIZER PACKAGE: {basics_package}, LANGUAGE(S): {language}"
     return (
         error,
         package,
@@ -240,9 +251,13 @@ def write_NLP_package_language_config_file(
         #   several times in this scripts (search for instance for MAIN NLP PACKAGE and change
         #   they also need to be changed in one line in NLP_setup_package_language_main.py
         csv_file = pd.DataFrame()
-        csv_file.at[0, "Parser & annotators"] = currently_selected_options["MAIN NLP PACKAGE"]
+        csv_file.at[0, "Parser & annotators"] = currently_selected_options[
+            "MAIN NLP PACKAGE"
+        ]
         csv_file.at[0, "Parsers"] = {currently_selected_parsers}
-        csv_file.at[0, "Basic functions (tokenizer/lemmatizer)"] = currently_selected_options["LEMMATIZER PACKAGE"]
+        csv_file.at[0, "Basic functions (tokenizer/lemmatizer)"] = (
+            currently_selected_options["LEMMATIZER PACKAGE"]
+        )
         csv_file.at[0, "Corpus language"] = currently_selected_options["LANGUAGE(S)"]
         csv_file.at[0, "Language encoding"] = encoding_var
         csv_file.at[0, "Export Json"] = export_json_var
@@ -253,7 +268,11 @@ def write_NLP_package_language_config_file(
         csv_file.to_csv(config_filename_path, encoding="utf-8", index=False)
 
         IO_user_interface_util.timed_alert(
-            2000, "Warning", "NLP package and language options have been saved to\n\n  " + config_filename_path, False
+            2000,
+            "Warning",
+            "NLP package and language options have been saved to\n\n  "
+            + config_filename_path,
+            False,
         )
     except:
         print(
@@ -276,7 +295,9 @@ def save_NLP_package_language_config(
     limit_document_length,
     limit_sentence_length,
 ):
-    config_filename = GUI_IO_util.configPath + os.sep + "NLP_default_package_language_config.csv"
+    config_filename = (
+        GUI_IO_util.configPath + os.sep + "NLP_default_package_language_config.csv"
+    )
     # TODO any change in the labels MAIN NLP PACKAGE, LEMMATIZER PACKAGE, and LANGUAGE(S) must be carried out
     #   several times in this scripts (search for instance for MAIN NLP PACKAGE and change
     #   they also need to be changed in one line in NLP_setup_package_language_main.py
@@ -299,9 +320,13 @@ def save_NLP_package_language_config(
 # 5 fields: label/path + sort order + 3 date items (Item separator character(s), Date format, Date position)
 
 
-def get_template_config_csv_file(config_input_output_numeric_options, config_input_output_alphabetic_options):
+def get_template_config_csv_file(
+    config_input_output_numeric_options, config_input_output_alphabetic_options
+):
     IO_configuration = []
-    fileType = getFiletype(config_input_output_numeric_options)  # different types of input files
+    fileType = getFiletype(
+        config_input_output_numeric_options
+    )  # different types of input files
     IO_configuration_label = [
         fileType,
         "Input files directory",
@@ -311,7 +336,9 @@ def get_template_config_csv_file(config_input_output_numeric_options, config_inp
 
     # loop through the 4 rows of input file, input primary dir, input secondary dir, output dir
     # configuration_column_label is the set of values in IO_configuration_label defined above
-    for index, configuration_column_label in enumerate(IO_configuration_label):  # row is the sublist
+    for index, configuration_column_label in enumerate(
+        IO_configuration_label
+    ):  # row is the sublist
         if len(config_input_output_alphabetic_options) > 0:
             if len(config_input_output_alphabetic_options[index]) > 0:
                 sublist = config_input_output_alphabetic_options[index]
@@ -320,11 +347,25 @@ def get_template_config_csv_file(config_input_output_numeric_options, config_inp
                 # =5 when date options are available (path + sort order + 3 date options), otherwise =1
                 # [configuration_column_label, sublist[0], sublist[1], sublist[2], sublist[3]])
                 IO_configuration.append(
-                    [configuration_column_label, sublist[0], sublist[1], sublist[4], sublist[3], sublist[4]]
+                    [
+                        configuration_column_label,
+                        sublist[0],
+                        sublist[1],
+                        sublist[4],
+                        sublist[3],
+                        sublist[4],
+                    ]
                 )
                 if len(sublist) == 5:
                     IO_configuration.append(
-                        [configuration_column_label, sublist[0], sublist[1], sublist[2], sublist[3], sublist[4]]
+                        [
+                            configuration_column_label,
+                            sublist[0],
+                            sublist[1],
+                            sublist[2],
+                            sublist[3],
+                            sublist[4],
+                        ]
                     )
                 else:
                     IO_configuration.append([configuration_column_label, sublist[0]])
@@ -351,7 +392,9 @@ def read_config_file(config_filename, config_input_output_numeric_options):
     if os.path.isfile(configFilePath):
         config_file_exists = True
         csv_file = open(configFilePath, newline="")
-        config_input_output_alphabetic_options = list(csv.reader(csv_file, delimiter=","))
+        config_input_output_alphabetic_options = list(
+            csv.reader(csv_file, delimiter=",")
+        )
         config_input_output_alphabetic_options.pop(0)  # skip header
         # if not 'Date format' in config_input_output_alphabetic_options[0]: # len(config_input_output_alphabetic_options[0])==2:
         if len(config_input_output_alphabetic_options[0]) == 2:
@@ -367,7 +410,9 @@ def read_config_file(config_filename, config_input_output_numeric_options):
             while not os.path.isfile(configFilePath):
                 call(
                     "python NLP_setup_IO_main.py --config_option "
-                    + str(config_input_output_numeric_options).replace("[", '"').replace("]", '"')
+                    + str(config_input_output_numeric_options)
+                    .replace("[", '"')
+                    .replace("]", '"')
                     + " --config_filename "
                     + config_filename,
                     shell=True,
@@ -379,7 +424,9 @@ def read_config_file(config_filename, config_input_output_numeric_options):
                     )
             # read the newly saved options
             csv_file = open(configFilePath, newline="")
-            config_input_output_alphabetic_options = list(csv.reader(csv_file, delimiter=","))
+            config_input_output_alphabetic_options = list(
+                csv.reader(csv_file, delimiter=",")
+            )
             config_input_output_alphabetic_options.pop(0)  # skip header
             # cannot use read_config_file again or it returns the old config_input_output_numeric_options
             #   and the program bombs in GUI_util
@@ -392,13 +439,17 @@ def read_config_file(config_filename, config_input_output_numeric_options):
         config_input_output_alphabetic_options = get_template_config_csv_file(
             config_input_output_numeric_options, config_input_output_alphabetic_options
         )
-    missing_IO = get_missing_IO_values(config_input_output_numeric_options, config_input_output_alphabetic_options)
+    missing_IO = get_missing_IO_values(
+        config_input_output_numeric_options, config_input_output_alphabetic_options
+    )
     return config_input_output_alphabetic_options, missing_IO, config_file_exists
 
 
 # called by read_config_file above
 # returns the IO labels that are missing: Filename, Dir, output Dir
-def get_missing_IO_values(config_input_output_numeric_options, config_input_output_alphabetic_options):
+def get_missing_IO_values(
+    config_input_output_numeric_options, config_input_output_alphabetic_options
+):
     missing_IO = ""
     # loop through the 4 input/output options: input filename, input man dir, input secondary dir, output dir
     index = 0
@@ -412,14 +463,21 @@ def get_missing_IO_values(config_input_output_numeric_options, config_input_outp
                 and config_input_output_alphabetic_options[index][1] == ""
             ):
                 # in [1][1] the first [1] refers to row number (input dir) the second to column number (the path)
-                if config_input_output_alphabetic_options[1][1] == "":  # check input dir
+                if (
+                    config_input_output_alphabetic_options[1][1] == ""
+                ):  # check input dir
                     # add filename as missing if dir not there either; dir will be added in next check
                     config_label = str(config_input_output_alphabetic_options[index][0])
                     missing_IO = missing_IO + config_label + "\n"
         elif index == 1:  # Input files dir
-            if config_input_output_numeric_options[index] > 0 and config_input_output_alphabetic_options[1][1] == "":
+            if (
+                config_input_output_numeric_options[index] > 0
+                and config_input_output_alphabetic_options[1][1] == ""
+            ):
                 # in [0][1] the first [0] refers to row number (input filename) the second to column number (the path)
-                if config_input_output_alphabetic_options[0][1] == "":  # check input filename
+                if (
+                    config_input_output_alphabetic_options[0][1] == ""
+                ):  # check input filename
                     config_label = str(config_input_output_alphabetic_options[index][0])
                     missing_IO = missing_IO + config_label + "\n"
         elif index == 2:  # Input files secondary dir
@@ -442,7 +500,9 @@ def get_missing_IO_values(config_input_output_numeric_options, config_input_outp
 
 # check_missing_IO is called from GUI_util
 # the function checks for missing IO values, displays messages and sets the RUN button to normal or disabled
-def check_missing_IO(config_filename, scriptName, IO_setup_display_brief, missing_IO, silent=False):
+def check_missing_IO(
+    config_filename, scriptName, IO_setup_display_brief, missing_IO, silent=False
+):
     if config_filename == "NLP_config.csv" or "NLP_menu_main" in scriptName:
         config_filename = "NLP_default_IO_config.csv"
     # the IO_button_name error message changes depending upon the call
@@ -498,7 +558,10 @@ def check_missing_IO(config_filename, scriptName, IO_setup_display_brief, missin
 # each sublist has four items: path, date format, date separator, date position
 # e.g., [['C:/Users/rfranzo/Desktop/NLP-Suite/lib/sampleData/The Three Little Pigs.txt', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['C:\\Program Files (x86)\\NLP_backup\\Output', '', '', '']]
 def write_IO_config_file(
-    config_filename, config_input_output_numeric_options, config_input_output_alphabetic_options, silent=False
+    config_filename,
+    config_input_output_numeric_options,
+    config_input_output_alphabetic_options,
+    silent=False,
 ):
     # check that the config directory exists inside the NLP main directory
     if not os.path.isdir(GUI_IO_util.configPath):
@@ -537,7 +600,11 @@ def write_IO_config_file(
 
     if config_filename != "license_config.csv":
         IO_user_interface_util.timed_alert(
-            2000, "Warning", "INPUT and OUTPUT paths configuration have been saved to\n\n" + config_filename_path, False
+            2000,
+            "Warning",
+            "INPUT and OUTPUT paths configuration have been saved to\n\n"
+            + config_filename_path,
+            False,
         )
 
 
@@ -545,8 +612,8 @@ def get_date_options(config_filename, config_input_output_numeric_options):
 
     # in the NLP_setup_IO_config there are 6 columns and 4 rows (each row for input file, input dir1, input dir2, output dir):
     # 5 fields: label/path + sort order + 3 date items (Item separator character(s), Date format, Date position)
-    config_input_output_alphabetic_options, missing_IO, config_file_exists = read_config_file(
-        config_filename, config_input_output_numeric_options
+    config_input_output_alphabetic_options, missing_IO, config_file_exists = (
+        read_config_file(config_filename, config_input_output_numeric_options)
     )
     if len(config_input_output_alphabetic_options) > 0:
         index = 0
@@ -559,13 +626,23 @@ def get_date_options(config_filename, config_input_output_numeric_options):
             # date options saved: date format, date characters separator, date position in filename
             # =4 when date options are available (path + sort order + 3 date options), otherwise =1
             # @@@RF
-            if config_input_output_alphabetic_options[index][4] != "":  # check date format field
+            if (
+                config_input_output_alphabetic_options[index][4] != ""
+            ):  # check date format field
                 filename_embeds_date_var = 1
                 date_format_var = config_input_output_alphabetic_options[index][4]
                 items_separator_var = config_input_output_alphabetic_options[index][3]
-                date_position_var = int(config_input_output_alphabetic_options[index][5])
+                date_position_var = int(
+                    config_input_output_alphabetic_options[index][5]
+                )
             index = index + 1
-    return filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists
+    return (
+        filename_embeds_date_var,
+        date_format_var,
+        items_separator_var,
+        date_position_var,
+        config_file_exists,
+    )
 
 
 # used in GIS_GUI and GIS_geocode_GUI
@@ -574,7 +651,9 @@ def Google_API_Config_Save(Google_config, Google_API_key):
     if Google_API_key != "":
         GoogleConfigFilename = os.path.join(GUI_IO_util.configPath, Google_config)
         # if not os.path.isfile(GoogleConfigFilename):
-        with open(GoogleConfigFilename, "w+", newline="", encoding="utf-8", errors="ignore") as file1:
+        with open(
+            GoogleConfigFilename, "w+", newline="", encoding="utf-8", errors="ignore"
+        ) as file1:
             file1.write(Google_API_key)
             if "Maps" in Google_config:
                 msg = "Maps"

@@ -1,12 +1,16 @@
 from collections import Counter
 
+import pandas as pd
+
 import charts_util
 import IO_csv_util
 import IO_files_util
-import pandas as pd
 import Stanford_CoreNLP_tags_util
 
-dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
+dict_POSTAG, dict_DEPREL = (
+    Stanford_CoreNLP_tags_util.dict_POSTAG,
+    Stanford_CoreNLP_tags_util.dict_DEPREL,
+)
 
 recordID_position = 9  # NEW CoNLL_U
 sentenceID_position = 10  # NEW CoNLL_U
@@ -15,7 +19,9 @@ documentID_position = 11  # NEW CoNLL_U
 # Following are used if running all analyses to prevent redundancy
 inputFilename = ""
 outputDir = ""
-cla_open_csv = False  # if run from command line, will check if they want to open the CSV
+cla_open_csv = (
+    False  # if run from command line, will check if they want to open the CSV
+)
 
 """
     SUPPORTING COMMANDS FOR MAIN FUNCTIONS
@@ -46,7 +52,14 @@ def compute_stats(data):
     postag_counter = Counter(postag_list)
     deprel_counter = Counter(deprel_list)
     ner_counter = Counter(ner_list)
-    return postag_list, postag_counter, deprel_list, deprel_counter, ner_list, ner_counter
+    return (
+        postag_list,
+        postag_counter,
+        deprel_list,
+        deprel_counter,
+        ner_list,
+        ner_counter,
+    )
 
 
 def adjective_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
@@ -92,7 +105,14 @@ def adjective_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sen
     df = pd.DataFrame(data, columns=column_names)
 
     list_adjectives_postag = data_preparation(
-        data, ["JJ", "JJR", "JJS"], ["Adjective (JJ)", "Comparative Adjective (JJR)", "Superlative Adjective (JJS)"], 3
+        data,
+        ["JJ", "JJR", "JJS"],
+        [
+            "Adjective (JJ)",
+            "Comparative Adjective (JJR)",
+            "Superlative Adjective (JJS)",
+        ],
+        3,
     )
 
     adjective_postag_stats = [
@@ -102,7 +122,9 @@ def adjective_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sen
         ["Superlative Adjective (JJS)", postag_counter["JJS"]],
     ]
 
-    list_adjectives_deprel = data_preparation(data, ["amod"], ["Adjective Modifier (amod)"], 6)
+    list_adjectives_deprel = data_preparation(
+        data, ["amod"], ["Adjective Modifier (amod)"], 6
+    )
 
     adjective_deprel_stats = [
         ["Adjective DEPREL Tags", "Frequencies"],
@@ -114,7 +136,9 @@ def adjective_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sen
     possible_items = list(filtered_df["NER"].value_counts().keys())
     list_adjectives_ner = data_preparation(data, possible_items, possible_items, 4)
 
-    adjective_ner_stats = [["Adjective NERs", "Frequencies"]] + [[item, ner_counter[item]] for item in possible_items]
+    adjective_ner_stats = [["Adjective NERs", "Frequencies"]] + [
+        [item, ner_counter[item]] for item in possible_items
+    ]
 
     return (
         list_adjectives_postag,
@@ -171,7 +195,13 @@ def process_df_headers(df, word_type):
 
 
 def adjective_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     filesToOpen = []  # Store all files that are to be opened once finished
 
@@ -205,7 +235,9 @@ def adjective_stats(
     adjective_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adjective-ALL", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "stats")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "stats"
+    )
 
     adjective_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "POSTAG_list"
@@ -216,9 +248,15 @@ def adjective_stats(
     adjective_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "DEPREL_list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "POSTAG_stats")
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "NER_stats")
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "DEPREL_stats")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "POSTAG_stats"
+    )
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "NER_stats"
+    )
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "DEPREL_stats"
+    )
 
     df = pd.DataFrame(adjective_postag_list)
 
@@ -226,26 +264,48 @@ def adjective_stats(
     df1.columns = ["Form", "Lemma", "POS"]
 
     IO_csv_util.df_to_csv(
-        df1, adjective_list_file_name, headers=["Form", "Lemma", "POS"], index=False, language_encoding="utf-8"
+        df1,
+        adjective_list_file_name,
+        headers=["Form", "Lemma", "POS"],
+        index=False,
+        language_encoding="utf-8",
     )
 
     df = pd.DataFrame(adjective_postag_list)
     df, headers = process_df_headers(df, "Adjective POS Tags")
     headers = list(headers) if not isinstance(headers, list) else headers
 
-    IO_csv_util.df_to_csv(df, adjective_postag_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        adjective_postag_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     df = pd.DataFrame(adjective_ner_list)
     df, headers = process_df_headers(df, "Adjective NER Tags")
     headers = list(headers) if not isinstance(headers, list) else headers
 
-    IO_csv_util.df_to_csv(df, adjective_ner_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        adjective_ner_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     df = pd.DataFrame(adjective_deprel_list)
     df, headers = process_df_headers(df, "Adjective DEPREL Tags")
     headers = list(headers) if not isinstance(headers, list) else headers
 
-    IO_csv_util.df_to_csv(df, adjective_deprel_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        adjective_deprel_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         # Bar charts for Adjective Forms
@@ -268,7 +328,9 @@ def adjective_stats(
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Bar charts for Adjective Lemmas
         columns_to_be_plotted_xAxis = []
@@ -290,7 +352,9 @@ def adjective_stats(
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Adjective POS Tags Frequency Chart
         columns_to_be_plotted_xAxis = []
@@ -315,7 +379,9 @@ def adjective_stats(
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Adjective NER Tags Frequency Chart
         columns_to_be_plotted_xAxis = []
@@ -340,7 +406,9 @@ def adjective_stats(
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
         # Adjective DEPREL Tags Frequency Chart
         columns_to_be_plotted_xAxis = []
@@ -365,7 +433,9 @@ def adjective_stats(
         )
 
         if outputFiles:
-            filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
+            filesToOpen.extend(
+                outputFiles if isinstance(outputFiles, list) else [outputFiles]
+            )
 
     # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Analysis end', 'Finished running ADJECTIVE ANALYSES at',
     #                                    True, '', True, startTime, True)

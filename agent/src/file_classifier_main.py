@@ -98,10 +98,19 @@ def run(
             filesToOpen.append(outputFiles)
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName
+        )
 
     IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis end", "Finished running the File Classifier at", True, "", True, startTime
+        GUI_util.window,
+        2000,
+        "Analysis end",
+        "Finished running the File Classifier at",
+        True,
+        "",
+        True,
+        startTime,
     )
 
 
@@ -157,14 +166,21 @@ config_filename = scriptName.replace("_main.py", "_config.csv")
 #   output dir
 config_input_output_numeric_options = [1, 1, 1, 1]
 
-GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
+GUI_util.set_window(
+    GUI_size, GUI_label, config_filename, config_input_output_numeric_options
+)
 
 window = GUI_util.window
 config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
 config_filename = GUI_util.config_filename
 inputFilename = GUI_util.inputFilename
 
-GUI_util.GUI_top(config_input_output_numeric_options, config_filename, IO_setup_display_brief, scriptName)
+GUI_util.GUI_top(
+    config_input_output_numeric_options,
+    config_filename,
+    IO_setup_display_brief,
+    scriptName,
+)
 
 
 by_date_var = tk.IntVar()
@@ -185,58 +201,108 @@ date_position_var.set(2)
 by_NER_var.set(0)
 
 by_date_checkbox = tk.Checkbutton(
-    window, text="By date embedded in filenames", variable=by_date_var, onvalue=1, offvalue=0
+    window,
+    text="By date embedded in filenames",
+    variable=by_date_var,
+    onvalue=1,
+    offvalue=0,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, by_date_checkbox, True
+    window,
+    GUI_IO_util.labels_x_coordinate,
+    y_multiplier_integer,
+    by_date_checkbox,
+    True,
 )
 
 date_format_lb = tk.Label(window, text="Date format ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate + 270, y_multiplier_integer, date_format_lb, True
+    window,
+    GUI_IO_util.labels_x_coordinate + 270,
+    y_multiplier_integer,
+    date_format_lb,
+    True,
 )
 date_format_menu = tk.OptionMenu(
-    window, date_format, "mm-dd-yyyy", "dd-mm-yyyy", "yyyy-mm-dd", "yyyy-dd-mm", "yyyy-mm", "yyyy"
+    window,
+    date_format,
+    "mm-dd-yyyy",
+    "dd-mm-yyyy",
+    "yyyy-mm-dd",
+    "yyyy-dd-mm",
+    "yyyy-mm",
+    "yyyy",
 )
 date_format_menu.configure(state="normal", width=10)
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate + 350, y_multiplier_integer, date_format_menu, True
+    window,
+    GUI_IO_util.labels_x_coordinate + 350,
+    y_multiplier_integer,
+    date_format_menu,
+    True,
 )
 
 date_separator_lb = tk.Label(window, text="Date character separator ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.entry_box_x_coordinate + 210, y_multiplier_integer, date_separator_lb, True
+    window,
+    GUI_IO_util.entry_box_x_coordinate + 210,
+    y_multiplier_integer,
+    date_separator_lb,
+    True,
 )
 date_separator = tk.Entry(window, state="normal", textvariable=items_separator_var)
 date_separator.configure(width=2)
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.entry_box_x_coordinate + 350, y_multiplier_integer, date_separator, True
+    window,
+    GUI_IO_util.entry_box_x_coordinate + 350,
+    y_multiplier_integer,
+    date_separator,
+    True,
 )
 
 date_position_menu_lb = tk.Label(window, state="normal", text="Date position ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.entry_box_x_coordinate + 400, y_multiplier_integer, date_position_menu_lb, True
+    window,
+    GUI_IO_util.entry_box_x_coordinate + 400,
+    y_multiplier_integer,
+    date_position_menu_lb,
+    True,
 )
 date_position_menu = tk.OptionMenu(window, date_position_var, 1, 2, 3, 4, 5)
 date_position_menu.configure(width=2)
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.entry_box_x_coordinate + 490, y_multiplier_integer, date_position_menu
+    window,
+    GUI_IO_util.entry_box_x_coordinate + 490,
+    y_multiplier_integer,
+    date_position_menu,
 )
 
 date_distance_value_lb = tk.Label(window, text="Date distance ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate + 270, y_multiplier_integer, date_distance_value_lb, True
+    window,
+    GUI_IO_util.labels_x_coordinate + 270,
+    y_multiplier_integer,
+    date_distance_value_lb,
+    True,
 )
 
 date_distance_value = tk.Entry(window, textvariable=date_distance_value_var)
 date_distance_value.configure(width=4)
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate + 350, y_multiplier_integer, date_distance_value, True
+    window,
+    GUI_IO_util.labels_x_coordinate + 350,
+    y_multiplier_integer,
+    date_distance_value,
+    True,
 )
 
 date_type_lb = tk.Label(window, text="Date type ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.entry_box_x_coordinate + 210, y_multiplier_integer, date_type_lb, True
+    window,
+    GUI_IO_util.entry_box_x_coordinate + 210,
+    y_multiplier_integer,
+    date_type_lb,
+    True,
 )
 
 date_type = tk.OptionMenu(window, date_type_var, "day", "month", "year")
@@ -244,7 +310,9 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.entry_box_x_coordinate + 300, y_multiplier_integer, date_type
 )
 
-by_NER_checkbox = tk.Checkbutton(window, text="By NER values", variable=by_NER_var, onvalue=1, offvalue=0)
+by_NER_checkbox = tk.Checkbutton(
+    window, text="By NER values", variable=by_NER_var, onvalue=1, offvalue=0
+)
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, by_NER_checkbox, True
 )
@@ -252,7 +320,11 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 similarityIndex_var.set(0.25)  # or 0.3
 similarityIndex_menu_lb = tk.Label(window, text="Relativity index threshold ")
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate + 270, y_multiplier_integer, similarityIndex_menu_lb, True
+    window,
+    GUI_IO_util.labels_x_coordinate + 270,
+    y_multiplier_integer,
+    similarityIndex_menu_lb,
+    True,
 )
 similarityIndex_menu = tk.OptionMenu(
     window,
@@ -278,7 +350,10 @@ similarityIndex_menu = tk.OptionMenu(
     0.9,
 )
 y_multiplier_integer = GUI_IO_util.placeWidget(
-    window, GUI_IO_util.labels_x_coordinate + 450, y_multiplier_integer, similarityIndex_menu
+    window,
+    GUI_IO_util.labels_x_coordinate + 450,
+    y_multiplier_integer,
+    similarityIndex_menu,
 )
 
 videos_lookup = {"No videos available": ""}
@@ -290,7 +365,12 @@ TIPS_lookup = {
     "NER (Named Entity Recognition)": "TIPS_NLP_NER (Named Entity Recognition) Stanford CoreNLP.pdf",
     "CoNLL Table": "TIPS_NLP_Stanford CoreNLP CoNLL table.pdf",
 }
-TIPS_options = "Classify files (By date)", "Classify files (By NER)", "NER (Named Entity Recognition)", "CoNLL Table"
+TIPS_options = (
+    "Classify files (By date)",
+    "Classify files (By NER)",
+    "NER (Named Entity Recognition)",
+    "CoNLL Table",
+)
 
 
 # add all the lines to the end to every special GUI
@@ -298,7 +378,11 @@ TIPS_options = "Classify files (By date)", "Classify files (By NER)", "NER (Name
 # any special message (e.g., msg_anyFile stored in GUI_IO_util) will have to be prefixed by GUI_IO_util.
 def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
     y_multiplier_integer = GUI_IO_util.place_help_button(
-        window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_CoNLL
+        window,
+        help_button_x_coordinate,
+        y_multiplier_integer,
+        "NLP Suite Help",
+        GUI_IO_util.msg_CoNLL,
     )
     y_multiplier_integer = GUI_IO_util.place_help_button(
         window,
@@ -315,7 +399,11 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
         "Please, select the directory that contains the set of TARGET subdirectories.",
     )
     y_multiplier_integer = GUI_IO_util.place_help_button(
-        window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_outputDirectory
+        window,
+        help_button_x_coordinate,
+        y_multiplier_integer,
+        "NLP Suite Help",
+        GUI_IO_util.msg_outputDirectory,
     )
     y_multiplier_integer = GUI_IO_util.place_help_button(
         window,
@@ -347,7 +435,11 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
     )
 
     y_multiplier_integer = GUI_IO_util.place_help_button(
-        window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_openOutputFiles
+        window,
+        help_button_x_coordinate,
+        y_multiplier_integer,
+        "NLP Suite Help",
+        GUI_IO_util.msg_openOutputFiles,
     )
 
     return y_multiplier_integer - 1

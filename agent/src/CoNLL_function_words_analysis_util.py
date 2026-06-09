@@ -18,14 +18,18 @@
 import os
 from collections import Counter
 
+import pandas as pd
+
 import charts_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-import pandas as pd
 import Stanford_CoreNLP_tags_util
 
-dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
+dict_POSTAG, dict_DEPREL = (
+    Stanford_CoreNLP_tags_util.dict_POSTAG,
+    Stanford_CoreNLP_tags_util.dict_DEPREL,
+)
 
 sentenceID_position = 10  # NEW CoNLL_U
 documentID_position = 11  # NEW CoNLL_U
@@ -113,10 +117,18 @@ def process_df_headers(df, function_word):
 
 
 def pronoun_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     # create pronoun subdir
-    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="FW_pron", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        "", "", outputDir, label="FW_pron", silent=True
+    )
     if outputDir == "":
         return
 
@@ -126,22 +138,36 @@ def pronoun_stats(
     pronouns_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Pronouns", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Pronouns")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "FW", "Pronouns"
+    )
     # not necessary to open stats since these stats are included in the pie chart
 
     # obtain data
 
     if not os.path.isdir(outputDir):
-        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
+        raise (
+            Exception(
+                "output file path error, Please check OUTPUT DIRECTORY PATH and try again"
+            )
+        )
 
-    pronouns_list, pronouns_stats, pronouns_data = stats_pronouns_output(data, data_divided_sents)
+    pronouns_list, pronouns_stats, pronouns_data = stats_pronouns_output(
+        data, data_divided_sents
+    )
     pronouns_list = pronouns_data
 
     # convert list to dataframe and save
     df = pd.DataFrame(pronouns_list)
     df, headers = process_df_headers(df, "PRONOUNS")
 
-    IO_csv_util.df_to_csv(df, pronouns_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(
+        df,
+        pronouns_list_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
+    )
 
     if chartPackage != "No charts":
         columns_to_be_plotted_xAxis = []
@@ -204,10 +230,18 @@ def pronoun_stats(
 
 
 def preposition_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     # create preposition subdir
-    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="FW_prep", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        "", "", outputDir, label="FW_prep", silent=True
+    )
     if outputDir == "":
         return
 
@@ -217,13 +251,21 @@ def preposition_stats(
     function_words_prepositions_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Prepositions", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Prepositions")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "FW", "Prepositions"
+    )
     # not necessary to open stats since these stats are included in the pie chart
 
     if not os.path.isdir(outputDir):
-        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
+        raise (
+            Exception(
+                "output file path error, Please check OUTPUT DIRECTORY PATH and try again"
+            )
+        )
 
-    prepositions_list, prepositions_stats, prepositions_data = stats_prepositions_output(data, data_divided_sents)
+    prepositions_list, prepositions_stats, prepositions_data = (
+        stats_prepositions_output(data, data_divided_sents)
+    )
     prepositions_list = prepositions_data
 
     # convert list to dataframe and save
@@ -231,7 +273,11 @@ def preposition_stats(
     df, headers = process_df_headers(df, "PREPOSITIONS")
 
     IO_csv_util.df_to_csv(
-        df, function_words_prepositions_file_name, headers=headers, index=False, language_encoding="utf-8"
+        df,
+        function_words_prepositions_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
     )
 
     if chartPackage != "No charts":
@@ -266,10 +312,18 @@ def preposition_stats(
 
 
 def article_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     # create article/determinant subdir
-    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="FW_det", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        "", "", outputDir, label="FW_det", silent=True
+    )
     if outputDir == "":
         return
 
@@ -279,14 +333,22 @@ def article_stats(
     function_words_articles_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Articles", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Articles")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "FW", "Articles"
+    )
     # not necessary to open stats since these stats are included in the pie chart
 
     if not os.path.isdir(outputDir):
-        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
+        raise (
+            Exception(
+                "output file path error, Please check OUTPUT DIRECTORY PATH and try again"
+            )
+        )
 
     # output files
-    article_list, article_stats, article_data = stats_determiners_articles_output(data, data_divided_sents)
+    article_list, article_stats, article_data = stats_determiners_articles_output(
+        data, data_divided_sents
+    )
     article_list = article_data
 
     # convert list to dataframe and save
@@ -294,7 +356,11 @@ def article_stats(
     df, headers = process_df_headers(df, "ARTICLES")
 
     IO_csv_util.df_to_csv(
-        df, function_words_articles_file_name, headers=headers, index=False, language_encoding="utf-8"
+        df,
+        function_words_articles_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
     )
 
     if chartPackage != "No charts":
@@ -328,11 +394,19 @@ def article_stats(
 
 
 def conjunction_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
 
     # create conjunction subdir
-    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="FW_conj", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        "", "", outputDir, label="FW_conj", silent=True
+    )
     if outputDir == "":
         return
 
@@ -343,20 +417,32 @@ def conjunction_stats(
     function_words_conjunctions_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Conjunctions", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Conjunctions")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "FW", "Conjunctions"
+    )
     # not necessary to open stats since these stats are included in the pie chart
 
     if not os.path.isdir(outputDir):
-        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
+        raise (
+            Exception(
+                "output file path error, Please check OUTPUT DIRECTORY PATH and try again"
+            )
+        )
 
-    conjunction_list, conjunction_stats, conjunction_data = stats_conjunctions_output(data, data_divided_sents)
+    conjunction_list, conjunction_stats, conjunction_data = stats_conjunctions_output(
+        data, data_divided_sents
+    )
     conjunction_list = conjunction_data
 
     # convert list to dataframe and save
     df = pd.DataFrame(conjunction_list)
     df, headers = process_df_headers(df, "CONJUNCTIONS")
     IO_csv_util.df_to_csv(
-        df, function_words_conjunctions_file_name, headers=headers, index=False, language_encoding="utf-8"
+        df,
+        function_words_conjunctions_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
     )
 
     if chartPackage != "No charts":
@@ -416,10 +502,18 @@ def conjunction_stats(
 
 
 def auxiliary_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
     # create auxiliary subdir
-    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="FW_aux", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        "", "", outputDir, label="FW_aux", silent=True
+    )
     if outputDir == "":
         return
     filesToOpen = []  # Store all files that are to be opened once finished
@@ -428,12 +522,20 @@ def auxiliary_stats(
     function_words_auxiliaries_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries", "list"
     )
-    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries")
+    IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries"
+    )
     # not necessary to open stats since these stats are included in the pie chart
 
     if not os.path.isdir(outputDir):
-        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
-    auxiliary_list, auxiliary_stats, auxiliary_data = stats_auxiliaries_output(data, data_divided_sents)
+        raise (
+            Exception(
+                "output file path error, Please check OUTPUT DIRECTORY PATH and try again"
+            )
+        )
+    auxiliary_list, auxiliary_stats, auxiliary_data = stats_auxiliaries_output(
+        data, data_divided_sents
+    )
     auxiliary_list = auxiliary_data
 
     # convert list to dataframe and save
@@ -441,7 +543,11 @@ def auxiliary_stats(
     df, headers = process_df_headers(df, "AUXILIARIES")
 
     IO_csv_util.df_to_csv(
-        df, function_words_auxiliaries_file_name, headers=headers, index=False, language_encoding="utf-8"
+        df,
+        function_words_auxiliaries_file_name,
+        headers=headers,
+        index=False,
+        language_encoding="utf-8",
     )
 
     if chartPackage != "No charts":
@@ -479,7 +585,9 @@ def verb_data_preparation_auxiliary(data):
     try:
         verb_postags = ["VB", "VBN", "VBD", "VBG", "VBP", "VBZ"]
         verb_deprel = ["auxpass", "aux"]
-        data_2 = [tok for tok in data if (tok[3] in verb_postags or tok[6] in verb_deprel)]
+        data_2 = [
+            tok for tok in data if (tok[3] in verb_postags or tok[6] in verb_deprel)
+        ]
         return data_2
     except:
         print(
@@ -513,7 +621,10 @@ def stats_pronouns_output(data, data_divided_sents):
             "Personal pronoun (PRP)",
             postag_counter["PRP"],
         ],  # I, you, she, he, it, we, they (as subjects of the sentence); me, you, her, him, it, us, them (as objects of the sentence)
-        ["Possessive pronoun (PRP$)", postag_counter["PRP$"]],  # mine, ours, yours, his, hers, theirs
+        [
+            "Possessive pronoun (PRP$)",
+            postag_counter["PRP$"],
+        ],  # mine, ours, yours, his, hers, theirs
         [
             "WH-pronoun (WP)",
             postag_counter["WP"],
@@ -524,7 +635,12 @@ def stats_pronouns_output(data, data_divided_sents):
     pronouns_data = data_preperation(
         data,
         ["PRP", "PRP$", "WP", "WP$"],
-        ["Personal pronouns", "Possessive pronouns", "WH-pronouns", "Possessive WH-pronouns"],
+        [
+            "Personal pronouns",
+            "Possessive pronouns",
+            "WH-pronouns",
+            "Possessive WH-pronouns",
+        ],
         3,
     )
 
@@ -542,7 +658,9 @@ def stats_prepositions_output(data, data_divided_sents):
         ["Preposition/subordinating conjunction", postag_counter["IN"]],
     ]
 
-    prepositions_data = data_preperation(data, ["IN"], ["Preposition/subordinating conjunction"], 3)
+    prepositions_data = data_preperation(
+        data, ["IN"], ["Preposition/subordinating conjunction"], 3
+    )
 
     return list_prepositions_postag, prepositions_postag_stats, prepositions_data
 
@@ -589,7 +707,10 @@ def stats_conjunctions_output(data, data_divided_sents):
     ]
 
     conjunction_data = data_preperation(
-        data, ["CC", "IN"], ["Coordinating conjunction (CC)", "Preposition/subordinating conjunction (IN)"], 3
+        data,
+        ["CC", "IN"],
+        ["Coordinating conjunction (CC)", "Preposition/subordinating conjunction (IN)"],
+        3,
     )
 
     return list_conjunctions_postag, conjunctions_postag_stats, conjunction_data
@@ -610,58 +731,110 @@ def stats_auxiliaries_output(data, data_divided_sents):
         ["Passive auxiliary (AUXPASS)", deprel_counter["auxpass"]],
     ]
 
-    auxiliaries_data = data_preperation(data, ["aux", "auxpass"], ["Auxiliary (AUX)", "Passive auxiliary (AUXPASS)"], 6)
+    auxiliaries_data = data_preperation(
+        data, ["aux", "auxpass"], ["Auxiliary (AUX)", "Passive auxiliary (AUXPASS)"], 6
+    )
 
     return list_auxiliaries_deprel, auxiliaries_deprel_stats, auxiliaries_data
 
 
 def function_words_stats(
-    inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+    inputFilename,
+    outputDir,
+    data,
+    data_divided_sents,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
 ):
 
     filesToOpen = []  # Store all files that are to be opened once finished
 
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started running FUNCTION WORDS ANALYSES at", True, "", True, "", True
+        2000,
+        "Analysis start",
+        "Started running FUNCTION WORDS ANALYSES at",
+        True,
+        "",
+        True,
+        "",
+        True,
     )
 
     # articles  ---------------------------------------------------
     outputFiles = article_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)
 
     # auxiliaries ---------------------------------------------------
     outputFiles = auxiliary_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)
 
     # conjunctions ---------------------------------------------------
     outputFiles = conjunction_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)
 
     # prepositions  ---------------------------------------------------
     outputFiles = preposition_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)
 
     # pronouns  ---------------------------------------------------
     outputFiles = pronoun_stats(
-        inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
+        inputFilename,
+        outputDir,
+        data,
+        data_divided_sents,
+        openOutputFiles,
+        chartPackage,
+        dataTransformation,
     )
     if outputFiles is not None:
         filesToOpen.extend(outputFiles)
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running FUNCTION WORDS ANALYSES at", True, "", True, startTime, True
+        2000,
+        "Analysis end",
+        "Finished running FUNCTION WORDS ANALYSES at",
+        True,
+        "",
+        True,
+        startTime,
+        True,
     )
 
     return filesToOpen

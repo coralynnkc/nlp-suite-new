@@ -148,7 +148,13 @@ def run_CoNLL_table_analyzer(
             import CoNLL_noun_analysis_util
 
             outputFiles = CoNLL_noun_analysis_util.noun_stats(
-                inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage, dataTransformation
+                inputFilename,
+                outputDir,
+                data,
+                all_CoNLL_records,
+                openOutputFiles,
+                chartPackage,
+                dataTransformation,
             )
             if outputFiles is not None:
                 filesToOpen.extend(outputFiles)
@@ -164,7 +170,13 @@ def run_CoNLL_table_analyzer(
             import CoNLL_adjective_analysis_util
 
             outputFiles = CoNLL_adjective_analysis_util.adjective_stats(
-                inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage, dataTransformation
+                inputFilename,
+                outputDir,
+                data,
+                all_CoNLL_records,
+                openOutputFiles,
+                chartPackage,
+                dataTransformation,
             )
             if outputFiles is not None:
                 filesToOpen.extend(outputFiles)
@@ -180,7 +192,13 @@ def run_CoNLL_table_analyzer(
             import CoNLL_ratio_analysis_util
 
             outputFiles = CoNLL_ratio_analysis_util.compute_word_class_frequencies(
-                inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage, dataTransformation
+                inputFilename,
+                outputDir,
+                data,
+                all_CoNLL_records,
+                openOutputFiles,
+                chartPackage,
+                dataTransformation,
             )
             if outputFiles is not None:
                 filesToOpen.extend(outputFiles)
@@ -196,7 +214,13 @@ def run_CoNLL_table_analyzer(
             import CoNLL_adverb_analysis_util
 
             outputFiles = CoNLL_adverb_analysis_util.adverb_stats(
-                inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage, dataTransformation
+                inputFilename,
+                outputDir,
+                data,
+                all_CoNLL_records,
+                openOutputFiles,
+                chartPackage,
+                dataTransformation,
             )
             if outputFiles is not None:
                 filesToOpen.extend(outputFiles)
@@ -235,7 +259,13 @@ def run_CoNLL_table_analyzer(
             import CoNLL_function_words_analysis_util
 
             outputFiles = CoNLL_function_words_analysis_util.function_words_stats(
-                inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage, dataTransformation
+                inputFilename,
+                outputDir,
+                data,
+                all_CoNLL_records,
+                openOutputFiles,
+                chartPackage,
+                dataTransformation,
             )
             if outputFiles is not None:
                 filesToOpen.extend(outputFiles)
@@ -350,7 +380,9 @@ def run_CoNLL_table_analyzer(
         df_nouns = df[df["POS"].isin(["NN", "NNPS", "NNP", "NNS"])][["Lemma", "POS"]]
         inputFilename_nouns = outputDir + os.sep + "CoNLL_nouns_forWordNet.csv"
         df_nouns.to_csv(inputFilename_nouns, index=False)  # , header=None
-        df_verbs = df[df["POS"].isin(["VB", "VBN", "VBD", "VBG", "VBP", "VBZ"])][["Lemma", "POS"]]
+        df_verbs = df[df["POS"].isin(["VB", "VBN", "VBD", "VBG", "VBP", "VBZ"])][
+            ["Lemma", "POS"]
+        ]
         inputFilename_verbs = outputDir + os.sep + "CoNLL_verbs_forWordNet.csv"
         df_verbs.to_csv(inputFilename_verbs, index=False)  # , header=None
 
@@ -414,7 +446,12 @@ def run_CoNLL_table_analyzer(
         #                                                'Started running the CoNLL table K-sentences analyzer at',
         #                                                True, '', True, '', False)
         temp_outputDir, outputFiles = CoNLL_k_sentences_util.k_sent(
-            inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_sent_var, End_K_sent_var
+            inputFilename,
+            outputDir,
+            chartPackage,
+            dataTransformation,
+            Begin_K_sent_var,
+            End_K_sent_var,
         )
         if outputFiles is not None:
             outputDir = temp_outputDir

@@ -2,8 +2,9 @@
 
 import os.path
 
-import IO_files_util
 import pandas as pd
+
+import IO_files_util
 
 
 def listToString(s, sep):
@@ -40,7 +41,9 @@ def select_csv(files, cols=None):
                     file, encoding="utf-8", on_bad_lines="skip"
                 )  # gives error on CoNLL table ,on_bad_lines='error')
             else:
-                df = pd.read_csv(file, usecols=cols, encoding="utf-8", on_bad_lines="skip")
+                df = pd.read_csv(
+                    file, usecols=cols, encoding="utf-8", on_bad_lines="skip"
+                )
         except:
             # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
             raise (Exception("Missing fields")) from None
@@ -83,7 +86,17 @@ def append(outputDir, operation_results_text_list):
             tempHeaders = "`" + tempHeaders + "`"
 
     outputFilename = IO_files_util.generate_output_file_name(
-        files[0], os.path.dirname(files[0]), outputDir, ".csv", "append", "", "", "", "", False, True
+        files[0],
+        os.path.dirname(files[0]),
+        outputDir,
+        ".csv",
+        "append",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     data_files = [file for file in select_csv(files)]  # dataframes
@@ -94,7 +107,12 @@ def append(outputDir, operation_results_text_list):
         return ""
     sep = ","
     df_append = pd.concat(data_cols, axis=0)
-    df_append.to_csv(outputFilename, encoding="utf-8", header=[listToString(headers, sep)], index=False)
+    df_append.to_csv(
+        outputFilename,
+        encoding="utf-8",
+        header=[listToString(headers, sep)],
+        index=False,
+    )
     return outputFilename
 
 
@@ -132,7 +150,17 @@ def concatenate(outputDir, operation_results_text_list):
             sep = s.split(",")[2]
 
     outputFilename = IO_files_util.generate_output_file_name(
-        files[0], os.path.dirname(files[0]), outputDir, ".csv", "concatenate", "", "", "", "", False, True
+        files[0],
+        os.path.dirname(files[0]),
+        outputDir,
+        ".csv",
+        "concatenate",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     data_files = [file for file in select_csv(files)]  # dataframes
@@ -142,7 +170,12 @@ def concatenate(outputDir, operation_results_text_list):
     if data_cols == []:
         return ""
     df_concat = concat(data_cols, sep)
-    df_concat.to_csv(outputFilename, header=[listToString(headers, sep)], encoding="utf-8", index=False)
+    df_concat.to_csv(
+        outputFilename,
+        header=[listToString(headers, sep)],
+        encoding="utf-8",
+        index=False,
+    )
     return outputFilename
 
 
@@ -150,7 +183,9 @@ def concatenate(outputDir, operation_results_text_list):
 
 
 # the function can export field contents of a csv file for selected fields (and field values) to either a csv file or text file
-def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".csv", cols=None):
+def export_csv_to_csv_txt(
+    outputDir, operation_results_text_list, export_type=".csv", cols=None
+):
     files = []
     headers = []
     sign_var = []
@@ -189,7 +224,9 @@ def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".
         # mb.showwarning(title='Missing field(s)',
         #                message="No field(s) to be extracted have been selected.\n\nPlease, select field(s) and try again.")
         return
-    for sign, value, and_or, header, df in zip(sign_var, value_var, and_or, headers, data_files, strict=False):
+    for sign, value, and_or, header, df in zip(
+        sign_var, value_var, and_or, headers, data_files, strict=False
+    ):
         if sign == "''" and value == "''":
             df_list.append(df[[header]])
         else:
@@ -215,12 +252,19 @@ def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".
         if operation_results_text_list[index].split(",")[4] in ["and", "''"]:
             if index == len(df_list) - 1:
                 continue
-            df_extract = df_extract.merge(df_list[index + 1], how="inner", right_index=True, left_index=True)
+            df_extract = df_extract.merge(
+                df_list[index + 1], how="inner", right_index=True, left_index=True
+            )
         elif operation_results_text_list[index].split(",")[4] == "or":
             if index == len(df_list) - 1:
                 continue
-            df_extract = df_extract.merge(df_list[index + 1], how="outer", right_index=True, left_index=True)
-        elif operation_results_text_list[index].split(",")[4] == "" and index != len(df_list) - 1:
+            df_extract = df_extract.merge(
+                df_list[index + 1], how="outer", right_index=True, left_index=True
+            )
+        elif (
+            operation_results_text_list[index].split(",")[4] == ""
+            and index != len(df_list) - 1
+        ):
             raise (Exception("Missing and/or condition"))
             # mb.showwarning(title='Missing and/or condition',
             #                message="Please include an and/or condition between each WHERE condition on the column you want to extract!")
@@ -231,7 +275,9 @@ def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".
     else:  # .txt
         text = df_extract.to_csv(encoding="utf-8", index=False)
         text = text.replace(",", " ")
-        with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as text_file:
+        with open(
+            outputFilename, "w", encoding="utf-8", errors="ignore", newline=""
+        ) as text_file:
             text_file.write(text)
     return outputFilename
 
@@ -300,7 +346,17 @@ def MERGE(outputDir, operation_results_text_list):
         print("Unexpected err", err)
         raise
     outputFilename = IO_files_util.generate_output_file_name(
-        csv_lst[0], os.path.dirname(csv_lst[0]), outputDir, ".csv", "merge", "", "", "", "", False, True
+        csv_lst[0],
+        os.path.dirname(csv_lst[0]),
+        outputDir,
+        ".csv",
+        "merge",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     df.to_csv(outputFilename, encoding="utf-8", index=False)
