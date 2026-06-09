@@ -7,7 +7,7 @@ A monorepo for running a suite of text-analysis tools through a browser UI. Desi
 **Requirements:** Docker Desktop running, `git`, `bash`.
 
 ```bash
-git clone <repo-url> ~/nlp-suite-repo
+git clone https://github.com/coralynnkc/nlp-suite-new ~/nlp-suite-repo
 cd ~/nlp-suite-repo
 ./scripts/start.sh
 ```
@@ -26,10 +26,10 @@ Opens `http://localhost:8000` automatically.
 
 All input and output files live outside the repo on your host machine:
 
-| Directory | Purpose |
-|-----------|---------|
-| `~/nlp-suite/input/` | Put corpus files here before running tools |
-| `~/nlp-suite/output/` | All tool output is written here |
+| Directory               | Purpose                                    |
+| ----------------------- | ------------------------------------------ |
+| `~/nlp-suite/input/`    | Put corpus files here before running tools |
+| `~/nlp-suite/output/`   | All tool output is written here            |
 | `~/nlp-suite/csvInput/` | CSV input files (sentiment lexicons, etc.) |
 
 To use a different base directory, set `NLP_SUITE_DIR` before running:
@@ -48,12 +48,12 @@ docker compose down
 
 ## Architecture
 
-| Service | What it does | Host port |
-|---------|-------------|-----------|
-| `ui` | Django web frontend | 8000 |
-| `agent` | FastAPI processing backend | 8080 |
-| `corenlp` | Stanford CoreNLP (Java) | 9000 |
-| `mallet` | MALLET topic modeling (Java) | 8081 |
+| Service   | What it does                 | Host port |
+| --------- | ---------------------------- | --------- |
+| `ui`      | Django web frontend          | 8000      |
+| `agent`   | FastAPI processing backend   | 8080      |
+| `corenlp` | Stanford CoreNLP (Java)      | 9000      |
+| `mallet`  | MALLET topic modeling (Java) | 8081      |
 
 The UI sends form submissions to the agent. The agent calls CoreNLP or MALLET when needed and writes output files to `~/nlp-suite/output/`.
 
@@ -61,29 +61,29 @@ The UI sends form submissions to the agent. The agent calls CoreNLP or MALLET wh
 
 ## Tools
 
-| Tool | What it produces |
-|------|-----------------|
-| File manager | Rename, copy, move, delete, split, filter corpus files |
-| Sentiment analysis | VADER, ANEW, SentiWordNet, Hedonometer scores |
-| Topic modeling | LDA via Gensim, MALLET, or BERTopic |
-| Parsers & annotators | POS tags, dependency parse, semantic roles (CoreNLP / spaCy / Stanza) |
-| Word embeddings | Word2Vec with t-SNE visualization |
-| CoNLL table analyzer | Frequency analysis over parsed CoNLL output |
-| Style analysis | Readability indices, vocabulary complexity |
-| SVO extraction | Subject–Verb–Object triples |
-| N-grams & co-occurrences | Frequency counts, co-occurrence search |
-| File search | Keyword and dictionary search across corpus |
-| Document statistics | Token/type counts, corpus-level statistics |
-| Sentence analysis | Length, complexity, readability |
-| GIS | Location extraction and interactive map (Nominatim or Google Maps) |
-| Word clouds | Weighted word clouds with POS coloring |
-| Sunburst / Sankey / Colormap | Hierarchical and flow visualizations |
-| NER | Named entity recognition (CoreNLP / spaCy / BERT) |
-| WordNet | Semantic network graphs |
-| Gender analysis | Name-based gender classification |
-| Shape of stories | Narrative arc detection |
-| Excel/Plotly charts | Interactive chart export |
-| Boxplot | Statistical boxplots |
+| Tool                         | What it produces                                                      |
+| ---------------------------- | --------------------------------------------------------------------- |
+| File manager                 | Rename, copy, move, delete, split, filter corpus files                |
+| Sentiment analysis           | VADER, ANEW, SentiWordNet, Hedonometer scores                         |
+| Topic modeling               | LDA via Gensim, MALLET, or BERTopic                                   |
+| Parsers & annotators         | POS tags, dependency parse, semantic roles (CoreNLP / spaCy / Stanza) |
+| Word embeddings              | Word2Vec with t-SNE visualization                                     |
+| CoNLL table analyzer         | Frequency analysis over parsed CoNLL output                           |
+| Style analysis               | Readability indices, vocabulary complexity                            |
+| SVO extraction               | Subject–Verb–Object triples                                           |
+| N-grams & co-occurrences     | Frequency counts, co-occurrence search                                |
+| File search                  | Keyword and dictionary search across corpus                           |
+| Document statistics          | Token/type counts, corpus-level statistics                            |
+| Sentence analysis            | Length, complexity, readability                                       |
+| GIS                          | Location extraction and interactive map (Nominatim or Google Maps)    |
+| Word clouds                  | Weighted word clouds with POS coloring                                |
+| Sunburst / Sankey / Colormap | Hierarchical and flow visualizations                                  |
+| NER                          | Named entity recognition (CoreNLP / spaCy / BERT)                     |
+| WordNet                      | Semantic network graphs                                               |
+| Gender analysis              | Name-based gender classification                                      |
+| Shape of stories             | Narrative arc detection                                               |
+| Excel/Plotly charts          | Interactive chart export                                              |
+| Boxplot                      | Statistical boxplots                                                  |
 
 ---
 
@@ -91,10 +91,10 @@ The UI sends form submissions to the agent. The agent calls CoreNLP or MALLET wh
 
 Enter keys on the UI settings page. They are saved to `~/nlp-suite/.env` on your host machine and never committed to the repo.
 
-| Key | Effect |
-|-----|--------|
+| Key                   | Effect                                                       |
+| --------------------- | ------------------------------------------------------------ |
 | `GOOGLE_MAPS_API_KEY` | GIS tool uses Google Maps; falls back to Nominatim if absent |
-| `NYT_API_KEY` | Placeholder — no backend wiring yet |
+| `NYT_API_KEY`         | Placeholder — no backend wiring yet                          |
 
 ---
 
