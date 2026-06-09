@@ -104,7 +104,6 @@ class Clusterer:
             words = batched_words[b]
             batched_users[b]
             with torch.no_grad():
-                #                _, _, encoded_layers = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
                 o = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
                 encoded_layers = o["hidden_states"]
             for sent_i in range(len(words)):
@@ -162,7 +161,6 @@ class Clusterer:
             data.append(np.mean(ongoing_rep, axis=0).flatten())
         np.random.shuffle(data)
 
-        #        return np.array(data)[:500]
         return np.array(data)
 
     def cluster_embeddings(
@@ -322,7 +320,6 @@ class Matcher:
             words = batched_words[b]
             users = batched_users[b]
             with torch.no_grad():
-                #                _, _, encoded_layers = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
                 o = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
                 encoded_layers = o["hidden_states"]
             for sent_i in range(len(words)):

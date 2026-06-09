@@ -5,7 +5,6 @@
 import csv
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"WordNet",['os','csv','tkinter','subprocess','nltk','pandas'])==False:
-#     sys.exit(0)
 import os
 import subprocess
 
@@ -143,7 +142,6 @@ def aggregate_GoingUP(
     #                                                                                      silent=False, errorFound=False)
 
     # if WordNetDir == None or WordNetDir == '':
-    #     return filesToOpen
 
     errorFound, error_code, system_output, java_version = IO_libraries_util.check_java_installation(
         "WordNet upward search"
@@ -295,15 +293,11 @@ def aggregate_GoingUP(
     if noun_verb == "VERB":
         operation_results_text_list = []
         outputFilenameCSV3_new = inputFile.replace("VERB", "VERB_no_auxil")
-        # outputFilenameCSV3_new = outputFilenameCSV3_new.replace("_output", "")
         # # the file already exists and must be removed
         # if os.path.isfile(outputFilenameCSV3_new):
-        #     os.remove(outputFilenameCSV3_new)
-        # os.rename(outputFilenameCSV1_new, outputFilenameCSV3_new)
         # Word is the header from the _output file created by the Java WordNet script
         operation_results_text_list.append(str(outputFilenameCSV1_new) + ",Word,<>,be,and")
         operation_results_text_list.append(str(outputFilenameCSV1_new) + ",Word,<>,have,and")
-        # outputFilenameCSV3_new = data_manipulation_util.export_csv_to_csv_txt(outputFilenameCSV3_new, operation_results_text_list,'.csv',[0,1])
         outputFilenameCSV3_new = data_manipulation_util.export_csv_to_csv_txt(
             outputDir, operation_results_text_list, ".csv", [0, 1]
         )
@@ -367,7 +361,7 @@ def Wordnet_bySentenceID(
             + wordnetDict
             + "\n\ndoes not have the expected 2 columns: Word, WordNet Category. You may have selected the wrong input file.\n\nPlease, select the right input file and try again."
         )
-        raise (Exception("Warning"))
+        raise (Exception("Warning")) from None
         # mb.showwarning("Warning",
         #                "The file \n\n" + wordnetDict + "\n\ndoes not have the expected 2 columns: Word, WordNet Category. You may have selected the wrong input file.\n\nPlease, select the right input file and try again.")
         return
@@ -380,7 +374,7 @@ def Wordnet_bySentenceID(
             + ConnlTable
             + "\n\ndoes not appear to be a CoNLL table with expected column names: Form,Lemma,POS, SentenceID, DocumentID, Document.\n\nPlease, select the right input file and try again."
         )
-        raise (Exception("Warning"))
+        raise (Exception("Warning")) from None
         # mb.showwarning("Warning",
         #                "The file \n\n" + ConnlTable + "\n\ndoes not appear to be a CoNLL table with expected column names: Form,Lemma,POS, SentenceID, DocumentID, Document.\n\nPlease, select the right input file and try again.")
         return

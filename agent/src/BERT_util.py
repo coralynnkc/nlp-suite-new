@@ -1,4 +1,3 @@
-# import statements
 # BERT is available as a multilingual model in 102 languages
 import argparse
 import csv
@@ -10,7 +9,6 @@ import time
 import charts_util
 
 # Visualization
-##from sklearn.decomposition import PCA
 import IO_csv_util
 import IO_files_util
 import IO_internet_util
@@ -265,7 +263,6 @@ def word_embeddings_BERT(
     # Creates the word embeddings per word and stores each embedding as an element in a list called embeddings
     word_vectors = model.encode(words_to_embed)
 
-    # print('\nFinished running BERT computing the vector space for ' + str(len(words)) + ' distinct words in the input file(s) at ' + time.asctime( time.localtime(time.time())))
 
     # Creates key-value pairs of words and their corresponding vectors to be added to csv file output
     # showing words and their corresponding multidimensional vectors
@@ -411,127 +408,54 @@ def word_embeddings_BERT(
             else:
                 filesToOpen.extend(outputFiles)
 
-        # print(f'\nStarted computing word distances between top {top_words_var} words at {time.asctime( time.localtime(time.time()))}')
         # # find user-selected top most-frequent words
         # # word vectors
-        # tmp_result = result_df['Word'].value_counts().index.tolist()[:top_words_var]
-        # tmp_result_df = result_df.loc[result_df['Word'].isin(tmp_result)]
-        # tmp_result_df.drop_duplicates(subset=['Word'], keep='first', inplace=True)
-        # tmp_result_df = tmp_result_df.reset_index(drop=True)
         #
         # if not 'Do not' in vis_menu_var:
         #     # TSNE x,y (z) coordinates
-        #     tmp_tsne = tsne_df['Word'].value_counts().index.tolist()[:top_words_var]
-        #     tmp_tsne_df = tsne_df.loc[tsne_df['Word'].isin(tmp_tsne)]
-        #     tmp_tsne_df.drop_duplicates(subset=['Word'], keep='first', inplace=True)
-        #     tmp_tsne_df = tmp_tsne_df.reset_index(drop=True)
         #
         #     # calculate 2-dimensional euclidean distance
         #     # TSNE x,y (z) coordinates
-        #     tsne_dist_df = pd.DataFrame()
-        #     dist_idx = 0
-        #     print(f'\nStarted computing t-SNE 2-dimensional Euclidean distance between top {top_words_var} words at {time.asctime( time.localtime(time.time()))}')
         #     for i, row in tmp_tsne_df.iterrows():
-        #         j = len(tmp_tsne_df)-1
         #         while i < j:
-        #             tsne_dist_df.at[dist_idx, 'Word_1'] = row['Word']
-        #             tsne_dist_df.at[dist_idx, 'Word_2'] = tmp_tsne_df.at[j, 'Word']
         #             if 'z' not in tmp_tsne_df.columns:
-        #                 tsne_dist_df.at[dist_idx, '2-dimensional Euclidean distance'] = word2vec_util.euclidean_dist( [row['x'],row['y']], [tmp_tsne_df.at[j, 'x'],tmp_tsne_df.at[j, 'y']] )
-        #             else:
-        #                 tsne_dist_df.at[dist_idx, '2-dimensional Euclidean distance'] = word2vec_util.euclidean_dist( [row['x'],row['y'],row['z']], [tmp_tsne_df.at[j, 'x'],tmp_tsne_df.at[j, 'y'],tmp_tsne_df.at[j, 'z']] )
-        #             dist_idx+=1
-        #             j-=1
-        #     tsne_dist_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Word2Vec_top_' + str(top_words_var)+'_TSNE_dist')
-        #     tsne_dist_df.to_csv(tsne_dist_outputFilename, encoding='utf-8', index=False)
-        #     tsne_dist_df.to_csv(tsne_dist_outputFilename, encoding='utf-8', index=False)
-        #     filesToOpen.append(tsne_dist_outputFilename)
         #
         # # calculate cos similarity
-        # cos_sim_df = pd.DataFrame()
-        # cos_idx = 0
         # print(
         #     f'\nStarted computing cosine similarity between top {top_words_var} words at {time.asctime(time.localtime(time.time()))}')
         # for i, row in tmp_result_df.iterrows():
-        #     j = len(tmp_result_df) - 1
         #     while i < j:
-        #         try:
-        #             tfidf_vectorizer = TfidfVectorizer(analyzer="char")
-        #             sparse_matrix = tfidf_vectorizer.fit_transform(
         #                 [str(row['Word'])] + [str(tmp_result_df.at[j, 'Word'])])
-        #             sim_score = cosine_similarity(sparse_matrix[0], sparse_matrix[1])
-        #             cos_sim_df.at[cos_idx, 'Word_1'] = row['Word']
-        #             cos_sim_df.at[cos_idx, 'Word_2'] = tmp_result_df.at[j, 'Word']
-        #             cos_sim_df.at[cos_idx, 'Cosine similarity'] = sim_score
-        #         except KeyError:
-        #             cos_idx += 1
-        #             j -= 1
         #             continue
-        #         cos_idx += 1
-        #         j -= 1
         #
         # # vectors of top 10 freq words n-dimensional distance
-        # dist_df = pd.DataFrame()
-        # dist_idx = 0
-        # print(f'\nStarted computing n-dimensional Euclidean distance between top {top_words_var} words at {time.asctime( time.localtime(time.time()))}')
         # for i, row in tmp_result_df.iterrows():
-        #     j = len(tmp_result_df)-1
         #     while i < j:
-        #         dist_df.at[dist_idx, 'Word_1'] = row['Word']
-        #         dist_df.at[dist_idx, 'Word_2'] = tmp_result_df.at[j, 'Word']
-        #         dist_df.at[dist_idx, 'n-dimensional Euclidean distance'] = word2vec_util.euclidean_dist(row['Embeddings'], tmp_result_df.at[j, 'Embeddings'])
-        #         dist_idx+=1
-        #         j-=1
         #
         # # create outputFilenames and save them
-        # cos_sim_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Word2Vec_top_' + str(top_words_var)+'_Cos_Similarity')
-        # dist_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Word2Vec_top_' + str(top_words_var)+'_Euclidean_dist')
         #
-        # dist_df.to_csv(dist_outputFilename, encoding='utf-8', index=False)
-        # cos_sim_df.to_csv(cos_sim_outputFilename, encoding='utf-8', index=False)
         #
-        # dist_df.to_csv(dist_outputFilename, encoding='utf-8', index=False)
-        # cos_sim_df.to_csv(cos_sim_outputFilename, encoding='utf-8', index=False)
         #
-        # filesToOpen.append(dist_outputFilename)
-        # filesToOpen.append(cos_sim_outputFilename)
         #
         # outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation, dist_outputFilename,
         #                                                    outputDir,
-        #                                                    columns_to_be_plotted_xAxis=[], columns_to_be_plotted_yAxis=['n-dimensional Euclidean distance'],
-        #                                                    chart_title='Frequency Distribution of n-dimensional Euclidean distances',
         #                                                    # count_var = 1 for columns of alphabetic values
         #                                                    count_var=0, hover_label=[],
-        #                                                    outputFileNameType='nDim_dist', #'POS_bar',
-        #                                                    column_xAxis_label='Euclidean distance',
-        #                                                    groupByList=[],
-        #                                                    plotList=[],
         #                                                    chart_title_label='')
         #
         # if outputFiles!=None:
         #     if len(chart_outputFilename) > 0:
-        #         filesToOpen.extend(chart_outputFilename)
         #
         # outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation, cos_sim_outputFilename,
         #                                                    outputDir,
-        #                                                    columns_to_be_plotted_xAxis=[], columns_to_be_plotted_yAxis=['Cosine similarity'],
-        #                                                    chart_title='Frequency Distribution of cosine similarities',
         #                                                    # count_var = 1 for columns of alphabetic values
         #                                                    count_var=0, hover_label=[],
-        #                                                    outputFileNameType='coos_simil', #'POS_bar',
-        #                                                    column_xAxis_label='Cosine similarity',
-        #                                                    groupByList=[],
-        #                                                    plotList=[],
         #                                                    chart_title_label='')
         #
         # if outputFiles!=None:
         #     if len(chart_outputFilename) > 0:
-        #         filesToOpen.extend(chart_outputFilename)
 
-        # keyword_sim_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Word2Vec_' + str(
         # len(keywords_list)) + '_Keywords_Cos_Similarity')
-        # keyword_df.to_csv(keyword_sim_outputFilename, encoding='utf-8', index=False)
-    # filesToOpen.append(keyword_sim_outputFilename)
 
     IO_user_interface_util.timed_alert(
         2000, "Analysis end", "Finished running BERT word embeddings at", True, "", True, startTime
@@ -542,8 +466,6 @@ def word_embeddings_BERT(
 
 # Performs sentiment analysis using roBERTa model
 def sentiment_analysis_BERT(inputFilename, outputDir, outputFilename, mode, Document_ID, Document, model_path):
-    # model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment" # multilingual model
-    # model_path = "cardiffnlp/twitter-roberta-base-sentiment-latest" # English language model
     # sentiment_task = pipeline("sentiment-analysis",
     #  model=model_path, tokenizer=model_path, max_length=512, truncation=True)
 
@@ -593,8 +515,6 @@ def sentiment_main(
     dataTransformation="No Transformation",
     model_path="cardiffnlp/twitter-xlm-roberta-base-sentiment",
 ):
-    # model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment" # multilingual model
-    # model_path = "cardiffnlp/twitter-roberta-base-sentiment-latest" # English language model
 
     """
     Runs analyzefile on the appropriate files, provided that the input paths are valid.
@@ -667,20 +587,15 @@ def sentiment_main(
                     print("Processing file " + str(documentID) + "/" + str(nDocs) + " " + tail)
                     filename = os.path.join(inputDir, os.fsdecode(file))
                     if filename.endswith(".txt"):
-                        # start_time = time.asctime( time.localtime(time.time()))()
                         time.time()
-                        # print("Started SentiWordNet sentiment analysis of " + filename + "...")
                         documentID += 1
                         filesToOpen.append(
                             sentiment_analysis_BERT(
                                 filename, outputDir, outputFilename, mode, documentID, filename, model_path
                             )
                         )
-                        # print("Finished SentiWordNet sentiment analysis of " + filename + " in " + str((time.asctime( time.localtime(time.time()))() - start_time)) + " seconds")
-                        # print("Finished SentiWordNet sentiment analysis of " + filename + " in " + str((time.asctime( time.localtime(time.time()))() - start_time)) + " seconds")
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
-                # sys.exit(1)
     csvfile.close()
 
     if chartPackage != "No charts":

@@ -19,16 +19,10 @@ def run_excel_plotly_charts(
 
     outputFiles = ""
     # if extra_GUIs_var.get()==False and csv_field_visualization_var == '':
-    #     print("Warning, No csv file field to be used for visualization (Y-axis) has been selected.\n\nPlease, use the dropdown menu of the 'csv file field for visualization (Y-axis)' widget to select the desired field and try again.")
-    #     return
 
     # if extra_GUIs_var.get()==False and visualizations_menu_var=='':
-    #     print("Warning, No visualization option has been selected.\n\nPlease, use the dropdown menu of the 'Visualization options' widget to select the desired visualization option and try again.")
-    #     return
 
     # if csv_field_visualization_var=='':
-    #     print("Warning, No Y-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as Y-axis and try again.")
-    #     return
 
     # Excel/Plotly charts --------------------------------------------------------------------------------
     if X_axis_var == "":
@@ -40,11 +34,9 @@ def run_excel_plotly_charts(
     if "bar" in charts_type_options.lower() or "line" in charts_type_options.lower():
         # TODO: implement warnings in frontend
         if X_axis_var == "" and len(csv_file_field_Y_axis_list) < 1:
-            # print('Warning, A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires ONE X-axis variable and AT LEAST ONE Y-axis variable.\n\nPlease, select the expected number of variables and try again.'))
             return
     if "scatter" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 1:
-            # print('Warning, A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least TWO Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))
             return
     if "bubble" in charts_type_options.lower() or "radar" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 3:

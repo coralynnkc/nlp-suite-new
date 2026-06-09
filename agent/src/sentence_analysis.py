@@ -76,16 +76,8 @@ def run_sentence_analysis(
 
     if visualize_sentence_structure_var:
         # if IO_libraries_util.check_inputPythonJavaProgramFile('DependenSee.Jar')==False:
-        #     return
-        # errorFound, error_code, system_output = IO_libraries_util.check_java_installation('Sentence structure visualization')
         # if errorFound:
-        #     return
         # if inputFilename=='' and inputFilename.strip()[-4:]!='.txt':
-        #     mb.showwarning(title='Input file error', message='The Sentence tree viewer script requires a single txt file in input.\n\nPlease, select a txt file and try again.')
-        #     return
-        # IO_user_interface_util.timed_alert(GUI_util.window,2000,'Analysis start', 'Started running Sentence visualization: Dependency tree viewer (png graphs) at', True, '\n\nYou can follow Sentence Complexity in command line.')
-        # subprocess.call(['java', '-jar', 'DependenSee.Jar', inputFilename, outputDir])
-        # mb.showwarning(title='Analysis end',message='Finished running the Dependency tree viewer (png graphs).\n\nMake sure to open the png files in output, one graph for each sentence.')
 
         def first_file(path):
             try:

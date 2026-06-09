@@ -47,7 +47,6 @@ def run_word2vec(
             'Visualization via t-SNE: You have selected to run Word2Vec with the t-SNE visualization option ("Plot word vectors"). Depending upon the total number of words in your corpus, this option is computationally VERY demanding.'
         )
         # if not result:
-        #     return
 
     label = ""
     if BERT_var:
@@ -65,18 +64,9 @@ def run_word2vec(
 
     # Word Sense Induction
     if WSI_var:
-        # WSI_keywords_var = tk.StringVar()
-        # WSI_keywords_var.set('')
-        # WSI_keywords_lb = tk.Label(window, text='Keywords (WSI)')
-        # y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.labels_x_indented_coordinate,y_multiplier_integer,WSI_keywords_lb,True)
 
-        # WSIdictionary_file_var=tk.StringVar() # dictionary file used to annotate
         # def get_dictionary_file(window,title,fileType):
-        #     #WSIdictionary_var.set('')
-        #     filePath = tk.filedialog.askopenfilename(title = title, initialdir =GUI_IO_util.namesGender_libPath, filetypes = fileType)
         #     if len(filePath)>0:
-        #         # WSIdictionary_file.config(state='normal')
-        #         WSI_keywords_var.set(filePath)
 
         # TODO: file upload functionality
         WSI_keywords_var = keywordInput
@@ -102,9 +92,6 @@ def run_word2vec(
 
         # k-means range from web sliders (range4 and range6)
 
-        # k_means_min_var = tk.Scale(window, from_=2, to=9, orient=tk.HORIZONTAL)
-        # k_means_min_var.pack()
-        # k_means_min_var.set(4)
         # TODO: add a label for K means
         k_means_min_var = int(range4)  # TODO: range(2, 9)
         k_means_max_var = int(range6)  # TODO: range(3, 15)
@@ -115,9 +102,6 @@ def run_word2vec(
         s_paths = WSI_util.get_cluster_sentences(Word2Vec_Dir)
         v_paths = WSI_viz.sense_bar_chart(Word2Vec_Dir)
 
-        # ngrams_menu_var = tk.StringVar()
-        # ngrams_menu_var.set('1-grams')
-        # ngrams_menu = tk.OptionMenu(window,ngrams_menu_var, '1-grams (unigrams)','2-grams (bigrams)','3-grams (trigrams)','4-grams (quadgrams)')
         ngrams_menu_var = int(ngramsDropDown.split("-")[0])  # TODO: needs to be between 1 and 4
         top_keywords_var = int(range20)  # TODO: change to between 5 to 20
         k_paths = WSI_keyterms.get_keyterms(Word2Vec_Dir, topn=top_keywords_var, ngram_range=(1, ngrams_menu_var))

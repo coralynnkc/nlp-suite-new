@@ -84,7 +84,6 @@ def file_classifier_byDate_distance(
         nTargetDocs = 0
         print("\nProcessing folder: ", os.path.basename(os.path.normpath(ungrouped)))
         print("Processing file: " + str(ungrouped))
-        # IO_util.timed_alert(GUI_util.window, 5000, 'file classifier', 'Processing file: ' + str(ungrouped))
 
         fname, file_ext = os.path.splitext(ungrouped)
         date, date_str, month, day, year = IO_files_util.getDateFromFileName(

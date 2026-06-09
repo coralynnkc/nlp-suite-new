@@ -27,9 +27,6 @@ The flags --file, --dir, --out MUST be entered before the respective strings but
 
 # The VADER algorithm outputs sentiment scores to 4 classes of sentiments
 #   https://github.com/nltk/nltk/blob/develop/nltk/sentiment/vader.py#L441:
-# neg: Negative
-# neu: Neutral
-# pos: Positive
 # compound: Compound (i.e. aggregated score)
 # The "compound" score, ranging from -1 (most neg) to 1 (most pos)
 #   would provide a single measure of polarity.
@@ -44,10 +41,6 @@ import IO_libraries_util
 
 IO_libraries_util.import_nltk_resource("vader_lexicon", "vader_lexicon")
 import charts_util
-
-# from nltk import tokenize
-# from nltk import word_tokenize
-# from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
@@ -79,8 +72,6 @@ if not os.path.isfile(vader):
 # obliterate -2.9    0.83066 [-3, -4, -3, -3, -3, -3, -2, -1, -4, -3]
 # ONLY -2.9 IS USED
 
-# data = pd.read_csv(vader)
-# data_dict = {col: list(data[col]) for col in data.columns}
 
 
 # performs sentiment analysis on inputFile using the NLTK, outputting results to a new CSV file in outputDir
@@ -109,7 +100,6 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
     from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
 
-    # sentences = tokenize.sent_tokenize(fulltext)  # split text into sentences
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
     sid = SentimentIntensityAnalyzer()  # create sentiment analyzer
     i = 1  # to store sentence index
@@ -133,30 +123,12 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
         # VADER, as is, cannot compute mean and median because compound refers to the value of the entire sentence
         #   look at hedonometer to compute separate values and word list of words found
-        # label = 'neutral'
-        # label_mean = 'neutral'
-        # label_median = 'neutral'
         # if mode == 'mean' or mode == 'both':
-        #     sentiment_mean = ss['compound'] #for the whole sentence
-        #     sentiment=sentiment_mean
         #     if sentiment > 0.05 :
-        #         label_mean = 'positive'
-        #     elif sentiment < -0.05:
-        #         label_mean = 'negative'
-        #     label=label_mean
         # if mode == 'median' or mode == 'both':
-        #     sentiment_median = ss['compound']
-        #     #print("sentiment_median",sentiment_median)
-        #     #sentiment_median = statistics.median(ss['compound'])
-        #     sentiment=sentiment_median
         #     if sentiment > 0.05 :
-        #         label_median = 'positive'
-        #     elif sentiment < -0.05:
-        #         label_median = 'negative'
-        #     label=label_median
 
         # search for each valid word's sentiment in VADER database
-        # words = word_tokenize(s.lower())
         words = word_tokenize_stanza(stanzaPipeLine(s.lower()))
         filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
         for index, w in enumerate(filtered_words):
@@ -173,10 +145,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
             # lemmatize word
 
-            # lmtzr = WordNetLemmatizer()
-            # lemma = lmtzr.lemmatize(w, pos='v')
             # if lemma == w:
-            #     lemma = lmtzr.lemmatize(w, pos='n')
             lemmatize_stanza(stanzaPipeLine(w))
 
         writer.writerow(
@@ -192,18 +161,13 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
         # if mode == 'mean' or mode == 'median':
         #     writer.writerow({'Sentence ID': i,
-        #                         'Sentence': s,
         #                         Sentiment_measure: sentiment,
         #                         Sentiment_label: label,
-        #                         })
-        # else:
         #     writer.writerow({'Sentence ID': i,
-        #                         'Sentence': s,
         #                          'Sentiment score': sentiment_mean,
         #                          'Sentiment label': label_mean,
         #                          'Sentiment (Median)': sentiment_median,
         #                          'Sentiment Label (Median)': label_median,
-        #                         })
 
         i += 1
 
@@ -246,15 +210,7 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
         # VADER, as is, cannot compute mean and median because compound refers to the value of the entire sentence
         #   look at hedonometer to compute separate values and word list of words found
         # if mode == 'both':
-        # fieldnames = ['Document ID', 'Document', 'Sentence ID', 'Sentence', 'Sentiment score', 'Sentiment label']
-        # else:
         #     if mode == 'mean':
-        #         Sentiment_measure='Sentiment score'
-        #         Sentiment_label='Sentiment label'
-        #     elif mode == 'median':
-        #         Sentiment_measure='Sentiment (Median)'
-        #         Sentiment_label='Sentiment Label (Median)'
-        #     fieldnames = ['Sentence ID', 'Sentence', Sentiment_measure, Sentiment_label]
 
         global Sentiment_measure, Sentiment_label
         Sentiment_measure = "Sentiment score"
@@ -268,7 +224,6 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
             if os.path.exists(inputFilename):
                 filesToOpen.append(analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename))
                 analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename)
-                # print("Output Vader Sentiment " + outputFilename + " created")
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(1)
@@ -281,9 +236,7 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                     if filename.endswith(".txt"):
                         documentID += 1
                         time.time()
-                        # print("Started VADER sentiment analysis of " + filename + "...")
                         filesToOpen.append(analyzefile(filename, outputDir, outputFilename, mode, documentID, filename))
-                        # print("Finished VADER sentiment analysis of " + filename + " in " + str((time.time() - start_time)) + " seconds")
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
                 sys.exit(1)

@@ -61,16 +61,11 @@ def run_kg_wordnet(
 
     language_var = "English"  # WordNet works only for English language
 
-    # check that the WordNet has been setup
-    # WordNetDir, existing_software_config, errorFound = IO_libraries_util.external_software_install('knowledge_graphs_WordNet_util',
-    #                                                                                      'WordNet',
-    #                                                                                      '',
-    #                                                                                      silent=False, errorFound=False)
-
-    # if WordNetDir == None:
-    #     return
-
-    # print("noun_verb",noun_verb)
+    WordNetDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
+        "knowledge_graphs_WordNet_util", "WordNet", "", silent=False, errorFound=False
+    )
+    if WordNetDir is None:
+        return filesToOpen
 
     if (
         not aggregate_POS_var
@@ -200,8 +195,7 @@ def run_kg_wordnet(
                 )
                 # result=mb.askokcancel(title='Missing required information',
                 #              message="You have selected to run the option 'Zoom OUT/UP to find higher-level aggregates' with the 'NOUN' option but the csv file currently selected does not contain the expected subscript 'nouns_lemma'.\n\nIf this an overshigth, click on the Select INPUT CSV file button to select a different csv file and try again.")
-                if not result:
-                    return
+                return
         if noun_verb == "VERB" and "verbs_lemma" not in csv_file:
             if hidden_verb_lemma_csv != "":
                 pass
@@ -209,7 +203,6 @@ def run_kg_wordnet(
                 print(
                     "Missing required information, You have selected to run the option 'Zoom OUT/UP to find higher-level aggregates' with the 'VERB' option but the csv file currently selected does not contain the expected subscript 'verbs_lemma'.\n\nIf this an overshigth, click on the Select INPUT CSV file button to select a different csv file and try again."
                 )
-                # result=mb.askokcancel(title='Missing required information', message="You have selected to run the option 'Zoom OUT/UP to find higher-level aggregates' with the 'VERB' option but the csv file currently selected does not contain the expected subscript 'verbs_lemma'.\n\nIf this an overshigth, click on the Select INPUT CSV file button to select a different csv file and try again.")
                 result = False
                 if not result:
                     return

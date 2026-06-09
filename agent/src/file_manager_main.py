@@ -51,8 +51,6 @@ def run_file_manager(
 ):
 
     # if inputDir == outputDir and list_var ==False:
-    #     print("You have selected the same directory for both input and output.THIS IS NOT A GOOD IDEA, PARTICULARLY IF YOU DO NOT HAVE BACKUPS OF THE FILES IN THE INPUT DIRECTORY.")
-    #     return
     # Frontend Implementation
 
     filesToOpen = []
@@ -70,8 +68,6 @@ def run_file_manager(
     # if utf8_var==1 or ASCII_var==1:
     #     mb.showwarning(title='Option not available',
     #                    message='The utf-8 and ASCII options are not available yet.\n\nSorry!')
-    #     list_var=1
-    #     return
 
     if list_var:
         options = options + 1
@@ -93,9 +89,7 @@ def run_file_manager(
         options = options + 1
         operation = "deleted"
         outputFilename = "List_deleted_files_" + currentSubfolder + ".csv"
-        # command = tk.messagebox.askyesno("Deleting files", "You are about to delete files. Make sure you have a backup! Files deleted via a Python command will not be recoverable from the Recycle Bin\n\nAre you sure you want to do continue?")
         # if command==False:
-        #     return
         # Frontend Implementation
     if count_file_manager_var:
         i = 1
@@ -144,17 +138,11 @@ def run_file_manager(
 
     if by_creation_date_var:
         # if file_type_menu_var!='' and file_type_menu_var!='doc' and by_file_type_var!='docx':
-        #     print("You have selected the options 'By file type' as " + file_type_menu_var + " and 'By creation date'.\n\nThe 'By creation date' option only works for 'doc' and 'docx' type of files.\n\nThe 'By creation date' option will be ignored.")
-        # else:
-        #     fieldnames = fieldnames + ['Creation_date', 'Modification_date']
         # frontend implementation
         fieldnames = fieldnames + ["Creation_date", "Modification_date"]
 
     if by_author_var:
         # if file_type_menu_var!='' and file_type_menu_var!='doc' and by_file_type_var!='docx':
-        #     print("You have selected the options 'By file type' as " + file_type_menu_var + " and 'By author'.\n\nThe 'By author' option only works for 'doc' and 'docx' type of files.\n\nThe 'By author' option will be ignored.")
-        # else:
-        #     fieldnames = fieldnames + ['Author']
         # frontend implementation
         fieldnames = fieldnames + ["Author"]
 
@@ -187,15 +175,11 @@ def run_file_manager(
 
     # _________________________________________________________________________________________________________________________________________________
 
-    # startTime=IO_user_interface_util.timed_alert(GUI_util.window,2000,'Analysis start', 'Started running File Manager at',True, '', True, '', True)
     if list_var:
         # extract the last subfolder of the path to be displayed as part of the output filename
         os.path.basename(os.path.normpath(inputDir))
-        # outputFilename = "List__files" + str(subDir) + ".csv"
 
     if count_file_manager_var:
-        # fieldnames = ['Main_Dir', 'Subdir', 'pdf', 'doc', 'docx', 'txt', 'Matching']
-        # i=len(os.listdir(inputDir))
         i = file_filename_util.get_count(inputDir, outputDir, outputFilename)
     else:
         with open(outputDir + os.sep + outputFilename, "w", errors="ignore", newline="") as csvfile:
@@ -205,11 +189,7 @@ def run_file_manager(
     if rename_var:
         # You can in fact have a blank entry
         # if rename_new_entry=='' and string_entry_var=='':
-        # 	mb.showwarning(title='File handling', message='You have selected the option "Rename files" but you have not entered the substring values old and new necessary for renaming the filename.\n\nPlease, enter the values in the fields "New substring for renaming" and "Enter value" and try again.')
-        # 	return
         # if rename_new_entry=='':
-        # 	mb.showwarning(title='File handling', message='You have selected the option "Rename files" but you have not entered the new substring value necessary for renaming the filename.\n\nPlease, enter the value in the field "New substring for renaming" and try again.')
-        # 	return
         if (
             not by_prefix_var
             and not by_substring_var
@@ -263,10 +243,8 @@ def run_file_manager(
             msg = 'containing the substring "' + string_entry_var + '" '
 
     # For cases where matching files beginning with a dot (.); like files in the current directory or hidden files on Unix based system, use the os.walk
-    # import glob
     # include_subdir_var
     # for filename in glob.iglob(inputDir + os.sep+ '*.'+by_file_type_var, recursive=True):
-    #      print(filename)
 
     # root: Current path which is "walked through"
     # subdirs: Files in root of type directory
@@ -277,40 +255,20 @@ def run_file_manager(
 
     # implemented noHeaders and headers here as it was in GUI section
     # no need!!
-    # csv_file = get_first_csv(inputDir)
     # if selectedCsvFile_var != '':
-    #     headers_result = IO_csv_util.get_csv_file_headers(selectedCsvFile_var, True)
     #     if headers_result == '':
-    #         noHeaders= True
-    #         headers = []
-    #     else:
-    #         noHeaders = False
-    #         data, headers = IO_csv_util.get_csv_file_data_and_headers(selectedCsvFile_var, True)
 
     #     if noHeaders==False:
-    #         selectedCsvFile_colNum=IO_csv_util.get_columnNumber_from_headerValue(headers, selectedCsvFile_colName, selectedCsvFile_var)
-    #     else:
     #         # No headers, we assume the first column
-    #         selectedCsvFile_colNum=0
 
     # if there are variables declared in frontend, just take them from frontend
 
-    # fileList = []
     # with open(selectedCsvFile_var, 'r', encoding="utf-8", errors='ignore') as read_obj:
-    #     csv_reader = csv.reader(read_obj)
     #     if noHeaders==False:
     #         # skip first row since it has headers
-    #         next(csv_reader)
     #     for row in csv_reader:
     #         if row[selectedCsvFile_colNum][:10] == "=hyperlink":
-    #             f = IO_csv_util.undressFilenameForCSVHyperlink(row[selectedCsvFile_colNum])
-    #             print(f)
-    #         else:
-    #             f = row[selectedCsvFile_colNum]
-    #         head, tail = os.path.split(f)
     #         if head != '':
-    #             hasFullPath = True
-    #         fileList.append(f)
 
     # _________________________________________________________________________________________________________________________________________________
 
@@ -484,7 +442,6 @@ def run_file_manager(
     if outputFiles:
         filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
 
-    # IO_user_interface_util.timed_alert(GUI_util.window,2000,'Analysis end', 'Finished running File manager at', True, '', True, startTime)
 
     if i > 0:
         if rename_var == 1:
@@ -514,7 +471,6 @@ def run_file_manager(
         else:
             print(str(i) + " files " + msg + operation + ".")
             filesToOpen.append(os.path.join(outputDir, outputFilename))
-            # IO_files_util.OpenOutputFiles(GUI_util.window, True, filesToOpen, outputDir, scriptName)
     else:
         print(
             "No files "

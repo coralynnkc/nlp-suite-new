@@ -1,4 +1,3 @@
-# import statements
 import os
 import pickle
 import random

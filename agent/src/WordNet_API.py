@@ -5,7 +5,6 @@ AGENT_MOUNT_PATH = "/root/nlp-suite"
 
 def call_wordnet_api(cmd, call_list, args):
 
-    # api_url = f"http://172.16.0.13:7070/{cmd}"
 
     api_url = f"http:localhost:7070/{cmd}"
 
@@ -19,8 +18,8 @@ def call_wordnet_api(cmd, call_list, args):
 
         return response.json()
 
-    except Exception:
-        raise RuntimeError(f"Failed to call WordNet API w/ command {cmd} and call list {call_list}")
+    except Exception as e:
+        raise RuntimeError(f"Failed to call WordNet API w/ command {cmd} and call list {call_list}") from e
 
 
 def wordnet_to_agent_path(path):

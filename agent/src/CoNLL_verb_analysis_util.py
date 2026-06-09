@@ -7,7 +7,6 @@ modified by Siyan Pu November 2021
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "Verb Analysis",
 # 										  ['csv', 'os', 'collections', 'tkinter']) == False:
-# 	sys.exit(0)
 from collections import Counter
 
 import charts_util
@@ -25,7 +24,6 @@ sentenceID_position = 10  # NEW CoNLL_U
 documentID_position = 11  # NEW CoNLL_U
 
 # Following are used if running all analyses to prevent redundancy
-# filesToOpen = []  # Store all files that are to be opened once finished
 inputFilename = ""
 outputDir = ""
 cla_open_csv = False  # if run from command line, will check if they want to open the CSV
@@ -76,8 +74,6 @@ def compute_stats(data):
 
 # for voice analysis
 def verb_voice_compute_frequencies(list_all_tok):
-    # print ("\n------- VERB VOICE ANALYSIS -------")
-    # print ("\n############### VERB VOICE ANALYSIS ##############")
     rootAuxiliary = False
     rootPassive = False
     aux_helper = ""
@@ -168,7 +164,6 @@ def verb_voice_stats(
     inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation
 ):
     filesToOpen = []  # Store all files that are to be opened once finished
-    # print ("\nRun verb voice analysis")
     data_prep = verb_voice_data_preparation(data)
 
     verb_voice_list, voice_stats, voice_pass, voice_aux, voice_act = voice_output(data_prep, data_divided_sents)
@@ -308,36 +303,15 @@ def verb_modality_data_preparation(data):
 
 # modality compute frequencies of modality categories
 # def verb_modality_compute_categories(data, data_divided_sents):
-# 	num_obligation_mod = 0
-# 	num_will_would_mod = 0
-# 	num_can_may_mod = 0
-# 	num_unclassified = 0
-# 	verb_modality_list = []
-# 	obligation_keywords = ['must', 'need', 'form', 'should', 'ought', 'shall']
-# 	will_would_keywords = ['will', 'would', 'll', '\'d']
-# 	can_may_keywords = ['can', 'could', 'may', 'might']
 
-# 	try:
-# 		verb_postags = ['MD']
-# 		verb_modality_list = [tok[1] for tok in data if (tok[3] in verb_postags and tok[1] in obligation_keywords)]
-# 		will_would_list = [tok[1] for tok in data if (tok[3] in verb_postags and tok[1] in will_would_keywords)]
-# 		can_may_list = [tok[1] for tok in data if (tok[3] in verb_postags and tok[1] in can_may_keywords)]
 
 # 		verb_modality_list = [['Verb Modality', 'Frequencies'],
-# 					  ['Obligation', len(verb_modality_list)],
-# 					  ['Will/would', len(will_would_list)],
 # 					  ['Can/may', len(can_may_list)]]
 
-# 		obligation_counter = len(verb_modality_list)
-# 		will_would_counter = len(will_would_list)
-# 		can_may_counter = len(can_may_list)
 
-# 		return obligation_counter, will_would_counter, can_may_counter, verb_modality_list, will_would_list
 # 	except:
-# 		print("ERROR: INPUT MUST BE THE CoNLL TABLE CONTAINING THE SENTENCE ID. Program will exit.")
 # 		mb.showinfo("ERROR",
 # 					"INPUT MUST BE THE MERGED CoNLL TABLE CONTAINING THE SENTENCE ID. Please use the merge option when generating your CoNLL table in the StanfordCoreNLP.py routine. Program will exit.")
-# 		return
 
 
 def verb_modality_stats(
@@ -736,7 +710,6 @@ def verb_tense_stats(
                 filesToOpen.extend(outputFiles)
 
     # # temporary headers added, not sure why the verb_voice_list doesn't have headers
-    # df = pd.read_csv(verb_file_name, header=None, encoding='utf-8', on_bad_lines='skip')
     # df.to_csv(verb_file_name,
     # 		  header=["ID", "FORM", "Lemma", "POS", "NER", "Head", "DepRel", "Deps", "Clause Tag", "Record ID", "Sentence ID", "Document ID", "Document",
     # 			  "Verb Tense"])
@@ -804,11 +777,7 @@ def verb_stats(
 # Debug use
 # =======================================================================================================================
 # def main():
-# 	file = "C:/Users/Tony Chen/Desktop/NLP_working/Test Input/conll_chn.csv"
 # 	# debug use
-# 	data, header = IO_csv_util.get_csv_data(file, True)
 # 	# end debug use
-# 	a,b = verb_modality_data_preparation(data)
 
 # if __name__ == "__main__":
-# 	main()

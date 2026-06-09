@@ -24,7 +24,6 @@ def run_colormap(
         all_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
 
     # mb.showwarning(title='Search values',
-    #                 message='You have entered ' + str(len(csv_file_categorical_field_list)) + \
     #                         ' different search fields: "' + all_fields_str + '".' + \
     #                         '\n\nThe first selected field "' + csv_file_categorical_field_list[0][0].split('|')[0] + '" will be used as the GroupBy field.' + \
     #                         '\n\nThe last field "' + csv_file_categorical_field_list[len(csv_file_categorical_field_list)-1][0].split('|')[0] + '" will be used as the field whose values will be displayed.' + \
@@ -33,7 +32,6 @@ def run_colormap(
     # if csv_field_categorical_var == '':
     #     mb.showwarning("Warning",
     #                     "The colormap/heatmap algorithm requires a value for 'csv file field.'\n\nPlease, select a value and try again.")
-    #     return
     params = [max_rows_var, color_1_style_var, color_2_style_var, normalize_var]
     outputFiles = charts_util.colormap(
         inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=inputFileData
@@ -63,7 +61,6 @@ def main():
     inputFilename = "sample.csv"
 
     #                                     #GROUPBY,     WHERE,         SELECT
-    # csv_file_categorical_field_list = [['Gender|'], ['Fixed|Yes'], ['Weight|']]
     #                                 # GROUPBY format: [field|Val1, Val2...], Vals optional
     #                                 # WHERE format: [field|Val1, Val2...], Vals not optional
     #                                 # SELECT format: [field|]

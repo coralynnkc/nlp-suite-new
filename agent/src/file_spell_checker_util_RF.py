@@ -41,8 +41,6 @@ import os
 import subprocess
 import time
 import tkinter.messagebox as mb
-
-# from nltk.stem import WordNetLemmatizer
 from tkinter import filedialog
 
 import charts_util
@@ -51,8 +49,6 @@ import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
 import nltk
-
-# IO_libraries_util.import_nltk_resource(GUI_util.window,'tokenizers/punkt','punkt')
 import pandas
 import pandas as pd
 import reminders_util
@@ -65,8 +61,6 @@ from pandas import DataFrame
 from spacy_langdetect import LanguageDetector
 from spellchecker import SpellChecker
 from stanfordcorenlp import StanfordCoreNLP
-
-# from nltk import tokenize
 from Stanza_functions_util import lemmatize_stanza_word, stanzaPipeLine, tokenize_stanza_text
 from textblob import Word
 
@@ -78,8 +72,6 @@ def lemmatizing(word):  # edited by Claude Hu 08/2020
     for _p in pos:
         # if lemmatization with any postag gives different result from the word itself
         # that lemmatization is returned as #
-        # lemmatizer = WordNetLemmatizer()
-        # lemma = lemmatizer.lemmatize(word, p)
         lemma = lemmatize_stanza_word(stanzaPipeLine(word))
         if lemma != word:
             result = lemma
@@ -115,14 +107,11 @@ def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFil
     )
 
     # already shown in NLP.py
-    # IO_util.timed_alert(GUI_util.window,2000,'Analysis start','Started running NLTK unusual words at',True,'You can follow NLTK unusual words in command line.')
     for file in files:
         documentID = documentID + 1
         head, tail = os.path.split(file)
         print("Processing file " + str(documentID) + "/" + str(nFile) + " " + tail)
         text = open(file, encoding="utf-8", errors="ignore").read()
-        # lemmatizer = WordNetLemmatizer()
-        # text_vocab = set(lemmatizer.lemmatize(w.lower()) for w in text.split(" ") if w.isalpha())
         text_vocab = set(lemmatizing(w.lower()) for w in text.split(" ") if w.isalpha())
         english_vocab = set([w.lower() for w in nltk.corpus.words.words()])
         print("english_vocab", english_vocab)
@@ -132,7 +121,6 @@ def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFil
         unusual = list(unusual)
         # sort the list
         unusual.sort()
-        # unusual = [[documentID, file, word] for word in unusual]
         unusual = [[documentID, IO_csv_util.dressFilenameForCSVHyperlink(file), word] for word in unusual]
         container.append(unusual)
     container.insert(0, ["Misspelled/unusual word", "Document ID", "Document"])
@@ -146,7 +134,6 @@ def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFil
         if nFile == 1:
             return
 
-    # if not silent: IO_user_interface_util.single_file_output_save(inputDir,'NLTK')
 
     # NLTK unusual words
     if chartPackage != "No charts":
@@ -183,7 +170,6 @@ def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFil
         IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen)
         filesToOpen = []  # do not open twice, hee and calling function
     # already shown in NLP.py
-    # IO_util.timed_alert(GUI_util.window,3000,'Analysis end','Finished running NLTK unusual words at',True)
     for u in unusual:
         print(u[-1])
 
@@ -374,11 +360,9 @@ def check_for_typo(
             with open(dir_path, encoding="utf-8", errors="ignore") as src:
                 text = src.read().replace("\n", " ")
                 NLP = StanfordCoreNLP("http://localhost", port=9000)
-            # sentences = tokenize.sent_tokenize(text)
             sentences = tokenize_stanza_text(stanzaPipeLine(text))
             documents.append([sentences, filename, dir_path])
 
-    # IO_util.timed_alert(GUI_util.window, 5000, 'Word similarity', 'Finished preparing data...\n\nProcessed '+str(folderID)+' subfolders and '+str(fileID)+' files.\n\nNow running Stanford CoreNLP to get NER values on every file processed... PLEASE, be patient. This may take a while...')
 
     if by_all_tokens_var:
         # TODO header_rows ends up including filename as well; must only include the words in the documents
@@ -444,7 +428,6 @@ def check_for_typo(
         + str(len(distinct_word_list))
         + " DISTINCT words. Now computing spelling and word differences for DISTINCT words..."
     )
-    # IO_util.timed_alert(GUI_util.window, 5000, 'Word similarity', 'Finished running Stanford CoreNLP...\n\nProcessed '+str(len(list_to_check))+' words.\n\nNow computing word differences... PLEASE, be patient. This may take a while...')
     # These headers reflect the items returned from the processing above
     # THEIR ORDER CANNOT BE CHANGED, UNLESS ABOVE ORDER OF PROCESSING IS ALSO CHANGED
     # These headers are then used selectively for the output (see headers2)
@@ -483,17 +466,7 @@ def check_for_typo(
 
         # for header_row in header_row_list_to_check:
         # for header_row in header_row_list_to_check:
-        #     header_row.insert(1, word_freq_dict.get(word[0]))
-        #     checker_against = all_word_dict
-        #     value_tuple = check_edit_dist(word[0], checker_against, similarity_value)
         #     if value_tuple[0]:
-        #         header_row.append(value_tuple[1])  # returned similar word from check_edit_list
-        #         header_row.append(value_tuple[2])  # returned similar word frequency from check_edit_list
-        #         header_row.append('Typo?')
-        #     else:
-        #         header_row.append('')
-        #         header_row.append('')
-        #         header_row.append('')
 
         checker_against = all_header_rows_dict
         for word in distinct_word_list:
@@ -501,7 +474,6 @@ def check_for_typo(
                 processed_wordID = processed_wordID + 1
                 speller = SpellChecker()
                 respelled_word = speller.correction(word)
-                # print("      Processing DISTINCT word " + str(processed_wordID) + "/" + str(len(distinct_word_list)) + " Row " + str(header_rowID) + "/" + str(len(header_row_list_to_check)) + ":" + word)
                 print(
                     "      Processing DISTINCT word "
                     + str(processed_wordID)
@@ -530,7 +502,6 @@ def check_for_typo(
                 header_row.append("")
                 header_row.append("")
                 header_row.append("")
-            # print("      Processing word " + str(header_rowID) + "/" + str(len(header_row_list_to_check)) + ":" + word)
 
             if word not in processed_word_list:
                 processed_word_list.append(word)
@@ -659,7 +630,6 @@ def spelling_checker_cleaner(window, inputFilename, inputDir, outputDir, openOut
         title="Find & Replace csv file (with 'Original' and 'Corrected' headers)",
         message="Please, select the csv file that contains the information about words that need correcting.\n\nMostly likely this file was created by the spell checker algorithms and edited by you keeping only correct entries.\n\nThe Find & Replace will expect 2 column headers 'Original' and 'Corrected'.\n\nPlease, make sure that your csv file has those characteristics.",
     )
-    # initialdir=initialFolder,
     csv_spelling_file = filedialog.askopenfilename(
         title="Select INPUT csv spelling file (with 'Original' and 'Corrected' headers)",
         filetypes=[("csv files", "*.csv")],
@@ -719,40 +689,16 @@ def spellchecking_autocorrect(text: str, inputFilename) -> (str, DataFrame):
 
 # the library has an indexer problem
 # if checkIO_Filename_inputDir ("Spelling checker (via SpellChecker)",inputFilename, "NO input directory required", 'txt'):
-#     print("going to spell")
-#     outputFilename=IO_util.generate_output_file_name(inputFilename,outputDir,'.csv','Spell')
-#     misspelledWordsList=statistics_corpus_util.spellingChecker(GUI_util.window,inputFilename,outputFilename)
 #     if len(misspelledWordsList)>0:
-#         openOutputFiles=True
-#         filesToOpen.append(outputFilename)
-#     else:
-#         mb.showwarning(title='Spelling checker (via SpellChecker)', message='No misspelled/unusual words found in\n'+inputFilename)
 # https://www.tutorialspoint.com/python_text_processing/python_spelling_check.htm
 # def spellingChecker(window,inputFilename,outputFilename):
-#     print("IN spellingChecker")
-#     text = (open(inputFilename, "r", encoding="utf-8", errors="ignore").read())
-#     spell = SpellChecker()
 #     # SHOULD HAVE THIS FORMAT
-#     # misspelled = spell.unknown(['let', 'us', 'wlak','on','the','groun'])
 #     # string.punctuation doesn't include non-English punctuation at all
 #     # https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string
-#     #text=text.translate(str.maketrans('', '', string.punctuation))
-#     import re
-#     #s = "string. With. Punctuation?"
-#     text = re.sub(r'[^\w\s]','',text)
-#     arr = text.split(" ")
-#     print("len(arr)",len(arr))
 #     # misspelled contains the list of misspelled words
-#     misspelled = spell.unknown(arr)
-#     print("len(misspelled)",len(misspelled))
-#     #print ("misspelled",misspelled)
 #     for word in misspelled:
-#         print("word: ",word)
 #         # Get the one `most likely` answer
-#         print("correction: ",spell.correction(word))
 #         # Get a list of `likely` options
-#         print("candidates: ",spell.candidates(word))
-#     return misspelled
 
 
 def spellchecking_pyspellchecker(text: str, inputFilename) -> (str, DataFrame):
@@ -815,52 +761,25 @@ def spellchecking_text_blob(text: str, inputFilename) -> (str, DataFrame):
 
 # not used
 # def spellchecking_pytesseract(inputDir,outputDir):
-#     misspelled = spell.unknown([word])
 #     if misspelled == set():
-#         return False,''
-#     else:
 #         for misspell in misspelled:
 #             # Get the one `most likely` answer
-#             return True, spell.correction(misspell)
 
 # not used
 # def spell_word_pytesseract(word, spell):
-#     misspelled = spell.unknown([word])
 #     if misspelled == set():
-#         return False,''
-#     else:
 #         for misspell in misspelled:
 #             # Get the one `most likely` answer
-#             return True, spell.correction(misspell)
 #
 #     if spelling_checker_var:
 #         if 'autocorrect' in checker_package:
-#             spell = Speller(lang='en')
-#         else:
-#             spell = SpellChecker()
 #         header_rows = [[token, sentence_number + 1, document_number + 1, sentence, document[1],IO_csv_util.dressFilenameForCSVHyperlink(document[2]) ,''] for document_number, document in
-#                      enumerate(documents)
 #                      for sentence_number, sentence in enumerate(document[0])
 #                      for token in NLP.word_tokenize(sentence)]
 #
-#         list_to_check = header_rows
-#         word_list = [elmt[0] for elmt in list_to_check]
-#         word_freq_dict = {i: word_list.count(i) for i in set(word_list)}
 #         for word in list_to_check:
-#             word.insert(1, word_freq_dict.get(word[0]))
 #             if 'pyspellchecker' in checker_package:
-#                 value_tuple = spell_word_pytesseract(word[0],spell)
-#             else:
-#                 return
 #             if value_tuple[0]:
-#                 word.append(value_tuple[1])  # returned similar word from check_edit_list
-#                 word.append(word_freq_dict.get(value_tuple[1],0))  # returned similar word frequency from check_edit_list
-#                 word.append('Typo?')
-#             else:
-#                 word.append('')
-#                 word.append('')
-#                 word.append('')
-#             print(word)
 
 
 def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
@@ -891,10 +810,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
     for filename in files:
         if check_withinDir:
             print("Processing file:", filename)
-        # else:
-        #     print("  Processing file:", filename)
         fileID = fileID + 1
-        # inputFilenames_path = os.path.join(folder, filename)
         # with open(inputFilenames_path, 'r', encoding='utf-8', errors='ignore') as opened_file:
         with open(filename, encoding="utf-8", errors="ignore") as opened_file:
             print("  Processing file:", filename)
@@ -1005,8 +921,6 @@ def language_detection(window, inputFilename, inputDir, outputDir, openOutputFil
                 print("  The file is empty. It will be discarded from processing.")
                 docErrors_empty = docErrors_empty + 1
                 continue
-            # text = opened_file.read()
-            # head, tail = os.path.split(filename)
             # head is path, tail is filename
             try:
                 value = detect_langs(text)
@@ -1021,7 +935,6 @@ def language_detection(window, inputFilename, inputDir, outputDir, openOutputFil
             language = value[0]
             probability = value[1]
             print("   LANGDETECT", language, probability)
-            # print('   LANGDETECT',value[0],value[1])  # [cs:0.7142840957132709, pl:0.14285810606233737, sk:0.14285779665739756]
             currentLine = ["LANGDETECT", language, probability]
 
             nlp = spacy.load("en_core_web_sm")

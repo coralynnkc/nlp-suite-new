@@ -96,7 +96,6 @@ if IO_setup_display_brief:
 else:  # full display
     # GUI CHANGES add following lines to every special GUI
     # +3 is the number of lines starting at 1 of IO widgets
-    # y_multiplier_integer=GUI_util.y_multiplier_integer+2
     y_multiplier_integer = GUI_util.y_multiplier_integer + 1  # IO FULL display
     increment = 1
 
@@ -149,8 +148,6 @@ window.bind("<Escape>", clear)
 
 # MERGE ________________________________________________________
 
-# merge_files_lb = tk.Label(window, text='Merge files',font=("Courier", 12, "bold"))
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.labels_x_coordinate,y_multiplier_integer,merge_files_lb)
 
 merge_save_fileName_var.set(0)
 merge_save_fileName_checkbox = tk.Checkbutton(

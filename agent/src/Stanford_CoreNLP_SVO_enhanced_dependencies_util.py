@@ -14,7 +14,6 @@ import GUI_IO_util
 def SVO_enhanced_dependencies_sent_data_reorg(sentence):  # reorganize the dependencies output of stanford corenlp
     result = {}  # store each token's information
     tokens = sentence["tokens"]
-    # dependencies = sentence["enhancedDependencies"]
     dependencies = sentence["enhancedPlusPlusDependencies"]
     for token in tokens:
         idx = token["index"]
@@ -230,7 +229,6 @@ def verb_root_svo_building(
     # form the verb
     #'compound:prt' is the compound part of the verb, usually a preposition that follows the the verb
     if "compound:prt" in vgd.keys():
-        # v_string = v_string + " "  +sent_data[vgd['compound:prt']]['word']
         v_string = v_string + " " + token_connect(vgd["compound:prt"], sent_data)
 
     # extract subject
@@ -371,18 +369,14 @@ def pred_root(token, gov_dict, sent_data):  # returns one triplet of subject-lin
         s = s_o_formation(gov_dict["nsubj"], sent_data)[0]
         negation = negation or content_negation(gov_dict["nsubj"], sent_data)
     if "cop" in gov_dict.keys():
-        # v = sent_data[gov_dict["cop"]]['word']
         # if v != "":
         v = token_connect(gov_dict["cop"], sent_data) + " " + v
-        # else:
-        #     v = token_connect(gov_dict["cop"], sent_data)
         negation = negation or content_negation(gov_dict["cop"], sent_data)
     if "aux" in gov_dict.keys() and v != "":
         v = token_connect(gov_dict["aux"], sent_data) + " " + v
         negation = negation or content_negation(gov_dict["aux"], sent_data)
     o = token["word"]
     if "case" in gov_dict.keys() and v != "":
-        # v = v + " " + sent_data[gov_dict["case"]]['word']
         v = v + " " + token_connect(gov_dict["case"], sent_data)
 
     return s, v, o, negation
@@ -557,8 +551,6 @@ def SVO_extraction(sent_data, entitymentions):  # returns columns of the final o
 
         # for item in entitymentions:
         #     if item["ner"] is not None and item["ner"] in ['PERSON']:
-        #         person_list.append(item["text"])
-        #         per_NER_value.append([item["text"], item["ner"], item["tokenBegin"], item["tokenEnd"]])
 
         gov_dict = token[
             "govern_dict"
@@ -634,15 +626,11 @@ def SVO_extraction(sent_data, entitymentions):  # returns columns of the final o
                     SVO.extend(svo_acl)
                     N.extend(negation_acl)
 
-    # print("BEGIN======")
-    # print(SVO)
     for index, item in enumerate(SVO):
         SVO[index][0] = replace_words_with_full_names(SVO[index][0], person_list)
         SVO[index][0] = replace_words_with_full_names(SVO[index][0], organization_list)
         SVO[index][2] = replace_words_with_full_names(SVO[index][2], person_list)
         SVO[index][2] = replace_words_with_full_names(SVO[index][2], organization_list)
-    # print(SVO)
-    # print("======END")
     # the values are returned for every SVO
     return (
         SVO,
@@ -667,7 +655,6 @@ def SVO_extraction(sent_data, entitymentions):  # returns columns of the final o
 def date_get_info(norm_date):
     norm_date = norm_date.strip()
     tense = "OTHER"
-    # print(norm_date)
     if norm_date.isdigit() or (norm_date[0] == "-" and norm_date.replace("-", "").isdigit()):
         tense = "YEAR"
     elif norm_date[-2:] == "XX" and (
@@ -682,33 +669,23 @@ def date_get_info(norm_date):
         or ("XXXX" in norm_date and norm_date.split("XXXX")[1].replace("-", "").isdigit())
     ):  # (len(norm_date) > 4 and norm_date[0:4] == 'XXXX' and norm_date[4:].replace("-", '').isdigit()):#specific year,month, day
         tense = "DATE"
-        # print("date")
     elif "WXX" in norm_date or "WE" in norm_date:  # weekdays
         tense = "DAY"
-        # print("day")
     elif "SP" in norm_date or "SU" in norm_date or "FA" in norm_date or "WI" in norm_date:
         tense = "SEASON"
-        # print("season")
-    # else:
-    #     tense = "OTHER"
     return tense
 
 
-# ["Word", "Normalized date", "tid","tense","Date type","Sentence ID", "Sentence", "Document ID", "Document"],
 def date_get_tense(norm_date):
     tense = ""
-    # print(norm_date)
     if (len(norm_date) >= 9 and "PREV" in norm_date) or "OFFSET person_list" in norm_date or "PAST" in norm_date:
-        # print('past')
         tense = "PAST"
     elif (len(norm_date) >= 6 and "OFFSET" in norm_date) or "FUTURE" in norm_date:
-        # print("future")
         tense = "FUTURE"
     elif "THIS" in norm_date or "PRESENT" in norm_date:
         tense = "PRESENT"
     elif "NEXT" in norm_date:
         tense = "NEXT"
-        # print('present')
     else:
         tense = "OTHER"  # TODO separate out days of week, months of year
     return tense

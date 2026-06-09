@@ -62,8 +62,6 @@ def run(inputFilename, folium_pinmap_outputFilename, folium_heatmap_outputFilena
     GISLocation["Longitude"] = GISLocation["Longitude"].astype(float)
 
     # Filter the DF for rows, then columns, then remove NaNs
-    # heat_df = GISLocation[GISLocation['Speed_limit']=='40'] # Reducing data size so it runs faster
-    # heat_df = GISLocation[GISLocation['Year']=='2007'] # Reducing data size so it runs faster
     GISLocation = GISLocation[["Latitude", "Longitude"]]
     GISLocation = GISLocation.dropna(axis=0, subset=["Latitude", "Longitude"])
 

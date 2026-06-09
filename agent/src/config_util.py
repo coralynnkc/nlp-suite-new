@@ -158,7 +158,6 @@ def read_NLP_package_language_config():
     limit_document_length_var = 90000
     limit_sentence_length_var = 100
     config_filename = GUI_IO_util.configPath + os.sep + "NLP_default_package_language_config.csv"
-    # dataset = pd.read_csv(config_filename, sep='\t')
     error = False
     if not os.path.exists(config_filename):
         print(
@@ -181,7 +180,6 @@ def read_NLP_package_language_config():
             # TODO any change in the labels MAIN NLP PACKAGE, LEMMATIZER PACKAGE, and LANGUAGE(S) must be carried out
             #   several times in this scripts (search for instance for MAIN NLP PACKAGE and change
             #   they also need to be changed in one line in NLP_setup_package_language_main.py
-            # package_display_area_value = f"MAIN NLP PACKAGE: {package}, LEMMATIZER PACKAGE: {basics_package}, LANGUAGE(S): {language}"
         except:
             # setup default values if config is not available for first tme users
             package = "Stanford CoreNLP"
@@ -197,7 +195,6 @@ def read_NLP_package_language_config():
             # error must be set to true to display the next message after the entire GUI has been displayed
             # mb.showwarning(title='Warning',
             #                message="The config file 'NLP_default_package_language_config.csv' could not be found in the sub-directory 'config' of your main NLP Suite folder.\n\nPlease, setup the default NLP package and language options using the Setup button.")
-            # package_display_area_value = ''
     package_display_area_value = (
         f"MAIN NLP PACKAGE: {package}, LEMMATIZER PACKAGE: {basics_package}, LANGUAGE(S): {language}"
     )
@@ -341,7 +338,6 @@ def get_template_config_csv_file(config_input_output_numeric_options, config_inp
 # called by get_missing_IO_values in GUI_util and readConfig below
 # returns config_input_output_alphabetic_options, a double list of csv IO labels and values
 #   each sublist containing 5 items
-# [['Input txt filename with path', '', '', '', '0'], ['Input files directory', 'C:/Users/rfranzo/Desktop/NLP-Suite/lib/sampleData/newspaperArticles (Date: mm-dd-yyyy _ 2)', 'mm-dd-yyyy', '_', '4'], ['Input files secondary directory', '', '', '', '0'], ['Output files directory', 'C:\\Program Files (x86)\\NLP_backup\\Output', '', '', '0']]
 # config_option_csv contains 5 columns for each of four rows of input filename, directory, secondary directory, output directory
 #   Oct 2022 added 3 more columns for date options of either fileName or Input Dir: date format, character separator, date position
 #   Jan 2023 added sort order
@@ -387,7 +383,6 @@ def read_config_file(config_filename, config_input_output_numeric_options):
             config_input_output_alphabetic_options.pop(0)  # skip header
             # cannot use read_config_file again or it returns the old config_input_output_numeric_options
             #   and the program bombs in GUI_util
-            # read_config_file(config_filename, config_input_output_numeric_options)
         csv_file.close()
     else:
         config_file_exists = False
@@ -448,7 +443,6 @@ def get_missing_IO_values(config_input_output_numeric_options, config_input_outp
 # check_missing_IO is called from GUI_util
 # the function checks for missing IO values, displays messages and sets the RUN button to normal or disabled
 def check_missing_IO(config_filename, scriptName, IO_setup_display_brief, missing_IO, silent=False):
-    # missing_IO=''
     if config_filename == "NLP_config.csv" or "NLP_menu_main" in scriptName:
         config_filename = "NLP_default_IO_config.csv"
     # the IO_button_name error message changes depending upon the call
@@ -521,7 +515,6 @@ def write_IO_config_file(
     try:
         with open(config_filename_path, "w+", newline="") as csv_file:
             writer = csv.writer(csv_file)
-            # writer.writerows(temp)
             # in the NLP_setup_IO_config there are 6 columns and 4 rows (each row for input file, input dir1, input dir2, output dir)
             header = [
                 "I/O configuration label",
@@ -576,7 +569,6 @@ def get_date_options(config_filename, config_input_output_numeric_options):
 
 
 # used in GIS_GUI and GIS_geocode_GUI
-# Google_config: 'Google-geocode-API_config.csv' or 'Google-Maps-API_config.csv'
 def Google_API_Config_Save(Google_config, Google_API_key):
     # save the API key is not blank and not already there
     if Google_API_key != "":

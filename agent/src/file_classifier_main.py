@@ -178,9 +178,6 @@ by_NER_var = tk.IntVar()
 similarityIndex_var = tk.DoubleVar()
 
 # applies to list files only
-# character_count_var.set(0)
-# character_count_checkbox = tk.Checkbutton(window, text='By count of character(s) embedded in filename', variable=character_count_var, onvalue=1, offvalue=0)
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.labels_x_coordinate+50,y_multiplier_integer, character_count_checkbox)
 
 by_date_var.set(0)
 date_format.set("mm-dd-yyyy")

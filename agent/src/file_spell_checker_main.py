@@ -54,7 +54,6 @@ def run(
                 silent = True
             else:
                 silent = False
-            # openOutputFiles=False
             filesToOpen = file_spell_checker_util.nltk_unusual_words(
                 GUI_util.window,
                 inputFilename,
@@ -137,7 +136,6 @@ def run(
                 title="Option under testing",
                 message="The dictionary option is not completed yet.\n\nPlease, use with caution.",
             )
-            # return
         if (
             not by_all_words_var
             and not byNER_value_var
@@ -238,7 +236,6 @@ if IO_setup_display_brief:
 else:  # full display
     # GUI CHANGES add following lines to every special GUI
     # +3 is the number of lines starting at 1 of IO widgets
-    # y_multiplier_integer=GUI_util.y_multiplier_integer+2
     y_multiplier_integer = GUI_util.y_multiplier_integer + 2  # IO FULL display
     increment = 2
 
@@ -265,8 +262,6 @@ config_input_output_numeric_options = [2, 1, 0, 1]
 GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
 
 window = GUI_util.window
-# config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
-# config_filename = GUI_util.config_filename
 inputFilename = GUI_util.inputFilename
 input_main_dir_path = GUI_util.input_main_dir_path
 
@@ -413,12 +408,10 @@ def get_dictionary_file(window, title, fileType):
     filePath = tk.filedialog.askopenfilename(title=title, initialdir=initialFolder, filetypes=fileType)
     if len(filePath) > 0:
         # always disabled; user cannot tinker with the selection
-        # selectedCsvFile.config(state='disabled')
         selectedCsvFile_var.set(filePath)
 
 
 # setup a button to open Windows Explorer on the selected input directory
-# current_y_multiplier_integer=y_multiplier_integer-1
 openInputFile_button = tk.Button(
     window,
     width=GUI_IO_util.open_file_directory_button_width,
@@ -574,7 +567,6 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
     GUI_IO_util.entry_box_x_coordinate,
     "Check the spelling of words in your corpus using various spelling algorithms.\nSelect * to run all algorithms.",
 )
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.entry_box_x_coordinate, y_multiplier_integer,spelling_checker_value,True)
 
 check_withinDir_spell_checker_var.set(1)
 check_withinDir_spell_checker_checkbox = tk.Checkbutton(
@@ -625,11 +617,6 @@ def activate_all_options(*args):
         Levenshtein_distance_checkbox.configure(state="normal")
 
 
-# Levenshtein_distance_var.trace('w', activate_all_options)
-# by_all_words_var.trace('w', activate_all_options)
-# bydictionary_value_var.trace('w', activate_all_options)
-# byNER_value_var.trace('w', activate_all_options)
-# spelling_checker_var.trace('w', activate_all_options)
 
 activate_all_options()
 

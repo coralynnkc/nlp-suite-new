@@ -110,7 +110,6 @@ def adjective_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sen
     ]
 
     included_tags = ["JJ", "JJR", "JJS"]
-    # df = pd.DataFrame(data, columns=["ID", "Form", "Lemma", "POS", "NER", "Head", "DepRel", "Deps", "Clause Tag", "Record ID", "Sentence ID", "Document ID", "Document"])
     filtered_df = df[df["POS"].isin(included_tags)]
     possible_items = list(filtered_df["NER"].value_counts().keys())
     list_adjectives_ner = data_preparation(data, possible_items, possible_items, 4)

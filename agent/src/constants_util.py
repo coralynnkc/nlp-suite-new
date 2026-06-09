@@ -737,7 +737,6 @@ ISO_GIS_country_menu = (
 )
 
 # http://mappings.dbpedia.org/server/ontology/classes/
-# DBpedia_ontology_class_menu='Thing', 'Activity', 'Agent', 'Algorithm' 'Altitude', 'AnatomicalStructure', \
 # 'Area','Award','Biomolecule', 'Blazon','Browser','ChartsPlacements', 'ChemicalSubstance','Cipher', \
 # 'Colour', 'Currency', 'Demographics','Depth','Device','Diploma','Disease','ElectionDiagram', \
 # 'ElectricalSubstation','EthnicGroup','Event','FileSystem','Flag','Food','GeneLocation', \
@@ -1027,13 +1026,8 @@ NLP_Suite_pre_processing_tools_menu = (
     "Spelling checker cleaner (Find & Replace string)",
 )
 
-# 'CoreNLP annotator - date (NER normalized date)',
-# 'CoreNLP annotator - gender (male & female names; via CoreNLP and dictionaries)',
 # 'CoreNLP annotator - quote',
 # 'CoreNLP Co-Reference PRONOMINAL resolution',
-# 'Spelling checker/Unusual words (via NLTK)',
-# 'Spelling checker (via autocorrect)',
-# 'Spelling checker (via pyspellchecker)',
 # 'Spelling checker (via textblob)')
 
 NLP_Suite_corpus_tools_menu = (
@@ -1106,7 +1100,3 @@ NLP_Suite_corpus_document_tools_menu = (
 )
 
 
-# 'Spelling checker/Unusual words (via NLTK)',
-# 'Spelling checker (via autocorrect)',
-# 'Spelling checker (via pyspellchecker)',
-# 'Spelling checker (via textblob)',

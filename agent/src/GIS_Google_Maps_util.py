@@ -29,7 +29,6 @@ def create_google_heatmap(outputFilename, gmaps_list):
             title="Google Maps API key error",
             message="The expected API key required by Google Maps is missing in the config file Google-Maps-API_config.csv.\n\nPlease, make sure to obtain the key, enter it, and save it correctly in the Google-Maps-API_config.csv file and try again.\n\nNo Google Maps heatmap can be produced.",
         )
-        # import IO_user_interface_util
         # IO_user_interface_util.timed_alert('', 2000, 'Google Maps API key error',
         #                                    'The expected API key required by Google Maps is missing. Please, make sure to obtain the key, enter it, and save it correctly in the Google-Maps-API_config.csv file.')
         return
@@ -41,7 +40,6 @@ def create_google_heatmap(outputFilename, gmaps_list):
     open_js.close()
 
     js_to_write = js_template.split("//DO NOT REMOVE! PROGRAM INSERTS THE CORRECT JS HERE!")
-    # js_to_write.insert(1,js_to_insert)
     s = ""
     for item in gmaps_list:
         s += str(item + "\n")

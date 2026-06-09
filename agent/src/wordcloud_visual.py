@@ -99,8 +99,6 @@ def run_wordcloud(
         if prepare_image_var:
             # check internet connection
             # if not IO_internet_util.check_internet_availability_warning(visualization_tools):
-            #     return
-            # webbrowser.open_new_tab('https://www.remove.bg/')
             # https://www.adobe.com/express/feature/image/remove-background
             # https://express.adobe.com/tools/remove-background
             # https://www.slazzer.com/upload

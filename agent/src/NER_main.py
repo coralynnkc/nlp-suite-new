@@ -28,6 +28,7 @@ def run_NER(
 
     config_filename = "NLP_default_IO_config.csv"
     filesToOpen = []  # Store all files that are to be opened once finished
+    original_NER_list = NER_list
 
     # get the NLP package and language options
     (
@@ -58,7 +59,7 @@ def run_NER(
         )
         return
 
-    if len(NER_list) == 0 and "CoreNLP" in NER_packages_var.get():
+    if len(NER_list) == 0 and "CoreNLP" in NER_package:
         print("No NER tag selected, No NER tag has been selected.\n\nPlease, select an NER tag and try again.")
         return
 
@@ -74,7 +75,6 @@ def run_NER(
         import BERT_util
 
         NER_list = BERT_util.NER_dict
-        NER_entry_var.set(NER_list["NERs"])
         outputFiles = BERT_util.NER_tags_BERT(
             inputFilename, inputDir, outputDir, config_filename, "", chartPackage, dataTransformation
         )
@@ -90,7 +90,6 @@ def run_NER(
         document_length_var = 1
         limit_sentence_length_var = 1000
         NER_list = spaCy_util.NER_dict
-        NER_entry_var.set(NER_list)
         outputFiles = spaCy_util.spaCy_annotate(
             config_filename,
             inputFilename,
@@ -121,7 +120,7 @@ def run_NER(
     # Stanford CoreNLP -------------------------------------------------------------------------
 
     if "*" in NER_package or "CoreNLP" in NER_package:
-        NER_list = NER_entry_var.get()  # Stanford_CoreNLP_util.NER_list
+        NER_list = original_NER_list
         outputFiles = Stanford_CoreNLP_util.CoreNLP_annotate(
             config_filename,
             inputFilename,
@@ -157,8 +156,7 @@ def run_NER(
         document_length_var = 1
         limit_sentence_length_var = 1000
 
-        NER_list = get_NER_list("Stanza", language)
-        NER_entry_var.set(NER_list)
+        NER_list = original_NER_list
 
         outputFiles = Stanza_util.Stanza_annotate(
             config_filename,
@@ -189,5 +187,3 @@ def run_NER(
 
     if "*" in NER_package:
         NER_list = []
-        NER_tag_var.set(" ")
-        NER_entry_var.set(NER_list)

@@ -25,7 +25,6 @@ import IO_csv_util
 import IO_files_util
 from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
-# from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_word
 filesToOpen = []
 
 
@@ -71,7 +70,6 @@ def get_article_soc_actors_NER(dir_path, soc_acts, nlp, keywords, num_doc):
             # find out all the nouns
             if pos == "NN" or pos == "NNS":
                 # lemma_word to check if is social actor
-                # lemma_word = lemmatizer.lemmatize(word.lower())
                 lemma_word = lemmatize_stanza_word(stanzaPipeLine(word.lower()))
                 if lemma_word in soc_acts:
                     # add into the list.
@@ -83,7 +81,6 @@ def get_article_soc_actors_NER(dir_path, soc_acts, nlp, keywords, num_doc):
                         keywords[fileName][lemma_word] = 1
         for wordNER, pos in nlp.ner(fcontent):
             if pos == "LOCATION" or pos == "DATE" or pos == "ORGANIZATION" or pos == "PERSON":
-                # lemma_NER = lemmatizer.lemmatize(wordNER.lower())
                 lemma_NER = lemmatize_stanza_word(stanzaPipeLine(wordNER.lower()))
                 if lemma_NER not in postag_seen:
                     if lemma_NER in keywords[fileName]:
@@ -157,7 +154,6 @@ def check(
     # the local intruder in this folder
     this_intrude = []
     # print out the results.
-    # my_files = '\n'.join(map(lambda x: x.split(os.path.sep)[-1], my_files))
     for doc, similarity in similar.items():
         # We set the minimum index to 0.1 now.
         if similarity < similarityIndex_base:
@@ -209,7 +205,6 @@ def check(
 
 
 def main(CoreNLPDir, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, similarityIndex_base):
-    # similarityIndex_base = float(similarityIndex_base)
     ##
     ##This is just for evaluation purposes
     freq_intruded_folder = 0

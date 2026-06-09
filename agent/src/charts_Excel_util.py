@@ -77,7 +77,6 @@ def get_hover_column_numbers(withHeader_var, headers, hover_info_column_list):
                         + " will be empty.\n\nYou may have entered a column name which does not exist in the input CSV file.\n\nPlease, exit the program, check your input and try again.",
                     )
                 x = -1
-            # y=headers.index(selected_series[i][1])
         else:  # NO headers
             try:
                 x = int(hover_info_column_list[i])
@@ -156,7 +155,6 @@ def create_excel_chart(
     See https://www.pythonexcel.com/openpyxl.php
     """
 
-    # head, tail = os.path.split(chart_outputFilename)
     head, tail = os.path.split(inputFilename)
     num_label = len(data_to_be_plotted[0]) - 1
 
@@ -177,7 +175,6 @@ def create_excel_chart(
             "",
             True,
         )
-        # mb.showwarning(title='Excel chart error',message="Excel chart error: The number of rows in the input csv file\n\n" + tail + "\n\nexceeds the maximum number of rows Excel can handle (1048576, i.e., 2 to the 20th power, the largest that can be represented in twenty bits), leading to the error 'ValueError: Row numbers must be between 1 and 1048576.'")
         print(
             "Excel chart error: The number of rows in the input csv file\n\n"
             + tail
@@ -246,7 +243,6 @@ def create_excel_chart(
     # for color in bar charts depending upon value
 
     # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
-    # output_file_name = str(checkExcel_extension(output_file_name,hover_info_column_list))
     if len(hover_info_column_list) > 0:  # hover-over effects are invoked and the Excel filename extension MUST be xlsm
         if len(chart_type_list) == 0:
             print(
@@ -254,7 +250,6 @@ def create_excel_chart(
                 "No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!",
             )
             return
-        # scriptPath = os.path.dirname(os.path.realpath(__file__))
         fpath = ""
         first_chart_type = chart_type_list[0]
         if chart_type_list and all(type == first_chart_type for type in chart_type_list):
@@ -415,9 +410,6 @@ def create_excel_chart(
                     tail, tail_noExtension, filename_no_hyperlink = IO_files_util.getFilename(str(stats_list[i][0]))
                     stats_list[i][0] = tail
                     # if index > 0:
-                    #     row.append(stats_list[i][1]) # then we append the data
-                    # else:
-                    #     row += stats_list[i] # then we append the data
                     row += stats_list[i]  # then we append the data
                 else:  # else means the length of current series is smaller than the largest length of all series
                     # lines below are for the situation: in an excel chart, we have multiple series, but they are not the same length.
@@ -470,13 +462,9 @@ def create_excel_chart(
             ):
                 if len(column_xAxis_label) > 0:
                     chartName.x_axis.title = str(column_xAxis_label) + insertLines
-                # else:
-                #     chartName.x_axis.title = " X_AXIS"
 
                 if len(column_yAxis_label) > 0:
                     chartName.y_axis.title = str(column_yAxis_label)  # displayed on the y-axis
-                # else:
-                #     chartName.y_axis.title = " Y_AXIS"
 
             if len(series_label_list) > n:
                 print(
@@ -514,8 +502,6 @@ def create_excel_chart(
                         # setting title='' will still display a blue little square button w/w series name
                         # chartName.series.append(Series(data)) will still display Series 1
                         # LEGEND
-                        # chartName.legend(legendEntry=())
-                        # chartName.add_data(data,titles_from_data=False)
                         # test for n > 1 but... no matter how this is exported it still displays the legend oon the right; see comments above
                         if n < 2:
                             chartName.legend = None
@@ -583,19 +569,13 @@ def create_excel_chart(
             # TODO must center the X-axis label
             if len(column_xAxis_label) > 0:
                 chartName1.x_axis.title = str(column_xAxis_label + insertLines)
-            # else:
-            #     chartName1.x_axis.title = " X_AXIS"
 
             if len(column_yAxis_label) > 0:
                 chartName1.y_axis.title = str(column_yAxis_label)
-            # else:
-            #     chartName1.y_axis.title = " Y_AXIS"
 
             # second y-axis label
             if len(second_yAxis_label) > 0:
                 chartName2.y_axis.title = str(second_yAxis_label)
-            # else:
-            #     chartName2.y_axis.title = " Second Y_AXIS"
 
             data = Reference(ws, min_col=2, min_row=2, max_row=1 + num_label)
             hover_over_values = Reference(ws, min_col=1, min_row=2, max_row=1 + num_label)
@@ -659,7 +639,6 @@ def create_excel_chart(
     to_loc = 0
     sheet = sheets.pop(from_loc)
     sheets.insert(to_loc, sheet)
-    # errorFound=False
     try:
         wb.save(chart_outputFilename)
     except OSError:
@@ -670,9 +649,7 @@ def create_excel_chart(
             + "\n\nA file with the same name is already open. Please close the Excel file and try again!",
         )
         return
-    #     errorFound=True
     # if errorFound==True:
-    #     chart_outputFilename=''
 
     # IO_user_interface_util.timed_alert(2000, 'Excel charts', 'Finished preparing Excel chart at',
     #                                    True, '', True, startTime, silent=True)

@@ -77,8 +77,6 @@ def run_default(
     file_groups = {}
 
     # path = /home/brett/Downloads/Lynching/data_Simplex.xlsx
-    # path.name = data_Simplex.xlsx
-    # path.stem = data_Simplex
     # path.suffix = .xlsx
     # path.parent = /home/brett/Downloads/Lynching/
 

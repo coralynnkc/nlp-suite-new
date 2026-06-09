@@ -80,20 +80,17 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
     )
 
     # otherwise, split into sentences
-    # sentences = tokenize.sent_tokenize(fulltext)
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
 
     i = 1  # to store sentence index
     # check each word in sentence for sentiment and write to outputFilename
     # analyze each sentence for sentiment
     for s in sentences:
-        # print("S" + str(i) +": " + s)
         found_words = []
         total_words = 0
         v_list = []  # holds valence scores
 
         # search for each valid word's sentiment in hedonometer database
-        # words = word_tokenize(s.lower())
         words = word_tokenize_stanza(stanzaPipeLine(s.lower()))
         filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
         for index, w in enumerate(filtered_words):
@@ -109,10 +106,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
                 j -= 1
 
             # lemmatize word
-            # lmtzr = WordNetLemmatizer()
-            # lemma = lmtzr.lemmatize(w, pos='v')
             # if lemma == w:
-            #     lemma = lmtzr.lemmatize(w, pos='n')
             lemma = lemmatize_stanza(stanzaPipeLine(w))
 
             total_words += 1
@@ -307,7 +301,6 @@ def main(
                     filename = os.path.join(inputDir, os.fsdecode(file))
                     if filename.endswith(".txt"):
                         time.time()
-                        # print("Started HEDONOMETER sentiment analysis of " + filename + "...")
                         Document_ID += 1
                         filesToOpen.append(
                             analyzefile(
@@ -319,7 +312,6 @@ def main(
                                 filename,
                             )
                         )  # LINE ADDED (edited)
-                        # print("Finished HEDONOMETER sentiment analysis of " + filename + " in " + str((time.time() - start_time)) + " seconds")
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
                 sys.exit(1)
@@ -331,13 +323,10 @@ def main(
                 "Sentiment score (Mean)",
                 "Sentiment score (Median)",
             ]
-            # hover_label = ['Sentence', 'Sentence']
         elif mode == "mean":
             columns_to_be_plotted_yAxis = ["Sentiment score (Mean)"]
-            # hover_label = ['Sentence']
         elif mode == "median":
             columns_to_be_plotted_yAxis = ["Sentiment score (Median)"]
-        # inputFilename = outputFilename
 
         outputFiles = charts_util.visualize_chart(
             chartPackage,

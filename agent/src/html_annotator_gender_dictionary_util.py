@@ -34,9 +34,7 @@ def text_generate(inputFilename, inputDir):
                 print("  Processing file:", filename)
                 with open(os.path.join(folder, filename), encoding="utf-8", errors="ignore") as src:
                     text = src.read().replace("\n", " ")
-                # sentences = tokenize.sent_tokenize(text)
                 sentences = sentence_split_stanza_text(stanzaPipeLine(text))
-                # articles.append([sentences, filename])
                 articles.append([sentences, IO_csv_util.dressFilenameForCSVHyperlink(filename)])
                 # name, sentence, sentenceID, documentID, documentName
 
@@ -47,7 +45,6 @@ def text_generate(inputFilename, inputDir):
         else:
             with open(inputFilename, encoding="utf-8", errors="ignore") as src:
                 text = src.read().replace("\n", " ")
-            # sentences = tokenize.sent_tokenize(text)
             sentences = sentence_split_stanza_text(stanzaPipeLine(text))
             articles.append([sentences, inputFilename])
     return articles, inputDir
@@ -115,7 +112,6 @@ def dictionary_annotate(
                 if ner[1] == "PERSON":
                     people.append([ner[0], sentence, sentence_num + 1, article_num + 1, article[1]])
             if personal_pronouns_var:
-                # tokens = word_tokenize(sentence)
                 tokens = tokenize_stanza_text(stanzaPipeLine(sentence))
                 for token in tokens:
                     if token in ["his", "His", "He", "he", "Him", "him"]:
@@ -173,7 +169,6 @@ def SSA_annotate_help(year_state_var, firstName_entry_var, outputDir):
         q2 = pd.read_csv(output_path, encoding="utf-8", on_bad_lines="skip")
         q2 = q2[["Name", "Gender", "Frequency", "State"]]
         q2 = q2.sort_values(by=["Frequency"], ascending=False)
-        # print(q2)
         q2.to_csv(output_path, encoding="utf-8", index=False)
 
     # YEAR OF BIRTH  ---------------------------------------------------------

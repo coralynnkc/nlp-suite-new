@@ -7,8 +7,6 @@ import IO_csv_util
 import IO_files_util
 from get_first_csv import first_csv
 
-# from data_manager_main import extract_from_csv
-
 # more imports (e.g., import CoNLL_clause_analysis_util) are called below under separate if statements
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
@@ -65,15 +63,9 @@ def run_CoNLL_table_analyzer(
 
     # if extra_GUIs_var.get():
     #     if 'Data manipulation' in extra_GUIs_menu_var.get():
-    #         call("python data_manipulation_main.py", shell=True)
-    #     elif 'Style' in extra_GUIs_menu_var.get():
-    #         call("python style_analysis_main.py", shell=True)
     #     if 'Ngrams searches' in extra_GUIs_menu_var.get():
-    #         call("python NGrams_CoOccurrences_main.py", shell=True)
     #     if 'Word searches' in extra_GUIs_menu_var.get():
-    #         call("python file_search_byWord_main.py", shell=True)
     #     if 'Wordnet' in extra_GUIs_menu_var.get():
-    #         call("python knowledge_graphs_WordNet_main.py", shell=True)
 
     # Ngrams searches & VIEWER','Word searches
 
@@ -102,9 +94,7 @@ def run_CoNLL_table_analyzer(
         # outputDir_temp = IO_files_util.make_output_subdirectory(inputFilename, '', outputDir, label='CoNLL_analyses',
         #                                                    silent=True)
         # if outputDir_temp == '':
-        #     return
         #
-        # outputDir=outputDir_temp
         #
         if all_analyses == "*":
             pass
@@ -435,4 +425,3 @@ def run_CoNLL_table_analyzer(
         #                                    True, '', True, startTime, False)
 
     # if openOutputFiles:
-    #     IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)

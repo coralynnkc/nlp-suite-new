@@ -22,7 +22,6 @@ def call_mallet_api(command, args):
     api_url = "http://172.16.0.13:5050/run"
 
     # Working locally
-    # api_url = "http://localhost:5050/run"
     payload = {"command": command, "args": args}
 
     print(f"Calling MALLET: {command} with args {args}")
@@ -38,7 +37,7 @@ def call_mallet_api(command, args):
 
         return response.json()
     except Exception as e:
-        raise RuntimeError(f"Failed to call MALLET API ({command}): {e}")
+        raise RuntimeError(f"Failed to call MALLET API ({command}): {e}") from e
 
 
 def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeInterval, numTopics):
@@ -49,8 +48,6 @@ def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeIn
 
     # (Optional) Keep warnings about number of files if you want them
     # if numFiles == 0:
-    #     print('ERROR: No .txt files found in the input directory.')
-    #     return
 
     print("Importing directory into MALLET format")
 

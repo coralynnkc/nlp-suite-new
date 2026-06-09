@@ -19,7 +19,6 @@ sentenceID_position = 10  # NEW CoNLL_U
 documentID_position = 11  # NEW CoNLL_U
 
 # Following are used if running all analyses to prevent redundancy
-# filesToOpen = []  # Store all files that are to be opened once finished
 inputFilename_name = ""
 output_dir = ""
 
@@ -35,7 +34,6 @@ def process_Json(inputFilename, outputDir):
 
             sent_list_clause = []
             subtree_string = []
-            # JsonDir = head+os.sep+"Json_"+ tail[:-4]
             JsonDir = ""
             for file in os.listdir(head):
                 if "Json_" in file:
@@ -57,8 +55,7 @@ def process_Json(inputFilename, outputDir):
                     subtree_string.append(sent_examples)
 
             if len(subtree_string) > 0:
-                IO_csv_util.list_to_csv(subtree_string, subtree_string_fileName, encoding=language_encoding)
-                # filesToOpen.append(subtree_string_fileName)
+                IO_csv_util.list_to_csv(subtree_string, subtree_string_fileName, encoding="utf-8")
 
     return subtree_string_fileName
 
@@ -152,14 +149,10 @@ def clause_stats(
     IO_files_util.generate_output_file_name(
         inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "list"
     )
-    # filesToOpen.append(clausal_analysis_file_name)
     # clausal_analysis_stats_file_name will contain a data sheet with the frequency distribution of all available clausal tags and a chart sheet with the pie chart visualization of the data
 
     # if 0:
-    #    stats_clauses(data)
-    # else:
     if not os.path.isdir(outputDir):
-        # mb.showwarning(title='Output file path error', message='Please check OUTPUT DIRECTORY PATH and try again')
         print("Please check OUTPUT DIRECTORY PATH and try again")
         raise FileNotFoundError("Output file path error")
         return
@@ -172,8 +165,6 @@ def clause_stats(
         else:
             filesToOpen.extend(outputFiles)
 
-    # clausal_list, clausal_counter = compute_stats(data)
-    # clausal_stats = clause_compute_frequencies(data,data_divided_sents)
 
     clausal_stats, clausal_list = clause_data_preparation(data)
     if len(clausal_list) == 0:
@@ -192,7 +183,6 @@ def clause_stats(
         inputFilename, "", outputDir, ".csv", "CA", "Clause tags", "list"
     )
     # convert list to dataframe and save
-    # headers=['Clause Tags','Frequencies']
     df = pd.DataFrame(clausal_list)
     df.columns = [
         "ID",

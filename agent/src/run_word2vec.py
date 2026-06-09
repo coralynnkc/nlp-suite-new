@@ -43,24 +43,16 @@ class TestWord2Vec(unittest.TestCase):
             ngramsDropDown="1-gram",
         )
 
-        # self.assertTrue(len(filesToOpen) > 0, "No output files were generated.")
         # for file in filesToOpen:
-        #     self.assertTrue(os.path.exists(file), f"Output file {file} does not exist.")
 
     # def tearDown(self):
     #     if os.path.exists(os.path.join(self.inputDir, self.inputFilename)):
-    #         os.remove(os.path.join(self.inputDir, self.inputFilename))
     #     if os.path.exists(self.inputDir):
-    #         os.rmdir(self.inputDir)
     #     if os.path.exists(self.outputDir):
     #         for root, dirs, files in os.walk(self.outputDir, topdown=False):
     #             for name in files:
-    #                 os.remove(os.path.join(root, name))
     #             for name in dirs:
-    #                 os.rmdir(os.path.join(root, name))
-    #         os.rmdir(self.outputDir)
 
 
 if __name__ == "__main__":
     unittest.main()
-    # WSI_util.get_cluster_sentences("C:/Users/sherry/OneDrive/Desktop/QTM446W/Ouput/Word2Vec_Gensim_Input")

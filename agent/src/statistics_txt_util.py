@@ -45,31 +45,15 @@ except Exception:
     print("NLTK Directory already exists")
 
 
-# from nltk import tokenize
-# from nltk import word_tokenize
-# from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza
 #
-# import ast
-# import textstat
-# import subprocess
-# import spacy
-# from nltk.tree import Tree
-# from nltk.draw import TreeView
-# from PIL import Image
 
 # Sentence Complexity
 import csv
-
-# from gensim.utils import lemmatize
 from itertools import groupby
 
 import nltk
 import pandas as pd
 import sentence_complexity_node_util as Node
-
-# import ast
-# import textstat
-# import subprocess
 import spacy
 import tree
 from nltk.draw import TreeView
@@ -82,7 +66,6 @@ from nltk.tree import Tree
 #   see also caveats
 
 # check stopwords
-# IO_libraries_util.import_nltk_resource('corpora/stopwords','stopwords')
 # check punkt
 IO_libraries_util.import_nltk_resource("tokenizers/punkt", "punkt")
 
@@ -93,36 +76,19 @@ import IO_files_util
 import IO_user_interface_util
 import reminders_util
 import statistics_csv_util
-
-# from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
 import textstat
 from nltk.corpus import wordnet
 
 # https://github.com/nltk/nltk/wiki/Frequently-Asked-Questions-(Stackoverflow-Edition)
 # to compute bigrams, 3-grams, ...
-#   from nltk import bigrams, trigrams
-#   from nltk import ngrams
 
 
-#   from nltk import everygrams
 
 # https://stackoverflow.com/questions/24347029/python-nltk-bigrams-trigrams-fourgrams
 # def compute_word_ngrams(inputFilename,outputFilename):
-#     import nltk
-#     #from nltk import word_tokenize
-#     from nltk.util import ngrams
-#     #OutputFile = open(outputFilename,"w")
-#     text = (open(inputFilename, "r", encoding="utf-8").read())
-#     #OutputFile.write ("2-grams, 3-grams, 4-grams, 5-grams")
-#     grams2 = ngrams(text.split(), 2)
 #     for grams in grams2 :
-#         print(grams)
-#     grams3 = [ngrams(text.split(), 3)]
 #     for grams in grams3 :
-#         print(grams)
-#     grams4 = [ngrams(text.split(), 4)]
 #     for grams in grams4 :
-#         print(grams)
 
 # returns a frequency distribution of words in text,
 #    in the format {"chapman's": 1, 'carried': 1, 'hinesville': 1, 'broke': 1, 'an': 3,...
@@ -140,8 +106,6 @@ def get_wordnet_pos(word):  # from https://www.machinelearningplus.com/nlp/lemma
 
 
 # def lemmatizing(word):#lemmatization with pos value
-#     lemmatizer = WordNetLemmatizer()
-#     return lemmatizer.lemmatize(word, get_wordnet_pos(word))
 
 
 def lemmatizing(word):  # edited by Claude Hu 08/2020
@@ -151,8 +115,6 @@ def lemmatizing(word):  # edited by Claude Hu 08/2020
     for _p in pos:
         # if lemmatization with any postag gives different result from the word itself
         # that lemmatization is returned as result
-        # lemmatizer = WordNetLemmatizer()
-        # lemma = lemmatizer.lemmatize(word, p)
         from Stanza_functions_util import lemmatize_stanza, stanzaPipeLine
 
         lemma = lemmatize_stanza(stanzaPipeLine(word))
@@ -174,7 +136,6 @@ def word_count(text):
 
 
 def excludeStopWords_list(words):
-    # stop_words = stopwords.words('english')
     fin = open("../lib/wordLists/stopwords.txt")
     stop_words = set(fin.read().splitlines())
     # since stop_words are lowercase exclude initial-capital words (He, I)
@@ -217,8 +178,6 @@ def compute_corpus_statistics(
         inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
     )
 
-    # read_line(inputFilename, inputDir, outputDir)
-    # return
 
     Ndocs = str(len(inputDocs))
     fieldnames = [
@@ -279,30 +238,20 @@ def compute_corpus_statistics(
     with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
-        # print("Number of corpus text documents: ",Ndocs)
-        # currentLine.append([Ndocs])
         documentID = 0
         for doc in inputDocs:
             head, tail = os.path.split(doc)
             documentID = documentID + 1
-            # currentLine.append([documentID])
             print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
-            # currentLine.append([doc])
-            # fullText = (open(doc, "r", encoding="utf-8", errors="ignore").read())
             f = open(doc, encoding="utf-8", errors="ignore")
             docText = f.read()
             f.close()
             Nsentences = textstat.sentence_count(docText)
-            # print('TOTAL number of sentences: ',Nsentences)
 
             Nwords = textstat.lexicon_count(docText, removepunct=True)
-            # print('TOTAL number of words: ',Nwords)
 
             Nsyllables = textstat.syllable_count(docText, lang="en_US")
-            # print('TOTAL number of Syllables: ',Nsyllables)
 
-            # words = fullText.split()
-            # words = nltk.word_tokenize(fullText)
             from Stanza_functions_util import (
                 lemmatize_stanza,
                 stanzaPipeLine,
@@ -315,11 +264,9 @@ def compute_corpus_statistics(
                 words = excludeStopWords_list(words)
 
             if lemmatizeWords:
-                # lemmatizer = WordNetLemmatizer()
                 text_vocab = []
                 for w in words:
                     if w.isalpha():
-                        # text_vocab.append(lemmatizer.lemmatize(w.lower()))
                         from Stanza_functions_util import (
                             lemmatize_stanza,
                             stanzaPipeLine,
@@ -333,9 +280,7 @@ def compute_corpus_statistics(
             word_counts = Counter(words)
 
             # 20 most frequent words in the document
-            # print("\n\nTOP 20 most frequent words  ----------------------------")
             # for item in word_counts.most_common(20):
-            #     print(item)
             currentLine = [
                 [Ndocs, documentID, IO_csv_util.dressFilenameForCSVHyperlink(doc), Nsentences, Nwords, Nsyllables]
             ]
@@ -416,7 +361,6 @@ def compute_corpus_statistics(
     #   and plot them as column charts.
 
     # if openOutputFiles==True:
-    #     IO_files_util.OpenOutputFiles(openOutputFiles, filesToOpen)
     return filesToOpen, outputDir
 
 
@@ -469,7 +413,6 @@ def compute_sentence_length(inputFilename, inputDir, outputDir, configFileName, 
                     word_tokenize_stanza,
                 )
 
-                # sentences = tokenize.sent_tokenize(text)
                 sentences = sent_tokenize_stanza(stanzaPipeLine(text))
                 if len(sentences) == 0:
                     print(
@@ -478,7 +421,6 @@ def compute_sentence_length(inputFilename, inputDir, outputDir, configFileName, 
                     )
                     return filesToOpen
                 for sentence in sentences:
-                    # tokens = nltk.word_tokenize(sentence)
                     tokens = word_tokenize_stanza(stanzaPipeLine(sentence))
                     if len(tokens) > 100:
                         long_sentences = long_sentences + 1
@@ -569,14 +511,12 @@ def compute_line_length(
                     # continue
                 while line:
                     lineID += 1
-                    # words = nltk.word_tokenize(line)
                     from Stanza_functions_util import (
                         stanzaPipeLine,
                         word_tokenize_stanza,
                     )
 
                     words = word_tokenize_stanza(stanzaPipeLine(line))
-                    # print("Line {}: Length (in characters) {} Length (in words) {}".format(lineID, len(line), len(words)))
                     currentLine = [
                         [
                             len(line),
@@ -685,7 +625,6 @@ def compute_character_word_ngrams(
 
     if bySentenceID is None:
         result = 0
-        # result = mb.askyesno("By sentence index","Would you like to compute n-grams by sentence index?")
         if result:
             bySentenceID = 1
         else:
@@ -844,7 +783,6 @@ def get_ngramlist(
             for row in corpus_ngramsList:
                 # Extract the first and third element (index 0 and 2) of each row and append to the new list
                 corpus_ngramsList_vocab.append([row[0], row[2]])
-            # corpus_ngramsList_vocab = [corpus_ngramsList[:][i] for i in (0, 2)] #[[corpus_ngramsList[index][0], corpus_ngramsList[index][2]]]
             csv_vocab_outputFilename = IO_files_util.generate_output_file_name(
                 inputFilename,
                 inputDir,
@@ -866,8 +804,6 @@ def get_ngramlist(
                 filesToOpen.append(csv_vocab_outputFilename)
                 columns_to_be_plotted_xAxis = [str(index + 1) + "-grams"]
                 columns_to_be_plotted_yAxis = ["Frequency in Corpus"]
-                # chartPackage = "Excel" ## I am too tired ... I don't know why -- Simon
-                # createCharts = 1
                 # this variable is not right....
                 outputFiles = charts_util.visualize_chart(
                     chartPackage,
@@ -879,7 +815,6 @@ def get_ngramlist(
                     chart_title="Frequency of " + str(index + 1) + "-gram",
                     count_var=0,
                     hover_label=[],  # hover_label,
-                    # outputFileNameType='n-grams_'+str(gram), # +'_'+ tail,
                     outputFileNameType="",
                     column_xAxis_label=str(index + 1) + "-gram",
                     groupByList=[],  # ['Document'],
@@ -918,8 +853,6 @@ def get_ngramlist(
                 columns_to_be_plotted_yAxis = ["Frequency in Document"]
             else:
                 columns_to_be_plotted_yAxis = ["Frequency in Document", "Frequency in Corpus"]
-            # chartPackage = "Excel" ## I am too tired ... I don't know why -- Simon
-            # createCharts = 1
             # this variable is not right....
             outputFiles = charts_util.visualize_chart(
                 chartPackage,
@@ -931,7 +864,6 @@ def get_ngramlist(
                 chart_title="Frequency of " + str(index + 1) + "-gram",
                 count_var=0,
                 hover_label=[],  # hover_label,
-                # outputFileNameType='n-grams_'+str(gram), # +'_'+ tail,
                 outputFileNameType="",
                 column_xAxis_label=str(index + 1) + "-gram",
                 groupByList=["Document"],
@@ -967,7 +899,6 @@ def get_yules_k_i(s):
     m1 = sum(token_counter.values())
     m2 = sum([freq**2 for freq in token_counter.values()])
     i = (m1 * m1) / (m2 - m1)
-    # k = 10000/i
     k = 1 / i * 10000
     return (k, i)
 
@@ -1014,7 +945,6 @@ def yule(inputFilename, inputDir, outputDir, configFileName, hideMessage=False):
         except ZeroDivisionError:
             result = 0
 
-        # print results
         if inputFilename != "" and not hideMessage:
             IO_user_interface_util.timed_alert(
                 4000,
@@ -1044,12 +974,7 @@ def print_results(
         stopMsg = "(excluding stopwords)"
     else:
         stopMsg = "(including stopwords)"
-    # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv', fileLabel)
-    # # class_word_list.insert(0, header,IO_csv_util.dressFilenameForCSVHyperlink(inputFilename))
-    # class_word_list.insert(0, header)
-    # IO_error=IO_csv_util.list_to_csv( class_word_list, outputFilename)
     # if IO_error:
-    #     outputFilename=''
 
     if not hideMessage:
         # do not count header
@@ -1066,14 +991,11 @@ def print_results(
             + ": "
             + str(len(class_word_list) - 1),
         )
-    # print results
     print("\nTotal word count " + stopMsg + ": " + str(len(words)))
     # do not count header
     print("Total word count for " + header + " " + stopMsg + ": " + str(len(class_word_list) - 1))
     print("\n\nList of " + header + " " + stopMsg + "\n\n", class_word_list)
     # if outputFilename != '':
-    #     filesToOpen.append(outputFilename)
-    # return filesToOpen
 
 
 # called by sentence_analysis_main and style_analysis_main
@@ -1227,31 +1149,24 @@ def process_words(
         # analyze each sentence
         for s in sentences:
             sentenceID = sentenceID + 1
-            # print("S" + str(i) +": " + s)
             s.count(" ") + 1
 
             from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
 
             words = word_tokenize_stanza(stanzaPipeLine(s))
             words_with_stop = [word for word in words if word.isalpha()]
-            # print(words_with_stop)
             # don't process stopwords
             filtered_words = words
             if processType != "" and "punctuation" not in processType.lower():
                 if excludeStopWords:
                     words = excludeStopWords_list(words)
                     filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
-            # words = fullText.translate(string.punctuation).split()
             # for wordID, word in enumerate(filtered_words):
-            # print(filtered_words)
 
             # SUBJECTIVITY/OBJECTIVITY PER SENTENCE---------------------------------------------------------------------------------------------
 
             if "Objectivity/subjectivity" in processType:
-                # import spaCy_util
-                # annotator_available = spaCy_util.check_spaCy_annotator_availability(['Objectivity/subjectivity'], language, silent=False)
                 # if not annotator_available:
-                #     return
                 nlp = spacy.load("en_core_web_sm")
                 nlp.add_pipe("spacytextblob")
 
@@ -1485,8 +1400,6 @@ def process_words(
                                 ]
                             )
                             rep_words_last.append(wrd)
-                    # print(rep_words_first)
-                    # print(rep_words_last)
 
                 if "Repetition: Words" in processType:
                     word_list.extend(
@@ -1500,9 +1413,6 @@ def process_words(
                 # REPEATED WORDS END OF SENTENCE/BEGINNING NEXT SENTENCE  --------------------------------------------------------------------------
                 if "Repetition: Last" in processType:
                     for wrdID, wrd in enumerate(words_with_stop):
-                        # print(wordID)
-                        # print(word)
-                        # mb.showwarning("Naman","Naman, this for you!")
 
                         header = [
                             "First/Last Sentence",
@@ -1514,7 +1424,6 @@ def process_words(
                             "Document ID",
                             "Document",
                         ]
-                        # fileLabel = 'Last K words of a sentence and first K words of next sentence'
                         fileLabel = str(k) + "_K words"
                         "Last/First_" + str(k) + "_k_words_byDoc"
                         columns_to_be_plotted_yAxis = ["Word"]
@@ -1637,13 +1546,9 @@ def n_most_common_words(n, text):
         stop_words = set(fin.read().splitlines())
         if word not in stop_words and "'" not in word and '"' not in word:
             cleaned_words.append(word)
-    # print(cleaned_words)
     counts = Counter(cleaned_words)
-    # print(cleaned_words)
-    # print(str(n), ' most common words in the repeated phrases:')
     for key, value in counts.most_common(n):
         common_words.append([key, value])
-        # print(key, value)
     return common_words
 
 
@@ -1672,27 +1577,19 @@ def convert_txt_file(inputFilename, inputDir, outputDir, openOutputFiles, exclud
     )
 
     with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline=""):
-        # print("Number of corpus text documents: ",Ndocs)
-        # currentLine.append([Ndocs])
         documentID = 0
         for doc in inputDocs:
             head, tail = os.path.split(doc)
             documentID = documentID + 1
-            # currentLine.append([documentID])
             print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
             fullText = open(doc, encoding="utf-8", errors="ignore").read()
 
             str(textstat.sentence_count(fullText))
-            # print('TOTAL number of sentences: ',Nsentences)
 
             str(textstat.lexicon_count(fullText, removepunct=True))
-            # print('TOTAL number of words: ',Nwords)
 
             textstat.syllable_count(fullText, lang="en_US")
-            # print('TOTAL number of Syllables: ',Nsyllables)
 
-            # words = fullText.split()
-            # words = nltk.word_tokenize(fullText)
             from Stanza_functions_util import (
                 lemmatize_stanza,
                 stanzaPipeLine,
@@ -1705,9 +1602,6 @@ def convert_txt_file(inputFilename, inputDir, outputDir, openOutputFiles, exclud
                 words = excludeStopWords_list(words)
 
             if lemmatizeWords:
-                # lemmatizer = WordNetLemmatizer()
-                # text_vocab = set(lemmatizer.lemmatize(w.lower()) for w in fullText.split(" ") if w.isalpha())
-                # words = set(lemmatizing(w.lower()) for w in words if w.isalpha()) # fullText.split(" ") if w.isalpha())
                 from Stanza_functions_util import (
                     lemmatize_stanza,
                     stanzaPipeLine,
@@ -1787,7 +1681,6 @@ def compute_sentence_text_readability(
         writer.writeheader()
 
         # already shown in NLP.py
-        # IO_util.timed_alert(2000,'Analysis start','Started running NLTK unusual words at',True,'You can follow NLTK unusual words in command line.')
 
         # open txt output file
         outputTxtFile = open(outputFilenameTxt, "w")
@@ -1806,25 +1699,9 @@ def compute_sentence_text_readability(
             outputTxtFile.write(file + "\n\n")
 
             # This legenda is now available as a TIPS file
-            # outputTxtFile.write ("LEGENDA -----------------------------------------------------------------------------------------------------------------------------------------------\n\n")
-            # outputTxtFile.write ("Text readability measures the understandability of a text.\n")
-            # outputTxtFile.write ("The different measures of readability map on the U.S grade level (1 through 12) needed to comprehend a text.\n\n  12 readability score requires HIGHSCHOOL education;\n  16 readability score requires COLLEGE education;\n  18 readability score requires MASTER education;\n  24 readability score requires DOCTORAL education;\n  >24 readability score requires POSTDOC education.\n\n")
 
-            # outputTxtFile.write ("Automated Readability Index (ARI) outputs a number that approximates the grade level needed to comprehend the text. For example if the ARI is 6.5, then the grade level to comprehend the text is 6th to 7th grade.\n\n")
-            # outputTxtFile.write ("Coleman-Liau Index, Linsear Write Formula, Flesch-Kincaid Grade, SMOG index, Fog Scale (Gunning FOG Formula) are grade formula in that a score of 9.3 means that a ninth grader would be able to read the document.\n\n")
 
-            # outputTxtFile.write ("The Flesch Reading Ease formula has the following range of values (the maximum score is 121.22; there is no limit on how low the score can be, with a negative score being valid):\n")
-            # outputTxtFile.write ("  0-30 College\n")
-            # outputTxtFile.write ("  50-60 High School\n")
-            # outputTxtFile.write ("  90-100 Fourth Grade\n\n")
 
-            # outputTxtFile.write ("The Dale-Chall index has the following range of values (different from other tests, since it uses a lookup table of the most commonly used 3000 English words and returns the grade level using the New Dale-Chall Formula):\n")
-            # outputTxtFile.write ("  4.9 or lower    easily understood by an average 4th-grade student or lower\n")
-            # outputTxtFile.write ("  5.0–5.9 easily understood by an average 5th or 6th-grade student\n")
-            # outputTxtFile.write ("  6.0–6.9 easily understood by an average 7th or 8th-grade student\n")
-            # outputTxtFile.write ("  7.0–7.9 easily understood by an average 9th or 10th-grade student\n")
-            # outputTxtFile.write ("  8.0–8.9 easily understood by an average 11th or 12th-grade student\n")
-            # outputTxtFile.write ("  9.0–9.9 easily understood by an average 13th to 15th-grade (college) student\n\n")
 
             outputTxtFile.write(
                 "RESULTS -----------------------------------------------------------------------------------------------------------------------------------------------\n\n"
@@ -1832,59 +1709,46 @@ def compute_sentence_text_readability(
             # Syllable count
             str_value = "Syllable count " + str(textstat.syllable_count(text, lang="en_US"))
             outputTxtFile.write(str_value + "\n")
-            # print("\n\nSyllable count ",textstat.syllable_count(text, lang='en_US'))
             # Lexicon count
             str_value = "Lexicon count " + str(textstat.lexicon_count(text, removepunct=True))
             outputTxtFile.write(str_value + "\n")
-            # print("Lexicon count ",textstat.lexicon_count(text, removepunct=True))
             # Sentence count
             str_value = "Sentence count " + str(textstat.sentence_count(text))
             outputTxtFile.write(str_value + "\n\n")
-            # print("Sentence count ",textstat.sentence_count(text))
 
             # The Flesch Reading Ease formula
             str_value = "Flesch Reading Ease formula " + str(textstat.flesch_reading_ease(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Flesch Reading Ease formula",textstat.flesch_reading_ease(text))
             # The Flesch-Kincaid Grade Level
             str_value = "Flesch-Kincaid Grade Level " + str(textstat.flesch_kincaid_grade(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Flesch-Kincaid Grade Level",textstat.flesch_kincaid_grade(text))
             # The Fog Scale (Gunning FOG Formula)
             str_value = "Fog Scale (Gunning FOG Formula) " + str(textstat.gunning_fog(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Fog Scale (Gunning FOG Formula)",textstat.gunning_fog(text))
             # The SMOG Index
             str_value = "SMOG (Simple Measure of Gobbledygook) Index " + str(textstat.smog_index(text))
             outputTxtFile.write(str_value + "\n")
-            # print("SMOG (Simple Measure of Gobbledygook) Index",textstat.smog_index(text))
             # Automated Readability Index
             str_value = "Automated Readability Index " + str(textstat.automated_readability_index(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Automated Readability Index",textstat.automated_readability_index(text))
             # The Coleman-Liau Index
             str_value = "Coleman-Liau Index " + str(textstat.coleman_liau_index(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Coleman-Liau Index",textstat.coleman_liau_index(text))
             # Linsear Write Formula
             str_value = "Linsear Write Formula " + str(textstat.linsear_write_formula(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Linsear Write Formula",textstat.linsear_write_formula(text))
             # Dale-Chall Readability Score
             str_value = "Dale-Chall Readability Score " + str(textstat.dale_chall_readability_score(text))
             outputTxtFile.write(str_value + "\n")
-            # print("Dale-Chall Readability Score",textstat.dale_chall_readability_score(text))
             # Readability Consensus based upon all the above tests
             str_value = "\n\nReadability Consensus Level based upon all the above tests: " + str(
                 textstat.text_standard(text, float_output=False) + "\n\n"
             )
             outputTxtFile.write(str_value + "\n")
-            # print("\n\nReadability Consensus based upon all the above tests: ",textstat.text_standard(text, float_output=False))
 
             # write csv files ____________________________________________
 
             # split into sentences
-            # sentences = nltk.sent_tokenize(text)
             from Stanza_functions_util import (
                 sent_tokenize_stanza,
                 stanzaPipeLine,
@@ -1966,7 +1830,6 @@ def compute_sentence_text_readability(
                 else:
                     str9 = "Unclassified"
                     sortOrder = 25
-                # rowValue=[[documentID,file,sentenceID,sent,str1,str2,str3,str4,str5,str6,str7,str8,str9,sortOrder]]
                 rowValue = [
                     [
                         str1,
@@ -1995,8 +1858,6 @@ def compute_sentence_text_readability(
 
         # TODO YI not sure what to pass to the sort function;
         # IO filenames should be computed here
-        # outputFilename1=IO_util.generate_output_file_name(inputFilename,outputDir,'.csv','READ','stats1')
-        # IO_util.sort_csvFile_by_columns(outputFilename, outputFilename, ['Document ID','Sort order'])
         outputTxtFile.close()
         outputCsvFile.close()
 
@@ -2006,7 +1867,6 @@ def compute_sentence_text_readability(
         if chartPackage != "No charts":
             result = True
             # if nFile>10:
-            #     result = mb.askyesno("Excel charts","You have " + str(nFile) + " files for which to compute Excel charts for each file.\n\nTHIS WILL TAKE A LONG TIME TO PRODUCE.\n\nAre you sure you want to do that?")
             if result:
                 # overall qualitative grade level (e.g., 4th)
                 outputFiles = charts_util.visualize_chart(
@@ -2043,7 +1903,6 @@ def compute_sentence_text_readability(
                     "Dale-Chall Readability Score",
                 ]
                 # multiple lines with hover-over effects the sample line chart produces wrong results
-                # hover_label = ['Sentence', 'Sentence', 'Sentence', 'Sentence', 'Sentence', 'Sentence']
 
                 outputFiles = charts_util.visualize_chart(
                     chartPackage,
@@ -2110,14 +1969,8 @@ def sentence_structure_tree(inputFilename, outputDir, num_sentences):
     if inputFilename == "":
         print("No input file")
         return
-        # sentences = GUI_IO_util.enter_value_widget(
         #     'Enter sentence                                                                               ', 'Enter', 1)
-        # sent = [sentences[0]]
         # if len(sent) == 0:
-        #     return
-        # else:
-        #     sentences = sent
-        # maxNum = 1
     else:
         # split into sentences
         text = open(inputFilename, encoding="utf-8", errors="ignore").read()
@@ -2200,11 +2053,9 @@ def compute_sentence_complexity(
                 document.append(IO_csv_util.dressFilenameForCSVHyperlink(os.path.join(inputDir, doc)))
                 all_input_docs[dId] = text
     else:
-        # numFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, 'txt')
         # if numFiles == 0:
         #     mb.showerror(title='Number of files error',
         #                  message='The selected input directory does NOT contain any file of txt type.\n\nPlease, select a different directory and try again.')
-        #     return
 
         inputDocs = IO_files_util.getFileList(
             inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
@@ -2243,9 +2094,7 @@ def compute_sentence_complexity(
         import subprocess
         import sys
 
-        # subprocess.check_call([sys.executable, "-m", "pip", "install", "git+https://github.com/stanfordnlp/stanza.git@dev"])
         subprocess.check_call([sys.executable, "-m", "pip", "install", "stanza==1.4.0"])
-        # import stanza
         nlp = stanza.Pipeline(lang="en", processors="tokenize,pos,constituency", use_gpu=False)
     op = pd.DataFrame(columns=columns)
     for idx, txt in enumerate(all_input_docs.items()):
@@ -2257,10 +2106,7 @@ def compute_sentence_complexity(
             root1 = tree.make_tree(sent)
             root2 = tree.make_tree(sent)
             leaves_list = tree.getLeavesAsList(root1)
-            # print(i)
-            # print(sentence.text)
             sentence_length = len(sentence.words)
-            # print(sentence_length)
 
             newRoot1 = Node.Node(root1)
             newRoot2 = Node.Node(root2)
@@ -2273,27 +2119,21 @@ def compute_sentence_complexity(
 
             ySum = newRoot1.sumY()
             yAvg = round(ySum / leaf, 2)
-            # print(f"Yngve: {yAvg}, {ySum}")
 
             fSum = newRoot2.sumF()
             fAvg = round(fSum / leaf, 2)
-            # print(f"Frazier: {fAvg}, {fSum}\n")
 
             # new ordering
-            # op = op.append({
             #     'Sentence length (No. of words)': sentence_length,
             #     'Yngve score': yAvg,
             #     'Yngve sum': ySum,
             #     'Frazier score': fAvg,
             #     'Frazier sum': fSum,
             #     'Sentence ID': i + 1,
-            #     'Sentence': sentence.text,
             #     'Document ID': idx + 1,
-            #     'Document': document[idx],
             # },ignore_index=True)
             # op = op.append({ deprecated
             # https://stackoverflow.com/questions/75956209/dataframe-object-has-no-attribute-append
-            # df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
             op = pd.concat(
                 [
                     op,
@@ -2316,7 +2156,6 @@ def compute_sentence_complexity(
                 ignore_index=True,
             )
     # not necessary sorted already
-    # op.sort_values(by=['Document ID', 'Sentence ID'], ascending=True, inplace=True)
 
     outputFilename = IO_files_util.generate_output_file_name(
         inputFilename, inputDir, outputDir, ".csv", "SentenceComplexity"
@@ -2357,55 +2196,34 @@ def compute_sentence_complexity(
 
 # def compute_corpus_statistics_byPOS( inputFilename, inputDir, outputDir, configFileName, openOutputFiles,
 #                                     chartPackage, dataTransformation):
-#     filesToOpen=[]
-#     lemmatize= True
 #
-#     inputDocs=IO_files_util.getFileList(inputFilename, inputDir, '.txt', silent=False, configFileName=configFileName)
-#     nDocs=len(inputDocs)
 #     if nDocs==0:
-#         return filesToOpen
 #
-#     stannlp = stanza.Pipeline(lang='en', processors='tokenize, mwt, lemma, pos')
 #
 #     startTime=IO_user_interface_util.timed_alert(3000, 'Running STANZA & wordcloud',
 #                                        'Started running STANZA and wordcloud at', True,
 #                                        'Please, be patient. Depending upon the number of documents processed this may take a few minutes.',True,'',False)
 #
 #     for doc in inputDocs:
-#         i = i+1
-#         head, tail = os.path.split(doc)
-#         print("Processing file " + str(i) + "/" + str(nDocs) + ' ' + tail)
 #         if doc[-4:]=='.txt':
 #             with open(doc, 'r', encoding='utf-8', errors='ignore') as myfile:
-#                 textToProcess = ''
-#                 currenttext = myfile.read()
 #                 # check for empty file
-#                 textToProcess = ''
-#                 annotated = stannlp(currenttext)
 #                 for sent_id in range(len(annotated.sentences)):
 #                     # words do not contain ner; tokens do
 #                     # words is a single list []; tokes a double list [[]]
 #                     # for word in annotated.sentences[sent_id].tokens:
 #                     for word in annotated.sentences[sent_id].words:
 #                         # pos & upos have the same tag value
-#                         print("--------------------word.text.lower() & pos",word.text.lower(), word.pos)
 #                         if word.text.lower() == "'s" or word.text.lower() == "’s" or word.text.lower() == "s":
 #                             continue  # do not process the s of a saxon genitive
 #                         # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
 #                         #   YELLOW for anything else; no longer used
 #                         if lemmatize:
-#                             word_str = word.lemma
 #                             # if no lemma, use form value
 #                             if word_str==None:
-#                                 word_str = word.text
-#                         else:
-#                             word_str = word.text
 #                             pass
 #
 #                         if word_str != None:
-#                             textToProcess = textToProcess + ' ' + word_str
 #
 #                 if len(textToProcess) == 0:
-#                     textToProcess = currenttext
 #
-#             combinedtext = combinedtext + textToProcess

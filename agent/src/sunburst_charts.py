@@ -10,19 +10,10 @@ def run_sun_burst(
 ):
 
     csv_path = first_csv(inputDir)
-    # try:
-    #     saved_pairs = json.loads(selected_pairs_data)
-    # except json.JSONDecodeError:
-    #     print("Invalid JSON in selected_pairs_data, status_code=400")
-    #     raise ValueError("Invalid JSON in selected_pairs_data")
-    #     return
 
     csv_file_categorical_field_list = json.loads(selected_pairs_data)
 
-    # csv_file_categorical_field_list = [
-    #     [f"{pair['searchField']}|{', '.join(word.strip() for word in pair['csvFieldList'].split(',') if word.strip())}"]
     #     for pair in saved_pairs
-    # ]
     print("IMPORTANT LIST ", csv_file_categorical_field_list)
     filesToOpen = []
 
@@ -103,10 +94,6 @@ def main():
 8,Leo,Male,Yes,Reddish,Single breed,15,14,Small"""
 
     filter_options_var = "No filtering"
-    # selected_pairs_data = json.dumps([
-    #     {"searchField": "Color", "csvFieldList": "Black,Reddish,Light brown,"},
-    #     {"searchField": "Size", "csvFieldList": "Small, Medium, Large"}
-    # ])
     selected_pairs_data = [["Name|Max, Isla"], ["Color|"]]
     piechart_var = True
     treemap_var = True

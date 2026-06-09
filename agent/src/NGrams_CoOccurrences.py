@@ -52,7 +52,6 @@ def run_ngrams(
         )
         return
 
-    # print(date_options, temporal_aggregation_var, date_format, items_separator_var, date_position_var)
 
     print("language_list", language_list)
 
@@ -70,15 +69,11 @@ def run_ngrams(
     # if csv_file_var!='':
     #
     #
-    #         return
 
     # if extra_GUIs_var.get() and extra_GUIs_menu_var.get()!='':
     #     if 'CoNLL' in extra_GUIs_menu_var.get():
-    #         call('python CoNLL_table_analyzer_main.py', shell=True)
     #     if 'WordNet' in extra_GUIs_menu_var.get():
-    #         call('python knowledge_graphs_WordNet_main.py', shell=True)
     #     if 'Word search' in extra_GUIs_menu_var.get():
-    #         call("python file_search_byWord_main.py", shell=True)
 
     # get the date options from filename
     filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = (
@@ -129,7 +124,6 @@ def run_ngrams(
         # outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label='N-grams',
         #                                                    silent=False)
         # if outputDir == '':
-        #     return
 
         if "sensitive" in str(ngrams_options_list):
             pass
@@ -191,11 +185,8 @@ def run_ngrams(
                 import statistics_csv_util
 
                 for file in outputFiles:
-                    # print(file, 'beginning to process because maybe needed normalization....')
                     if "csv" in file:
                         statistics_csv_util.data_transformation(file, dataTransformation).to_csv(file, index=False)
-                        # print("OK DONE TRANSFORMATION")
-                        # print('===-=====-====')
             if outputFiles is not None:
                 if isinstance(outputFiles, str):
                     filesToOpen.append(outputFiles)
@@ -307,8 +298,6 @@ def run_ngrams(
             filesToOpen.append(error_output)
 
             # if openOutputFiles == True:
-            #     IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)
-            # return
 
         if (ngrams_viewer_var or CoOcc_Viewer_var) and (chartPackage == "No charts"):
             print(
@@ -358,23 +347,14 @@ def run_ngrams(
             # run VIEWER ------------------------------------------------------------------------------------
 
             # if within_sentence_co_occurrence_search_var:
-            #     print("OK executing efficient solution for sentence cooccurence...")
-            #     print("Cannot use old method because too slow and improper")
-            #     outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Stanza', 'Co-occurrence_within_sentence')
-            #     print(outputFilename)
             #     outputFiles = NGrams_CoOccurrences_util.search_within_sentence_coOccurences(inputFilename,
             #                                     inputDir,
-            #                                     search_words.split(', '),
             #                                     config_filename,
             #                                     outputDir,
             #                                     exact_word_match)
 
             #     if outputFiles != None:
             #         if isinstance(outputFiles, str):
-            #             filesToOpen.append(outputFiles)
-            #         else:
-            #             filesToOpen.extend(outputFiles)
-            # else:
             outputFiles = NGrams_CoOccurrences_util.NGrams_coOccurrences_VIEWER(
                 inputDir,
                 outputDir,

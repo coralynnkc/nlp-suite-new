@@ -9,8 +9,6 @@ edited by Naman Sahni 9/23.2022
 import string
 
 import charts_util
-
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text, sentence_split_stanza_text
 import IO_files_util
 import pandas as pd
 import statistics_txt_util
@@ -59,7 +57,6 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
     rep_words_first = []
     rep_words_last = []
 
-    # print(filtered_lemmas)
 
     txt = ""
 
@@ -85,8 +82,6 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
             else:
                 txt += " " + l
 
-        # txt.replace("  ", " ")
-        # print(txt)
         from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine, tokenize_stanza_text
 
         sent = sentences = sentence_split_stanza_text(stanzaPipeLine(txt))
@@ -174,7 +169,6 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
             ksentences_first = doc_conll.loc[(doc_conll["Sentence ID"] <= Begin_K_sent_var)]
             ksentences_last = doc_conll.loc[(doc_conll["Sentence ID"] > max(doc_conll["Sentence ID"]) - End_K_sent_var)]
 
-        # ksentences = ksentences_first + ksentences_last
         word_count_first = len(ksentences_first["POS"]) - ksentences_first["DepRel"].value_counts()["punct"]
         verb_count_first = 0
         noun_count_first = 0
@@ -195,8 +189,6 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
                 verb_count_first += 1
             elif "JJ" in pos:  # adjectives
                 adj_count_first += 1
-        # print("dataframe: ")
-        # print(ksentences)
         for doc in ksentences_first["Document"]:
             DOC = doc  # as doc is in CoNLL table, doc already as the hyperlink
             break
@@ -210,8 +202,6 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
                 verb_count_last += 1
             elif "JJ" in pos:  # adjectives
                 adj_count_last += 1
-        # print("dataframe: ")
-        # print(ksentences)
         for doc in ksentences_last["Document"]:
             DOC = doc  # as doc is in CoNLL table, doc already as the hyperlink
             break

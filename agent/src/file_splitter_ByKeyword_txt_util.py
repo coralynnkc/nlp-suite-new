@@ -34,7 +34,6 @@ from Stanza_functions_util import (
 # https://stackoverflow.com/questions/31016540/lemmatize-plural-nouns-using-nltk-and-wordnet
 
 
-# import pattern.en
 # https://stackoverflow.com/questions/18902608/generating-the-plural-form-of-a-noun/19018986#comment27903114_18902608
 
 
@@ -53,11 +52,8 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization=True
             or letter == "*"
         ):
             title_keyword = keyword.replace(letter, "")
-    # kwtokens = word_tokenize(keyword.lower())
-    # kwtokens = tokenize_stanza_text(stanzaPipeLine(keyword.lower()))
     kwtokens = tokenize_stanza_text(stanzaPipeLine(keyword))
     kwlist = []  # list of list which includes conjugated forms of each token in keyword phrase
-    # default_conjugator = mlconjug.Conjugator(language='en')
     if first_occurrence:
         outputPathone = outputPath + "/subfile_1"
         outputPathtwo = outputPath + "/subfile_2"
@@ -70,8 +66,6 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization=True
     for token in kwtokens:
         if token.isalpha():
             # lemmatize instead
-            # conjus = default_conjugator.conjugate(token.lower())
-            # formlist = conjus.iterate()
             token_lemma = lemmatize_stanza_word(stanzaPipeLine(token))
             if token_lemma == "":
                 continue
@@ -114,7 +108,6 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization=True
         f = open(inputFilename, encoding="utf-8", errors="ignore")
         docText = f.read()
         f.close()
-        # sentences_ = sent_tokenize(docText)#the list of sentneces in corpus
         sentences_ = sentence_split_stanza_text(stanzaPipeLine(docText))  # the list of sentneces in corpus
         subfileindex = 1
         subfilePath = outputPath + os.sep + title + "_" + str(subfileindex) + ".txt"
@@ -125,7 +118,6 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization=True
         sentence_index = 1
 
         for sent in sentences_:
-            # tokens_ = word_tokenize(sent)
             tokens_ = tokenize_stanza_text(stanzaPipeLine(sent))
             kwindex = 0
             kw = False
@@ -169,24 +161,15 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization=True
                         frequency,
                     ]
                 )
-                # writer.writerow([docIndex, inputFilename, presubfile, keyword, sent, first_occurrence_index, sentence_index / len(sentences_), frequency])
             subfile.write(sent + " ")
             sentence_index += 1
-        # print(contents)
         l = len(contents)
-        # print("length:",l)
         if l != 0 and first_occurrence:
             f = contents[-1][-1]
             if f > 1:
                 f -= 1
-            # print(f)
             subpath = contents[-1][2]
             for i in reversed(range(l)):
-                # print(contents[i][2])
                 if contents[i][2] == subpath:
                     contents[i][-1] = f
-                # elif l > 1:
-                #     f = contents[i][-1] - 1
-                #     contents[i][-1] = f
-                #     subpath = contents[i][2]
         writer.writerows(contents)

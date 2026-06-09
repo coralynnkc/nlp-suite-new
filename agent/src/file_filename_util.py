@@ -22,7 +22,6 @@ def backup_files(inputFilename, inputDir, scripName, fileType=".txt", configFile
         temp_inputDir = inputDir
     backup_path = os.path.join(temp_inputDir, "backup")
     answer = "yes"
-    # answer=mb.askyesnocancel("Backup files!","The function '" + scripName + "' will modify your input file(s).\n\nDo you want to backup your file(s)?")
     if answer is None:  # Cancel
         return False
     if answer:
@@ -93,7 +92,6 @@ def purge_duplicate_rows_byFilename(window, inputFilename, outputDir, openOutput
         if header is not None:
             for row in csv_reader:
                 head, fName = os.path.split(row[filenameColNum])
-                # fName = row[0]
                 if fName in bestFiles:
                     # Only print rows NOT in bestFiles. We want to output the old files (they are the ones to be deleted).
                     if row != bestFiles.get(fName):
@@ -317,7 +315,6 @@ def processFile(
 
     # endswith would not distinguish between, for instance, .doc and .docx or .xls and .xlsx
     # if filename.endswith('.'+by_file_type_var):
-    # 	fileFound=True
 
     if by_substring_var == 1:
         if string_entry_var in filename:
@@ -335,7 +332,6 @@ def processFile(
                 print("   Filename " + filename + " is not utf-8")
         # ASCII_var,
 
-        # old_file=filename
         if by_creation_date_var == 1:
             creation_date, modification_date = get_creation_date(os.path.join(inputPath, filename))
 
@@ -355,11 +351,9 @@ def processFile(
 
         if by_embedded_items_var == 1:
             itemCount = 0
-            # old_file = filename
             filename, itemCount = get_spec_num_files(
                 filename, comparison_var, number_of_items_var, embedded_item_character_value
             )
-            # filename = numEmbedded(filename, comparison_var,  embedded_item_character_value, include_exclude_var)
             if filename == "":
                 fileFound = False
 
@@ -388,7 +382,6 @@ def processFile(
                     + "' because a file by that name already exists in the output directory."
                 )
                 fileFound = False
-    # fileFound==False
 
     if "HYPERLINK" in filename:
         filename = IO_csv_util.undressFilenameForCSVHyperlink(filename)
@@ -519,8 +512,6 @@ def get_count(path, outputPath, outputFilename):
             folders.append(i.path)
 
     fieldnames = ["Main_Dir", "Subdir", "pdf", "doc", "docx", "txt", "Matching"]
-    # fieldnames = ['a','b','c','d','e','f','g']
-    # outputFilename = 'Ext_count.csv'
     with open(outputPath + os.sep + outputFilename, "w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -641,7 +632,6 @@ def get_creation_date(path_to_file):
     else:
         stat = os.stat(path_to_file)
         try:
-            # return stat.st_birthtime,
             # https://www.w3resource.com/python-exercises/python-basic-exercise-64.php
             return time.ctime(os.path.getmtime(path_to_file)), time.ctime(os.path.getctime(path_to_file))
         except AttributeError:
@@ -651,33 +641,23 @@ def get_creation_date(path_to_file):
 
 
 def get_spec_num_files(filename, comparator, number_of_items_var, embedded_item_character_value):
-    # outputList = []
     # with open(inputCSV, 'r', encoding="utf-8", errors='ignore') as read_obj:
-    #     csv_reader = csv.reader(read_obj)
-    #     header = next(csv_reader)
     #     if header is not None:
     # for row in csv_reader:
-    # fullFilePath = row[fullPathColNum] # fullPathColNum should point to the col that has the complete path to the file ie  C:\Users\brett\Desktop\myfile.docx
     justName = os.path.splitext(os.path.split(filename)[1])[0]
     itemCount = len(justName.split(embedded_item_character_value))
     result = ""
     if comparator == "=":
         if itemCount == number_of_items_var:
-            # outputList.append([filename])
             result = filename
     elif comparator == ">=":
         if itemCount >= number_of_items_var:
-            # outputList.append([filename])
             result = filename
     elif comparator == "<=":
         if itemCount <= number_of_items_var:
-            # outputList.append([filename])
             result = filename
     return result, itemCount
 
-    # print(outputList)
-    # filesToOpen = [outputCSV]
-    # IO_csv_util.list_to_csv(0, outputList, outputCSV, colnum=0)
 
 
 def numEmbedded(filename, embedded_item_character_value, number_of_items_var, include_exclude_var):

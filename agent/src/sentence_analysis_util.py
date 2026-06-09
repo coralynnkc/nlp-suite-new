@@ -38,7 +38,6 @@ def dictionary_items_bySentenceID(
         # TODO: HIS HERE MIGHT BE AN ERROR, CHECK LATER
 
         # input_dictionary_file = tk.filedialog.askopenfilename(title="Select dictionary csv file",
-        # 													  initialdir=initialFolder,
         # 													  filetypes=[("csv files", "*.csv")])
         if len(input_dictionary_file) == 0:
             return
@@ -61,7 +60,6 @@ def dictionary_items_bySentenceID(
             text = open(file, encoding="utf-8", errors="ignore").read()
             # Process each word in txt
             Sentence_ID = 0
-            # sentences = tokenize.sent_tokenize(text)
             sentences = sentence_split_stanza_text(stanzaPipeLine(text))
             # word  frequency sentenceID DocumentID FileName
             for each_sentence in sentences:
@@ -102,7 +100,6 @@ def dictionary_items_bySentenceID(
             text = open(file, encoding="utf-8", errors="ignore").read()
             # Process each word in txt
             Sentence_ID = 0
-            # sentences = tokenize.sent_tokenize(text)
             sentences = sentence_split_stanza_text(stanzaPipeLine(text))
             # word  frequency sentenceID DocumentID FileName
             for each_sentence in sentences:
@@ -144,4 +141,3 @@ def dictionary_items_bySentenceID(
             file, inputDir, outputDir, ".xlsx", str(Sentence_ID) + "-Dict_value", "chart", "", "", "", False, True
         )
         filesToOpen.append(outputFilename)
-        # charts_Excel_util.create_excel_chart(GUI_util.window, [DictionaryList], outputFilename, chart_title, ["bar"])

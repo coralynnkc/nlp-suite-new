@@ -102,10 +102,7 @@ def run_GIS(
             return
         inputFilename = csv_file
 
-    # geocoder = 'Nominatim'
     geoName = "geo-" + str(geocoder[:3])
-    # locationColumnName = 'Location'
-    # locationColumnName = location_menu_var #.get()
     if geocode_locations_var:
         IO_files_util.generate_output_file_name(
             inputFilename, inputDir, outputDir, ".csv", "GIS", geoName, locationColumnName, "", "", False, True
@@ -162,10 +159,7 @@ def run_GIS(
 
         # If Column A is 'Word' (coming from CoreNLP NER annotator), rename to 'Location'
         # if IO_csv_util.rename_header(inputFilename, "Word", "Location") == False:
-        #     return
         df = pd.read_csv(locationFiles[0], encoding="utf-8", on_bad_lines="skip").rename(columns={"Word": "Location"})
-        # location_menu_var.set('Location')
-        # 'NER': ['Word', 'NER', 'Sentence ID', 'Sentence', 'tokenBegin', 'tokenEnd', 'Document ID', 'Document'],
 
         # Clean dataframe, remove any 'DATE' or non-location rows
         del_list = []
@@ -174,10 +168,8 @@ def run_GIS(
                 del_list.append(index)
         df = df.drop(del_list)
         df.to_csv(NER_outputFilename, encoding="utf-8", index=False)
-        # csv_file_var.set(NER_outputFilename)
         filesToOpen.append(NER_outputFilename)
         locationColumnName = "Location"
-        # check_csv_file_headers(NER_outputFilename)
 
     else:
         NER_outputFilename = "NER_StanfordCoreNLP_output"
@@ -230,8 +222,6 @@ def run_GIS(
         if outputFiles is not None:
             if len(outputFiles) > 0:
                 filesToOpen.extend(outputFiles)
-                # csv_file_var.set(outputFiles[1])
-                # geocode_locations_var.set(0)
 
         if len(filesToOpen) > 0:
             return filesToOpen

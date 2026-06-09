@@ -15,7 +15,6 @@ import numpy as np
 import pandas as pd
 
 # Stanza for tokenization and lemmatization
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 import stanza
 import word2vec_distances_util
 
@@ -92,7 +91,6 @@ def run_Gensim_word2vec(
                 all_input_docs[dId] = text
                 tail_list[dId] = tail
     else:
-        # numFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, 'txt')
         # if numFiles == 0:
         #     mb.showerror(title='Number of files error',
         #                 message='The selected input directory does NOT contain any file of txt type.\n\nPlease, select a different directory and try again.')
@@ -210,7 +208,6 @@ def run_Gensim_word2vec(
     word_vector_df = pd.DataFrame()
     for v in words:
         if isinstance(v, str):
-            # word_vector_df = word_vector_df.append(pd.Series([v, word_vectors[v]]), ignore_index=True)
             word_vector_df = pd.concat(
                 [word_vector_df, pd.Series([v, word_vectors[v]]).to_frame().T], ignore_index=True
             )
@@ -218,12 +215,10 @@ def run_Gensim_word2vec(
     # merge out_df with word_vector coordinates values
     if lemmatize_var:
         word_vector_df.columns = ["Lemma", "Vector"]
-        # word_vector_df = word_vector_df.astype(str)
         result_df = pd.merge(word_vector_df, out_df, on="Lemma", how="inner")
         result_df = result_df[["Word", "Lemma", "Vector", "Sentence ID", "Sentence", "Document ID", "Document"]]
     else:
         word_vector_df.columns = ["Word", "Vector"]
-        # word_vector_df = word_vector_df.astype(str)
         result_df = pd.merge(word_vector_df, out_df, on="Word", how="inner")
         result_df = result_df[["Word", "Vector", "Sentence ID", "Sentence", "Document ID", "Document"]]
 
@@ -282,7 +277,6 @@ def make_sentences(all_input_docs):
 
     all_txt = []
     for doc in all_input_docs:
-        # sentences = sent_tokenize(doc)
         sentences = sentence_split_stanza_text(stanzaPipeLine(doc))
         sentences = [list(sent_to_words(sent)) for sent in sentences]
         all_txt += sentences
@@ -304,25 +298,19 @@ def remove_stopwords_df(sentence_df):
 # def plot_interactive_graph(tsne_df):
 #     fig = px.scatter(tsne_df, x = "x", y = "y",
 #                      hover_name = "Word")
-#     return fig
 #
 # def plot_interactive_graph_words(tsne_df):
 #     fig = px.scatter(tsne_df, x = "x", y = "y",
-#                      text = "Word",
 #                      hover_name = "Word")
-#     return fig
 #
 # def plot_interactive_3D_graph(tsne_df):
 #     fig = px.scatter_3d(tsne_df, x = "x", y = "y", z="z",
 #                      hover_name = "Word")
-#     return fig
 
 
 # def plot_interactive_3D_graph_words(tsne_df):
 #     fig = px.scatter_3d(tsne_df, x = "x", y = "y", z="z",
-#                      text = "Word",
 #                      hover_name = "Word")
-#     return fig
 #
 def append_list(sim_words, words):
     list_of_words = []
@@ -338,16 +326,9 @@ def append_list(sim_words, words):
 
 # def plot_similar_graph(tsne_df):
 #     fig = px.scatter(tsne_df, x = "x", y = "y",
-#                      text = "Word",
-#                      color = "label",
-#                      size = "similarity",
 #                      hover_name = "Word")
-#     return fig
 #
 # def plot_similar_3D_graph(tsne_df):
 #     fig = px.scatter_3d(tsne_df, x = "x", y = "y", z = "z",
-#                      color = "label",
-#                      size = "similarity",
 #                      hover_name = "Word")
-#     return fig
 #

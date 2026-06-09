@@ -12,12 +12,10 @@ class Node:
         self.root = True
 
         self.kids = tr.getChildrenAsList(tree)
-        # self.leaves = tr.getLeavesAsList(tr.make_tree(tree))
         self.children = []
 
         if not isLeaf:
             for i, kid in enumerate(self.kids):
-                # print(kid.children)
                 if len(kid.children) == 0:
                     self.children.append(Node(kid, True))
                 else:
@@ -30,7 +28,6 @@ class Node:
         else:
             self.parent = None
             self.leaf = True
-            # self.root = False
             self.kids = []
             self.children = []
 
@@ -38,9 +35,7 @@ class Node:
     def calY(self):
         for i in range(0, len(self.children)):
             child = self.children[i]
-            # print(len(self.children))
             x = self.getY() + len(self.children) - 1.0 - i
-            # print(x)
             child.setY(x)
             if self.children[i].isLeaf():
                 continue
@@ -72,8 +67,6 @@ class Node:
             if not child.isLeaf():
                 child.calF()
                 continue
-            # withleaf = child.getF() - 1.0
-            # child.setF(withleaf)
 
     def setF(self, frazier):
         self.Fsc = frazier

@@ -23,9 +23,6 @@ Created on Sun Apr 12 21:04:52 2020
 # target: the substring used to identify the start of a subfile
 # spot_one & spot_two: range where the target appear in the starting line
 # inclusion: if that substring appear in any line, that line will be the start of a new subfile
-# run (inputFilename, outputPath, 'pp.', -7, -5, True)
-# a = '6) pp. 884'
-# print(a[-7:-5+1])
 def splitDocument_byStrings(inputFilename, outputPath, target, spot_one, spot_two, inclusion=False):
     newOutputPath = os.path.join(outputPath, "split_files")
     if not os.path.exists(newOutputPath):
@@ -35,13 +32,11 @@ def splitDocument_byStrings(inputFilename, outputPath, target, spot_one, spot_tw
         shutil.rmtree(newOutputPath)
         os.mkdir(newOutputPath)
 
-    # print("target, spot_one, spot_two",target, spot_one, spot_two)
 
     f = open(inputFilename, encoding="utf-8", errors="ignore")
     content = f.readlines()
     content = [x.strip() for x in content]
 
-    # print(len(content))
     loc = []
     for c in content:
         if inclusion:

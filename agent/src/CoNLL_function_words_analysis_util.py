@@ -14,7 +14,6 @@
 
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"function_words_analysis_main",['csv','os','collections','tkinter','ntpath'])==False:
-#     sys.exit(0)
 
 import os
 from collections import Counter
@@ -130,89 +129,79 @@ def pronoun_stats(
     IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Pronouns"
     )
-    # filesToOpen.append(function_words_list_file_name)
     # not necessary to open stats since these stats are included in the pie chart
-    # filesToOpen.append(function_words_stats_file_name)
 
     # obtain data
-    # data  = get_data(inputFilename)
-    # data_divided_sents = CoNLL_util.sentence_division(data)
 
-    if 0:
-        stats_pronouns(data)
-    else:
-        if not os.path.isdir(outputDir):
-            raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
-            # mb.showwarning(title='output file path error', message='Please check OUTPUT DIRECTORY PATH and try again')
-            # return filesToOpen
+    if not os.path.isdir(outputDir):
+        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
 
-        pronouns_list, pronouns_stats, pronouns_data = stats_pronouns_output(data, data_divided_sents)
-        pronouns_list = pronouns_data
+    pronouns_list, pronouns_stats, pronouns_data = stats_pronouns_output(data, data_divided_sents)
+    pronouns_list = pronouns_data
 
-        # convert list to dataframe and save
-        df = pd.DataFrame(pronouns_list)
-        df, headers = process_df_headers(df, "PRONOUNS")
+    # convert list to dataframe and save
+    df = pd.DataFrame(pronouns_list)
+    df, headers = process_df_headers(df, "PRONOUNS")
 
-        IO_csv_util.df_to_csv(df, pronouns_list_file_name, headers=headers, index=False, language_encoding="utf-8")
+    IO_csv_util.df_to_csv(df, pronouns_list_file_name, headers=headers, index=False, language_encoding="utf-8")
 
-        if chartPackage != "No charts":
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["FORM"]
-            count_var = 1
+    if chartPackage != "No charts":
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["FORM"]
+        count_var = 1
 
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                pronouns_list_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Pronouns",
-                outputFileNameType="FW_pron",
-                column_xAxis_label="Pronoun",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            pronouns_list_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Pronouns",
+            outputFileNameType="FW_pron",
+            column_xAxis_label="Pronoun",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
+        )
 
-            # run_all returns a string; must use append
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+        # run_all returns a string; must use append
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["PRONOUNS"]
-            count_var = 1
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["PRONOUNS"]
+        count_var = 1
 
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                pronouns_list_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Types of Pronouns",
-                outputFileNameType="FW_pron_type",
-                column_xAxis_label="Pronoun type",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            pronouns_list_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Types of Pronouns",
+            outputFileNameType="FW_pron_type",
+            column_xAxis_label="Pronoun type",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
+        )
 
-            # run_all returns a string; must use append
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+        # run_all returns a string; must use append
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
-    # IO_user_interface_util.timed_alert(GUI_util.window,2000,'Analysis end', 'Finished running PRONOUN Analysis at', True, '', True, startTime, True)
     return filesToOpen
 
 
@@ -233,59 +222,50 @@ def preposition_stats(
     IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Prepositions"
     )
-    # filesToOpen.append(function_words_list_file_name)
     # not necessary to open stats since these stats are included in the pie chart
-    # filesToOpen.append(function_words_stats_file_name)
 
-    # data  = get_data(inputFilename)
-    # data_divided_sents = CoNLL_util.sentence_division(data)
 
-    if 0:
-        stats_prepositions(data)
-    else:
-        if not os.path.isdir(outputDir):
-            raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
-            # mb.showwarning(title='output file path error', message='Please check OUTPUT DIRECTORY PATH and try again')
-            # return filesToOpen
+    if not os.path.isdir(outputDir):
+        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
 
-        prepositions_list, prepositions_stats, prepositions_data = stats_prepositions_output(data, data_divided_sents)
-        prepositions_list = prepositions_data
+    prepositions_list, prepositions_stats, prepositions_data = stats_prepositions_output(data, data_divided_sents)
+    prepositions_list = prepositions_data
 
-        # convert list to dataframe and save
-        df = pd.DataFrame(prepositions_list)
-        df, headers = process_df_headers(df, "PREPOSITIONS")
+    # convert list to dataframe and save
+    df = pd.DataFrame(prepositions_list)
+    df, headers = process_df_headers(df, "PREPOSITIONS")
 
-        IO_csv_util.df_to_csv(
-            df, function_words_prepositions_file_name, headers=headers, index=False, language_encoding="utf-8"
+    IO_csv_util.df_to_csv(
+        df, function_words_prepositions_file_name, headers=headers, index=False, language_encoding="utf-8"
+    )
+
+    if chartPackage != "No charts":
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["PREPOSITIONS"]
+        count_var = 1
+
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            function_words_prepositions_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Prepositions",
+            outputFileNameType="FW_prep",
+            column_xAxis_label="Preposition",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
         )
 
-        if chartPackage != "No charts":
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["PREPOSITIONS"]
-            count_var = 1
-
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                function_words_prepositions_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Prepositions",
-                outputFileNameType="FW_prep",
-                column_xAxis_label="Preposition",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
-
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
     return filesToOpen
 
@@ -307,60 +287,50 @@ def article_stats(
     IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Articles"
     )
-    # filesToOpen.append(function_words_list_file_name)
     # not necessary to open stats since these stats are included in the pie chart
-    # filesToOpen.append(function_words_stats_file_name)
 
-    # data  = get_data(inputFilename)
-    # data_divided_sents = CoNLL_util.sentence_division(data)
 
-    if 0:
-        stats_articles(data)
-        return filesToOpen
-    else:
-        if not os.path.isdir(outputDir):
-            raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
-            # mb.showwarning(title='output file path error', message='Please check OUTPUT DIRECTORY PATH and try again')
-            # return filesToOpen
+    if not os.path.isdir(outputDir):
+        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
 
-        # output files
-        article_list, article_stats, article_data = stats_determiners_articles_output(data, data_divided_sents)
-        article_list = article_data
+    # output files
+    article_list, article_stats, article_data = stats_determiners_articles_output(data, data_divided_sents)
+    article_list = article_data
 
-        # convert list to dataframe and save
-        df = pd.DataFrame(article_list)
-        df, headers = process_df_headers(df, "ARTICLES")
+    # convert list to dataframe and save
+    df = pd.DataFrame(article_list)
+    df, headers = process_df_headers(df, "ARTICLES")
 
-        IO_csv_util.df_to_csv(
-            df, function_words_articles_file_name, headers=headers, index=False, language_encoding="utf-8"
+    IO_csv_util.df_to_csv(
+        df, function_words_articles_file_name, headers=headers, index=False, language_encoding="utf-8"
+    )
+
+    if chartPackage != "No charts":
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["ARTICLES"]
+        count_var = 1
+
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            function_words_articles_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Articles",
+            outputFileNameType="FW_art",
+            column_xAxis_label="Article",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
         )
-
-        if chartPackage != "No charts":
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["ARTICLES"]
-            count_var = 1
-
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                function_words_articles_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Articles",
-                outputFileNameType="FW_art",
-                column_xAxis_label="Article",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
     return filesToOpen
 
@@ -385,82 +355,73 @@ def conjunction_stats(
         inputFilename, "", outputDir, ".csv", "FW", "Conjunctions"
     )
     # not necessary to open stats since these stats are included in the pie chart
-    # filesToOpen.append(function_words_stats_file_name)
 
-    # data  = get_data(inputFilename)
-    # data_divided_sents = CoNLL_util.sentence_division(data)
 
-    if 0:
-        stats_conjunctions(data)
-        return filesToOpen
-    else:
-        if not os.path.isdir(outputDir):
-            raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
-            # mb.showwarning(title='output file path error', message='Please check OUTPUT DIRECTORY PATH and try again')
-            # return filesToOpen
+    if not os.path.isdir(outputDir):
+        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
 
-        conjunction_list, conjunction_stats, conjunction_data = stats_conjunctions_output(data, data_divided_sents)
-        conjunction_list = conjunction_data
+    conjunction_list, conjunction_stats, conjunction_data = stats_conjunctions_output(data, data_divided_sents)
+    conjunction_list = conjunction_data
 
-        # convert list to dataframe and save
-        df = pd.DataFrame(conjunction_list)
-        df, headers = process_df_headers(df, "CONJUNCTIONS")
-        IO_csv_util.df_to_csv(
-            df, function_words_conjunctions_file_name, headers=headers, index=False, language_encoding="utf-8"
+    # convert list to dataframe and save
+    df = pd.DataFrame(conjunction_list)
+    df, headers = process_df_headers(df, "CONJUNCTIONS")
+    IO_csv_util.df_to_csv(
+        df, function_words_conjunctions_file_name, headers=headers, index=False, language_encoding="utf-8"
+    )
+
+    if chartPackage != "No charts":
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["CONJUNCTIONS"]
+        count_var = 1
+
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            function_words_conjunctions_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Conjunctions",
+            outputFileNameType="FW_conj",
+            column_xAxis_label="Conjunction",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
         )
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
-        if chartPackage != "No charts":
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["CONJUNCTIONS"]
-            count_var = 1
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["Lemma"]
+        count_var = 1
 
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                function_words_conjunctions_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Conjunctions",
-                outputFileNameType="FW_conj",
-                column_xAxis_label="Conjunction",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
-
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["Lemma"]
-            count_var = 1
-
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                function_words_conjunctions_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Conjunction Words",
-                outputFileNameType="FW_conj_words",
-                column_xAxis_label="Conjunction word",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            function_words_conjunctions_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Conjunction Words",
+            outputFileNameType="FW_conj_words",
+            column_xAxis_label="Conjunction word",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
+        )
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
     return filesToOpen
 
@@ -481,60 +442,50 @@ def auxiliary_stats(
     IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries"
     )
-    # filesToOpen.append(function_words_list_file_name)
     # not necessary to open stats since these stats are included in the pie chart
-    # filesToOpen.append(function_words_stats_file_name)
 
-    # data  = get_data(inputFilename)
-    # data_divided_sents = CoNLL_util.sentence_division(data)
 
-    if 0:
-        stats_auxiliaries(data)
-        return filesToOpen
-    else:
-        if not os.path.isdir(outputDir):
-            raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
-            # mb.showwarning(title='output file path error', message='Please check OUTPUT DIRECTORY PATH and try again')
-            # return filesToOpen
-        auxiliary_list, auxiliary_stats, auxiliary_data = stats_auxiliaries_output(data, data_divided_sents)
-        auxiliary_list = auxiliary_data
+    if not os.path.isdir(outputDir):
+        raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
+    auxiliary_list, auxiliary_stats, auxiliary_data = stats_auxiliaries_output(data, data_divided_sents)
+    auxiliary_list = auxiliary_data
 
-        # convert list to dataframe and save
-        df = pd.DataFrame(auxiliary_list)
-        df, headers = process_df_headers(df, "AUXILIARIES")
+    # convert list to dataframe and save
+    df = pd.DataFrame(auxiliary_list)
+    df, headers = process_df_headers(df, "AUXILIARIES")
 
-        IO_csv_util.df_to_csv(
-            df, function_words_auxiliaries_file_name, headers=headers, index=False, language_encoding="utf-8"
+    IO_csv_util.df_to_csv(
+        df, function_words_auxiliaries_file_name, headers=headers, index=False, language_encoding="utf-8"
+    )
+
+    if chartPackage != "No charts":
+        columns_to_be_plotted_xAxis = []
+        columns_to_be_plotted_yAxis = ["AUXILIARIES"]
+        count_var = 1
+
+        outputFiles = charts_util.visualize_chart(
+            chartPackage,
+            dataTransformation,
+            function_words_auxiliaries_file_name,
+            outputDir,
+            columns_to_be_plotted_xAxis,
+            columns_to_be_plotted_yAxis,
+            chart_title="Frequency Distribution of Auxiliaries",
+            outputFileNameType="FW_aux",
+            column_xAxis_label="Auxiliary verb",
+            count_var=count_var,
+            hover_label=[],
+            groupByList=["Document"],
+            plotList=[],
+            chart_title_label="",
         )
+        if outputFiles is not None:
+            if isinstance(outputFiles, str):
+                filesToOpen.append(outputFiles)
+            else:
+                filesToOpen.extend(outputFiles)
 
-        if chartPackage != "No charts":
-            columns_to_be_plotted_xAxis = []
-            columns_to_be_plotted_yAxis = ["AUXILIARIES"]
-            count_var = 1
-
-            outputFiles = charts_util.visualize_chart(
-                chartPackage,
-                dataTransformation,
-                function_words_auxiliaries_file_name,
-                outputDir,
-                columns_to_be_plotted_xAxis,
-                columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of Auxiliaries",
-                outputFileNameType="FW_aux",
-                column_xAxis_label="Auxiliary verb",
-                count_var=count_var,
-                hover_label=[],
-                groupByList=["Document"],
-                plotList=[],
-                chart_title_label="",
-            )
-            if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
-
-            return filesToOpen
+        return filesToOpen
 
 
 # for verb auxiliaries analysis
@@ -548,9 +499,7 @@ def verb_data_preparation_auxiliary(data):
         print(
             "ERROR: INPUT MUST BE THE MERGED CoNLL TABLE CONTAINING THE SENTENCE ID. Please use the merge option when generating your CoNLL table in the StanfordCoreNLP.py routine. Program will exit."
         )
-        raise (Exception("ERROR"))
-        # mb.showinfo("ERROR", "INPUT MUST BE THE MERGED CoNLL TABLE CONTAINING THE SENTENCE ID. Please use the merge option when generating your CoNLL table in the StanfordCoreNLP.py routine. Program will exit.")
-        # sys.exit(0)
+        raise (Exception("ERROR")) from None
 
 
 # Written by Tony Apr 2022
@@ -617,10 +566,8 @@ def stats_determiners_articles_output(data, data_divided_sents):
 
     # Common kinds of determiners include:
     #   definite and indefinite articles (the, a),
-    #   demonstratives (this, that),
     #   possessive determiners (my, their),
     #   cardinal numerals (one, two),
-    #   quantifiers (many, both),
     #   distributive determiners (each, every)
     #   interrogative determiners (which, what)
 
@@ -662,7 +609,6 @@ def stats_conjunctions_output(data, data_divided_sents):
     return list_conjunctions_postag, conjunctions_postag_stats, conjunction_data
 
 
-# "DEPREL = ""AUX"",""Auxiliary"", DEPREL = ""AUXPASS"", ""Passive auxiliary"", " & _
 # auxiliaries no output
 
 

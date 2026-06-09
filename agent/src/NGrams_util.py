@@ -11,12 +11,6 @@ global nlp
 called = 0
 
 #     if frequency==1: # hapax
-#         hapax_label="_hapax_"
-#         hapax_header=" (hapax)"
-#         ngramsNumber=1 # if hapax, there is no point computing higher-level n-grams
-#     else:
-#         hapax_label=""
-#         hapax_header=""
 
 
 def process_hapax(ngramsList, frequency, excludePunctuation):

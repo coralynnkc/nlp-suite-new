@@ -37,8 +37,6 @@ import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import numpy as np  # np
-
-# from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
 import pandas as pd
 
 fin = open("../lib/wordLists/stopwords.txt")
@@ -70,7 +68,6 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
     # the output filename is reset in the specific script; must be passed as a parameter
     # cannot use time in the filename or when re-generated n the main sentimen_concreteness_analysis.py it will have a different time stamp and the file will not be found
     # if outputFilename == '':
-    #     outputFilename = IO_files_util.generate_outputFilename_name(inputFilename, outputFilename, '.csv', 'SC', 'ANEW', '', '', '', False, True)
 
     # read file into string
     with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
@@ -84,14 +81,12 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
     from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
 
     # otherwise, split into sentences
-    # sentences = tokenize.sent_tokenize(fulltext)
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
     # # check each word in sentence for sentiment and write to outputFilename
 
     # analyze each sentence for sentiment
     i = 1
     for s in sentences:
-        # print("S" + str(i) +": " + s)
         found_words = []
         total_words = 0
         v_list = []  # holds valence scores
@@ -99,7 +94,6 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
         d_list = []  # holds dominance scores
 
         # search for each valid word's sentiment in ANEW
-        # words = word_tokenize(s.lower())
         words = word_tokenize_stanza(stanzaPipeLine(s.lower()))
         filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
         for index, w in enumerate(filtered_words):
@@ -116,10 +110,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
                 j -= 1
 
             # lemmatize word
-            # lmtzr = WordNetLemmatizer()
-            # lemma = lmtzr.lemmatize(w, pos='v')
             # if lemma == w:
-            #     lemma = lmtzr.lemmatize(w, pos='n')
             lemma = lemmatize_stanza(stanzaPipeLine(w))
 
             total_words += 1
@@ -138,10 +129,8 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
                 d_list.append(float(data_dict["dominance"][index]))
         if len(found_words) == 0:  # no words found in ANEW for this sentence
             # writer.writerow({'Document ID': Document ID, 'Document': IO_util.dressFilenameForCSVHyperlink(Document), 'Sentence ID': i,
-            #                 'Sentence': s,
             #                 Sentiment score (Mean): 0,
             #                 sentiment_label: "",
-            #                 })
             i += 1
             pass
         else:  # output sentiment info for this sentence
@@ -325,8 +314,6 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
     if outputDir == "":
         return
 
-    # startTime = time.localtime()
-    # print("Started running ANEW at " + str(startTime[3]) + ':' + str(startTime[4]))
 
     if len(outputDir) < 0 or not os.path.exists(outputDir):
         print("No output directory specified, or path does not exist.")
@@ -415,12 +402,10 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                     filename = os.path.join(inputDir, os.fsdecode(file))
                     if filename.endswith(".txt"):
                         time.time()
-                        # print("Started ANEW sentiment analysis of " + filename + "...")
                         Document_ID += 1
                         filesToOpen.append(
                             analyzefile(filename, outputDir, outputFilename, csvfile, mode, Document_ID, filename)
                         )
-                        # print("Finished ANEW sentiment analysis of " + filename + " in " + str((time.time() - start_time)) + " seconds")
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
                 sys.exit(1)
@@ -436,17 +421,14 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                 "Arousal score (Median)",
                 "Dominance score (Median)",
             ]
-            # hover_label = ['Sentence', 'Sentence', 'Sentence', 'Sentence', 'Sentence', 'Sentence']
         elif mode == "mean":
             columns_to_be_plotted_yAxis = ["Sentiment score (Mean)", "Arousal score (Mean)", "Dominance score (Mean)"]
-            # hover_label = ['Sentence', 'Sentence', 'Sentence']
         elif mode == "median":
             columns_to_be_plotted_yAxis = [
                 "Sentiment score (Median)",
                 "Arousal score (Median)",
                 "Dominance score (Median)",
             ]
-            # hover_label = ['Sentence', 'Sentence', 'Sentence']
 
         outputFiles = charts_util.visualize_chart(
             chartPackage,
@@ -472,8 +454,6 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
             else:
                 filesToOpen.extend(outputFiles)
 
-    # endTime = time.localtime()
-    # print("Finished running ANEW at " + str(endTime[3]) + ':' + str(endTime[4]))
 
     return filesToOpen
 
@@ -506,5 +486,4 @@ if __name__ == "__main__":
 
     # run main
     sys.exit(main(args.inputFilename, args.inputDir, args.outputFilename, args.outputFilename, args.mode))
-    # sys.exit(main('','./in','./out',''))
     # python SentimentAnalysisAnew.py --file "C:\Users\rfranzo\Documents\ACCESS Databases\PC-ACE\NEW\DATA\CORPUS DATA\MURPHY\Murphy Miracles thicker than fog CORENLP.txt" --out C:\Users\rfranzo\Desktop\NLP_output --mode mean

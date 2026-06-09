@@ -109,7 +109,6 @@ def adverb_POSTAG_DEPREL_compute_lists_frequencies(data, data_divided_sents):
 
     included_tags = ["RB", "RBR", "RBS"]  # Adverb POS tags
 
-    # df = pd.DataFrame(data, columns=["ID", "Form", "Lemma", "POS", "NER", "Head", "DepRel", "Deps", "Clause Tag", "Record ID", "Sentence ID", "Document ID", "Document"])
     df[df["POS"].isin(included_tags)]
 
     return list_adverbs_postag, list_adverbs_deprel, adverbs_postag_stats, adverbs_deprel_stats
@@ -187,14 +186,12 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
     adverbs_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_list"
     )
-    # adverbs_ner_list_file_name = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv', 'AVA', 'Adverb', 'NER_list')
     adverbs_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_list"
     )
     IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_stats"
     )
-    # adverbs_ner_stats_file_name = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv', 'AVA', 'Adverb', 'NER_stats')
     IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_stats"
     )

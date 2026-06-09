@@ -105,7 +105,6 @@ def run(
 
     else:
         for file in files:
-            # print("file",file)
             docname = os.path.split(file)[1]
             title = docname.partition(".")[0]
             keyword_value_var = keyword_value_var.strip()
@@ -231,7 +230,6 @@ def run(
                     import file_splitter_ByDocumentID_csv_util
 
                     file_splitter_ByDocumentID_csv_util.split_NLP_Suite_csv_output_by_document_id(file, outputDir)
-        # IO_user_interface_util.timed_alert(GUI_util.window, 2000, "Analysis end", "Finished running '" + menu_option + "' at", True)
     if len(filesToOpen) > 0:
         filesToOpenSubset = []
         for file in filesToOpen:
@@ -243,7 +241,6 @@ def run(
         IO_files_util.OpenOutputFiles(
             GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName, filesToOpenSubset
         )
-        # IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir)
 
 
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
@@ -319,8 +316,6 @@ config_input_output_numeric_options = [6, 1, 0, 1]
 GUI_util.set_window(GUI_size, GUI_label, config_filename, config_input_output_numeric_options)
 
 window = GUI_util.window
-# config_input_output_numeric_options = GUI_util.config_input_output_numeric_options
-# config_filename = GUI_util.config_filename
 inputDir = GUI_util.input_main_dir_path
 outputDir = GUI_util.output_dir_path
 
@@ -441,7 +436,6 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.labels_x_coordinate, y_multiplier_integer, docLength_checkbox, True
 )
 
-# current_docLength_lb = tk.Label(window, text='Word count in selected file')
 # y_multiplier_integer = GUI_IO_util.placeWidget(window,GUI_IO_util.current_docLength_lb_pos, y_multiplier_integer,
 #                                                current_docLength_lb, True)
 
@@ -480,7 +474,6 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
     "The widget, always disabled, displays the number of words in the input file",
 )
 
-# split_docLength_lb = tk.Label(window, text='Max word count in split files')
 # y_multiplier_integer = GUI_IO_util.placeWidget(window,GUI_IO_util.file_splitter_split_docLength_lb_pos, y_multiplier_integer,
 #                                                split_docLength_lb, True)
 
@@ -648,7 +641,6 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
     window, GUI_IO_util.IO_configuration_menu, y_multiplier_integer, search_words_entry
 )
 
-# extract_BME_K_sentences_var.set(0) # Beginning Middle and End
 # extract_BME_K_sentences_checkbox = tk.Checkbutton(window, text='Split by Beginning-Middle-End K-sentences (extract sentences)',
 #                                             variable=extract_BME_K_sentences_var, onvalue=1, offvalue=0)
 # y_multiplier_integer = GUI_IO_util.placeWidget(window,GUI_IO_util.labels_x_coordinate, y_multiplier_integer,
@@ -659,8 +651,6 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 # # y_multiplier_integer = GUI_IO_util.placeWidget(window,GUI_IO_util.file_splitter_split_mergedFile_separator_entry_begin_pos, y_multiplier_integer,
 # #                                                Begin_K_sent_entry_lb, True)
 #
-# Begin_K_sent_entry = tk.Entry(window, textvariable=Begin_K_sent_var)
-# Begin_K_sent_entry.configure(width=3, state='disabled')
 # # place widget with hover-over info
 # y_multiplier_integer = GUI_IO_util.placeWidget(window, GUI_IO_util.file_splitter_split_mergedFile_separator_entry_begin_pos,
 #                                                y_multiplier_integer,
@@ -673,8 +663,6 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 # # y_multiplier_integer = GUI_IO_util.placeWidget(window,GUI_IO_util.file_splitter_split_mergedFile_separator_entry_end_pos, y_multiplier_integer,
 # #                                                End_K_sent_entry_lb, True)
 #
-# End_K_sent_entry = tk.Entry(window, textvariable=End_K_sent_var)
-# End_K_sent_entry.configure(width=3, state='disabled')
 # # place widget with hover-over info
 # y_multiplier_integer = GUI_IO_util.placeWidget(window, GUI_IO_util.file_splitter_split_mergedFile_separator_entry_end_pos,
 #                                                y_multiplier_integer,

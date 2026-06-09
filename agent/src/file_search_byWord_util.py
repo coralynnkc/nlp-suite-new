@@ -27,7 +27,6 @@ def find_k_adjacent_sentences(sentences, search_sentence, kminus, kplus):
     prior_k = sentences[max(0, idx - kminus) : idx]
     after_k = sentences[idx + 1 : min(n, idx + kplus + 1)]
     # return a list of -K + K sentences before and after the search_sentence []
-    # adjacent_sentences = prior_k + [search_sentence] + after_k
     # return ONLY adjacent sentence, excluding the search sentence that contains a search word
     adjacent_sentences = prior_k + after_k
     return adjacent_sentences
@@ -53,10 +52,8 @@ def find_k_adjacent_tokens(tokenized_sentence, search_word, exact_word_match, km
             search_word_right = search_word_list[len_search_word - 1]
             if tokenized_sentence[idx] == search_word_left:
                 prior_k = tokenized_sentence[max(0, idx - kminus) : idx]
-                # after_k = s[idx + 1:min(n, idx + kplus + 1)]
                 left.append(" ".join(prior_k))
             if tokenized_sentence[idx] == search_word_right:
-                # prior_k = s[max(0, idx - kminus):idx]
                 after_k = tokenized_sentence[idx + 1 : min(n, idx + kplus + 1)]
                 right.append(" ".join(after_k))
             if (left != [] or right != []) and mid == []:
@@ -73,10 +70,6 @@ def find_k_adjacent_tokens(tokenized_sentence, search_word, exact_word_match, km
             if process_before_after:
                 left.append(" ".join(tokenized_sentence[max(0, idx - kminus) : idx]))
                 right.append(" ".join(tokenized_sentence[idx + 1 : min(n, idx + kplus + 1)]))
-                # prior_k = tokenized_sentence[max(0, idx-kminus):idx]
-                # after_k = tokenized_sentence[idx+1:min(n, idx+kplus+1)]
-                # left.append(' '.join(prior_k))
-                # right.append(' '.join(after_k))
                 mid.append(search_word)
     return left, mid, right
 
@@ -102,9 +95,6 @@ def get_words_minus_K_plus_K(
         from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
         words_ = tokenize_stanza_text(stanzaPipeLine(docText))
-    # hashmap[hashfile.calculate_checksum(file)] = words_
-    # hashfile.writehash(hashmap,hashOutputDir)
-    # print("   Building cache...")
     a = []
     # for keyword in search_keywords_list: the calling function now loops through the search_keywords_list
     left, mid, right = find_k_adjacent_tokens(
@@ -115,7 +105,6 @@ def get_words_minus_K_plus_K(
             a = [left[i], right[i]]  # If you would like to retain, just follow the 4 lines above and you can do that.
         except:
             a = ["", ""]
-            # print('error')
     # a is the word list used for a wordcloud of the set of -K and +K words
     return a
 
@@ -146,33 +135,21 @@ def search_in_document(
 ):
     # SIMON cache
     # cache not working properly
-    # import hashfile
     # if hashfile.calculate_checksum(file)+"case"+str(case_sensitive) in hashmap:
-    #     words_ = hashmap[hashfile.calculate_checksum(file)]
-    #     print('   Using cache...')
-    # else:
 
     all_found_csv_sentences_records_oneDoc = []
 
     from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
     # SIMON cache
-    # import hashfile
 
     search_keywords_NOT_found = []
     search_keywords_found = False
 
     tokenize_stanza_text(stanzaPipeLine(docText))
-    # hashmap[hashfile.calculate_checksum(file)+"case"+str(case_sensitive)] = words_
-    # hashfile.writehash(hashmap, hashOutputDir)
-    # print("   Building cache...")
 
-    # wordCounter = collections.Counter(words_)
 
     # @@@@@
     # if exact_word_match:
-    #     docText = re.findall(r'\b\w+\b', docText)
-    # else:
-    #     docText = docText
 
     for keyword in search_keywords_list:
         import NGrams_CoOccurrences_util
@@ -436,8 +413,6 @@ def search_sentences_documents(
 
     docIndex = 0
 
-    # outputDir_sentences_extract = ''
-    # outputDir_sentences_extract_wo_searchword = ''
     outputFilename_extract_w_searchword = ""
     outputFilename_extract_wo_searchword = ""
 
@@ -445,7 +420,6 @@ def search_sentences_documents(
     #                                    "Started running the Word search function at",
     #                                     True, '', True, '', False)
 
-    # nlp = stanza.Pipeline(lang=lang, processors='tokenize, lemma')
     #
     # processing corpus files
 
@@ -453,7 +427,6 @@ def search_sentences_documents(
     if lemmatize:
         import NGrams_CoOccurrences_util
 
-        # lemmatized_search_keywords_list, lemmatized_search_word_str = NGrams_CoOccurrences_util.lemmatize_search_words(search_keywords_list)
         lemmatized_search_keywords_list, lemmatized_search_word_str = NGrams_CoOccurrences_util.lemmatize_search_words(
             search_keywords_str
         )
@@ -569,14 +542,11 @@ def search_sentences_documents(
 
     # keywords NOT found applies to both documents and sentences searches
     # convert list to set to produce distinct values
-    # all_search_keywords_NOT_found_set = set(all_search_keywords_NOT_found)
     # # convert set back to list
-    # all_search_keywords_NOT_found=list(all_search_keywords_NOT_found_set)
     # sort the list of keywords not found
     all_search_keywords_NOT_found.sort()
     df = pd.DataFrame(all_search_keywords_NOT_found)
     # insert column names in dataframe
-    # df.columns = ['Searched keyword NOT found', 'Document ID', 'Document']
 
     # 0 is the column 'Searched keyword NOT found'
     # group and compute the frequency of 'Searched keyword NOT found' (column 0) in dataframe
@@ -603,24 +573,11 @@ def search_sentences_documents(
         # the within document option does not produce wordclouds. There is no point since entire documents containing the seatrch words would be processed
         #   these documents can be exported and visualized separately for wordclouds
         # # keywords NOT found
-        # all_search_keywords_NOT_found.sort()
-        # df = pd.DataFrame(all_search_keywords_NOT_found)
         # # insert column names in dataframe
-        # df.columns = ['Searched keyword NOT found', 'Document ID', 'Document']
         # # group and compute the frequency of 'Searched keyword NOT found' in dataframe
-        # df.groupby('Searched keyword NOT found').count()
-        # df['Frequency'] = df['Searched keyword NOT found'].map(df['Searched keyword NOT found'].value_counts())
-        # df = df.loc[df['Frequency'] == nFile]
-        # series = df.iloc[:,0]
-        # df = series.to_frame().reset_index()
-        # df = df.drop('index', axis=1)
-        # df = df.drop_duplicates()
-        # distinct_keywords_not_found_list = df['Searched keyword NOT found'].to_list()
-        # distinct_keywords_not_found_list.insert(0,'Searched keyword NOT found')
         # IO_error = IO_csv_util.list_to_csv(GUI_util.window, distinct_keywords_not_found_list,
         #                                    outputFilename_csv_distinct_word_NOT_found)
         # if not IO_error:
-        #     filesToOpen.append(outputFilename_csv_distinct_word_NOT_found)
 
         header = ["Searched keyword NOT found", "Document ID", "Document"]
         all_search_keywords_NOT_found.insert(0, header)
@@ -642,7 +599,6 @@ def search_sentences_documents(
                         # document search works for newspaper articles
                         # document search works for Jiang Li
                         # document search works for CGWR
-                        # writer.writerow(all_found_csv_sentences_records_allDocs[i][0])
                     except:
                         continue
         f_csv.close()
@@ -794,8 +750,6 @@ def search_sentences_documents(
                 )
 
                 df = pd.read_csv(outputFilename_csv_word, encoding="ISO-8859-1")
-            # except UnicodeEncodeError:
-            #     print('   Filename ' + outputFilename_csv_word + ' is not utf-8')
             unique_words = df["Search Word in Sentence"].unique()
             # Save separate CSVs for each unique search word
             file_paths = []

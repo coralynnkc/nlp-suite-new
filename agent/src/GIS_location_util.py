@@ -2,11 +2,7 @@ import CoNLL_util
 import IO_csv_util
 import pandas as pd
 
-# multi_word_location_prefix = "Republic of, People's, Kingdom of, south, South, north, North, west, east, los, new, san, las, la, hong, Soviet"
-# split_locations_suffix = "city, island, province"
-# multi_word_location_prefix = re.sub("[^\w]", " ",  multi_word_location_prefix).split()
 # convert string to list
-# multi_word_location_prefix = multi_word_location_prefix.split(', ')
 
 
 # if 'spatial' in NER_tag_var.get() or 'CITY' in NER_tag_var.get() or 'COUNTRY' in NER_tag_var.get() or 'STATE_OR_PROVINCE' in NER_tag_var.get():
@@ -50,8 +46,6 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
     # startTime=IO_user_interface_util.timed_alert(window, 2000, 'NER locations extraction', "Started extracting NER locations from CoNLL table at",
     # 											 True,'', True, '', True)
 
-    # re.sub(pattern, repl, string, count=0, flags=0)
-    # multi_word_location_prefix = re.sub("[^\w]", " ",  multi_word_location_prefix).split()
     if encodingValue == "":
         encodingValue = "utf-8"
     dt = pd.read_csv(conllFile, encoding=encodingValue, on_bad_lines="skip")
@@ -66,7 +60,6 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
     locList, currList, _locationsOnlyList = [], [], []
     tempLocation = ""
     # loop through all records of the CoNLL table
-    # print("The script will list the current record position in the CoNLL table out of all CoNLL records and the sentenceID and recordID")
     for index, row in dt.iterrows():
         if row[4] in ["LOCATION", "STATE_OR_PROVINCE", "CITY", "COUNTRY"]:  # col 4 is NER
             # do NOT compute the same sentence for the same document
@@ -76,7 +69,6 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
                 # No need to display the filename in Description when only one file is processed
                 # A blank value for the filename will be checked in Description to avoid displaying it
                 if numDocs != 1:
-                    # currList.append(row[filenamePositionInCoNLLTable]) #append filename
                     if "=dressforhyperlink" in str(row[filenamePositionInCoNLLTable]):
                         currList.append(row[filenamePositionInCoNLLTable])  # append filename
                     else:
@@ -103,7 +95,6 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
                 currList.append(documentID)
 
                 # A blank value for the filename will be checked in Description to avoid displaying it
-                # currList = [row[filenamePositionInCoNLLTable]] #col 11 is the filename
                 if "=hyperlink" in str(row[filenamePositionInCoNLLTable]):
                     currList.append(row[filenamePositionInCoNLLTable])  # append filename
                 else:
@@ -122,7 +113,6 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
                         currList.append("")
             if currList != [""] and len(currList) > 1:  # sometimes only the filename is printed; no location
                 locList.append(currList)
-                # locList+=currList
             print(
                 "Processing NER location "
                 + str(index)
@@ -147,10 +137,7 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
             + conllFile
             + "\n\nThere is no geocoding to be done."
         )
-    # else:
-    # 	IO_user_interface_util.timed_alert(window, 2000, 'NER locations extraction', "Finished extracting NER locations from CoNLL table at", True, '', True, startTime, True)
     # returns filename, location, sentence, date (if present)
-    # return sorted(locList)
     # do not sort locations so that you can check from wrong CoreNLP NER tag, e.g., South America as South = LOCATION, America = COUNTRY
     return locList
 
@@ -160,7 +147,6 @@ def save_location(datePresent, currLocation, sentence, document, row):
     if datePresent:
         try:
             # NER may not be present when an external input csv file of locations is passed
-            # locList.append([currLocation, row["Date"], row["NER"]])
             locList.append([currLocation, row["Date"], row["NER"], row["Sentence"], row["Document"]])
         except:
             locList.append([currLocation, row["Date"], row["Sentence"], row["Document"]])
@@ -183,7 +169,6 @@ def extract_csvFile_locations(
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
         count_row = dt.shape[0]  # gives number of row count
-        # count_col = dt.shape[1]  # gives number of col count
     except:
         print(
             "Input file error, There was an error in the function 'Extract csv locations' reading the input csv file\n"
@@ -240,15 +225,11 @@ def extract_csvFile_locations(
                             else:
                                 if currLocation != "":
                                     currLocation = currLocation + " " + row["Location"]
-                                # currLocation = ''
                                 else:
                                     currLocation = row["Location"]
-                            # sentence = row["Sentence"]
-                            # document = row["Document"]
                         except:
                             currLocation = row["Location"]
                             pass
-                        # locList.append(save_location(datePresent, currLocation, row)[0])
                         locList.append(save_location(datePresent, currLocation, sentence, document, row)[0])
                         currLocation = ""
                 except:
@@ -257,10 +238,7 @@ def extract_csvFile_locations(
                     currLocation = ""
 
     # the code would break if no NER is passed (e.g., from DB_PC-ACE)
-    # 		try:
-    # 			locList.append([row[locationColumnNumber],[index],[0], row['NER']])
     # 		except:
-    # 			locList.append([row[locationColumnNumber], [index], [0]])
 
     if len(locList) == 0:
         print(
@@ -269,8 +247,6 @@ def extract_csvFile_locations(
             + "\n\nThere is no geocoding to be done.\n\nNo maps can be done. "
         )
         return
-    # IO_user_interface_util.timed_alert(window, 2000, 'csv file locations extraction', "Finished extracting locations from csv file at", True, '', True, startTime, True)
-    # return sorted(locList)
     # do not sort locations so that you can check from wrong CoreNLP NER tag, e.g., South America as South = LOCATION, America = COUNTRY
 
     # locList is a list of four items: location mane, row index in the locations table, date, NER tag (e.g., COUNTRY)

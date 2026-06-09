@@ -57,16 +57,10 @@ def run(
         number_of_items,
     )
 
-    # outputFilename=''
-    # i=0
-    # fieldnames = []
-    # currentSubfolder=os.path.basename(os.path.normpath(inputPath))
 
     # For cases where matching files beginning with a dot (.); like files in the current directory or hidden files on Unix based system, use the os.walk
-    # import glob
     # include_subdir_var
     # for filename in glob.iglob(inputPath + os.sep+ '*.'+by_file_type_var, recursive=True):
-    #      print(filename)
 
     # root: Current path which is "walked through"
     # subdirs: Files in root of type directory
@@ -77,18 +71,9 @@ def run(
     )
 
     # if i > 0:
-    # 	mb.showwarning(title='File matcher', message=str(i) + ' files have been matched.')
-    # 	filesToOpen=[]
-    # 	filesToOpen.append(os.path.join(outputPath,outputFilename))
-    # 	IO_util.OpenOutputFiles(GUI_util.window,True,filesToOpen)
-    # else:
-    # 	mb.showwarning(title='File matcher', message='No files have been matched.')
 
 
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
-# noi = file_filename_matcher_GUI.number_of_items_value.get()
-# print("Number of items: ", noi)
-# print("Type: ", type(file_filename_matcher_GUI.number_of_items_var.get()))
 def run_script_command():
     return run(
     GUI_util.input_main_dir_path.get(),
@@ -155,7 +140,6 @@ find_var = tk.IntVar()
 source_file_type_menu_var = tk.StringVar()
 target_file_type_menu_var = tk.StringVar()
 matching_var = tk.IntVar()
-# by_embedded_items_var=tk.IntVar()
 character_value_var = tk.StringVar()
 number_of_items_var = tk.IntVar()
 include_exclude_var = tk.IntVar()
@@ -376,10 +360,7 @@ def activate_options(*args):
         copy_var.set(0)
         # TODO need to set move_var.set(0)
         # but the question gets repeated twice
-        # command = mb.askyesno("MOVE files", "You have selected to MOVE any mathed files from the INPUT directory to the OUTPUT directory?\n\nAre you sure you want to do that? Matched files will be removed from their original locations.",default='no')
         # if command==False:
-        # 	move_var.set(0)
-        # 	copy_checkbox.config(state='normal')
 
 
 copy_var.trace("w", activate_options)
@@ -394,7 +375,6 @@ def activate_find_options(*args):
         target_file_type_menu.configure(state="normal")
         # currently the matcher only works with exact match
         # need to use a csv file for partial matches
-        # matching_checkbox.config(text="Exact match",state='normal')
         matching_checkbox.config(text="Exact match", state="normal")
         matching_var.set(1)
     else:

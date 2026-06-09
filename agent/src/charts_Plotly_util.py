@@ -1,5 +1,4 @@
 # Written by Tony Chen Gu in Feb 2022
-# Contact: chentony2011@hotmail.com
 # https://plotly.com/python/
 
 import io
@@ -22,12 +21,6 @@ from plotly.subplots import make_subplots
 # def create_excel_chart(data_to_be_plotted,inputFilename,outputDir,scriptType,
 #                        chart_title,
 #                        chart_type_list,
-#                        column_xAxis_label='',
-#                        column_yAxis_label='',
-#                        hover_info_column_list=[],
-#                        reverse_column_position_for_series_label=False,
-#                        series_label_list=[],
-#                        second_y_var=0,
 #                        second_yAxis_label=''):
 # match the excel chart format
 def create_Plotly_chart(
@@ -76,9 +69,6 @@ def create_Plotly_chart(
             print(f"Error: {e}")
             return
     # print on X-axis the filename w/o path
-    # head, tail = os.path.split(inputFilename)
-    # inputFilenameSV=inputFilename
-    # inputFilename = tail
     headers = data.columns.tolist()
     file_list = []
     for j in range(0, len(chart_type_list)):
@@ -145,14 +135,12 @@ def create_Plotly_chart(
                     x_cols, y_cols, y_cols, "None", "px.bar(data, x=x_cols, color=chart_name)", "bar", data
                 )
                 file_list.append(outputDir + os.sep + "bar" + "chart of the " + x_cols + ".html")
-                # fig = px.bar(data, x=x_cols, y=y_cols,title = 'Frequency Distribution of '+x_cols)
                 # file_list.append(
                 #    save_chart(fig, outputDir, 'Frequency Distribution of '+x_cols, static_flag, x_cols))
             elif i.lower() == "pie":
                 if not x_cols:
                     df2 = data[y_cols].value_counts()
                     fig = px.pie(df2, values=df2.values, names=list(df2.index))
-                    # fig = plot_pie_chart_px(x_cols,inputFilename,chart_title,y_cols)
                     file_list.append(
                         save_chart(fig, outputDir, "Pie chart of " + y_cols[0] + "no x grouping", static_flag, x_cols)
                     )
@@ -167,7 +155,6 @@ def create_Plotly_chart(
                     x_cols, y_cols, y_cols, "None", "px.scatter(data, x=x_cols, color=chart_name)", "scatter", data
                 )
                 file_list.append(outputDir + os.sep + "scatter" + "chart of the " + x_cols + ".html")
-                # fig = px.scatter(data, x=x_cols, y=y_cols, title='Frequency Distribution of ' + x_cols)
                 # file_list.append(
                 #    save_chart(fig, outputDir, 'Frequency Distribution of ' + x_cols, static_flag, x_cols))
             elif i.lower() == "radar":
@@ -180,7 +167,6 @@ def create_Plotly_chart(
                     x_cols, y_cols, y_cols, "None", "px.line(data, x=x_cols, color=chart_name)", "line", data
                 )
                 file_list.append(outputDir + os.sep + "line" + "chart of the " + x_cols + ".html")
-                # fig = px.line(data, x=x_cols, y=y_cols, title='Frequency Distribution of ' + x_cols)
                 # file_list.append(
                 #    save_chart(fig, outputDir, 'Frequency Distribution of ' + x_cols, static_flag, x_cols))
             elif i.lower() == "bubble":
@@ -210,7 +196,6 @@ def create_Plotly_chart(
         elif i.lower() == "radar":
             fig = plot_radar_chart_px(x_cols, y_cols, inputFilename, chart_title)
         elif i.lower() == "line":
-            # plot_multi_line_chart_w_slider_px(fileName, chart_title, col_to_be_ploted, series_label_list = NULL)
             fig = plot_multi_line_chart_w_slider_px(inputFilename, chart_title, cols_to_plot)
             file_list.append(
                 save_chart(fig, outputDir, chart_title, static_flag, column_xAxis_label, column_yAxis_label)
@@ -251,7 +236,6 @@ def get_frequencies(data, variable):
 # set up the output directory path
 # support both static and dynamic chart
 def save_chart(fig, outputDir, chart_title, static_flag, x_label="", y_label=""):
-    # fig.show()
     if x_label != "":
         fig.update_layout(xaxis_title=x_label)
     if y_label != "":
@@ -380,7 +364,6 @@ def plot_multi_line_chart_w_slider_px(fileName, chart_title, col_to_be_ploted, s
             rangeslider=dict(visible=True),
         )
     )
-    # save_chart(figs, outputDir, chart_title, False)
     return figs
 
 

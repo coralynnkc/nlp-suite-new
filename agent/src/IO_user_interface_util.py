@@ -94,7 +94,6 @@ def timed_alert(
 
 
 # inputFilename has complete path
-# filesError is []
 def process_CoreNLP_error(CoreNLP_output, inputFilename, nDocs, filesError, text, silent=True):
     errorFound = False
     duration = 1000
@@ -115,7 +114,6 @@ def process_CoreNLP_error(CoreNLP_output, inputFilename, nDocs, filesError, text
             try:
                 CoreNLP_output = json.loads(CoreNLP_output)
                 logger.warning("[Info] Successfully converted CoreNLP output to JSON. Proceeding as normal.")
-                # logger.warning(CoreNLP_output)
             except Exception as e:
                 logger.error(
                     "[Error] Could not convert CoreNLP output to JSON! Please, check your input file for any corruption. Error: "

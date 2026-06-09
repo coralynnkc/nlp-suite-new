@@ -15,7 +15,6 @@ import pandas as pd
 """
 NGramsCoOccurrences implements the ability to generate NGram and CoOccurrences data
 """
-# import hashfile
 
 from Stanza_functions_util import (
     lemmatize_stanza_doc,
@@ -89,21 +88,12 @@ def search_within_sentence_coOccurences(
 
     os.path.dirname(outputDir + "_sentence")
     # SIMON cache
-    # hashmap = hashfile.getcache(hashOutputDir) if hashfile.checkOut(hashOutputDir) else {}
     all_results = pd.DataFrame()  # Initialize an empty DataFrame to store all results
     for doc_index, file in enumerate(files):
-        # checksum = hashfile.calculate_checksum(file)
-        # head, tail = os.path.split(file)
         # # SIMON cache
         # if checksum in hashmap:
-        #     sentences = hashmap[checksum]
-        #     print(f" Using cache :  Processing file {doc_index + 1}/{len(files)} {tail}")
-        # else:
-        #     print(f" Building cache:  Processing file {doc_index + 1}/{len(files)} {tail}")
         sentences = sentence_split_stanza_text(stanzaPipeLine(readfile(file)))
         # # SIMON cache
-        # hashfile.storehash(hashmap, checksum, sentences)
-        # hashfile.writehash(hashmap, hashOutputDir)
         for sentence in sentences:
             co_occurring = False
             sentIndex += 1
@@ -136,7 +126,6 @@ def search_within_sentence_coOccurences(
             ],
         )
 
-        # df = one_text_res(sentences, search_keywords_list, index+1, IO_csv_util.dressFilenameForCSVHyperlink(file))
         all_results = pd.concat([all_results, df])  # Append the results to the all_results DataFrame
     all_results.to_csv(outputFilename, index=False)
 
@@ -191,7 +180,6 @@ def process_date(search_keywords_str, temporal_aggregation):
 
 
 def aggregate_by_number_of_years(yearList, byNumberOfYears, search_keywords_list):
-    # pprint.pprint(ngram_results)
     curYear = yearList[0]
     newYear = curYear + byNumberOfYears - 1
     newYearStringList = []
@@ -290,7 +278,6 @@ def prepare_text_with_options(text_to_process, case_sensitive, exact_word_match,
     if not case_sensitive:
         text_to_process = text_to_process.lower()
     if lemmatize:
-        # text_to_process = 'Robert Bingman, a single man, ate shit and got sick.'
         text_to_process = lemmatize_stanza_doc(stanzaPipeLine(text_to_process), return_string, exact_word_match)
 
     return text_to_process
@@ -360,7 +347,6 @@ def process_word_search(
 
     return ngram_results, quarter_ngram_results, coOcc_results
 
-    #     else:
     #         if search_word == token:
     #             # for now the date option only applies to n-grams but there is no reason to exclude co-occurrences
     #             # if dateOption:
@@ -373,28 +359,11 @@ def process_word_search(
     # if CoOcc_Viewer:
     #     # @@@
     #     if within_sentence_co_occurrence_search_var:
-    #         # coOcc_results[docIndex_sentIndex]['Co-Occurrence in Sentence'][search_word]+=1
-    #         valuescheck_sent = coOcc_results[docIndex_sentIndex]['Co-Occurrence in Sentence'].values()
     #         if 0 in valuescheck_sent:
-    #             coOcc_results[docIndex_sentIndex]['Co-Occurrence_inSentence_bool'] = "NO"
-    #         else:
-    #             coOcc_results[docIndex_sentIndex]['Co-Occurrence_inSentence_bool'] = "YES"
     #
-    #         # coOcc_results[docIndex_sentIndex]['Co-Occurrence in Document'][search_word]+=1
-    #         valuescheck_doc = coOcc_results[docIndex_sentIndex]['Co-Occurrence in Document'].values()
     #         if 0 in valuescheck_doc:
-    #             coOcc_results[docIndex_sentIndex]['Co-Occurrence_inDocument_bool'] = "NO"
-    #         else:
-    #             coOcc_results[docIndex_sentIndex]['Co-Occurrence_inDocument_bool'] = "YES"
-    #     else:
-    #         coOcc_results[docIndex_sentIndex]['Co-Occurrence in Document'][search_word]+=1
-    #         valuescheck_doc = coOcc_results[docIndex_sentIndex]['Co-Occurrence in Document'].values()
     #         if 0 in valuescheck_doc:
-    #             coOcc_results[docIndex_sentIndex]['Co-Occurrence_inDocument_bool'] = "NO"
-    #         else:
-    #             coOcc_results[docIndex_sentIndex]['Co-Occurrence_inDocument_bool'] = "YES"
     #
-    # return ngram_results, quarter_ngram_results, coOcc_results
 
 
 def process_ngrams(data, word, minus_K_words_var, plus_K_words_var):
@@ -542,7 +511,6 @@ def search_ngrams_csv_file(
     a_to_b_mapping = data.drop_duplicates(subset="Document ID").set_index("Document ID")["Document"].to_dict()
     combined_pivot_df["Document ID"] = combined_pivot_df.index
     combined_pivot_df["Document"] = combined_pivot_df.index.map(a_to_b_mapping)
-    # combined_pivot_df.insert(len(combined_pivot_df.columns)-1, 'Document ID', combined_pivot_df['Document ID'])
     NgramsSearchFileName = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".csv", "N-grams_search")
 
     # Check if the combined DataFrame is empty
@@ -557,7 +525,6 @@ def search_ngrams_csv_file(
         inputFilename = NgramsSearchFileName
         ngram_size = int(data.columns[0].split("-")[0])
         if ngram_size == 1:
-            # inputFilename=outputFilename_byDocument
             # these variables are used in charts_util.visualize_chart
             headers = IO_csv_util.get_csvfile_headers(inputFilename)
             X_axis_label = ""
@@ -781,21 +748,15 @@ def NGrams_coOccurrences_VIEWER(
             lang = k
             lang_list.append(lang)
             break
-    # try:
     #     if useLemma:
-    #         nlp = stanza.Pipeline(lang=lang, processors='tokenize, lemma')
-    #     else:
-    #         nlp = stanza.Pipeline(lang=lang, processors='tokenize')
     # except:
     #     mb.showwarning(title='Warning',
     #                    # message='You must enter an integer value. The value ' + str(result[0]) + ' is not an integer.')
     #                 message = 'You must enter an integer value. The value is not an integer.')
-    #     return
     case_sensitive = False
     useLemma = False
     exact_word_match = True
 
-    # print(str(viewer_options_list))
     if "sensitive" in str(viewer_options_list):
         case_sensitive = True
     if "insensitive" in str(viewer_options_list):
@@ -809,7 +770,6 @@ def NGrams_coOccurrences_VIEWER(
     if "Lemmatize" in str(viewer_options_list):
         useLemma = True
 
-    # print('TOP case_sensitive',case_sensitive)
 
     byNumberOfYears = 0
     byYear = False
@@ -876,11 +836,7 @@ def NGrams_coOccurrences_VIEWER(
 
     #########NEW FILE##########
     # # SIMON cache
-    # import hashfile
     # if hashfile.checkOut(outputDir):
-    #     hashmap = hashfile.getcache(outputDir)
-    # else:
-    #     hashmap = {}
     #
 
     # search n-gram csv file --------------------------------------------------------------------
@@ -961,8 +917,6 @@ def NGrams_coOccurrences_VIEWER(
             pass  # TODO: getDate warns user is this file has a bad date
 
         # if hashfile.calculate_checksum(file) in hashmap:
-        #     tokens_ = hashmap[hashfile.calculate_checksum(file)]
-        # else:
         f = open(file, encoding="utf-8", errors="ignore")
         docText = f.read()
         f.close()
@@ -971,10 +925,6 @@ def NGrams_coOccurrences_VIEWER(
 
         # https://stackoverflow.com/questions/66342227/efficiently-searching-a-body-of-text-for-a-large-number-of-keywords-1000s
         # DOES NOT WORK
-        # import re
-        # c = re.compile(r"China") # c = re.compile(r"STOCK|GOOG|MICR")
-        # r = c.findall(docText, re.M)
-        # print('using re to search for China: ',r)
 
         if within_sentence_co_occurrence_search_var:
             sentIndex = 0
@@ -982,8 +932,6 @@ def NGrams_coOccurrences_VIEWER(
             len_sentences = len(sentences)
 
             # SIMON cache
-            # hashfile.storehash(hashmap, checksum, sentences)
-            # hashfile.writehash(hashmap, hashOutputDir)
 
             for sentIndex, sentence in enumerate(sentences):
                 sentIndex += 1  # to avoid starting at 0
@@ -1036,10 +984,7 @@ def NGrams_coOccurrences_VIEWER(
                 "Document ID": docIndex,
                 "Document": IO_csv_util.undressFilenameForCSVHyperlink(file),
             }
-            # tokens_ = tokenize_stanza_text(stanzaPipeLine(docText))
             # SIMON cache
-            # hashfile.storehash(hashmap, hashfile.calculate_checksum(file), tokens_)
-            # hashfile.writehash(hashmap, outputDir)
             ngram_results, quarter_ngram_results, coOcc_results = process_word_search(
                 docText,
                 docIndex_sentIndex,
@@ -1065,7 +1010,6 @@ def NGrams_coOccurrences_VIEWER(
     NgramsFileName = ""
     coOccFileName = ""
 
-    # coOcc_results = coOcc_sentence_results
     import charts_util
 
     if n_grams_viewer:
@@ -1117,7 +1061,6 @@ def NGrams_coOccurrences_VIEWER(
         coOccFileName = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".csv", "Co-Occ" + label)
 
         # save the Co-occurrence output files ------------------------------------------------------------------------------
-        # pprint.pprint(coOcc_results)
         filesToOpen = save_co_occurrences(
             coOccFileName,
             coOcc_results,
@@ -1150,15 +1093,6 @@ def NGrams_coOccurrences_VIEWER(
             count_var = 1
             # outputFiles = charts_util.visualize_chart(chartPackage, dataTransformation,
             #                                        coOccFileName, outputDir,
-            #                                        columns_to_be_plotted_xAxis=[],
-            #                                        columns_to_be_plotted_yAxis=columns_to_be_plotted_yAxis,
-            #                                        chart_title=chart_title,
-            #                                        count_var=count_var,  # 1 for alphabetic fields that need to be coounted;  1 for numeric fields (e.g., frequencies, scorers)
-            #                                        hover_label=[],
-            #                                        outputFileNameType='co-occ-words',
-            #                                        column_xAxis_label='Co-Occurring Words: ' + search_keywords_str,
-            #                                        groupByList=[], #['Document']
-            #                                        plotList=[], #'Co-Occurrence in Sentence','Co-Occurrence in Document'],
             #                                        chart_title_label='')
 
             columns_to_be_plotted_yAxis = [[1, 1], [2, 2]]

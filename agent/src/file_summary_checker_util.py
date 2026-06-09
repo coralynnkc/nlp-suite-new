@@ -111,7 +111,6 @@ def get_article_soc_actors_NER(dir_path, soc_acts, nlp):
             if pos == "ORGANIZATION":
                 if (wordNER, fileName) not in art_org and (wordNER, fileName) not in artActors:
                     art_org.add((wordNER, fileName))
-                    # art_org.add((wordNER.encode("Windows-1252").decode("UTF-8", "ignore"), fileName))
             if pos == "PERSON":
                 if (wordNER, fileName) not in art_person and (wordNER, fileName) not in artActors:
                     art_person.add((wordNER, fileName))

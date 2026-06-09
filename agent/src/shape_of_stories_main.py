@@ -2,7 +2,6 @@
 # Modified by Cynthia Dong (November 2019-April 2020)
 
 # if IO_libraries_util.install_all_Python_packages("shape_of_stories_main.py", ['subprocess', 'os', 'tkinter', 'matplotlib','csv','numpy','sklearn','tqdm','codecs']) == False:
-#     sys.exit(0)
 # tqdm, sklearn, and codecs must be installed
 # tqdm provides a progress bar (used in clustering_util)
 import os
@@ -12,7 +11,6 @@ import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
-import reminders_util
 import shape_of_stories_clustering_util as cl
 import shape_of_stories_vectorizer_util as vec
 import shape_of_stories_visualization_util as viz
@@ -109,10 +107,6 @@ def run(
     if not os.path.exists(outputDir):
         os.mkdir(outputDir)
     # if GUI_util.output_dir_path.get()!=outputDir:
-    #     # outputDir = head
-    #     GUI_util.output_dir_path.set(outputDir)
-    #     title_options_shape_of_stories = ['Output directory']
-    #     message_shape_of_stories = 'The output directory was changed to:\n\n'+str(outputDir)
     #     reminders_util.checkReminder(scriptName,
     #                                  title_options_shape_of_stories,
     #                                  message_shape_of_stories,
@@ -120,7 +114,6 @@ def run(
 
     # RUN SCRIPTS ---------------------------------------------------------------------------
 
-    # utf.check_utf8_compliance(GUI_util.window, "", inputDir, outputDir, openOutputFiles)
     # startTime=IO_user_interface_util.timed_alert('Analysis start',
     #                     'Started running Shape of Stories at', True)
 
@@ -157,17 +150,12 @@ def run(
         #                                  True)
         #
         #     # TODO any changes in the way the CoreNLP_annotator generates output filenames will need to be edited here
-        #     outputFilename = 'NLP_CoreNLP_sentiment_Dir_'+tail + '.csv'
         #
         #     if os.path.isfile(os.path.join(outputDir,outputFilename)):
-        #         computeSAScores=mb.askyesno("Sentiment Analysis","You have selected to run sentiment analysis on your corpus. But there already exists a csv file of sentiment scores for this corpus saved in the default output directory:\n\n"+outputFilename+"\n\nAre you sure you want to recompute the scores?")
         #         if not computeSAScores:
-        #             return
         #     tempOutputfile=Stanford_CoreNLP_util.CoreNLP_annotate(config_filename, '', inputDir, outputDir, openOutputFiles,
         #                         chartPackage, dataTransformation,'sentiment',False, language_var, export_json_var, memory_var)
         #     if tempOutputfile==None:
-        #         return
-        #     sentiment_scores_input=tempOutputfile[0]
 
         # BERT ---------------------------------------------------------
 
@@ -257,7 +245,6 @@ def run(
                 export_json_var,
                 memory_var,
             )
-            # outputFilename=outputFilename[0] # annotators return a list and not a string
             if len(tempOutputFiles) > 0:
                 sentiment_scores_input = tempOutputFiles[0]
                 filesToOpen.extend(tempOutputFiles)
@@ -316,14 +303,12 @@ def run(
         # window size
 
         # val = GUI_IO_util.slider_widget("Please, select the value for window size. Window size is the number of sentences "
-        #                          + "that will be averaged to obtain one point of the story arc. The recommend value is " + str(vectz.window_size)
         #              + ".", 1, vectz.min_doc_len - 1, vectz.window_size)
         val = vectz.window_size
         vectz.window_size = val
 
         # sentiment_vector_size
         # val = GUI_IO_util.slider_widget("Please, select the value for sentiment vector size. Sentiment vector size is the number of values "
-        #                          + "that each document will be represented with. The recommend value is " + str(vectz.ideal_sent_v_size)
         #              + ".", 1, vectz.min_doc_len, vectz.ideal_sent_v_size)
         vectz.ideal_sent_v_size
 
@@ -340,7 +325,6 @@ def run(
         filesToOpen.append(PCAFilename)
 
         # number of clusters
-        # val = GUI_IO_util.slider_widget("Please, select the value for number of clusters (modes). The recommend value is " + str(
         #                  rec_n_clusters)
         #                       + ".", 1, vectz.sentiment_vector_size, rec_n_clusters)
         val = rec_n_clusters
@@ -498,14 +482,12 @@ head, scriptName = os.path.split(os.path.basename(__file__))
 # #   output dir
 
 # def activate_warning(*args):
-#     if not 'CoreNLP' in sentiment_analysis_menu_var.get() and not \
 #             'BERT (English model)' in sentiment_analysis_menu_var.get() and not \
 #             'BERT (Multilingual model)' in sentiment_analysis_menu_var.get() and not \
 #             'spaCy' in sentiment_analysis_menu_var.get() and not \
 #             'Stanza' in sentiment_analysis_menu_var.get():
 #             mb.showwarning(title="Sentiment Analysis option deprecated",
 #                             message="The selected sentiment analysis dictionary-based option '" + (sentiment_analysis_menu_var.get()).lstrip() + "' is deprecated.\n\nPlease, use one of the neural network approaches, slower perhaps, but far more accurate.")
-# sentiment_analysis_menu_var.trace("w",activate_warning)
 
 
 def check_IO_requirements(
@@ -621,8 +603,6 @@ def check_IO_requirements(
             # answer = mb.askyesno("Data warning: Data reduction algorithms",
             #                      message=csv_fileWarning)
             # if answer == False:
-            #     Error = True
-            #     return Error
     else:  # inputDir
         if inputDir != "":
             if sentimentAnalysis or corpus_analysis:
@@ -640,8 +620,6 @@ def check_IO_requirements(
                     #                      message=txt_dirWarning)
                     print(txt_dirWarning)
                     # if answer == False:
-                    #     Error = True
-                    #     return Error
 
             if not sentimentAnalysis:
                 if hierarchical_clustering or SVD or NMF or best_topic_estimation:
@@ -668,7 +646,6 @@ def check_IO_requirements(
                         #                      message=csv_dirWarning)
                         print(csv_dirWarning)
                         # if answer == False:
-                        #     Error = True
                 return Error
 
     # check input file that must be a csv file containing sentiment analysis score of any data reduction options are ticked
@@ -687,12 +664,8 @@ def check_IO_requirements(
         #     answer = mb.askyesno("Data reduction algorithms",
         #                          message=csv_fileWarning)
         #     if answer == False:
-        #         Error = True
-        #         return Error
         # mb.showwarning(title="Data warning: Data reduction algorithms",
         #                      message=csv_fileWarning)
-        # Error = True
-        # return Error
 
     # check that there is inputDir value if sentiment analysis and/or corpus are checked
     if inputDir == "" and (sentimentAnalysis or corpus_analysis):
@@ -701,19 +674,6 @@ def check_IO_requirements(
         print(txt_DirErr)
         Error = True
         return Error
-        # check inputDir files that must be txt if sentiment analysis and/or corpus are checked
-        nSAscoreFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "txt")
-        if nSAscoreFiles == 0:
-            mb.showwarning(title="Input directory error", message=txt_DirErr)
-            Error = True
-            return Error
-        if sentiment_analysis_var.get():
-            reminders_util.checkReminder(
-                scriptName,
-                reminders_util.title_options_SA_CoreNLP_system_requirements,
-                reminders_util.message_SA_CoreNLP_system_requirements,
-                True,
-            )
 
     # check data reduction and IO input values
     if (
@@ -734,17 +694,8 @@ def check_IO_requirements(
         #     # too few csv files
         #     mb.showwarning(title="Data warning: Data reduction algorithms",
         #                          message=csv_dirWarning)
-        #     Error = True
-        #     return Error
 
     return Error
 
 
-# sentiment_analysis_var.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))
-# corpus_analysis_var.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))
-# hierarchical_clustering_var.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))
-# SVD_var.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))
-# NMF_var.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))
 #
-# GUI_util.inputFilename.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))
-# GUI_util.input_main_dir_path.trace('w',lambda x, y, z: check_IO_requirements(GUI_util.inputFilename.get(),GUI_util.input_main_dir_path.get()))

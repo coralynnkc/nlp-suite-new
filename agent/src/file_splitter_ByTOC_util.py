@@ -29,7 +29,6 @@ import IO_files_util
 
 def splitDocument_byTOC(window, inputDocumentTobeSplit, inputTOCfile, outputDir, openOutputFiles):
 
-    # print("nputDocumentTobeSplit",inputDocumentTobeSplit)
     #
 
     inputDocNoExtension = inputDocumentTobeSplit[:-4]
@@ -42,7 +41,6 @@ def splitDocument_byTOC(window, inputDocumentTobeSplit, inputTOCfile, outputDir,
         return
 
     # Get current directory and create "chapters folder"
-    # newoutputDir = inputDir + os.sep + "split_files_" + split_docLength + "_" + title
 
     head, tail = os.path.split(inputDocumentTobeSplit)  # head contains the path part of the filename
     # tail contains the filename only
@@ -143,7 +141,6 @@ def extractSection(fileContent, documentHeading, nextheading):
             flags=re.DOTALL | re.IGNORECASE,
         )
     elif documentHeading is not None:
-        # pattern = re.compile(re.escape(documentHeading) + r'.+', flags = re.DOTALL | re.IGNORECASE)
         pattern = re.compile(re.escape(documentHeading) + r"[\s*\W*]*" + r"\n" + r".+", flags=re.DOTALL | re.IGNORECASE)
     # findall() module is used to search for “all” occurrences that match a given pattern.
     # In contrast, search() module will only return the first occurrence that matches the specified pattern.

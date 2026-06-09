@@ -32,7 +32,6 @@ data = pd.read_csv(ratings, encoding="utf-8", on_bad_lines="skip")
 data_dict = {col: list(data[col]) for col in data.columns}
 
 
-# print data_dict
 # performs concreteness analysis on inputFile using the Brysbaert et al. concreteness ratings, outputting results to a new CSV file in outputDir
 def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentName):
     """
@@ -60,7 +59,6 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
         return
 
     # otherwise, split into sentences
-    # sentences = tokenize.sent_tokenize(fulltext)
     sentences = sentence_split_stanza_text(stanzaPipeLine(fulltext))
 
     # check each word in sentence for concreteness and write to outputFilename
@@ -68,7 +66,6 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
     i = 0  # to store sentence index
     for s in sentences:
         i = i + 1
-        # print("S" + str(i) +": " + s)
         all_words = []
         found_words = []
         score_list = []  # use the Conc.M as scores to calculate the concreteness
@@ -88,7 +85,6 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
                 score = round(float(data_dict["Conc.M"][index]), 2)
                 found_words.append("(" + str(lemma) + ", " + str(score) + ")")
                 score_list.append(score)
-                # print('score: '+ str(score) + ' LEMMA: ' + str(lemma))
             else:
                 continue
         # else:  # output concreteness info for this sentence
@@ -175,7 +171,6 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
             "Document",
         ]
         global writer
-        # writer = csv.DictWriter(csvfile, fieldnames=fieldnames, lineterminator='\n')
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
 
@@ -215,7 +210,6 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
                 sys.exit(0)
 
         # should sort by Document ID and Sentence ID
-        # IO_csv_util.sort_csvFile_by_columns(outputFilename, outputFilename, ['Document ID', 'Sentence ID'])
 
     outputFiles = charts_util.visualize_chart(
         chartPackage,
@@ -224,7 +218,6 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
         outputDir,
         columns_to_be_plotted_xAxis=[],
         columns_to_be_plotted_yAxis=["Concreteness (Mean score)"],
-        # columns_to_be_plotted_bySent= [[10, 7, 0]],
         chart_title="Frequency Distribution of Abstract/Concrete Scores",
         count_var=1,  # 0 for numeric field
         hover_label=[],

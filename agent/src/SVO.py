@@ -6,21 +6,17 @@
 
 # https://stackoverflow.com/questions/61121239/how-to-extract-subject-verb-object-using-nlp-java-for-every-sentence
 
-# import GUI_util
 import os
 
 # to install stanfordnlp, first install
 #   pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
 #   pip3 install stanfordnlp
-# import stanfordnlp
 import config_util
 import GIS_pipeline_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
-
-# import SENNA_util
 import spaCy_util
 import Stanford_CoreNLP_coreference_util
 import Stanford_CoreNLP_util
@@ -58,8 +54,6 @@ def run_svo(
 ):
 
     # Already hard coded below
-    # subjects_dict_path_var = "lib/wordLists/social-actor-list.csv"
-    # verbs_dict_path_var = "lib/wordLists/social-action-list.csv"
 
     config_filename = "NLP_default_IO_config.csv"
     # get the NLP package and language options
@@ -92,14 +86,10 @@ def run_svo(
     filesToOpen = []
 
     # # get the NLP package and language options
-    # error, package, parsers, package_basics, language, package_display_area_value, encoding_var, export_json_var, memory_var, document_length_var, limit_sentence_length_var = config_util.read_NLP_package_language_config()
-    # language_var = language
-    # language_list = [language]
 
     # # get the date options from filename
     # filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = config_util.get_date_options(
     #     config_filename, config_input_output_numeric_options)
-    # extract_date_from_text_var = 0
 
     if package_display_area_value == "":
         print(
@@ -127,7 +117,6 @@ def run_svo(
             )
             return
 
-    # Coref_Option = Coref_Option.lower()
 
     annotator = ["SVO"]
     svo_result_list = []
@@ -175,7 +164,6 @@ def run_svo(
 
     # CoRef _____________________________________________________
 
-    # field_names = ['Document ID', 'Sentence ID', 'Document', 'S', 'V', 'O', 'LOCATION', 'PERSON', 'TIME', 'TIME_STAMP', 'Sentence']
 
     if coref_var:
         # must be changed
@@ -321,7 +309,6 @@ def run_svo(
             nDateOutput = SVO_util.normalize_date_svo(SVO_filename, outputSVODir, chartPackage, dataTransformation)
             if nDateOutput is not None:
                 if len(nDateOutput) > 0:
-                    # nDateSVOFilename=nDateOutput[0] #see below; filename commented out
                     filesToOpen.extend(nDateOutput)
 
     # Stanford CoreNLP OpenIE _____________________________________________________
@@ -370,14 +357,9 @@ def run_svo(
     #         if language_var != 'English':
     #             mb.showwarning(title='Language',
     #                            message='SENNA is only available for English.')
-    #             return
-    #         svo_SENNA_files = []
     #         tempOutputFiles = SENNA_util.run_senna(inputFilename, inputDir, outputSVODir, openOutputFiles,
     #                                                                 chartPackage, dataTransformation)
     #         if len(tempOutputFiles)!=0:
-    #             filesToOpen.extend(tempOutputFiles)
-    #             SVO_filename=tempOutputFiles[0]
-    #             svo_result_list.append(tempOutputFiles[0])
 
     # spaCY _____________________________________________________
 
@@ -497,7 +479,6 @@ def run_svo(
                         SVO_filtered_filename = output[1]
                 else:
                     SVO_lemmatized_filename = output[0]
-                # filesToOpen.extend(output)
                 if SVO_lemmatized_filename != "":
                     svo_result_list.append(SVO_lemmatized_filename)
                 if SVO_filtered_filename != "":
@@ -516,7 +497,6 @@ def run_svo(
                 # # create a subdirectory of the output SVO directory for filtered SVOs
                 # # filtered SVOs are stored in the WordNet directory
                 outputWNDir = IO_files_util.make_output_subdirectory("", "", outputSVODir, label="WordNet", silent=True)
-                # outputWNDir = outputSVODir + os.sep + 'WordNet'
                 outputFilename = IO_csv_util.extract_from_csv(
                     SVO_lemmatized_filename, outputSVODir, "", ["Subject (S)", "Object (O)"]
                 )
@@ -542,7 +522,6 @@ def run_svo(
                     if output is not None and output != "":
                         filesToOpen.extend(output)
 
-        # else:
         # reminders_util.checkReminder(scriptName, reminders_util.title_options_no_SVO_records,
         #                              reminders_util.message_no_SVO_records, True)
 
@@ -564,7 +543,6 @@ def run_svo(
                 import charts_util
                 import Gephi_util
 
-                # i = 0
                 # previous svo csv files can be entered in input to display networks, wordclouds or GIS maps
                 if inputFilename[-4:] == ".csv":
                     fileBase = os.path.basename(inputFilename)[0:-4]
@@ -634,11 +612,6 @@ def run_svo(
                         #   (normal, lemma, filtered) to different folders
                         #   now exported to the main SVO subdir
                         # if 'SVO_lemma' in svo_result_list[i]:
-                        #     # tempOutputDir = outputSVOSVODir
-                        # elif 'SVO_filter' in svo_result_list[i]:
-                        #     # tempOutputDir = outputSVOSVODir
-                        # else:
-                        #     tempOutputDir = outputSVOSVODir
                         # using Sentence ID as a proxy of a date variable to create a dynamic network graph
                         gexf_file = Gephi_util.create_gexf(
                             os.path.basename(f)[:-4],
@@ -700,7 +673,6 @@ def run_svo(
             if wordcloud_var:
                 import wordclouds_util
 
-                # i = 0
                 wordcloud_title = "Wordcloud of Subject (red), Verb (blue), Object (green)"
 
                 if inputFilename[-4:] == ".csv":
@@ -722,13 +694,6 @@ def run_svo(
                         #   (normal, lemma, filtered) to different folders
                         #   now exported to the main SVO subdir
                         # if 'SVO_lemma' in svo_result_list[i]:
-                        #     # tempOutputDir = outputWNDir
-                        #     tempOutputDir = outputSVOSVODir
-                        # elif 'SVO_filter' in svo_result_list[i]:
-                        #     # tempOutputDir = outputSVOFilterDir
-                        #     tempOutputDir = outputSVOSVODir
-                        # else:
-                        #     tempOutputDir = outputSVOSVODir
                         # def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, wordcloud_title, prefer_horizontal):
 
                         outputFiles = wordclouds_util.SVOWordCloud(
@@ -742,7 +707,6 @@ def run_svo(
                         myfile.close()
                         if "CoreNLP" in f or "OpenIE" in f or "SENNA_SVO" in f or "spaCy" in f or "Stanza" in f:
                             filesToOpen.append(outputFiles)
-                    # i +=1
 
             i += 1
 
@@ -753,7 +717,6 @@ def run_svo(
             # if (package_var=='SENNA') and os.path.isfile(location_filename):
             #     reminders_util.checkReminder(scriptName, reminders_util.title_options_GIS_OpenIE_SENNA,
             #                                  reminders_util.message_GIS_OpenIE_SENNA, True)
-            # else:
             #     if (package_var != 'SENNA') and os.path.isfile(location_filename):
             #         reminders_util.checkReminder(scriptName, reminders_util.title_options_geocoder,
             #                                      reminders_util.message_geocoder, True)
@@ -807,7 +770,6 @@ def run_svo(
         filter_subjects_var = False
         filter_verbs_var = False
         filter_objects_var = False
-        # filesToOpenSubset.append(nDateSVOFilename)
         if filter_subjects_var or filter_verbs_var or filter_objects_var:
             filesToOpenSubset.append(SVO_filtered_filename)
         for file in filesToOpen:

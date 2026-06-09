@@ -67,7 +67,6 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
     # # get the date options from filename
     # filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = config_util.get_date_options(
     #     config_filename, config_input_output_numeric_options)
-    # extract_date_from_text_var = 0
 
     if package_display_area_value == "":
         mb.showwarning(
@@ -163,9 +162,6 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
     #                                                            openOutputFiles, chartPackage, dataTransformation, corpus_statistics_options_menu_var)
     #     if output != None:
     #         if isinstance(output, str):
-    #             filesToOpen.append(output)
-    #         else:
-    #             filesToOpen.extend(output)
 
     # spelling checker --------------------------------------------------------------------------
 
@@ -173,9 +169,6 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
         pyspellchecker_file_name = IO_files_util.generate_output_file_name(
             inputFilename, inputDir, outputDir, ".csv", "spell_pyspellchecker"
         )
-        # import BERT_util
-        # BERT_output = BERT_util.spell_checker_bert(window, inputFilename, inputDir, outputDir, '', chartPackage, dataTransformation)
-        # filesToOpen.append(BERT_output)
 
         autocorrect_df = pd.DataFrame({"Original": [], "Corrected": [], "Document ID": [], "Document": []})
 
@@ -346,7 +339,6 @@ extra_GUIs_menu_var.set("")
 extra_GUIs_menu = tk.OptionMenu(
     window, extra_GUIs_menu_var, "File checker/converter/cleaner", "Spell checker", "File splitter", "File word search"
 )
-# extra_GUIs_menu.configure(state='disabled')
 # place widget with hover-over info
 y_multiplier_integer = GUI_IO_util.placeWidget(
     window,
@@ -644,7 +636,6 @@ GUI_util.GUI_bottom(
 config_filename = GUI_util.config_filename_selected_config.get()
 
 # if GUI_util.setup_IO_menu_var.get() == 'Default I/O configuration':
-#     config_filename = 'NLP_default_IO_config.csv'
 filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = (
     config_util.get_date_options(config_filename, config_input_output_numeric_options)
 )

@@ -13,7 +13,6 @@ def run_word2vec_plot(inputFilename, inputDir, outputDir, word_vector_list, filt
     filesToOpen = []
 
     ## visualization
-    # print(f'\nStarted preparing charts via t-SNE for {len(words)} distinct words at {time.asctime(time.localtime(time.time()))}')
     print(f"\nStarted preparing charts via t-SNE for # distinct words at {time.asctime(time.localtime(time.time()))}")
 
     if vis_menu_var == "Plot word vectors":

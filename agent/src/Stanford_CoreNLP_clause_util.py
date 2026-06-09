@@ -35,7 +35,6 @@ output:
 
 def clausal_info_extract(parsetree):
     full_list = parsetree.leaves()
-    # print("IN clausal_info_extract full_list 1",full_list)
     dict_ind = dict()
     for subtree in parsetree.subtrees():
         if subtree.label() in ["SBAR", "SQ", "SBARQ", "SINV", "S", "VP", "NP"]:
@@ -47,7 +46,6 @@ def clausal_info_extract(parsetree):
         else:
             full_list[i] = [0]
     try:
-        # print("IN clausal_info_extract full_list 2",full_list)
         return full_list
     except:
         print("\nERROR IN PARSE-TREE\n", parsetree)
@@ -121,11 +119,8 @@ def merge_token_infos(first, second, third, forth):
 
 
 #             0        1        2           3           4                       5              6      7      8       9
-# key_toks = ['index','word','originalText','lemma','characterOffsetBegin','characterOffsetEnd','pos','ner','before','after']
 #            10        11       12              13          14
-# key_deps = ['dep','governor','governorGloss','dependent','dependentGloss']
 #                15        16
-# key_clausetree = ['word','ClausalTag']
 
 key_toks = ["index", "word", "lemma", "pos", "ner"]
 key_deps = ["governor", "dep"]

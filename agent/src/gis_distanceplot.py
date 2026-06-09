@@ -3,7 +3,6 @@
 #edited: Roberto Franzosi Nov 15 2019
 """
 
-# import libraries
 import os
 
 import matplotlib.pyplot as plt
@@ -17,23 +16,11 @@ output_dir = "C:\\Users\\rfranzo\\Documents\\My Publications\\My Papers\\IN PROG
 
 # groom residence and bride residence distance from each other, all 22K records
 # comment/uncomment the next 7 lines
-# inputFilenamename = 'NLP_GIS_la_stampa_groom_bride_waypoints_distance_gis_groom_res_gis_bride_res_ALL.csv'
-# inputFilenamename=os.path.join(input_dir,inputFilenamename)
 # # titles to be displayed in the chart
-# chart_title1='Geodesic distance in miles (Groom\'s residence distance to bride\'s residence)'
-# chart_title2='Geodesic distance in Km (Groom\'s residence distance to bride\'s residence)'
-# chart_title3='Great circle distance in miles (Groom\'s residence distance to bride\'s residence)'
-# chart_title4='Great circle distance in Km (Groom\'s residence distance to bride\'s residence)'
 
 # groom residence distance from Torino, all 22K records
 # comment/uncomment the next 7 lines
-# inputFilenamename = 'NLP_GIS_la_stampa_groom_bride_waypoints_distance_gis_groom_res_gis_bride_res_ALL.csv'
-# inputFilenamename=os.path.join(input_dir,inputFilenamename)
 # # titles to be displayed in the chart
-# chart_title1='Geodesic distance in miles (Groom\'s residence distance to Turin)'
-# chart_title2='Geodesic distance in Km (Groom\'s residence distance to Turin)'
-# chart_title3='Great circle distance in miles (Groom\'s residence distance to Turin)'
-# chart_title4='Great circle distance in Km (Groom\'s residence distance to Turin)'
 
 # bride residence distance from Torino, all 22K records
 # comment/uncomment the next 7 lines
@@ -47,7 +34,6 @@ chart_title4 = "Great circle distance in Km (Bride's residence distance to Turin
 
 encodingValue = "latin-1"
 
-# import data
 df = pd.read_csv(inputFilenamename, encoding=encodingValue, low_memory=False)
 
 # setup all variabels #################################################################
@@ -120,6 +106,3 @@ plt.savefig(outFilename, dpi=100)
 plt.show()
 
 # plot data with seaborn
-# sns.set()
-# sns.countplot(df['GeoKmRange'],color='blue')  #distr on x
-# sns.countplot(y=df['GeoKmRange'],color='blue') #distr on y

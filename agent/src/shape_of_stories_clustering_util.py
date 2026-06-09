@@ -39,9 +39,6 @@ class SVDClustering:
         # compute svd
         U, s, VT = sp_svd(normalized_vecs)
         # s is a vector containing the coefficients of the max number of modes in VT
-        # Sigma = np.zeros((normalized_vecs.shape[0], normalized_vecs.shape[1]))
-        # Sigma[:normalized_vecs.shape[1], :normalized_vecs.shape[1]] = np.diag(s)
-        # W = np.dot(U, Sigma)  # modes coefficients to "reconstruct" the matrix completely, i.e. using all the modes
 
         # we can use a shortcut to reconstruct the initial matrix normalized_vecs using a number of components
         # (aka modes) which is less than the number of the original ones.
@@ -103,7 +100,6 @@ class NMFClustering:
             n_components=self.n_clusters, init="random", random_state=0, max_iter=self.max_iter_nmf, solver="mu"
         )
         W = model.fit_transform(vectors)
-        # H = model.components_.T
 
         # here the groups are made out of the indices of the docs, not their vectors
         clusters_indices = self.group_elements(W)
@@ -118,7 +114,6 @@ class NMFClustering:
 
 class Clustering:
     def __init__(self, n_clust, clustering_alg="ward"):
-        # self.dist_thr = dist_thr
         self.n_clust = n_clust
         self.clustering_alg = clustering_alg
 
@@ -175,7 +170,6 @@ class Clustering:
         """
         assert self.n_clust >= 1
         assert self.n_clust < len(vectors)
-        # cluster = AgglomerativeClustering(n_clusters=self.n_clust, affinity='euclidean', linkage = 'ward')
         cluster = AgglomerativeClustering(n_clusters=self.n_clust, linkage="ward")
 
         cluster.fit_predict(vectors)
@@ -324,7 +318,6 @@ def estimate_best_k(document_matrix, output_dir, filesToOpen):
     max_iter_nmf = 2000
     np.random.seed(0)
 
-    # document_matrix, documents_map = load_data()
     A = np.array(document_matrix).T
     t = 50
     sampling_rate = 0.8
@@ -408,13 +401,9 @@ def test():
     vectz = vec.Vectorizer(sentiment_scores_folder)
     sentiment_vectors = vectz.vectorize()
 
-    # clustering = Clustering(9)
     clustering = NMFClustering(9)
-    # clustering = SVDClustering(9)
 
     grouped_vectors, clusters_indices = clustering.cluster(sentiment_vectors)
-    # print('%d clusters' % len(grouped_vectors))
-    # print('ok')
     #
     vis = viz.Visualizer("./output")
     vis.visualize_clusters(grouped_vectors)

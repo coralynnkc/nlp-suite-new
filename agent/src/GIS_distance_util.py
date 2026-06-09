@@ -20,8 +20,6 @@ import os
 
 import charts_util
 import GIS_geocode_util
-
-# from geopy.extra.rate_limiter import RateLimiter
 import GIS_location_util
 import IO_csv_util
 import IO_files_util
@@ -267,14 +265,12 @@ def computePairwiseDistances(
                         return filesToOpen
                     waypoints1 = (row[locationColumnNumber + 1], row[locationColumnNumber + 2])
                     waypoints2 = (row[locationColumnNumber2 + 1], row[locationColumnNumber2 + 2])
-                    # print(currRecord, currentLocation1, currentLocation2, str(row[locationColumnNumber+1]),str(row[locationColumnNumber+2]))
                     if (not distinctValues) or ([waypoints1, waypoints2] not in currList):
                         currList.append([waypoints1, waypoints2])
                         distMiles = distance.distance(waypoints1, waypoints2).miles
                         distKm = distance.distance(waypoints1, waypoints2).km
                         GCdistMiles = great_circle(waypoints1, waypoints2).miles
                         GCdistKm = great_circle(waypoints1, waypoints2).km
-                        # geowriter.writerow([row[locationColumnNumber], row[locationColumnNumber2],row[locationColumnNumber+1],row[locationColumnNumber+2],row[locationColumnNumber2+1],row[locationColumnNumber2+2],distMiles,distKm,GCdistMiles,GCdistKm])
                         geowriter.writerow(
                             [
                                 row[locationColumnNumber],
@@ -296,7 +292,6 @@ def computePairwiseDistances(
     if chartPackage != "No charts":
         filesToOpen = createCharts(distanceoutputFilename, outputDir, filesToOpen)
         # if len(chart_outputFilename) > 0:
-        # 	filesToOpen.append(chart_outputFilename)
 
     IO_user_interface_util.timed_alert(
         window, 2000, "Analysis end", "Finished running GIS distance at", True, "", True, startTime, True
@@ -557,7 +552,6 @@ def computeDistancesFromSpecificLocation(
     if chartPackage != "No charts":
         filesToOpen = createCharts(distanceoutputFilename, outputDir, filesToOpen, baselineLocation)
         # if len(chart_outputFilename) > 0:
-        # 	filesToOpen.append(chart_outputFilename)
 
     IO_user_interface_util.timed_alert(
         window, 2000, "Analysis end", "Finished running GIS distance at", True, "", True, startTime, True

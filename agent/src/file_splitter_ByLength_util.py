@@ -38,7 +38,6 @@ def splitAt(text, index):
                 "",
                 False,
             )
-            # mb.showwarning("Warning", "The file being split is a VERY large (" + str(len(text)) + " characters) file.\n\nTo deal with such large a file, the system recursion limit will be temporarily doubled, then restored to its original limit.\n\nClick OK to continue processing...")
             limit = limit * 2
             sys.setrecursionlimit(limit)
     sys.setrecursionlimit(first_limit)
@@ -75,10 +74,8 @@ def splitDocument_byLength(config_filename, filename_path, output_path="", maxLe
         length = len(text)
         if inWords:
             length = len(text.split())
-            # print("length",length)
     F.close()
     if length > maxLength:
-        # IO_user_interface_util.timed_alert( 2000, 'File split warning', 'The file ' + filename_path + ' was too long for ' + software + ' to process, and was split into sub-files and stored in the split_files sub-folder:\n\n' + new_splitFiles_folder)
         if os.path.exists(new_splitFiles_folder):
             shutil.rmtree(new_splitFiles_folder)
         try:
@@ -102,7 +99,6 @@ def splitDocument_byLength(config_filename, filename_path, output_path="", maxLe
             # write output file
             fname = os.path.basename(os.path.normpath(filename_path))
 
-            # SplitFile=os.path.join(output_path,fname).split('.txt')[0]+'_'+str(i)+'.txt'
             SplitFile = os.path.join(new_splitFiles_folder, fname).split(".txt")[0] + "_" + str(i) + ".txt"
             with open(SplitFile, "w+", newline="", encoding="utf-8", errors="ignore") as sf:
                 sf.write(text[splits[i - 1] + 1 : splits[i] + 1])
@@ -130,7 +126,6 @@ def splitDocument_byLength(config_filename, filename_path, output_path="", maxLe
             )
     else:
         filesToReturn.append(filename_path)
-    # print("filesToReturn",filesToReturn)
     return filesToReturn
 
 

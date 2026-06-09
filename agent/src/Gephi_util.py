@@ -9,7 +9,6 @@
 #     licence : GPL v3
 #
 
-# from lib.gexf._gexf import Gexf, Spells, Node, Edge
 
 import csv
 import datetime
@@ -51,7 +50,6 @@ class Gexf:
         gexfXML = etree.Element(
             "{" + self.xmlns + "}gexf", version=self.version, nsmap={None: self.xmlns, "viz": self.viz, "xsi": self.xsi}
         )
-        #         gexfXML.set("xmlnsxsi",)
         gexfXML.set("{xsi}schemaLocation", self.schemaLocation)
         meta = etree.SubElement(gexfXML, "meta")
         meta.set("lastmodified", date.today().isoformat())
@@ -113,9 +111,6 @@ class Graph:
         self.authorizedType = ("directed", "undirected")
         self.authorizedMode = ("dynamic", "static")
         # time format
-        # Discrete: integer or double
-        # Continuous : date (yyyy-mm-dd) or dateTime
-        # default : double
         self.authorizedTimeFormat = ("integer", "double", "date", "dateTime")
 
         self.defaultTimeFormat = "double"
@@ -199,10 +194,6 @@ class Graph:
         # check conformity with type is missing
         #  if id in self._nodesAttributes.keys() :
         #             if self._nodesAttributes[id]["mode"]=="static" and ( not start=="" or not end=="") :
-        #                 raise Exception("attribute "+str(id)+" is static you can't specify start or end dates. Declare Attribute as dynamic")
-        #             return 1
-        #         else :
-        #             raise Exception("attribute id unknown. Add Attribute to graph first")
 
     def addEdgeAttribute(self, title, defaultValue, type="integer", mode="static", force_id=""):
         return self._attributes.declareAttribute("edge", type, defaultValue, title, mode, force_id)
@@ -218,10 +209,6 @@ class Graph:
     #         # check conformity with type is missing
     #         if id in self._edgesAttributes.keys() :
     #             if self._edgesAttributes[id]["mode"]=="static" and ( not start=="" or not end=="") :
-    #                 raise Exception("attribute "+str(id)+" is static you can't specify start or end dates. Declare Attribute as dynamic")
-    #             return 1
-    #         else :
-    #             raise Exception("attribute id unknown. Add Attribute to graph first")
 
     def getXML(self):
         # return lxml etree element
@@ -539,7 +526,6 @@ class Node:
         self._attributes = []
         self.attributes = self._attributes
         # add existing nodesattributes default values : bad idea and unecessary
-        # self._graph.addDefaultAttributesToNode(self)
 
     def addAttribute(self, id, value, start="", end="", startopen=False, endopen=False):
         self._attributes.append(
@@ -564,8 +550,6 @@ class Node:
             # spells
             if self.spells:
                 # edit
-                # print("found spells in node " + self.id)
-                # print(dir(Spells(self.spells)))
                 nodeXML.append(Spells(self.spells).getXML())
 
             if not self.r == "" and not self.g == "" and not self.b == "":
@@ -721,7 +705,6 @@ class Edge:
         # spells expecting format = [{start:"",end:""},...]
         self.spells = spells
         # add existing nodesattributes default values : bad idea and unecessary
-        # self._graph.addDefaultAttributesToEdge(self)
 
     def addAttribute(self, id, value, start="", end="", startopen=False, endopen=False):
         self._attributes.append(
@@ -747,8 +730,6 @@ class Edge:
 
             # spells
             if self.spells:
-                # spellsXML = etree.SubElement(edgeXML, "spells")
-                # spellsXML.append(self.spells.getXML())
                 edgeXML.append(Spells(self.spells).getXML())
 
             # COLOR on edges is supported in GEXF since 1.2
@@ -1233,7 +1214,7 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
 
                             dateutil.parser.parse(date_str)
                         except Exception as e:
-                            raise Exception(f"Error parsing date '{date_str}' in column '{spellCol}': {e}")
+                            raise Exception(f"Error parsing date '{date_str}' in column '{spellCol}': {e}") from e
                 else:
                     if spellCol != "":
                         date_str = row[spellCol]
@@ -1241,7 +1222,7 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                         try:
                             datetime.datetime.strptime(date_str, date_format)
                         except Exception as e:
-                            raise Exception(f"Error parsing date '{date_str}' in column '{spellCol}': {e}")
+                            raise Exception(f"Error parsing date '{date_str}' in column '{spellCol}': {e}") from e
 
                 # Create the node with dynamic spells if spellCol is provided
                 if spellCol != "":
@@ -1285,7 +1266,7 @@ def create_gexf(fileBase, OutputDir, inputFilename, col1, col2, col3, spellCol="
                                 ],
                             )
                     except Exception as e:
-                        raise Exception(f"Error creating node for '{row[col1]}': {e}")
+                        raise Exception(f"Error creating node for '{row[col1]}': {e}") from e
                 else:
                     node = Node(
                         graph,

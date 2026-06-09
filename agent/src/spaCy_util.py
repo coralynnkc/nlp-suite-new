@@ -6,7 +6,6 @@ try:
 
     # this import is neccessary to establish the spacytextblob
 except Exception as e:
-    # print(err)
     print(
         "Warning",
         "The NLP Suite encountered an error in importing spacy, most likely due to tensorflow.\n\nERROR: " + str(e),
@@ -169,7 +168,6 @@ def spaCy_annotate(
         annotator = "sentiment"
 
     # create the appropriate subdirectory to better organize output files                                               silent=False)
-    # outputDir = create_output_directory(inputFilename, inputDir, outputDir, annotator)
     outputDir = IO_files_util.make_output_subdirectory(
         inputFilename, inputDir, outputDir, label=annotator + "_spaCy", silent=True
     )
@@ -321,9 +319,6 @@ def get_mwe(out_df):
     max_idx = len(out_df) - 1
     for _row in out_df.iterrows():
         # if i != 0 and row[1]['is_sent_start'] == True:
-        #     sidx+=1
-        # # out_df.at[i, 'Record ID'] = int(row[1]['id'])
-        # out_df.at[i, 'Sentence ID'] = int(sidx)
 
         # process IOB tags for Multi-Word Expression column
         mwe = out_df.at[i, "Multi-Word Expression"]
@@ -337,16 +332,13 @@ def get_mwe(out_df):
             # if the tag of the next token is B or if it's a single tag with one B, MWE is itself
             if i == max_idx and out_df.at[i, "Multi-Word Expression"] == "B":
                 out_df.at[i, "Multi-Word Expression"] = out_df.at[i, "Form"]
-                # out_df.at[i, 'Multi-Word Expression'] = out_df.at[i, 'Word']
             elif tmp_idx == i + 2 or (i <= max_idx and out_df.at[i + 1, "Multi-Word Expression"] == "B"):
                 out_df.at[i, "Multi-Word Expression"] = out_df.at[i, "Form"]
-                # out_df.at[i, 'Multi-Word Expression'] = out_df.at[i, 'Word']
             else:
                 # iterate reversely from the last tag to the first tag, and update the MWE
                 for j in reversed(range(i, tmp_idx - 1)):
                     if j == tmp_idx - 2:
                         out_df.at[j, "Multi-Word Expression"] = out_df.at[j - 1, "Form"] + " " + out_df.at[j, "Form"]
-                        # out_df.at[j, 'Multi-Word Expression'] = out_df.at[j - 1, 'Word'] + ' ' + out_df.at[j, 'Word']
                     elif out_df.at[j, "Multi-Word Expression"] == "B":
                         out_df.at[j, "Multi-Word Expression"] = out_df.at[j + 1, "Multi-Word Expression"]
                         # when finally reach the first tag (B), update existing MWE with complete MWE
@@ -419,7 +411,6 @@ def convertSpacyDoctoDf(spacy_doc, inputFilename, inputDir, tail, docID, annotat
                 out_df["Document"] = IO_csv_util.dressFilenameForCSVHyperlink(inputFilename)
                 rec_ID += 1
             sent_ID += 1
-        # out_df = out_df[['ID', 'Form', 'NER', 'Multi-Word Expression','Record ID', 'Sentence ID', 'Document ID', 'Document']]
         out_df = out_df[["Form", "NER", "Sentence ID", "Sentence", "Document ID", "Document"]]
 
     if "parse" in str(annotator_params):
@@ -450,8 +441,6 @@ def convertSpacyDoctoDf(spacy_doc, inputFilename, inputDir, tail, docID, annotat
             out_df = get_mwe(out_df)
 
         # extract list of identified token language
-        # tmp_lang_lst = [lang_dict[token.lang_] for token in spacy_doc]
-        # out_df['Language'] = tmp_lang_lst
         out_df = out_df[
             [
                 "ID",
@@ -479,7 +468,6 @@ def extractSVO(doc, docID, inputFilename, inputDir, tail, filename_embeds_date_v
     if inputDir != "":
         inputFilename = inputDir + os.sep + tail
 
-    # output: svo_df
     if filename_embeds_date_var:
         svo_df = pd.DataFrame(
             columns=[

@@ -49,14 +49,11 @@ def data_transformation(infile, arg):
     df = pd.read_csv(infile)
     # file has to be a dataframe using pandas, it is tested using pd.read_csv(some filename)
     if "Document" in df.columns:
-        # print("Effective Document was detected in your dataframe's columns")
         file_size_dict = {}
         if arg != "No transformation":
-            # print("Data normalized by FILESIZE ...")
             for col in df.columns:
                 if "Document" not in col and is_numeric_dtype(df[col]):
                     if "Frequencies" in col or "Frequency" in col:
-                        # print(col)
                         df[col] = df.apply(
                             lambda row: normalize_data(
                                 row,
@@ -68,27 +65,17 @@ def data_transformation(infile, arg):
                             ),
                             axis=1,
                         )
-                # else:
-                #     print(col)
-                #     print("failed...")
     for col in df.columns:
         if "Document" not in col and is_numeric_dtype(df[col]):
             if "Frequencies" in col or "Frequency" in col:
-                # print(col)
-                # print("Appropriate transformation on TRANSFORMATION METHOD is applied")
                 df[col] = apply_transformation(df[col], arg)
-                # print(file.columns.tolist())
-                # print("old .........")
                 df = df.rename(columns={col: col + "_" + arg})
-                # print(file.columns.tolist())
-                # print("new .........")
     return df
 
 
 # column_to_be_counted is the column number (starting 0 in data_list for which a count is required)
 # column_name is the name that will appear as the chart name
 # value is the value in a column that needs to be added up; for either POSTAG (e.g., NN) or DEPREL tags, the tag value is displayed with its description to make reading easier
-# most_common([n])
 # Return a list of n elements and their counts.
 # When n is omitted or None, most_common() returns all elements in the counter.
 def compute_statistics_CoreNLP_CoNLL_tag(data_list, column_to_be_counted, column_name, CoreNLP_tag):
@@ -112,11 +99,9 @@ def compute_statistics_CoreNLP_CoNLL_tag(data_list, column_to_be_counted, column
                     description = Stanford_CoreNLP_tags_util.dict_DEPREL[value]
                     column_stats.append([value + " - " + description, count])
             elif CoreNLP_tag == "CLAUSALTAG":
-                # print("in stats_visuals value ",value)
                 if value in Stanford_CoreNLP_tags_util.dict_CLAUSALTAG:
                     description = Stanford_CoreNLP_tags_util.dict_CLAUSALTAG[value]
                     column_stats.append([value + " - " + description, count])
-    # print("in compute_statistics_CoreNLP_CoNLL_tag column_stats ",column_stats)
     return column_stats
 
 
@@ -137,11 +122,9 @@ def compute_statistics_CoreNLP_CoNLL_tag(data_list, column_to_be_counted, column
 # fullText.median()                  Returns median of all value
 # fullText.mode()                    Returns mode of the series
 # fullText.value_counts()            Returns series with frequency of each value
-# stats=[fullText[fieldName].describe()]
 # groupByField
 # You can  group by more than one variable, allowing more complex queries.
 #   For instance, how many calls, sms, and data entries are in each month?
-#   data.groupby(['month', 'item'])['date'].count()
 # .sum(), .mean(), .mode(), .median() and other such mathematical operations
 #    are not applicable on string or any other data type than numeric value.
 # .sum() on a string series would give an unexpected output and return a string
@@ -212,7 +195,6 @@ def compute_csv_column_statistics_NoGroupBy(
             return None
         if df.iloc[:, currentColumn].dtypes != "object":  # alphabetic field; do NOT process
             currentName = df.iloc[:, currentColumn].name
-            # currentStats=df.iloc[:, currentColumn].describe()
             inputFile_headers = IO_csv_util.get_csvfile_headers(inputFilename)
             # get maximum number of documents in Document ID iff there is a Document ID field
             if "Document ID" in inputFile_headers:
@@ -224,7 +206,6 @@ def compute_csv_column_statistics_NoGroupBy(
                 nDocs = 1
             # need at least 3 values to compute skewness and kurtosis
             # mode always returns a series and t must be processed lambda x: stats.mode(x, keepdims=False)[0]
-            # df.iloc[:, currentColumn].mode(), \
             print(lambda x: df.iloc[:, currentColumn].mode(x, keepdims=False)[0])
 
             currentStats = (
@@ -249,7 +230,6 @@ def compute_csv_column_statistics_NoGroupBy(
                     currentLine.append(i)
 
             stats.append(currentLine)
-        # stats.to_csv(outputFilename, encoding='utf-8')
     if len(stats) > 0:
         df = pd.DataFrame(stats)
         IO_csv_util.df_to_csv(df, outputFilename, headers=None, index=False, language_encoding="utf-8")
@@ -274,7 +254,6 @@ def compute_csv_column_statistics_NoGroupBy(
     if chartPackage != "No charts":
         column_name_to_be_plotted = headers_stats[1]  # Mean
         # the mode is returned as a series; exclude for now
-        # column_name_to_be_plotted=column_name_to_be_plotted + ', ' + headers_stats[2] # Mode
         column_name_to_be_plotted = column_name_to_be_plotted + ", " + headers_stats[7]  # Skewness
         column_name_to_be_plotted = column_name_to_be_plotted + ", " + headers_stats[8]  # Kurtosis
         # Plot Mean, Mode, Skewness, Kurtosis
@@ -342,7 +321,6 @@ def compute_csv_column_statistics_groupBy(
     outputFilename = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "", outputFileNameLabel + "_group_stats"
     )
-    # filesToOpen.append(output_name)
 
     if not set(groupByField).issubset(set(IO_csv_util.get_csvfile_headers(inputFilename))):
         print(
@@ -464,11 +442,8 @@ def compute_csv_column_statistics_groupBy(
             [groupByField[0], "Skewness"],
             [groupByField[0], "Kurtosis"],
         ]
-        # columns_to_be_plotted_yAxis=[[2,4], [2,5], [2,10], [2,11]] # document field comes first [2
         get_columns_to_be_plotted(outputFilename, columns_list)
         columns_to_be_plotted_yAxis = get_columns_to_be_plotted(outputFilename, columns_list)
-        # columns_to_be_plotted_xAxis=[], columns_to_be_plotted_yAxis=['Mean', 'Mode', 'Skewness', 'Kurtosis'] # document field comes first [2
-        # hover_label=['Document']
         hover_label = []
         # @@@
         # when plotting kurtosis, skweness, etc. ALWAYS use Excel bar charts
@@ -480,7 +455,6 @@ def compute_csv_column_statistics_groupBy(
             chartPackage=chartPackage,
             dataTransformation=dataTransformation,
             chart_type_list=["bar"],
-            # chart_title=column_name_to_be_plotted + '\n' + chart_title_label + ' by Document',
             chart_title=column_name_to_be_plotted + "\n" + chart_title_label + " by " + str(groupByField[0]),
             column_xAxis_label_var="",  # Document
             column_yAxis_label_var=column_name_to_be_plotted,
@@ -498,7 +472,6 @@ def compute_csv_column_statistics_groupBy(
 
 # The function will provide several statistical measure for a csv field values: 'Count', 'Mean', 'Mode', 'Median', 'Standard deviation', 'Minimum', 'Maximum',
 #   csv field values MUST be NUMERIC!
-#   'Skewness', 'Kurtosis', '25% quantile', '50% quantile', '75% quantile'
 #   it will provide statistics both ungrouped and grouped by Document ID
 def compute_csv_column_statistics(
     inputFilename,
@@ -512,9 +485,7 @@ def compute_csv_column_statistics(
 ):
     filesToOpen = []
     # TODO TONY temporarily disconnected while waiting to fix problems in the compute_csv_column_statistics_NoGroupBy function
-    # temp_outputfile = compute_csv_column_statistics_NoGroupBy(inputFilename,outputDir,chartPackage, dataTransformation)
     # if temp_outputfile!='':
-    #     filesToOpen.append(temp_outputfile)
     if len(groupByList) > 0:
         outputFiles = compute_csv_column_statistics_groupBy(
             inputFilename,
@@ -558,7 +529,6 @@ def csv_data_pivot(inputFilename, index, values, no_hyperlinks=True):
     else:
         no_hyperlinks_filename = inputFilename
     data = pd.read_csv(no_hyperlinks_filename, encoding="utf-8", on_bad_lines="skip")
-    # data = data.pivot(index = 'Sentence ID', columns = 'Document', values = "Yngve score")
     data = data.pivot(index=index, columns="Document", values=values)
     data.to_csv(no_hyperlinks_filename, encoding="utf-8")
     # end of function and pass the document forward
@@ -621,7 +591,6 @@ def compute_csv_column_frequencies(
             pass
     data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     # TODO check if data is empty exit
-    # fileNameType=fileNameType.replace('/','-')
     # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir,
     #                 '.csv', 'col-freq_'+fileNameType)
     file_label = ""
@@ -630,7 +599,6 @@ def compute_csv_column_frequencies(
     tracked = True
     if len(group_cols) > 0:
         if "Document" in group_cols:
-            # file_label = file_label + 'byDoc'
             file_label = "byDoc"
             try:
                 if data["Document"].nunique() <= 1:
@@ -638,7 +606,6 @@ def compute_csv_column_frequencies(
             except:
                 pass
         else:
-            # file_label = file_label + 'by'+group_cols[0] # add only the first element
             file_label = "by" + group_cols[0]  # add only the first element
 
     outputFilename = IO_files_util.generate_output_file_name(
@@ -713,7 +680,6 @@ def compute_csv_column_frequencies(
             i = i + 1
         if len(group_colsumn_names) == 0:
             group_colsumn_names = temp_group_colsumn_names
-        # #     data = data.groupby(group_colsumn_names).size().reset_index(name='Frequency')
 
         group_colsumn_names.copy()
         group_cols.copy()
@@ -804,7 +770,6 @@ def compute_csv_column_frequencies(
             #   but... you do not want to display the frequency of document/group computed above otherwise you get charts with the same meaningless bar
             data_final["Frequency_" + group_cols[0]] = 0
             # this creates a duplicate header
-            # data_final.rename(columns={'Frequency_'+group_cols[0]:group_cols[0]})
 
             return data_final
 
@@ -853,10 +818,8 @@ def compute_csv_column_frequencies(
             #   but... you do not want to display the frequency of document/group computed above otherwise you get charts with the same meaningless bar
             data_final["Frequency_" + group_cols[0]] = 0
             # this creates a duplicate header
-            # data_final.rename(columns={'Frequency_'+group_cols[0]:group_cols[0]})
             return data_final
 
-        # print(plot_cols,group_cols)
         if len(plot_cols) >= 2:
             data_final = multi_level_grouping_and_frequency(data, plot_cols, group_cols)
         else:
@@ -871,10 +834,8 @@ def compute_csv_column_frequencies(
             data_final = data_final[["Document ID", "Document"] + other_cols]
         # This ensures you have enforced the order. Easily you can generalize it to enforce the order of other columns simply by tweaking the
 
-        # print(inputFilename,columns_to_be_plotted)
         # Pivot the dataframe if you want to change the layout
         # If you want to keep it as it is, you can comment these lines out.
-        # data_final = data_final.pivot(index=group_cols, columns=plot_cols, values="Frequency")
         data_final.fillna(0, inplace=True)
         data = data_final
         # Excel allows to group a series value by another series values (e.g., Form or Lemma values by POS or NER tags)
@@ -885,11 +846,9 @@ def compute_csv_column_frequencies(
         #   https://openpyxl.readthedocs.io/en/latest/charts/secondary.html
 
         # added TONY1
-        # pivot=True
         if pivot:
             data = data.pivot(index=group_colsumn_names[1:], columns=group_colsumn_names[0], values="Frequency")
             data.fillna(0, inplace=True)
-            # data.reset_index("Document")
         if complete_sid:
             # TODO Samir
             print("Completing sentence index...")
@@ -949,8 +908,6 @@ def compute_csv_column_frequencies(
             outputFilename, encoding="utf-8", index=False
         )
 
-        # print("OK DONE TRANSFORMATION")
-        # print('===-=====-====')
     if chartPackage != "No charts" and tracked:
 
         def add_suffix_to_selected_elements(list_of_lists, suffix, keyword, curse):
@@ -978,13 +935,10 @@ def compute_csv_column_frequencies(
             # @@@
             # the headers layout of the outputFilename is the following:
             #   Document, Frequency_Document ID, Form, Frequency_Form, Lemma, Frequency_Lemma, Frequency_Document
-            # columns_to_be_plotted = get_columns_to_be_plotted(outputFilename, group_cols[0], plot_cols[0])
             # [1, 2] frequency of docs, then form and lemma,
             #   where 1, 3, and 5 are the document name, the form values, and the lemma values
             #   and 2, 4, 6 are their respective frequencies
-            # columns_to_be_plotted = [[1, 2], [3, 4], [5, 6]]
             #   will display form and lemma in the X axes (in which case column_xAxis_label_var must be changed)
-            # columns_to_be_plotted = [[2, 3], [4, 5], [0, 1]]
             #   will display document in the X axes
             column_xAxis_label_var = group_cols[0]
             outputFiles = charts_util.run_all(

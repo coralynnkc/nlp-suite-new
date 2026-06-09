@@ -8,17 +8,10 @@
 
 
 import csv
-
-# import tkinter.messagebox as mb
 import errno
 import os
 
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
-# from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-# from pdfminer.pdfpage import PDFPage
-# from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
-# from pdfminer.layout import LAParams
-# from docx import Document #pip install python-docx
 from os.path import splitext
 
 import IO_files_util
@@ -32,66 +25,29 @@ from striprtf.striprtf import rtf_to_text
 
 #     if len(inputDir) > 0:
 #         # Removed GUI prompt, just process all subdirectories
-#         inputDocs = IO_files_util.getFileList_SubDir(inputFilename, inputDir, '.pdf')
 #         # filter files
-#         inputDocs = [f for f in inputDocs if f[:2] != '~$' and f[-4:] == '.pdf']
-#     elif len(inputFilename) > 0:
 #         if inputFilename[:2] != '~$' and inputFilename[-4:] == '.pdf':
-#             inputDocs = [inputFilename]
-#         else:
-#             print(f"INFO: The input file {inputFilename} is not of type pdf. Please select a pdf type file (or directory) for input and try again.")
-#             return
-#     else:
-#         print("INFO: No input filename or directory specified. Please select a pdf type file or directory for input and try again.")
-#         return
 
 #     if len(inputDocs) == 0:
-#         print("WARNING: There are no pdf files in the input directory. Please select a different directory (or pdf type file) for input and try again.")
-#         return
 
-#     print("WARNING: The Python pdf to text converter used here (pdfminer) is UNLIKELY to convert successfully multiple-column, full-page newspaper articles, with multiple headings and pictures. pdfminer CAN convert multiple-column documents with a simpler layout (e.g., journal articles) and does very well with full-page books/documents.")
 #     print("PLEASE, MAKE SURE TO CHECK THE CONVERTED OUTPUT FILE. IF YOU PLAN TO PARSE THE TXT OUTPUT VIA STANFORD CORENLP, YOU SHOULD CONSIDER CLEANING YOUR OUTPUT FROM COPYRIGHT MATERIAL AND BIBLIOGRAPHICAL REFERENCES, SINCE SUCH TEXTUAL ELEMENTS DO NOT HAVE COMPLETE SENTENCES.")
 
-#     numberOfDocs = len(inputDocs)
 #     for docNum, doc in enumerate(inputDocs):
-#         head, tail = os.path.split(doc)
-#         print(f'Processing file {docNum+1}/{numberOfDocs} {tail}')
 #         with open(doc, 'rb') as fp:
-#             rsrcmgr = PDFResourceManager()
-#             retstr = io.StringIO()
-#             codec = 'utf-8'
-#             laparams = LAParams()
-#             device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-#             interpreter = PDFPageInterpreter(rsrcmgr, device)
 
 #             if inputDir == "":
-#                 inputDir = os.path.dirname(inputFilename)
 
-#             common = os.path.commonprefix([doc, inputDir])
-#             relativePath = os.path.relpath(doc, common)
-#             outputFilename = os.path.join(outputDir, relativePath[:-4] + ".txt")
 
 #             if not os.path.exists(os.path.dirname(outputFilename)):
-#                 try:
-#                     os.makedirs(os.path.dirname(outputFilename))
-#                 except OSError as exc:
 #                     if exc.errno != errno.EEXIST:
 #                         raise
 
-#             f = open(outputFilename, "w+", encoding="utf-8")
 #             for page in PDFPage.get_pages(fp):
-#                 interpreter.process_page(page)
-#                 data = retstr.getvalue()
-#             f.write(data)
-#             f.close()
 
-#     print(f"Finished running pdf converter. {numberOfDocs} files were successfully converted from pdf to txt format and saved in directory {os.path.dirname(outputFilename)}")
 
 #     if openOutputFiles and len(inputFilename) > 0:
-#         IO_files_util.openFile(window, outputFilename)
 
 # if __name__ == '__main__':
-#     pdf_converter(sys.argv[1], sys.argv[2], sys.argv[3])
 
 
 # # https://www.geeksforgeeks.org/python-working-with-docx-module/
@@ -101,55 +57,31 @@ from striprtf.striprtf import rtf_to_text
 
 # def docx_converter(window,inputFilename,inputDir,outputDir,config_filename,openOutputFiles,chartPackage, dataTransformation):
 
-#     outputDirSV=outputDir
-#     textFilename=''
 #     # replaced GUI prompt with default False (no)
-#     msgbox_subDir = False
 #     if len(inputDir)>0:
 #         # Default no sub-directory processing (you can change to True if wanted)
-#         # msgbox_subDir = tk.messagebox.askyesnocancel("Process sub-directories", "Do you want to process files in subdirectories?")
-#         msgbox_subDir = False
 #     if msgbox_subDir:
-#         inputDocs = IO_files_util.getFileList_SubDir(inputFilename,inputDir,'.docx')
 
-#         # inputDocs = [f for f in inputDocs if os.path.basename(f)[:2] != '~$' and (f[-5:] == '.docx' or f[-4:] == '.doc')]
-#     else:
 #         inputDocs = IO_files_util.getFileList(inputFilename, inputDir, fileType='.docx',
-#                                               silent=False,
 #                                               configFileName=config_filename)
-#     nDocs = len(inputDocs)
 
-#     numberOfDocs=len(inputDocs)
 
 #     outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDirSV,
-#                                                        label='docx_2_txt',
 #                                                        silent=True)
 
 #     for docNum, doc in enumerate(inputDocs):
-#         head, tail = os.path.split(doc)
 #         if tail.startswith('~$'):
-#             numberOfDocs=numberOfDocs-1
 #             continue
-#         fileExtension=doc.split(".")[-1]
-#         #fileExtension = os.path.splitext(doc)[1]
 #         if fileExtension =="docx":
-#             print('Processing docx file ' + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
 
-#             document = Document(doc)
-#             textFilename = os.path.join(outputDir, tail[:-5] + ".txt")
 #             # TODO: if the subdirectory doesn't exist in output directory, create it
 #             if not os.path.exists(os.path.dirname(textFilename)):
-#                 try:
-#                     os.makedirs(os.path.dirname(textFilename))
-#                 except OSError as exc:
 #                     if exc.errno != errno.EEXIST:
 #                         raise
 #             with open(textFilename,"w", encoding="utf-8",errors='ignore') as textFile:
 #                 for para in document.paragraphs:
-#                     textFile.write(para.text+'\n') #line of texts
 
 #     if openOutputFiles and len(inputFilename)>0:
-#         IO_files_util.openFile(window, textFilename)
 
 
 def csv_converter(
@@ -193,7 +125,6 @@ def rtf_converter(
     # replaced GUI prompt with default False (no)
     msgbox_subDir = False
     if len(inputDir) > 0:
-        # msgbox_subDir = tk.messagebox.askyesnocancel("Process sub-directories", "Do you want to process for files in subdirectories?")
         msgbox_subDir = False
         if msgbox_subDir:
             inputRTFs = IO_files_util.getFileList_SubDir(inputFilename, inputDir, ".rtf")
@@ -222,14 +153,12 @@ def rtf_converter(
         head, tail = os.path.split(doc)
         print("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
         fileExtension = doc.split(".")[-1]
-        # fileExtension = os.path.splitext(doc)[1]
         if fileExtension == "rtf":
             fullText = open(doc, encoding="utf-8", errors="ignore").read()
             # https://stackoverflow.com/questions/60897366/how-to-read-rtf-file-and-convert-into-python3-strings-and-can-be-stored-in-pyth
             # https://stackoverflow.com/questions/44580580/how-to-convert-rtf-string-to-plain-text-in-python-using-any-library
             # https://stackoverflow.com/questions/188545/regular-expression-for-extracting-text-from-an-rtf-string/188877#188877
             text = rtf_to_text(fullText)
-            # text=fullText
             common = os.path.commonprefix([doc, inputDir])
             relativePath = os.path.relpath(doc, common)
             textFilename = os.path.join(outputDir, os.path.splitext(relativePath)[0] + ".txt")
@@ -267,14 +196,10 @@ def tsv_converter(window, inputFilename, outputDir, header):
 # with given string of directory, this script will use pytesseract to convert all the pdfs
 # inside the directory into .txt files
 
-# import pytesseract
-# from pdf2image import convert_from_path
-# from pytesseract import image_to_string
 
 # this tesseract path will differ for every machine..
 # for Windows:
 # for Mac:
-# pytesseract.pytesseract.tesseract_cmd = '/opt/homebrew/Cellar/tesseract/5.1.0/bin/tesseract'
 
 
 ################################################
@@ -303,18 +228,9 @@ def get_text_from_any_pdf(pdf_file):
 #################################################
 
 # the directory of pdf files
-# pdf_dir = '/Users/minocha/Downloads/OneDrive_1_6-30-2022/Historical-bibliographic vocabulary/'
 #
 # for filename in os.listdir(pdf_dir):
-#     path_to_pdf = os.path.join(pdf_dir, filename)
 #     if os.path.isfile(path_to_pdf) and path_to_pdf.endswith('pdf'):
-#         print(path_to_pdf)
-#         title = filename[:-4]  # assumes the inputFilename ends in '.pdf' and takes the previous string as title
 #
-#         start = time.time()
-#         extracted_text = get_text_from_any_pdf(path_to_pdf)
-#         end = time.time()
-#         print(f'{end - start} seconds')
 #
 #         with open(f'{title}.txt', 'w') as f:
-#             # f.write(extracted_text)

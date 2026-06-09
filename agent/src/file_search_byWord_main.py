@@ -49,19 +49,14 @@ def run_search_byWord(
 
     # if extra_GUIs_var.get():
     #     if 'CoNLL' in extra_GUIs_menu_var.get():
-    #         call("python CoNLL_table_analyzer_main.py", shell=True)
     #     if 'Style' in extra_GUIs_menu_var.get():
-    #         call("python style_analysis_main.py", shell=True)
     #     if 'Ngrams searches' in extra_GUIs_menu_var.get():
-    #         call("python NGrams_CoOccurrences_main.py", shell=True)
     #     if 'Wordnet' in extra_GUIs_menu_var.get():
-    #         call("python knowledge_graphs_WordNet_main.py", shell=True)
 
     # # create a subdirectory of the output directory
     # outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label='search',
     #                                                    silent=False)
     # if outputDir == '':
-    #     return
 
     if "Search within document" not in search_options_list:
         if "Search within sentence (default)" not in search_options_list:
@@ -79,12 +74,9 @@ def run_search_byWord(
     # @@
     # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Word/collocation search start',
     #                     'Started running Word/collocation search at', True,
-    #                     'SEARCH options: ' + str(search_options_list)+'\n'+label,
     #                                    True, '', True)
 
     if search_by_dictionary or search_by_keyword:
-        # print('Search options:', search_options_list)
-        # print('-K +K ',minus_K_words_sentences_var, plus_K_words_sentences_var)
         if coOccurring_keywords_var:
             import NGrams_CoOccurrences_util
 
@@ -140,8 +132,6 @@ def run_search_byWord(
 
     # if extract_sentences_var:
     #     if coOccurring_keywords_var:
-    #         import NGrams_CoOccurrences_util
-    #         outputFiles = NGrams_CoOccurrences_util.NGrams_coOccurrences_VIEWER(
     #             inputDir,
     #             outputDir,
     #             config_filename,
@@ -164,6 +154,3 @@ def run_search_byWord(
     #
     #         if outputFiles != None:
     #             if isinstance(outputFiles, str):
-    #                 filesToOpen.append(outputFiles)
-    #             else:
-    #                 filesToOpen.extend(outputFiles)

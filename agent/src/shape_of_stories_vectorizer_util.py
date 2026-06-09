@@ -106,7 +106,6 @@ class Vectorizer:
                 else:  # not a merged file
                     if len(readerList) == 1:
                         # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Sentiment Analysis Score Error',
-                        #                                    message="The file " + narrativeFile + " only contains one sentiment score.\n\n"
                         #                                            + "The file will be dropped from the analyses.")
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
@@ -139,14 +138,12 @@ class Vectorizer:
                         if result:
                             filesToDelete.append(narrativeFile)
                             continue
-                    # elif len(readerList) > 75:
                     #     result = messagebox.askyesno("Sentiment Analysis Score Error", "The file " + narrativeFile +
                     #                                  " contains more than 75 sentiment scores.\n" +
                     #                                  "This text is too long compared to others. " +
                     #                                  "It might influence the analysis of shape of stories.\n" +
                     #                                  "Would you like to drop this file from the analyses?")
                     #     if result:
-                    #         self.narrative_file_paths.remove(narrativeFile)
                     #         continue
                     doclengths.append(len(readerList))
 
@@ -229,8 +226,6 @@ class Vectorizer:
             file_list.append(df.iloc[0]["Document"])  # append document name
             scoresFile_list.update({str(df.iloc[0]["Document"]): str(df.iloc[0]["scoresFilename"])})  # ANGEL
         sentimentVectors = np.array(sentimentVectors)
-        # print('Minumum number of sentences in a document: %d' % min(files_lengths))
-        # print('shortest doc: %d' % np.argmin(np.array(files_lengths)))
         print(sentimentVectors)
         return sentimentVectors, file_list, scoresFile_list
 
@@ -268,5 +263,4 @@ def test():
 
 
 if __name__ == "__main__":
-    # sentiment_scores_folder = sys.argv[1]
     test()

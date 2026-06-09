@@ -10,8 +10,6 @@ import charts_util
 import config_util
 import GIS_file_check_util
 import GIS_geocode_util
-
-# import GIS_KML_util
 import GIS_Google_Maps_util
 import GIS_location_util
 import GUI_IO_util
@@ -24,7 +22,6 @@ import pandas as pd
 import reminders_util
 
 
-# Google_config: 'Google-geocode-API_config.csv' or 'Google-Maps-API_config.csv'
 def getGoogleAPIkey(Google_config, display_key=False):
     configFilePath = os.path.join(GUI_IO_util.configPath, Google_config)
     configAPIKey = []
@@ -71,7 +68,6 @@ def getGoogleAPIkey(Google_config, display_key=False):
             message = "Enter the Google " + config_type + " API key"
         else:
             message = "Enter a new Google " + config_type + " API key if you want to change the key"
-        # key, string_out = GUI_IO_util.enter_value_widget(message, 'Enter', 1, key, 'API key', key)
         key = ""
         # save the API key
         if key != "":
@@ -121,10 +117,8 @@ def GIS_pipeline(
     filesToOpen = []
 
     # if datePresent:
-    #     date, dateStr = IO_files_util.getDateFromFileName(inputFilename, dateFormat, dateDelimiter, int(datePosition))
     # if date == '':
     #     continue  # TODO: Warn user this file has a bad date; done in getDate
-    # else:
 
     inputIsCoNLL, inputIsGeocoded, withHeader, headers, datePresent, filenamePositionInCoNLLTable = (
         GIS_file_check_util.CoNLL_checker(inputFilename)
@@ -145,7 +139,6 @@ def GIS_pipeline(
     # check that the GEP has been setup
 
     # <!------------------GOOGLE EARTH PRO DIRECTORY CHECK-------------------------------------------------------------------------------!>
-    # GoogleEarthProDir = os.getenv("GOOGLE_EARTH_PATH")
     import platform
 
     os_temp = platform.system()
@@ -164,7 +157,6 @@ def GIS_pipeline(
 
 
     # if GoogleEarthProDir == None or GoogleEarthProDir == '': #We dont need this potentially
-    #     return
 
     startTime = IO_user_interface_util.timed_alert(
         2000, "Analysis start", "Started running GIS pipeline at", True, "", True, "", False
@@ -200,7 +192,6 @@ def GIS_pipeline(
         if not inputIsGeocoded and geocoder == "Nominatim":
             changed = False
             if datePresent:
-                # nom_df = pd.DataFrame(locations, columns=['Location', 'Date', 'NER']) if len(locations[0])==3 else pd.DataFrame(locations, columns=['Location', 'Index', '0', 'NER'])
                 nom_df = (
                     pd.DataFrame(locations, columns=["Location", "Date", "NER", "Sentence", "Document"])
                     if len(locations[0]) == 5
@@ -422,7 +413,6 @@ def GIS_pipeline(
                             filesToOpen.extend(outputFiles)
 
                 # save to csv file and run visualization
-                # outputFilename= IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv','found-notFound')
                 outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv")
                 outputFilename = outputFilename.replace("LOCATIONS", "LOCATIONS_found-notFound")
                 with open(outputFilename, "w", newline="", encoding="utf-8", errors="ignore") as csvFile:
@@ -436,7 +426,6 @@ def GIS_pipeline(
                     writer.writerow([nRecordsFound, nRecordsNotFound])
                     csvFile.close()
                 # no need to display since the chart will contain the values
-                # return_files.append(outputFilename)
                 columns_to_be_plotted_yAxis = [
                     "Number of Distinct Locations Found by Geocoder ",
                     "Number of Distinct Locations NOT Found by Geocoder",

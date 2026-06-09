@@ -18,8 +18,6 @@ import warnings
 import constants_util
 import GUI_IO_util
 import IO_csv_util
-
-# from tenacity import retry_unless_exception_type
 import IO_files_util
 import IO_user_interface_util
 import pandas as pd
@@ -36,22 +34,16 @@ DEFAULT_MODEL_DIR = stanza.resources.common.DEFAULT_MODEL_DIR
 
 
 # https://stanfordnlp.github.io/stanza/available_models.html
-# language_var.set('English')
-# language_list.append('English')
 # LIST OF LANGUAGES AVAILABLE IN STANZA
 def list_all_languages():
     with open(os.path.join(DEFAULT_MODEL_DIR, "resources.json")) as fin:
         resources = json.load(fin)
-    # languages = [lang for lang in resources if 'alias' not in resources[lang]]
-    # languages = sorted(languages)
     # Extracting language codes and corresponding names from resources.json
     languages_from_resources = []
     for _key, value in resources.items():
         if isinstance(value, dict) and "lang_name" in value:
             languages_from_resources.append(value["lang_name"])
     languages_from_resources.sort()
-    # langs_full = sorted([dict(constants_util.languages)[x] for x in languages])
-    # print(langs_full)
     return languages_from_resources
 
 
@@ -183,7 +175,6 @@ def Stanza_annotate(
 
     # annotating each input file
     docID = 0
-    # json = True
     # record the time consumption before annotating text in each file
 
     short_lang_list, long_lang_list = get_language_list(language)
@@ -214,7 +205,6 @@ def Stanza_annotate(
                 annotator = "SVO"
             else:
                 annotator = "depparse"
-                # annotator_params = "DepRel_SVO"
         elif "sentiment" in annotator_params:
             annotator = "sentiment"
             processors = "tokenize,sentiment"
@@ -241,7 +231,6 @@ def Stanza_annotate(
             file_label = "parser (dep)"
         else:
             file_label = annotator
-        # outputDir = create_output_directory(inputFilename, inputDir, outputDir, file_label)
         outputDir = IO_files_util.make_output_subdirectory(
             inputFilename, inputDir, outputDir, label=annotator + "_Stanza", silent=True
         )
@@ -260,7 +249,6 @@ def Stanza_annotate(
         for k, v in lang_dict.items():
             if v in language:
                 lang_list.append(k)
-                # stanza.download(k) # no need to manually download language package after Stanza v1.4.0
         nlp = MultilingualPipeline(lang_id_config={"langid_lang_subset": lang_list})
 
     df = pd.DataFrame()
@@ -468,24 +456,17 @@ def convertStanzaDoctoDf(stanza_doc, inputFilename, inputDir, tail, docID, annot
             for i in range(len(dicts)):
                 temp_df = pd.DataFrame.from_dict(dicts[i])
                 # if annotator_params=='sentiment':
-                #     temp_df['sentiment_score'] = sentiment_dictionary[i]
                 out_df = pd.concat([out_df, temp_df], ignore_index=True)
 
     # Stanza doc to Pandas DataFrame conversion logic for single language annotation
     elif annotator_params != "sentiment":
         # check if the annotator is sentiment
         # if annotator_params=='sentiment':
-        #     sentiment_dictionary = {}
-        #     sentence_dictionary = {}
         #     for i, sentence in enumerate(stanza_doc.sentences):
-        #         sentiment_dictionary[i] = sentence.sentiment
-        #         sentence_dictionary[i] = sentence.text
         dicts = stanza_doc.to_dict()
         for i in range(len(dicts)):
             temp_df = pd.DataFrame.from_dict(dicts[i])
             # if annotator_params=='sentiment':
-            #     temp_df['sentiment_score'] = sentiment_dictionary[i]
-            #     temp_df['Sentence'] = sentence_dictionary[i]
             out_df = out_df.append(temp_df)
 
     if annotator_params == "sentiment":
@@ -507,7 +488,6 @@ def convertStanzaDoctoDf(stanza_doc, inputFilename, inputDir, tail, docID, annot
         # rename the columns created by Stanza
         out_df = out_df.rename(
             columns={
-                # 'id':'ID',
                 "text": "Form",
                 "lemma": "Lemma",
                 "upos": "POS",
@@ -532,7 +512,6 @@ def convertStanzaDoctoDf(stanza_doc, inputFilename, inputDir, tail, docID, annot
             if i != 0 and row[1]["id"] == 1:
                 sidx += 1
 
-            # out_df.at[i, 'Record ID'] = row[1]['ID']
             out_df.at[i, "Sentence ID"] = sidx
             if "NER" in annotator_params:
                 curr_ner = str(out_df.at[i, "NER"])
@@ -578,22 +557,17 @@ def convertStanzaDoctoDf(stanza_doc, inputFilename, inputDir, tail, docID, annot
                 out_df.at[idx, "Language"] = lang_dict[temp_lang]
 
     if "Lemma" in annotator_params:
-        # out_df = out_df[['ID', 'Form', 'Lemma', 'POS', 'Record ID', 'Sentence ID', 'Document ID', 'Document']]
         out_df = out_df[["Form", "Lemma", "POS", "Record ID", "Sentence ID", "Document ID", "Document"]]
     elif "NER" in annotator_params:
-        # out_df = out_df[['ID', 'Form', 'NER', 'Multi-Word Expression','Record ID', 'Sentence ID', 'Document ID', 'Document']]
         out_df = out_df[["Form", "NER", "Multi-Word Expression", "Record ID", "Sentence ID", "Document ID", "Document"]]
     elif "All POS" in annotator_params:
-        # out_df = out_df[['ID', 'Form', 'POS', 'Record ID', 'Sentence ID', 'Document ID', 'Document']]
         out_df = out_df[["Form", "POS", "Record ID", "Sentence ID", "Document ID", "Document"]]
     elif "depparse" in annotator_params or "SVO" in annotator_params:
         if language not in available_NER:
-            # out_df = out_df[['ID', 'Form', 'Lemma', 'POS', 'Head', 'DepRel', 'Record ID', 'Sentence ID', 'Document ID', 'Document']]
             out_df = out_df[
                 ["Form", "Lemma", "POS", "Head", "DepRel", "Record ID", "Sentence ID", "Document ID", "Document"]
             ]
         else:
-            # out_df = out_df[['ID', 'Form', 'Lemma', 'POS', 'NER', 'Head', 'DepRel', 'Record ID', 'Sentence ID', 'Document ID', 'Document']]
             out_df = out_df[
                 ["Form", "Lemma", "POS", "NER", "Head", "DepRel", "Record ID", "Sentence ID", "Document ID", "Document"]
             ]
@@ -609,7 +583,6 @@ def extractSVO(doc, docID, inputFilename, inputDir, tail, filename_embeds_date_v
     if inputDir != "":
         inputFilename = inputDir + os.sep + tail
 
-    # output: svo_df
     if filename_embeds_date_var:
         svo_df = pd.DataFrame(
             columns=[
@@ -657,7 +630,6 @@ def extractSVO(doc, docID, inputFilename, inputDir, tail, filename_embeds_date_v
         V_found = False
         O_found = True
         for w, word in enumerate(sentence.words):
-            # tmp_head = sentence.words[word.head-1].deprel if word.head > 0 else "root"
             # if (word.deprel in SUBJECT_DEPS or tmp_head in SUBJECT_DEPS) and (SVO_found):
             if (word.deprel in SUBJECT_DEPS) and (O_found):
                 svo_df.at[c, "Subject (S)"] = word.text

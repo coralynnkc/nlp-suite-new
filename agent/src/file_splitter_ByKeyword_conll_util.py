@@ -43,7 +43,6 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
     )  # problem of utf-8 enconding when read csv file:
     # https://stackoverflow.com/questions/18171739/unicodedecodeerror-when-reading-csv-file-in-pandas-with-python
     subfileindex = 1  # record the number of subfles generated
-    # kwtoken = word_tokenize(keyword)
     kwtoken = tokenize_stanza_text(stanzaPipeLine(keyword))
     keyword_size = len(kwtoken)
     head, output_name = os.path.split(df.iloc[0][11])

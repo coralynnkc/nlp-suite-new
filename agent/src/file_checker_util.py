@@ -28,14 +28,8 @@ import IO_user_interface_util
 # chardet can detect:
 #   ASCII, UTF-8, UTF-16 (2 variants), UTF-32 (4 variants)
 #   Big5, GB2312, EUC-TW, HZ-GB-2312, ISO-2022-CN (Traditional and Simplified Chinese)
-#   EUC-JP, SHIFT_JIS, CP932, ISO-2022-JP (Japanese)
-#   EUC-KR, ISO-2022-KR (Korean)
-#   KOI8-R, MacCyrillic, IBM855, IBM866, ISO-8859-5, windows-1251 (Cyrillic)
-#   ISO-8859-5, windows-1251 (Bulgarian)
 #   ISO-8859-1, windows-1252 (Western European languages)
-#   ISO-8859-7, windows-1253 (Greek)
 #   ISO-8859-8, windows-1255 (Visual and Logical Hebrew)
-#   TIS-620 (Thai)
 
 
 # Predict a file's encoding using chardet
@@ -74,7 +68,6 @@ def predict_encoding(window, inputFilename, inputDir, outputDir, n_lines=20):
 # These private code points will then be returned in the same bytes when the surrogateescape error handler is used to write data. This is useful for processing files in an unknown encoding.
 
 _surrogates = re.compile(r"[\uDC80-\uDCFF]")
-# _surrogates = re.compile(r"[\u0080-\u00FF]")
 # [\uDC80-\uDCFF]") #the map of unicode private code characters
 # 0 to 127    "\u0000" to "\u007F"   Basic Latin or U.S. ASCII  "A", "\n", "7", "&"
 # 128 to 247 "\u0080" to "\u00FF"    Latin 1 supplement Most Latinic alphabets* "ę", "±", "ƌ", "ñ"
@@ -127,10 +120,8 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
 
     for docNum, doc in enumerate(inputDocs):
         docSV = doc
-        # try:
         head, tail = os.path.split(doc)
         print("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
-        # IO_util.timed_alert(window,700,'utf-8 compliance ','Processing file ' + str(docNum+1) + " (out of " + str(numberOfDocs) + ")\n\n" + doc,False)
         # https://geek-tips.github.io/articles/494831/index.html
         # 'surrogateescape' will represent any invalid bytes as code points in the Unicode Private Use Range, ranging from U + DC80 to U + DCFF.
         with open(doc, encoding="utf-8", errors="surrogateescape") as f:
@@ -143,7 +134,6 @@ def check_utf8_compliance(window, inputFilename, inputDir, outputDir, openOutput
                     nonUtf8CompliantList += [
                         [docNum, IO_csv_util.dressFilenameForCSVHyperlink(doc), i, line, col, line[col]]
                     ]
-    # f.close() #does not work
     len(nonUtf8CompliantList) - 1
     if len(nonUtf8CompliantList) > 1:
         IO_csv_util.list_to_csv(window, nonUtf8CompliantList, outFile)

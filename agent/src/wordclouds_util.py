@@ -3,7 +3,6 @@
 
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"wordclouds_util",['wordcloud','numpy','matplotlib','ntpath','PIL','stanza','csv'])==False:
-#     sys.exit(0)
 
 # The script uses Andreas Christian Mueller WordCloud package
 # https://amueller.github.io/word_cloud/
@@ -184,7 +183,6 @@ def get_wordcloud_title(inputFilename, inputDir, wordcloud_title):
 
 # CYNTHIA: wordcloud function particularly designed for SVO
 # collocations set to False to avoid repetition of words
-# wordcloud_title = 'Wordcloud of Subject (red), Verb (blue), Object (green)'
 def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, wordcloud_title, prefer_horizontal):
 
     wordcloud_title = get_wordcloud_title(inputFilename, "", wordcloud_title)
@@ -223,7 +221,6 @@ def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, word
                 (" ".join(["".join(filter(str.isalnum, s)) for s in row["Object (O)"].lower().split(" ")])) + " "
             )
     words_count_dict = Counter(words_list)
-    # print (words_count_dict)
     max_words = 1000  # TODO MINO: make max_words bigger to include generally lower frequency "Object (O)" words
     if len(transformed_image_mask) != 0:
         wc = WordCloud(
@@ -284,7 +281,6 @@ def processColorList(currenttext, color_to_words, csvField_color_list, myfile):
 
 
 # add bg_image_flag parameter to indicate whether to add background image
-# display_wordCloud_sep_color(inputFilename, outputDir, currenttext, color_to_words, transformed_image_mask, collocation, prefer_horizontal, bg_image = bg_image, bg_image_flag= bg_image_flag)
 def display_wordCloud_sep_color(
     inputFilename,
     inputDir,
@@ -373,18 +369,12 @@ def display_wordCloud(
 ):
     if textToProcess == "":
         return
-    # stopwords = set(STOPWORDS)
     # for val in textToProcess:
     #     # typecaste each val to string
-    #     val = str(textToProcess)
     # # split the value
-    # tokens = val.split()
     # # Converts each token into lowercase and delete non alphabetic chars
-    # regex = re.compile('[^a-zA-Z]')
     # for i in range(len(tokens)):
-    #     tokens[i] = regex.sub('', tokens[i].lower())
     # for words in tokens:
-    #     comment_words = comment_words + words + ' '
     c_wid = 0 if bg_image_flag else 3
     if len(transformed_image_mask) != 0:
         wordcloud = WordCloud(
@@ -460,7 +450,6 @@ def check_file_empty(currenttext, inputFilename, nDocs, NumEmptyDocs):
             raise (
                 FileNotFoundError("The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
             )
-            # mb.showerror(title='File empty', message='The file ' + inputFilename + ' is empty.\n\nPlease, use another file and try again.')
             return True, True, NumEmptyDocs  # must exit script
         else:
             IO_user_interface_util.timed_alert(3000, "Empty file", "The file " + inputFilename + " is empty.")
@@ -558,7 +547,6 @@ def python_wordCloud(
     if outputDir == "":
         return filesToOpen
 
-    # font = 'IMPRISHA.TTF'
     font = get_font_path(font)
 
     transformed_image_mask = []
@@ -590,7 +578,7 @@ def python_wordCloud(
                     + selectedImage
                     + "\n\nPlease, use another image file and try again."
                 )
-            )
+            ) from None
             # mb.showwarning(title='Image file error',
             #                message="An error was encountered opening the input image file\n\n" + selectedImage + "\n\nPlease, use another image file and try again.")
             return
@@ -626,8 +614,6 @@ def python_wordCloud(
         fileType = ".txt"
 
     # if differentColumns_differentColors:
-    #     processCsvColumns(inputFilename, inputDir, outputDir, openOutputFiles, csvField_color_list, doNotListIndividualFiles, bg_image=img, bg_image_flag=use_contour_only)
-    #     return
 
     # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
     #   YELLOW for anything else; no longer used
@@ -676,14 +662,12 @@ def python_wordCloud(
             False,
         )
 
-    # stopwords = set(STOPWORDS)  # STOPWORDS are all lowercase, so any exclusion will have to be converted
     # with stopwords = '' stopwords will be included in the output visual
     # do not process stopwords when processing by POS tag value
     if not exclude_stopwords and not differentPOS_differentColors:
         print("\nLIST OF WORDCLOUDS STOPWORDS\n", STOPWORDS, "\n")
     else:
         stopwords = set(STOPWORDS)  # STOPWORDS are all lowercase, so any exclusion will have to be converted
-        # stanza.download('en')#set the annotator that gives postag
 
     for doc in inputDocs:
         i = i + 1
@@ -714,7 +698,6 @@ def python_wordCloud(
                     forms_ = df["Form"]
                     lemmas_ = df["Lemma"]
                     postags_ = df["POS"]
-                    # ners_ = df['NER']
 
                     # text: summing tokens in each line together
                     words_ = []
@@ -726,8 +709,6 @@ def python_wordCloud(
                         words_ = forms_
 
                     for j in range(len(words_)):
-                        # print("word: ", forms_[i])
-                        # print("pos: ", postags_[i])
                         # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
                         #   YELLOW for anything else; no longer used
                         if len(postags_[j]) >= 2 and "VB" in postags_[j][0:2]:  # == "VB":
@@ -739,8 +720,6 @@ def python_wordCloud(
                         elif len(postags_[j]) >= 2 and postags_[j][0:2] == "RB":
                             color_to_words[grey_code].append(words_[j])
                         # else:  # should not process? Skip any other tags?
-                        #     color_to_words[yellow_code].append(words_[j])
-                        # if postags_[j][0:2] == "NN" or postags_[j][0:2] == "VB" or \
                         #         postags_[j][0:2] == "JJ" or postags_[j][0:2] == "RB":
                         if (
                             "NN" in postags_[j][0:2]
@@ -756,7 +735,7 @@ def python_wordCloud(
                             doc
                             + " is not a CoNLL table.\n\nPlease, select in input a proper csv CoNLL file with Form, Lemma, and POS columns and try again."
                         )
-                    )
+                    ) from None
                     # mb.showwarning(title='Not a CoNLL table',
                     #                message=doc + " is not a CoNLL table.\n\nPlease, select in input a proper csv CoNLL file with Form, Lemma, and POS columns and try again.")
                     return
@@ -779,7 +758,6 @@ def python_wordCloud(
                         # for word in annotated.sentences[sent_id].tokens:
                         for word in annotated.sentences[sent_id].words:
                             # pos & upos have the same tag value
-                            # print("--------------------word.text.lower() & pos",word.text.lower(), word.pos)
                             if word.text.lower() == "'s" or word.text.lower() == "’s" or word.text.lower() == "s":
                                 continue  # do not process the s of a saxon genitive
                             # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
@@ -797,11 +775,9 @@ def python_wordCloud(
                                     word_str.lower() in stopwords
                                 ):  # STOPWORDS are all lowercase, so any exclusion will have to be converted
                                     continue  # do not process stopwords & punctuation marks
-                            # print("   word_str",word_str,"word.pos",word.pos)
                             # convert to lower case for same improper words that may appear after a full stop
                             if lowercase:
                                 # if word_str=='':
-                                #     word_str = word.text
                                 if word_str is not None:
                                     word_str = word_str.lower()
                             if exclude_punctuation:
@@ -941,7 +917,6 @@ def python_wordCloud(
                 )
             )
             # mb.showerror(title='Files empty',
-            #              message='All ' + str(NumEmptyDocs) + ' txt files are empty in your input directory\n' + str(
             #                  inputDir) + '\n\nPlease, check your directory and try again.')
         if NumEmptyDocs > 0:
             print(
@@ -959,17 +934,12 @@ def python_wordCloud(
                 )
             )
             # mb.showerror(title='Empty file(s)',
-            #              message=str(NumEmptyDocs) + ' file(s) empty in the input directory\n' + str(
             #                  inputDir) + '\n\nFile(s) listed in command line. Please, make sure to check the file(s) content.')
 
     # @@@ 11/20/2023
     # if openOutputFiles:
-    #     head, scriptName = os.path.split(os.path.basename(__file__))
-    #     IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)
-    #     filesToOpen = None
     return filesToOpen
 
-    # plt.show()
 
     # =======================================================================================================================
     # Debug use
@@ -977,8 +947,5 @@ def python_wordCloud(
 
 
 # def main():
-#     a = get_font_list()
-#     print("123")
 
 # if __name__ == "__main__":
-#     main()

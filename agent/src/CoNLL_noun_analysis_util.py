@@ -8,7 +8,6 @@ modified by Tony Apr 2022
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL Table Analyzer",
 #                                           ['csv', 'os', 'collections']) == False:
-#     sys.exit(0)
 
 from collections import Counter
 
@@ -71,7 +70,6 @@ def compute_stats(data):
 
 
 def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
-    # print("\n\n################# NOUN ANALYSIS ################")
     list_nouns_postag = []
     list_nouns_deprel = []
     list_nouns_ner = []
@@ -118,11 +116,6 @@ def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
     # list_nouns_ner = data_preparation(data, ['COUNTRY','CITY','LOCATION','PERSON','ORGANIZATION','STATE_OR_PROVINCE'],
     # ['COUNTRY','CITY','LOCATION','PERSON','ORGANIZATION','STATE_OR_PROVINCE'],4)
     # noun_ner_stats = [['Noun NERs', 'Frequencies'],
-    #     ['COUNTRY', ner_counter['COUNTRY']],
-    #     ['CITY', ner_counter['CITY']],
-    #     ['LOCATION', ner_counter['LOCATION']],
-    #     ['PERSON', ner_counter['PERSON']],
-    #     ['ORGANIZATION', ner_counter['ORGANIZATION']],
     #     ['STATE_OR_PROVINCE', ner_counter['STATE_OR_PROVINCE']]]
 
     tl = [
@@ -157,11 +150,9 @@ def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
     print(noun_ner_stats[1], noun_ner_stats[1][1], "THIS IS THE O COUNTER!!!!!!!!")
     return list_nouns_postag, list_nouns_deprel, list_nouns_ner, noun_postag_stats, noun_deprel_stats, noun_ner_stats
 
-    # return list_nouns_postag, list_nouns_deprel, list_nouns_ner, noun_postag_stats, noun_deprel_stats, noun_ner_stats
 
 
 def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation):
-    # print("\nRun noun analysis")
 
     filesToOpen = []  # Store all files that are to be opened once finished
 
@@ -464,6 +455,5 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
             else:
                 filesToOpen.extend(outputFiles)
 
-    # IO_user_interface_util.timed_alert(2000,'Analysis end', 'Finished running NOUN ANALYSES at', True, '', True, startTime, True)
 
     return filesToOpen

@@ -19,8 +19,6 @@ import IO_files_util
 # ISO 3166-1 defines two-letter, three-letter, and three-digit country codes.
 # python-iso3166 is a self-contained module that converts between these codes
 #   and the corresponding country name.
-# import iso3166 #pip install
-# from iso3166 import countries
 
 
 def run(
@@ -78,7 +76,6 @@ def run(
         return
 
     # if restrictions_checker(inputFilename,inputIsCoNLL,numColumns,withHeader,headers,locationColumnName)==False:
-    # 	return
 
     if group_var == 1 and group_number_var == 1:
         print(

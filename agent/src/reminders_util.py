@@ -28,7 +28,6 @@ title_options_English_language_MALLET = ["English language & MALLET topic modeli
 message_English_language_MALLET = "MALLET topic modeling is only available for texts in the English language."
 
 # The core text analyses of the NLP Suite are based on the FREEWARE Stanford CoreNLP. You can download Stanford CoreNLP at https://stanfordnlp.github.io/CoreNLP/download.html.\n\n   3. GEPHI. The visualization of network graphs requires the installation of the FREEWARE software Gephi. You can download and install Gephi at https://gephi.org/users/download/\n\n   4. GOOGLE EARTH PRO. The visualization of geographic maps requires the installation of the FREEWARE software Google Earth Pro. You can download and install Google Earth Pro at https://www.google.com/earth/versions/#download-pro.\n\n   5. MALLET. MALLET topic modelling requires the installation of the FREEWARE MALLET. You can download and install MALLET at http://mallet.cs.umass.edu/download.php.
-# message_NLP_Suite_welcome = 'Welcome to the NLP Suite a package of Python 3 and Java tools designed for text processing and visualization. The Suite requires several FREWARE software components in order to run. You will need to download and install them or some functionality will be lost for some of the scripts (e.g., you cannot do any textual analysis of any kind without Stanford CoreNLP or produce any geographic maps without Google Earth Pro).'
 
 title_options_missing_external_software_NLP_main_GUI = ["Missing external software NLP_menu_main GUI"]
 message_missing_external_software_NLP_main_GUI = 'At least some external software has not been installed. \n\nSome of the algorithms that require the software will not run.\n\nPlease, click on the button "Setup external software" in the NLP_menu_main GUI to download/install all software.'
@@ -389,7 +388,6 @@ def create_remindersFile() -> None:
             remindersFile, "a", newline="", encoding="utf-8", errors="ignore"
         ) as reminders:  # write a new row in the reminder csv file
             writer = csv.writer(reminders)
-            # writer.writerow(['Routine', 'Title', 'Message', 'Event', 'Status'])
             writer.writerow(["Routine", "Title", "Message", "Status"])
             reminders.close()
 
@@ -474,9 +472,7 @@ def displayReminder(df, row_num, title, message, currentStatus, question, seeMsg
     if message == "":  # there is no message to be displayed
         return
     else:
-        # message = message + question # the question "Do you want to see this message again?" is asked
         #   in GUI_IO_util.message_box_widget so that it can be placed n red
-        # answer = GUI_IO_util.message_box_widget(1, title, message, buttonType='Yes-No', timeout=30000)
         answer = "this feature isn't set up"
 
     answer = answer.capitalize()  # Yes/No
@@ -494,7 +490,6 @@ def displayReminder(df, row_num, title, message, currentStatus, question, seeMsg
         else:
             status = currentStatus
     if currentStatus != status:
-        # saveReminder(df,row_num, message, event, status)
         saveReminder(df, row_num, message, status)
 
 
@@ -544,23 +539,16 @@ def checkReminder(scriptName, title_options=None, message="", triggered_by_GUI_e
                 df1 = df.loc[(df["Routine"] == "*") & (df["Title"] == title)]
             if len(df1) != 0:
                 row_num = df1.index[0]
-                # message_csv = df1.at[row_num, "Message"]
                 # if message != '' and message != message_csv:
-                #     message = df1.at[row_num, "Message"]
-                # event = df1.at[row_num, "Event"]
                 status = df1.at[row_num, "Status"]
                 # save any status changes or messages in reminders.csv file different from the Python reminder message in this scrit
                 #   always update the reminder message in reminders.csv file if we changed the message programmatically
                 message_csv = df1.at[row_num, "Message"].replace("\\n", os.linesep)
                 if message != "" and message != message_csv:
                     # must save the new message
-                    # saveReminder(df, row_num, message, event, status)
                     saveReminder(df, row_num, message, status)
                 # @@@ 5/21
                 # if triggered_by_GUI_event == False and event=='Yes':
-                #     silent = True
-                # else:
-                #     silent = False
                 if status == "Yes" or status == "ON":  # 'Yes' the old way of saving reminders
                     if not silent:
                         # must pass the entire dataframe and not the sub-dataframe dt1
@@ -572,16 +560,11 @@ def checkReminder(scriptName, title_options=None, message="", triggered_by_GUI_e
             else:  # the reminder option does not exist and must be inserted and then displayed
                 # @@@ 5/21
                 # if triggered_by_GUI_event == True:
-                #     event='Yes'
-                # else:
-                #     event = 'No'
-                # insertReminder(routine, title, message, event, "Yes")
                 insertReminder(routine, title, message, "Yes")
                 # after inserting the new reminder return to check whether you want to see the reminder again
                 if not silent:
                     # title_options is the value you originally came in with (i.e., [title]) and that was inserted
                     # @@@ 5/21
-                    # checkReminder(scriptName, title_options, message, triggered_by_GUI_event)
                     checkReminder(scriptName, title_options, message)
     return status  # returns Yes for ON or No for OFF
 
@@ -624,13 +607,11 @@ def resetReminder(scriptName, title):
             )
             return
         message = df.at[row_num, "Message"]
-        # event = df.at[row_num, "Event"]
         status = df.at[row_num, "Status"]
         if status == "No" or status == "OFF":  # 'No' the old way of saving reminders
             question = "\n\nNow this reminder is turned OFF. Do you want to turn it ON?"
         else:
             question = "\n\nNow this reminder is turned ON. Do you want to turn it OFF?"
-        # displayReminder(df, row_num, title, message, event, status, question, False)
         displayReminder(df, row_num, title, message, status, question, False)
 
 
@@ -641,7 +622,6 @@ def saveReminder(df, row_num, message, status):
 
     remindersFile = os.path.join(GUI_IO_util.remindersPath, "reminders.csv")
     df.at[row_num, "Message"] = message  # change it to yes or no
-    # df.at[row_num, "Event"] = event # change it to yes or no
     df.at[row_num, "Status"] = status  # change it to yes or no
     df.to_csv(remindersFile, encoding="utf-8", index=False, header=True)
 
@@ -653,6 +633,5 @@ def insertReminder(routine, title, message, status):
         remindersFile, "a", newline="", encoding="utf-8", errors="ignore"
     ) as reminders:  # write a new row in the reminder csv file
         writer = csv.writer(reminders)
-        # writer.writerow([routine, title, message, event, status])
         writer.writerow([routine, title, message, status])
         reminders.close()

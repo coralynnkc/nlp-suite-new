@@ -16,9 +16,6 @@ def parsers_annotators_visualization(
     dataTransformation,
     openFiles=True,
 ):
-    # headers = IO_csv_util.get_csvfile_headers_pandas(outputFilename)
-    # docCol = IO_csv_util.get_columnNumber_from_headerValue(headers, inputFilename)
-    # docCol = docCol + 1  # we need to visualize the doc filename
 
     # generate visualization output ----------------------------------------------------------------
     # Lemma ________________________________________________________________
@@ -26,7 +23,6 @@ def parsers_annotators_visualization(
 
     # cannot use the usual scriptName here otherwise it would be parsers_annotators_visualization_util
     #   and what we want is the calling script in config.csv, e.g., NER_config.csv
-    # head, scriptName = os.path.split(os.path.basename(__file__))
     scriptName = configFilename.replace("_config.csv", "")
     filesToOpen = []
     if ("Lemma" in str(annotator_params) and "Lemma" in outputFilename) or "parse" in str(annotator_params):
@@ -223,7 +219,6 @@ def parsers_annotators_visualization(
     if ("date" in str(annotator_params) and "date" in outputFilename) or (
         "OpenIE" in str(annotator_params) and "OpenIE" in outputFilename
     ):
-        # (('SVO' in str(annotator_params) and 'SVO' in outputFilename)) or \
         # visualizing normalized-date for SVO is done in SVO_util called in SVO_main
         # Date expressions are in the form yesterday, tomorrow morning, the day before Christmas
         outputFiles = charts_util.visualize_chart(
@@ -479,13 +474,7 @@ def parsers_annotators_visualization(
             if outputSVOUnFilterDir == "":
                 return
 
-            # Sankey_limit1_var=12
-            # Sankey_limit2_var = 12
-            # Sankey_limit3_var = 12
-            # three_way_Sankey = False
             #
-            # output_label = 'sankey'
-            # import IO_files_util
             # outputFilename_sankey = IO_files_util.generate_output_file_name(outputFilename, inputDir, outputDir,
             #                                                          '.html', output_label)
             # outputFiles = charts_util.Sankey(outputFilename, outputFilename_sankey,
@@ -493,66 +482,36 @@ def parsers_annotators_visualization(
             #
             # if outputFiles!=None:
             #     if isinstance(outputFiles, str):
-            #         filesToOpen.append(outputFiles)
-            #     else:
-            #         filesToOpen.extend(outputFiles)
 
         # wordclouds of locations, persons, organizations
 
-        # import wordclouds_util
         # # run with all default values;
-        # prefer_horizontal = .9
-        # doNotListIndividualFiles = True
-        # collocation = False
-        # transformed_image_mask = []
-        # stopwords = ''
         #
-        # column_name='Locations'
         #
-        # textToProcess = IO_csv_util.get_csv_field_values(outputFilename, column_name, uniqueValues=False, returnList=False)
         #
         # outputFiles = wordclouds_util.display_wordCloud(outputFilename, '', outputDir, textToProcess, doNotListIndividualFiles,
-        #                       transformed_image_mask, stopwords, collocation, prefer_horizontal, bg_image=None,
         #                       bg_image_flag=True, font=None, max_words=100)
         #
         # if outputFiles!=None:
         #     if isinstance(outputFiles, str):
         #         # rename outputfile not to be overwritten by the next wordclouds
-        #         os.rename(outputFiles,outputFiles[:-4] + "_locations.png")
-        #         filesToOpen.append(outputFiles)
-        #     else:
-        #         filesToOpen.extend(outputFiles)
         #
-        # column_name='Persons'
         #
-        # textToProcess = IO_csv_util.get_csv_field_values(outputFilename, column_name, uniqueValues=False, returnList=False)
         #
         # outputFiles = wordclouds_util.display_wordCloud(outputFilename, '', outputDir, textToProcess, doNotListIndividualFiles,
-        #                       transformed_image_mask, stopwords, collocation, prefer_horizontal, bg_image=None,
         #                       bg_image_flag=True, font=None, max_words=100)
         #
         # if outputFiles!=None:
         #     if isinstance(outputFiles, str):
         #         # rename outputfile not to be overwritten by the next wordclouds
-        #         os.rename(outputFiles,outputFiles[:-4] + "_persons.png")
-        #         filesToOpen.append(outputFiles)
-        #     else:
-        #         filesToOpen.extend(outputFiles)
         #
-        # column_name='Organizations'
         #
-        # textToProcess = IO_csv_util.get_csv_field_values(outputFilename, column_name, uniqueValues=False, returnList=False)
         #
         # outputFiles = wordclouds_util.display_wordCloud(outputFilename, '', outputDir, textToProcess, doNotListIndividualFiles,
-        #                       transformed_image_mask, stopwords, collocation, prefer_horizontal, bg_image=None,
         #                       bg_image_flag=True, font=None, max_words=100)
         #
         # if outputFiles!=None:
         #     if isinstance(outputFiles, str):
-        #         os.rename(outputFiles,outputFiles[:-4] + "_organizations.png")
-        #         filesToOpen.append(outputFiles)
-        #     else:
-        #         filesToOpen.extend(outputFiles)
 
         # plot Subjects
         outputFiles = charts_util.visualize_chart(
@@ -641,7 +600,6 @@ def parsers_annotators_visualization(
         #                          outputDir, filesToOpen,
         #                          chartPackage, dataTransformation, param, corefed_pronouns, all_pronouns)
         # if len(pronoun_files)>0:
-        #     filesToOpen.extend(pronoun_files)
 
         if "coref table" in str(annotator_params):
             outputFiles = charts_util.visualize_chart(

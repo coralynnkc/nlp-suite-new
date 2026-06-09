@@ -19,13 +19,9 @@ def run_sankey(
 
     file = first_csv(inputDir)
 
-    # data = json.loads(data)
 
-    # data = pd.DataFrame(data)
     # # @@@ nan values will break the code
-    # data = data.fillna("Blank/missing value")
 
-    # # csv_file_relational_field_list = json.loads(csv_file_relational_field_list)
     output_label = "Sankey"
 
     outputFilename = IO_files_util.generate_output_file_name(file, inputDir, outputDir, ".html", output_label)
@@ -107,7 +103,6 @@ def main():
         Sankey_limit3_var=Sankey_limit3_var,
     )
     # (inputFilename, inputDir, outputDir,
-    #     csv_file_relational_field_list, # = "a, b, c"
     #     Sankey_limit1_var, Sankey_limit2_var, Sankey_limit3_var,
     #     ):
 

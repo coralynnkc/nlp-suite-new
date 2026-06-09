@@ -4,8 +4,6 @@
 import glob
 import os
 import re
-
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 import string
 
 import GUI_IO_util
@@ -57,9 +55,7 @@ def add_full_stop_to_paragraph(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-    # result=file_filename_util.backup_files(inputFilename, inputDir,'Add full-stops to paragraphs', '.txt', configFileName)
     # if result==False:
-    #     return
 
     startTime = IO_user_interface_util.timed_alert(
         2000, "Analysis start", "Started running the add fullstop function at", True, "", True, "", False
@@ -181,7 +177,6 @@ def check_typesetting_hyphenation(
         if not IO_error:
             filesToOpen.append(outputFilename)
         # if openOutputFiles:
-        #     IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir)
     else:
         print("Warning: There are " + str(hyphenated_lines) + " typesetting hyphenated lines in the input file(s).")
 
@@ -207,7 +202,6 @@ def remove_typeseting_hyphenation(
         outputDir = create_input_subdir(inputDir, "_NoHyph")
 
     message = "The input file(s) may contain legitimate end-of-line hyphens (e.g., pretty-smart with pretty- at the end of a line and smart at the beginning of the next line). In such legitimate cases, the two-parts of the hyphenated compound should not be joined together (rather, the line end, pretty- should be manually moved to the next line.\n\nDo you want to check, first, that there are no legitimate uses of end-of-line hyphens, before removing them all automatically, whether legitimate or not?"
-    # answer = tk.messagebox.askyesno("Warning", message)
     print(message)
     answer = "yes"
     if answer:
@@ -242,7 +236,6 @@ def remove_typeseting_hyphenation(
             outfile = outputDir + os.sep + tail
         else:
             outfile = outputDir + os.sep + tail.replace(".txt", label + ".txt")
-        # outfile = outputDir + os.sep + tail.replace('.txt',label+'.txt')
         with (
             open(infile, encoding="utf-8", errors="ignore") as source,
             open(outfile, "w", encoding="utf-8", errors="ignore") as dest,
@@ -309,7 +302,6 @@ def remove_hard_carriage_returns(
     message = "The input file(s) may contain legitimate hard-carriage returns at the end of pargraphs (e.g., pretty-smart with pretty- at the end of a line and smart at the beginning of the next line). In such legitimate cases, the two-parts of the hyphenated compound should not be joined together (rather, the line end, pretty- should be manually moved to the next line.\n\nDo you want to check, first, that there are no legitimate uses of end-of-line hyphens, before removing them all automatically, whether legitimate or not?"
     print(message)
     answer = "yes"
-    # answer = tk.messagebox.askyesno("Warning", message)
     if answer:
         check_typesetting_hyphenation(
             window,
@@ -335,17 +327,14 @@ def remove_hard_carriage_returns(
         head, tail = os.path.split(infile)
         print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         removed_hard_returns = 0
-        # remove_hard_carriage_returns
         if inputDir != "":
             # do not modify the filename when processing multiple files in a directory
             #   this way, they can be copied directly over the inputDir
             outfile = outputDir + os.sep + tail
         else:
             outfile = head + os.sep + tail.replace(".txt", label + ".txt")
-        # outfile = outputDir + os.sep + tail.replace('.txt',label+'.txt')
         new_paragraph = ""
         with open(infile, encoding="utf-8", errors="ignore") as fn:
-            # remove_hard_carriage_returns
             paragraphs = get_paragraphs(fn)
             with open(outfile, "w", encoding="utf-8", errors="ignore") as out:
                 for paragraph in paragraphs:
@@ -429,7 +418,6 @@ def add_missing_blank_after_punctuation(
             outfile = outputDir + os.sep + tail
         else:
             outfile = head + os.sep + tail.replace(".txt", label + ".txt")
-        # outfile = outputDir + os.sep + tail.replace('.txt',label+'.txt')
         with open(infile, encoding="utf-8", errors="ignore") as infile:
             text = infile.read()
             processed_text = process_text_add_blank(text)
@@ -490,7 +478,6 @@ def remove_characters_between_characters(
     )
 
     # if not IO_user_interface_util.input_output_save('Remove all characters between characters'):
-    #     return
 
     label = "_NoChars"
     if inputDir != "":
@@ -586,7 +573,6 @@ def remove_characters_between_characters(
             while i < number_of_characters_pairs:
                 split_string_A = fullText.split(startCharacter, 1)  # Split into "ab" and "cd"
                 split_string_A = split_string_A[0]
-                # print("split_string_A",split_string_A)
                 split_string_B = fullText.split(endCharacter, 1)  # Split into "ab" and "cd"
                 if len(split_string_B) > 1:
                     split_string_B = split_string_B[1]
@@ -596,10 +582,8 @@ def remove_characters_between_characters(
                 else:
                     split_string_B = split_string_B[0]
 
-                # print("split_string_B",split_string_B)
                 fullText = split_string_A + split_string_B
                 i += 1
-            # print("\n\n\n\ncleaned_text", fullText)
             # remove_characters_between_characters
 
             if inputDir != "":
@@ -616,7 +600,6 @@ def remove_characters_between_characters(
                 os.stat(file).st_size
                 os.stat(outfile)
                 os.stat(outfile).st_size
-                # file_sizes.append(tail + ' FILE SIZES (in bytes) - ORIGINAL ' + str(os.stat(file).st_size) + ' EDITED ' + str(os.stat(outfile).st_size))
                 file_sizes.append(
                     [
                         IO_csv_util.dressFilenameForCSVHyperlink(file),
@@ -677,7 +660,6 @@ def remove_characters_between_characters(
                 + "\n\nList of edited files:\n\n"
                 + str(edited_files_list)
             )
-            # mb.showwarning(title='Warning', message='List of edited files with file sizes. CHECK FILE SIZES CAREFULLY! Too large discrepancies may indicate unbalanced start/end characters and too much text removed.\n\n' + str(file_sizes))
             print(
                 str(No_files_edited)
                 + " files edited removing ALL substrings between "
@@ -687,7 +669,6 @@ def remove_characters_between_characters(
                 + ".\n"
                 + str(edited_files_list)
             )
-            # print('\n\nList of edited files with file sizes.  CHECK FILE SIZES CAREFULLY! Too large discrepancies may indicate unbalanced start/end characters and too much text removed.\n\n' + str(file_sizes))
             header = [
                 "Original file",
                 "Edited file",
@@ -758,9 +739,7 @@ def remove_blank_lines(
     if inputDir != "":
         outputDir = create_input_subdir(inputDir, label)
 
-    # result=file_filename_util.backup_files(inputFilename, inputDir,"Remove blank lines", '.txt', configFileName)
     # if result==False:
-    #     return
 
     files = IO_files_util.getFileList(
         inputFilename, inputDir, fileType="txt", silent=False, configFileName=configFileName
@@ -789,7 +768,6 @@ def remove_blank_lines(
             outfile = outputDir + os.sep + tail
         else:
             outfile = outputDir + os.sep + tail.replace(".txt", label + ".txt")
-        # outfile = outputDir + os.sep + tail.replace('.txt',label+'.txt')
         with open(outfile, "w+", encoding="utf_8", errors="ignore") as outfile:
             outfile.write(outputLines[:-1])  # non-empty line. Write it to output
         if withEmptyLines:  # if there is any empty line, increment count
@@ -826,10 +804,6 @@ def remove_blank_lines(
 # criteria for title are no punctuation and
 # a shorter (user determined) sentence in number of words
 
-# Title_length_limit = int(sys.argv[1])
-# TITLENESS = sys.argv[2]
-# inputDir = sys.argv[3]
-# outputDir = sys.argv[4]
 
 
 # Check whether a sentence is title
@@ -837,13 +811,10 @@ def remove_blank_lines(
 def isTitle(sentence, Title_length_limit):
     if sentence[-1] not in string.punctuation:
         if len(sentence) < Title_length_limit:
-            # print sentence
             return True
     if sentence.isupper():
-        # print sentence
         return True
     if sentence.istitle():
-        # print sentence
         return True
 
 
@@ -922,7 +893,6 @@ def newspaper_titles(
                             out.write(one)  # .encode('utf-8'))
                             out.write(" ")
                         out.write("\n")
-                # titles.append((title,filename))
         count += 1
 
     # DOCUMENTS WITHOUT TITLES
@@ -954,7 +924,6 @@ def newspaper_titles(
                         out.write("\n")
                 titles.append((title, filename))
         count += 1
-        # print(count)
 
     # TITLES ONLY
     path_title = os.path.join(temp_inputDir, "document_titles_only")
@@ -988,7 +957,6 @@ def newspaper_titles(
             NUM_DOCUMENT,
             count,
         ) + "\n\nThe percentage of documents processed is %.2f" % ((float(count) / nDocs) * 100)
-    # msgString=" %s documents out of %d have generated titles." % (NUM_DOCUMENT, count)
     if count > 0:
         if inputFilename != "":
             msgString = (
@@ -1055,13 +1023,9 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
             fullText = file.read()
             # https://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html
             # if u"\u2018" in fullText:
-            # 	print("u\u2018")
             # if u"\u2019" in fullText:
-            # 	print("u\u2019")
             # if u"\u201C" in fullText:
-            # 	print("u\u201C")
             # if u"\u201D" in fullText:
-            # 	print("u\u201D")
             if (
                 ("%" in fullText)
                 or ("\u2018" in fullText)
@@ -1109,35 +1073,20 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
 # TODO to be completed w/o opening and closing the txt file for every string processed
 # Finished
 # def find_replace_string_csvINPUT(window, inputFilename_txt, inputFilename_csv, outputDir, openOutputFiles):
-# 	df = pd.read_csv(inputFilename_csv)
-# 	try:
-# 		original = df['Original']
-# 		corrected = df['Corrected']
 # 	except:
 # 		mb.showwarning(title='CSV Spelling File',
 # 					   message='Please, select a csv file with spelling correction information, or check the headers of that csv file for Original and Corrected')
 # 		print(
 # 			"Please select a csv file with spelling correction information, or check the header of that csv file for Original and Corrected")
-# 		return
 
 # 	# loop through input spelling csv file for each spelling error to replaced
-# 	l = len(original)
-# 	outputstring = ''
-# 	outputFilename = IO_files_util.generate_output_file_name(inputFilename_txt, '', outputDir, '.txt', "spelling","corrected")
 # 	with open(inputFilename_txt, 'r+',encoding='utf_8',errors='ignore') as file:
-# 		fullText = file.read()
 # 	for i in range(l):
 # 		if corrected[i] != '':
-# 			print('Original: ', original[i], ' Corrected: ', corrected[i])
 # # 			find_replace_string(window, inputFilename_txt, inputDir, outputDir, openOutputFiles,
 # # 												  string_IN=original[i], string_OUT=corrected[i])
 
 # 		if (string_IN in fullText):
-# 			fullText = str(fullText).replace(str(string_IN), str(string_OUT))
-# 			docError = docError + 1
-# 			file.seek(0)
-# 			file.write(fullText)
-# 			file.close()
 
 
 def find_replace_string(
@@ -1274,7 +1223,6 @@ def find_replace_string(
                 )
     else:
         if not silent:
-            # mb.showwarning(title='String edit', message=str(Ndocs) + ' document(s) processed.\n\nNo documents were found with the input string ' +str( string_IN))
             print(
                 title="String edit"
                 + str(Ndocs)

@@ -52,9 +52,7 @@ def run(
     # compute geodesic distances from specific location
 
     # this will check the appended country names and short name
-    # from iso3166 import countries
     # for c in countries:
-    #     print(c)
 
     inputIsCoNLL, inputIsGeocoded, withHeader, headers, datePresent, filenamePositionInCoNLLTable = (
         GIS_file_check_util.CoNLL_checker(inputFilename)
@@ -63,11 +61,9 @@ def run(
     # if input_main_dir_path.get()!='':
     #     mb.showwarning(title='File type error',
     #                    message='The GIS distance scripts expects in input a csv file. Please, select a csv file and try again.')
-    #     return
     # if inputFilename.endswith('.csv') == False:
     #     mb.showwarning(title='File type error',
     #                    message='The input file\n\n' + inputFilename + '\n\nis not an expected csv file. Please, check the file and try again.')
-    #     return
 
     if not compute_pairwise_distances and not compute_baseline_distances:
         print("Warning, No options have been selected.\n\nPlease, select an option and try again.")

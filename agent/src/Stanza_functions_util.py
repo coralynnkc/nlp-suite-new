@@ -93,7 +93,6 @@ def lemmatize_stanza_word(text_to_process, return_empty_string=True):
 #   e.g., ['Robert', 'go', 'to', 'Italy', 'on', 'vacation']
 # similar to tokenized_stanza_doc except that in this one the list items are tokenized (NOT lemmatized) words
 # for text_to_process.sentences to work, the calling function must first have
-#   from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_doc
 # must be called as lemmatize_stanza_doc(stanzaPipeLine(text))
 def lemmatize_stanza_doc(text_to_process, return_string=False, exact_word_match=True):
     if return_string:
@@ -102,7 +101,6 @@ def lemmatize_stanza_doc(text_to_process, return_string=False, exact_word_match=
         lemmatized_text_to_process = []
     punctuation_set = ",;.?!"
     # for text_to_process.sentences to work, the calling function must first have
-    #   from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_doc
     # must be called as lemmatize_stanza_doc(stanzaPipeLine(text))
 
     for sentence in text_to_process.sentences:
@@ -116,19 +114,14 @@ def lemmatize_stanza_doc(text_to_process, return_string=False, exact_word_match=
             else:
                 lemmatized_text_to_process.append(word.lemma)
                 # if not exact_word_match:
-                #     lemmatized_text_to_process.append(word.lemma)
-                # else:
                 #     # remove all punctuation and returns a list for exact_word_match
                 #     if word.lemma in punctuation_set:
                 #         continue
     return lemmatized_text_to_process
     # the function above in a text_to_process such as "Mao Zedong went to Taiwan for vacation." return Mao Zedong as lower case mao zedong
     # in theis other way of lemmatizing
-    # en_nlp = stanza.Pipeline('en')
-    # end_doc = en_nlp(text_to_process)
     # for i, sent in enumerate(end_doc.sentences):
     #     for word in sent.words:
-    #         print(word.lemma)
 
 
 # in INPUT the function takes a document or sentence or even word as string
@@ -144,7 +137,6 @@ def tokenize_stanza_text(text_to_process):
     for sentence in text_to_process.sentences:
         tokenized_text_to_process = [word.text for word in sentence.words]
         # you get the same result by using tokens instead or words
-        # tokenized_text_to_process = [token.text for token in sentence.tokens]
     return tokenized_text_to_process
 
 

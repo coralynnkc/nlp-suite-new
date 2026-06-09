@@ -28,7 +28,6 @@ Ngrams_search_var = False
 csv_file_var = ""
 ngrams_viewer_var = False
 CoOcc_Viewer_var = ""
-# within_sentence_co_occurrence_search_var = False  # commented in run()
 date_options = False
 temporal_aggregation_var = False
 viewer_options_list = []
@@ -55,7 +54,6 @@ run_ngrams(
     csv_file_var=csv_file_var,
     ngrams_viewer_var=ngrams_viewer_var,
     CoOcc_Viewer_var=CoOcc_Viewer_var,
-    # within_sentence_co_occurrence_search_var=within_sentence_co_occurrence_search_var,
     date_options=date_options,
     temporal_aggregation_var=temporal_aggregation_var,
     viewer_options_list=viewer_options_list,

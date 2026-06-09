@@ -25,7 +25,6 @@ def check_internet_availability_warning(script):
             + script
             + "' requires internet connection to run. Please, check internet connection and try again."
         )
-        # mb.showwarning(title='Internet Connection', message='Internet is not available... The script "' + script + '" requires internet connection to run.\n\nPlease, check internet connection and try again.')
         print(
             "Warning",
             "Internet is not available... The script '"

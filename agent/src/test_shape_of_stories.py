@@ -2,9 +2,7 @@ from shape_of_stories_main import run
 
 
 def main():
-    # inputFilename = '/Users/is2ac/nlp-suite/input/example.txt'
     inputFilename = ""
-    # inputDir = '/Users/is2ac/nlp-suite/input'
     inputDir = "/Users/is2ac/Documents/QTM_190/English"
     outputDir = "/Users/is2ac/nlp-suite/output"
     openOutputFiles = False

@@ -91,7 +91,6 @@ def run(
     # if plot_var and year_state_var!= 'Year of birth':
     #     mb.showwarning('Warning',
     #                    message='The selected option "' + year_state_var + '" is not available yet.\n\nThe only currently available option is "Year of birth".\n\nSorry!')
-    #     return
 
     # CoreNLP annotate
     if CoreNLP_gender_annotator_var:
@@ -144,7 +143,6 @@ def run(
             fileSubsc,
         )
         if len(output) > 0:
-            # output=output[0]
             filesToOpen.append(output)
 
     # plot annotate
@@ -378,18 +376,13 @@ y_multiplier_integer = GUI_IO_util.placeWidget(
 
 
 def get_dictionary_file(window, title, fileType):
-    # annotator_dictionary_var.set('')
     filePath = tk.filedialog.askopenfilename(
         title=title, initialdir=GUI_IO_util.namesGender_libPath, filetypes=fileType
     )
     if len(filePath) > 0:
-        # annotator_dictionary_file.config(state='normal')
         annotator_dictionary_file_var.set(filePath)
 
 
-# personal_pronouns_var.set(1)
-# personal_pronouns_checkbox = tk.Checkbutton(window, text='Process personal pronouns', variable=personal_pronouns_var, onvalue=1, offvalue=0)
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.labels_x_indented_coordinate,y_multiplier_integer,personal_pronouns_checkbox)
 #
 plot_var.set(0)
 plot_checkbox = tk.Checkbutton(window, text="Process names via US SS", variable=plot_var, onvalue=1, offvalue=0)
@@ -585,12 +578,8 @@ def process_namesbystate_folder(input_folder, output_file):
         f.write("State,Gender,Year of birth,Name,Frequency\n" + output_data)
 
 
-# new_SS_select_button=tk.Button(window, width=20, text='Select new SS folders',command=lambda: get_new_SS_folders(window))
-# new_SS_select_button.config(state='disabled')
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.labels_x_indented_coordinate, y_multiplier_integer,new_SS_select_button,True)
 #
 # #setup a button to open Windows Explorer on the selected input directory
-# open_new_SS_folder_button = tk.Button(window, width=3, text='', command=lambda: IO_files_util.openExplorer(window, new_SS_folder_var.get()))
 # # the button widget has hover-over effects (no_hover_over_widget=False) and the info displayed is in text_info
 # # the two x-coordinate and x-coordinate_hover_over must have the same values
 # y_multiplier_integer = GUI_IO_util.placeWidget(window,
@@ -598,20 +587,11 @@ def process_namesbystate_folder(input_folder, output_file):
 #     y_multiplier_integer,
 #     open_new_SS_folder_button, True, False, True, False, 90, GUI_IO_util.html_annotator_gender_select_dictionary_file_button, "Open SS file directory")
 #
-# new_SS_folder=tk.Entry(window, width=GUI_IO_util.html_annotator_gender_SS_folder_width,textvariable=new_SS_folder_var)
-# new_SS_folder.config(state='disabled')
 # # html_annotator_gender_select_dictionary_file_annotator
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.open_TIPS_x_coordinate, y_multiplier_integer,new_SS_folder,True)
 
-# last_SS_year_var.set(2021)
-# last_SS_year=tk.Entry(window, width=6,textvariable=last_SS_year_var)
-# last_SS_year.config(state='disabled')
-# y_multiplier_integer=GUI_IO_util.placeWidget(window,GUI_IO_util.html_annotator_gender_select_SS_folder, y_multiplier_integer,last_SS_year)
 
 # def checkUSSSUpdate():
 #     if annotator_dictionary_var.get()==True or plot_var.get() == True:
-#         currentYear = datetime.now().year
-#         yearDiff = currentYear - last_SS_year_var.get()
 #         if yearDiff >= 2:
 #             reminders_util.checkReminder(
 #                     config_filename,
@@ -629,38 +609,22 @@ def activate_all_options(*args):
     annotator_dictionary_button.config(state="disabled")
     openInputFile_button.config(state="disabled")
     annotator_dictionary_file.config(state="disabled")
-    # personal_pronouns_checkbox.configure(state='disabled')
-    # year_state_var.set('')
     year_state_menu.configure(state="disabled")
     firstName_entry.configure(state="disabled")
-    # new_SS_folders_checkbox.configure(state="disabled")
-    # new_SS_select_button.config(state='disabled')
-    # open_new_SS_folder_button.config(state='disabled')
-    # new_SS_folder_var.set("")
-    # new_SS_folder.config(state='disabled')
     new_SS_folders.clear()
     if CoreNLP_gender_annotator_var.get():
         annotator_dictionary_checkbox.configure(state="disabled")
         plot_checkbox.configure(state="disabled")
-        # CoreNLP_download_gender_file_checkbox.configure(state='normal')
-        # CoreNLP_upload_gender_file_checkbox.configure(state='normal')
     if annotator_dictionary_var.get():
-        # checkUSSSUpdate()
         CoreNLP_gender_annotator_checkbox.configure(state="normal")
         plot_checkbox.configure(state="disabled")
         annotator_dictionary_button.config(state="normal")
         openInputFile_button.config(state="normal")
-        # annotator_dictionary_file.config(state='normal')
-        # personal_pronouns_checkbox.configure(state='normal')
     if plot_var.get():
-        # checkUSSSUpdate()
         CoreNLP_gender_annotator_checkbox.configure(state="disabled")
         annotator_dictionary_checkbox.configure(state="disabled")
         new_SS_folders_checkbox.configure(state="normal")
         year_state_menu.configure(state="normal")
-        # new_SS_select_button.config(state='normal')
-        # open_new_SS_folder_button.config(state='normal')
-        # new_SS_select_button.config(state='normal')
     else:
         year_state_menu.configure(state="disabled")
         firstName_entry.configure(state="disabled")
@@ -669,9 +633,6 @@ def activate_all_options(*args):
     if year_state_var.get() != "":
         firstName_entry.configure(state="normal")
     # if new_SS_folders_checkbox:
-    #     new_SS_select_button.config(state='normal')
-    # else:
-    #     new_SS_select_button.config(state='disabled')
 
 
 CoreNLP_gender_annotator_var.trace("w", activate_all_options)
@@ -760,7 +721,6 @@ def help_buttons(window, help_button_x_coordinate, y_multiplier_integer):
         "NLP Suite Help",
         "Please, click on the 'Open US Social Security website' button to download the Nation data and State-specific data from the US Social Security website.\n\nTick the checkbox if you wish to generate new US Social Security files (by US State, Year of birth,  US State & Year of birth) required by the NLP Suite algorithms.\n\nTHIS IS ONLY NECESSARY WHEN THE US SOCIAL SECURITY ADMINISTRATION RELEASES NEW GENDER NAMES DATA.\n\nThe name database is downloadable from the US Social Security website\n\nhttps://www.ssa.gov/oact/babynames/limits.html\n\nAll names are from Social Security card applications for births that occurred in the United States after 1879. Note that many people born before 1937 never applied for a Social Security card, so their names are not included in our data. For others who did apply, our records may not show the place of birth, and again their names are not included in our data.\n\nNAMES FOR THE US ARE AVAILABLE SINCE 1879.\n\nNAMES BY STATE ARE AVAILABLE SINCE 1910.",
     )
-    # y_multiplier_integer = GUI_IO_util.place_help_button(window,help_button_x_coordinate,y_multiplier_integer,"NLP Suite Help", 'Please, click on the \'Select new SS folders\' button to select the two folders where you downloaded and unzipped the most up-to-date gender names databases \'National data\' and \'State-specific data\' from the US Social Security website\n\nhttps://www.ssa.gov/oact/babynames/limits.html\n\nAll names are from Social Security card applications for births that occurred in the United States after 1879. Note that many people born before 1937 never applied for a Social Security card, so their names are not included in our data. For others who did apply, our records may not show the place of birth, and again their names are not included in our data.\n\nNAMES FOR THE US ARE AVAILABLE SINCE 1879.\n\nNAMES BY STATE ARE AVAILABLE SINCE 1910.')
     y_multiplier_integer = GUI_IO_util.place_help_button(
         window, help_button_x_coordinate, y_multiplier_integer, "NLP Suite Help", GUI_IO_util.msg_openOutputFiles
     )

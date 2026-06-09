@@ -6,7 +6,6 @@ import pandas as pd
 # returns False if error found
 def geocoded_checker(numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue):
     # check that the file REALLY contains geocoded data, with float values for lat and long
-    # location_num=0 #RF
     for i in range(len(headers)):
         if locationColumnValue == headers[i]:
             location_num = i

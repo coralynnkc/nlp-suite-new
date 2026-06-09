@@ -32,8 +32,6 @@ import statistics
 import sys
 
 import charts_util
-
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
@@ -60,12 +58,9 @@ data = pd.read_csv(ratings, encoding="utf-8", on_bad_lines="skip")
 data_dict = {col: list(data[col]) for col in data.columns}
 
 
-# print data_dict
 # performs Iconicity analysis on inputFile using the Winter et al. 2024 Iconicity ratings, outputting results to a new CSV file in outputDir
 # min_rating is hard coded at to list the most-iconic words
-# 	min_rating=5.0
 # rating standard deviation set at 2
-#  	max_rating_sd = 2
 def analyzefile(
     inputFilename, inputDir, outputDir, outputFilename, documentID, documentName, min_rating, max_rating_sd
 ):
@@ -84,7 +79,6 @@ def analyzefile(
 
     global total_words
 
-    # from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
     # read file into string
     with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
         fulltext = myfile.read()
@@ -95,7 +89,6 @@ def analyzefile(
         return
 
     # otherwise, split into sentences
-    # sentences = tokenize.sent_tokenize(fulltext)
     sentences = sentence_split_stanza_text(stanzaPipeLine(fulltext))
 
     # check each word in sentence for iconicity and write to outputFilename
@@ -103,7 +96,6 @@ def analyzefile(
     i = 0  # to store sentence index
     for s in sentences:
         i = i + 1
-        # print("S" + str(i) +": " + s)
         all_words = []
         found_words = []
         score_list = []  # use the rating as scores to calculate the iconicity
@@ -126,16 +118,13 @@ def analyzefile(
                 score_sd = round(float(data_dict["rating_sd"][index]), 3)
                 found_words.append("(" + str(lemma) + ", " + str(score) + ")")
                 # min_rating is hard coded at to list the most-iconic words
-                # 	min_rating=5.0
                 # rating standard deviation set at 2
-                # 	rating_sd = 2
                 if score > min_rating and score_sd < max_rating_sd:
                     iconic_words.append(
                         [lemma, str(score), documentID, IO_csv_util.dressFilenameForCSVHyperlink(documentName)]
                     )
                     iconic_words_list.append(lemma)
                 score_list.append(score)
-                # print('score: '+ str(score) + ' LEMMA: ' + str(lemma))
             else:
                 continue
         # else:  # output iconicity info for this sentence
@@ -218,9 +207,7 @@ def main(
         return
 
     # min_rating is hard coded at to list the most-iconic words
-    # 	min_rating=5.0
     # rating standard deviation set at 2
-    #  	max_rating_sd = 2
 
     global stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
     from Stanza_functions_util import (
@@ -251,7 +238,6 @@ def main(
             "Document",
         ]
         global writer
-        # writer = csv.DictWriter(csvfile, fieldnames=fieldnames, lineterminator='\n')
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
 
@@ -310,7 +296,6 @@ def main(
             outputDir,
             columns_to_be_plotted_xAxis=[],
             columns_to_be_plotted_yAxis=["Sentence iconicity (Mean score: 1 Not iconic-7 Very iconic)"],
-            # columns_to_be_plotted_bySent= [[10, 7, 0]],
             chart_title="Frequency Distribution of Sentence Iconicity Scores (1 Not iconic-7 Very iconic)",
             count_var=1,  # 0 for numeric field
             hover_label=[],
@@ -354,7 +339,6 @@ def main(
                     outputDir,
                     columns_to_be_plotted_xAxis=[],
                     columns_to_be_plotted_yAxis=["Word"],
-                    # columns_to_be_plotted_bySent= [[10, 7, 0]],
                     chart_title="Frequency Distribution of Iconic Words",
                     count_var=1,  # 0 for numeric field
                     hover_label=[],

@@ -109,10 +109,8 @@ def prepare_data_to_be_plotted_inExcel(
 
 
 # bar chart aggregated by group  -----------------------------------------------------------------
-#         plotList = ['Frequency']
 # plot the words contained in each groupBy field values (e.g, the word 'Rome' in POS tag PPN)
 # must first run compute_csv_column_frequencies_with_aggregation
-# columns_to_be_plotted_yAxis=['Form']
 def visualize_chart_byGroup(
     inputFilename,
     outputDir,
@@ -137,7 +135,6 @@ def visualize_chart_byGroup(
         False,
         chartPackage,
         dataTransformation,
-        # plot_cols=columns_to_be_plotted_numeric,
         plot_cols=columns_to_be_plotted_yAxis,
         hover_col=[],
         group_cols=groupByList,
@@ -153,12 +150,8 @@ def visualize_chart_byGroup(
         else:
             filesToOpen.extend(outputFiles)
 
-    # new_inputFilename = chart_outputFilename[0]
 
     # temp_outputFilename[0] is the frequency filename (with no hyperlinks)
-    # count_var = 0
-    # remove_hyperlinks = False  # already removed in compute frequencies
-    # headers = IO_csv_util.get_csvfile_headers_pandas(new_inputFilename)
 
     # 0 is the groupBy field with no-hyperlinks (e.g., NER)
     # 1 is the column plotted (e.g., Form)
@@ -173,42 +166,22 @@ def visualize_chart_byGroup(
         headers, columns_to_be_plotted_yAxis[0], inputFilename
     )
 
-    # columns_to_be_plotted_byGroup = [[docCol, groupBy_Field, 3]]  # will give different bars for each value
-    # columns_to_be_plotted_byGroup = [[2, 0, 3]]  # will give different bars for each value
-    # columns_to_be_plotted_byGroup = [[1, 4, 0, 2, 3]] # will give different bars for each value
-    # outputFileLabel='by_' + str(groupByList[0])
-    # chart_title='Frequency Distribution of ' + str(columns_to_be_plotted_yAxis[0]) + ' by ' + str(groupByList[0])
-    # hover_label=[]
     # if chartPackage == "Excel":
-    #     column_name = IO_csv_util.get_headerValue_from_columnNumber(headers, 1)
     # chart is visualized in compute_csv_column_frequencies
-    # number_column_entries = len(IO_csv_util.get_csv_field_values(new_inputFilename, column_name))
     # # in visualize_chart_byGroup
     # outputFiles = run_all(columns_to_be_plotted_byGroup, new_inputFilename, outputDir,
-    #                                           outputFileLabel=outputFileLabel, # outputFileNameType + 'byDoc', #outputFileLabel,
-    #                                           chartPackage=chartPackage,
-    #                                           dataTransformation=dataTransformation,
-    #                                           chart_type_list=['bar'],
-    #                                           chart_title=chart_title,
-    #                                           column_xAxis_label_var='',
-    #                                           column_yAxis_label_var=column_yAxis_label,
-    #                                           hover_info_column_list=hover_label,
     #                                           # count_var is set in the calling function
     #                                           #     0 for numeric fields;
     #                                           #     1 for non-numeric fields
-    #                                           count_var=count_var,
     #                                           remove_hyperlinks=remove_hyperlinks)
     # if outputFiles!=None:
     #     if len(chart_outputFilename) > 0:
-    #         filesToOpen.append(chart_outputFilename)
     return filesToOpen
 
 
 # def visualize_chart_byDoc(inputFilename, outputDir, outputFileNameType, chartPackage, dataTransformation, filesToOpen,
 #                         columns_to_be_plotted_byDoc, columns_to_be_plotted_yAxis,
 #                         count_var, pivot, chart_title, hover_label):
-#     column_yAxis_label = 'Frequencies'
-#     remove_hyperlinks = True
 #     # by DOCUMENT counting the qualitative values ---------------------------------------------------------------------------
 #     if count_var == 1:  # for alphabetic fields that need to be counted for display in a chart
 #         # TODO TONY using this function, the resulting output file is in the wrong format and would need to be pivoted to be used
@@ -219,89 +192,48 @@ def visualize_chart_byGroup(
 #         #   in separate columns so that they will be plotted with different colors as separate series
 #
 #         # in visualize_chart_byDoc
-#         temp_outputFilename = statistics_csv_util.compute_csv_column_frequencies(
 #             inputFilename, None, outputDir,
 #             False, chartPackage, dataTransformation,
-#             # plot_cols=columns_to_be_plotted_numeric,
-#             plot_cols=columns_to_be_plotted_yAxis,
-#             hover_col=[],
-#             chart_title=chart_title + ' by Document',
-#             group_cols=['Document ID', 'Document'],
-#             complete_sid=False,
 #             fileNameType=columns_to_be_plotted_yAxis[0], chartType='', pivot=pivot)
-#         new_inputFilename = temp_outputFilename[0]
 #         # temp_outputFilename[0] is the frequency filename (with no hyperlinks)
-#         remove_hyperlinks = False  # already removed in compute frequencies
 #         # 2,3 are the Document and Frequency columns in temp_outputFilename
-#         # columns_to_be_plotted_byDoc = [[2,3]] # document 2, first item; frequencies 3 second item
-#         # columns_to_be_plotted_byDoc = [[1,2],[1,3]]
-#         # pivot = True
 #
-#         headers = IO_csv_util.get_csvfile_headers_pandas(new_inputFilename)
 #
 #         if pivot == True:
-#             columns_to_be_plotted_byDoc_len = len(columns_to_be_plotted_byDoc[0])
-#             columns_to_be_plotted_byDoc = []
 #             for i in range(columns_to_be_plotted_byDoc_len, len(headers)):
-#                 columns_to_be_plotted_byDoc.append([columns_to_be_plotted_byDoc_len - 1, i])
-#         else:
 #             # 1 is the Document with no-hyperlinks,
 #             # 2 is the column plotted (e.g., Gender) in temp_outputFilename
 #             # 3 is Frequency,
 #             # TODO TONY we should ask the same type of question for columns that are already in quantitative form if we want to compute a single MEAN value
-#             sel_column_name = IO_csv_util.get_headerValue_from_columnNumber(headers, 2)
 #             # item 1 is the column of Document with no-hyperlinks,
 #             # item 2 is the column plotted (e.g., Gender) in temp_outputFilename
 #             # item 3 is the column of Frequency,
-#             columns_to_be_plotted_byDoc = [[2, 0, 3]]  # will give different bars for each value
 #             # TODO temporarily disconnected until we figure out a way to not repeat this questions several times
 #             # if chartPackage == "Excel":
-#                 # column_name = IO_csv_util.get_headerValue_from_columnNumber(headers, 1)
-#                 # number_column_entries = len(
 #                 #     IO_csv_util.get_csv_field_values(new_inputFilename, column_name))
 #                 # if number_column_entries > 1:
-#                 #     answer = tk.messagebox.askyesno("Warning", "For the chart of '" + sel_column_name + "' by document, do you want to:\n\n  (Y) sum the values across all " + str(number_column_entries) + " '" + column_name + "';\n  (N) use all " + str(number_column_entries) + " distinct column values.")
 #                 #     if answer:
 #                 #         # [[1, 3]] will give one bar for each doc, the sum of all values in plot_colsumn to be plotted
-#                 #         columns_to_be_plotted_byDoc = [[1, 3]]
-#                 #     else:
 #                 #         # [[1, 3, 2]] will give different bars for each value
 #                 #         # Document, Field to be plotted (e.g., POS), Sentence ID
-#                 #         columns_to_be_plotted_byDoc = [[1, 3, 2]]
 #                 # reset the original value to be used in charts by sentence index
 #
 #     # by DOCUMENT NOT counting; quantitative values ---------------------------------------------------------------------------
-#     else:
-#         new_inputFilename = inputFilename
 #
 #     if outputFileNameType != '':
-#         outputFileLabel = 'byDoc_' + outputFileNameType
-#     else:
-#         outputFileLabel = 'byDoc'
 #
 #     # TODO Tony when plotting bar charts in Plotly with documents in the X-axis we need to remove the path and just keep the tail
 #     #   or the display is too messy; it works like that in Excel
 #
 #     # in visualize_chart_byDoc
 #     outputFiles = run_all(columns_to_be_plotted_byDoc, new_inputFilename, outputDir,
-#                                    outputFileLabel=outputFileLabel,
 #                                    # outputFileNameType + 'byDoc', #outputFileLabel,
-#                                    chartPackage=chartPackage,
-#                                    dataTransformation=dataTransformation,
-#                                    chart_type_list=['bar'],
-#                                    chart_title=chart_title + ' by Document',
-#                                    column_xAxis_label_var='',
-#                                    column_yAxis_label_var=column_yAxis_label,
-#                                    hover_info_column_list=hover_label,
 #                                    # count_var is set in the calling function
 #                                    #     0 for numeric fields;
 #                                    #     1 for non-numeric fields
-#                                    count_var=0,
 #                                    remove_hyperlinks=remove_hyperlinks)
 #     if outputFiles!=None:
 #         if len(chart_outputFilename) > 0:
-#             filesToOpen.append(chart_outputFilename)
-#     return filesToOpen
 
 
 def visualize_chart_bySent(
@@ -328,8 +260,6 @@ def visualize_chart_bySent(
         "",
         True,
     )
-    # inputFilename = data_pivot(inputFilename, 'Sentence ID', 'Yngve score')
-    # columns_to_be_plotted_bySent = [[columns_to_be_plotted_bySent[0][0]]]
     if count_var == 1:  # for alphabetic fields that need to be counted for display in a chart
         temp_outputFilename = statistics_csv_util.compute_csv_column_frequencies(
             inputFilename,
@@ -354,7 +284,6 @@ def visualize_chart_bySent(
         else:
             # Using the output from statistics_csv_util.compute_csv_column_frequencies
             #   Document, Frequency, Sentence ID, Field to be plotted (e.g., POS)
-            # columns_to_be_plotted_bySent = [[1, 4, 2, 3]]
             columns_to_be_plotted_bySent = [[2, 4]]
     else:  # numeric values of field(s) to be plotted
         columns_to_be_plotted_bySent = []
@@ -429,11 +358,8 @@ def visualize_chart_bySent(
 #   BUT they are passed by calling functions as single lists []
 #       and converted to double lists for run_all
 #       e.g., columns_to_be_plotted_xAxis=[],
-#             columns_to_be_plotted_yAxis=['Sentiment score (Median)', 'Arousal score (Median)', 'Dominance score (Median)']
 #       e.g., columns_to_be_plotted_xAxis=[],
-#             columns_to_be_plotted_yAxis=['Yngve score', 'Frazier score']
 #       e.g., columns_to_be_plotted_xAxis=[],
-#             columns_to_be_plotted_yAxis=['Yngve score']
 # the variable groupByList,plotList, chart_title_label are used to compute column statistics
 #   groupByList is typically the list ['Document ID', 'Document'] or just ['Document']
 #   plotList is the list of fields to be plotted
@@ -472,9 +398,6 @@ def visualize_chart(
         # the run_all always expects a double list with 2 values, e.g., [[0,0], [1,1]
         #   so, when only one field is passed, we add the same field twice
         # TODO
-        # columns_to_be_plotted_numeric = [[1, 1], [3, 3]]  # for complexity scores; duplicates columns gives right plot
-        # columns_to_be_plotted_numeric = [[1, 3]]  # for complexity scores; duplicates columns gives right plot
-        # columns_to_be_plotted_numeric = [[0, 2], [0, 3]]  # for ngrams
 
     # pivot = True will list for every document all the separate values of the selected item to be plotted
     #       = False will sum all the individual values
@@ -498,7 +421,6 @@ def visualize_chart(
             "",
             False,
         )
-        # mb.showwarning(title='Empty file', message='The file\n\n' + inputFilename + '\n\nis empty. No charts can be produced using this csv file.\n\nPlease, check the file and try again.')
         print(
             "The file\n\n"
             + inputFilename
@@ -543,31 +465,15 @@ def visualize_chart(
             columns_to_be_plotted_bySent.append([sentCol, field_number_yAxis])
 
         # remove first item in list, the X-axis label substituted by doc
-        # columns_to_be_plotted_numeric[0].pop(0)
-        # columns_to_be_plotted_numeric[0].insert(0, docCol + 1)
-        # columns_to_be_plotted_byDoc = columns_to_be_plotted_numeric
 
         # TODO Naman for numeric data build classes of values, rather than individual values, to be displayed in the X-axis
         # https://stackoverflow.com/questions/49382207/how-to-map-numeric-data-into-categories-bins-in-pandas-dataframe
         # if count_var == 0: # numeric variable
-        #     import pandas as pd
-        #     df = pd.read_csv(inputFilename)
-        #     # column_data =df[columns_to_be_plotted_yAxis[0].tolist()]
-        #     column_data =df[columns_to_be_plotted_yAxis[0]].tolist()
-        #     print("len(column_data)", len(column_data), "column_data",column_data)
-        #     bins = list(set(column_data))
-        #     bins.sort()
-        #     x_axis_labels = []
         #     # create classes of values
         #     for j in range(1,len(bins)):
-        #         # x_axis_labels.append(f"Bin(j)")
-        #         x_axis_labels.append("Bin-" + str(j))
-        #     print("Bins",pd.cut(column_data, bins, labels=x_axis_labels))
 
     # when pivoting data
-    # columns_to_be_plotted_bySent = []
     # for i in range(1, n_documents):
-    #     columns_to_be_plotted_bySent.append([0, i])
     count_var_SV = count_var
 
     nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(inputFilename)
@@ -643,7 +549,6 @@ def visualize_chart(
         columns_to_be_plotted_byGroup = []
         for header in groupByList:
             groupCol = IO_csv_util.get_columnNumber_from_headerValue(headers, header, inputFilename)
-            # [POS, Form]
             columns_to_be_plotted_byGroup.append([groupCol, field_number_yAxis])
 
         outputFiles = visualize_chart_byGroup(
@@ -740,11 +645,8 @@ def visualize_chart(
 #   BUT they are passed by calling functions as single lists []
 #       and converted to double lists for run_all
 #       e.g., columns_to_be_plotted_xAxis=[],
-#             columns_to_be_plotted_yAxis=['Sentiment score (Median)', 'Arousal score (Median)', 'Dominance score (Median)']
 #       e.g., columns_to_be_plotted_xAxis=[],
-#             columns_to_be_plotted_yAxis=['Yngve score', 'Frazier score']
 #       e.g., columns_to_be_plotted_xAxis=[],
-#             columns_to_be_plotted_yAxis=['Yngve score']
 # the variable groupByList,plotList, chart_title_label are used to compute column statistics
 #   groupByList is typically the list ['Document ID', 'Document'] or just ['Document']
 
@@ -808,7 +710,6 @@ def run_all(
     if complete_sid:
         # TODO Samir
         inputFilename = add_missing_IDs(pd.read_csv(StringIO(inputFileData)), inputFilename)
-        # complete_sentence_index(inputFilename)
     if use_Plotly:
         if "static" in chartPackage.lower():
             static_flag = True
@@ -895,13 +796,7 @@ def run_all(
             data_final = data_final.drop_duplicates()  # Remove potential duplicate rows
             return data_final
             # Convert DataFrame into list of lists
-            # data_list = data_final.values.tolist()
             # Extract 2nd and 3rd column into one list of lists and 4th and 5th into another
-            # list_1 = [[row[2], row[3]] for row in data_list]
-            # list_2 = [[row[0], row[1]] for row in data_list]
-            # list_1.insert(0, ['Form values', 'Frequencies of Form'])
-            # list_2.insert(0, ['Lemma values', 'Frequencies of Lemma'])
-            # return [list_1, list_2]
 
         if (
             len(data_to_be_plotted) == 2
@@ -990,11 +885,7 @@ def get_dataRange(columns_to_be_plotted, data):
 # MUST COMPUTE HOVER OVER VALUES!!! see below
 
 # create a list of unique words to be displayed in hover over
-# result = IO_files_util.openCSVFile(outputFilenameCSV1, 'r', 'utf-8')
-# DataCaptured = csv.reader(result)
-# words = set()
 # for row in DataCaptured:
-#     words.add(row[0])
 # also IO_csv_util.get_csv_field_values(inputfile_name, column_name)
 
 
@@ -1005,7 +896,6 @@ def get_data_to_be_plotted_with_counts(
     data_list,
 ):
     data_to_be_plotted = []
-    # data_to_be_plotted = compute_column_frequencies_4Excel(columns_to_be_plotted, dataRange, headers, column_yAxis_field_list)
 
     column_list = []
     column_frequencies = []
@@ -1072,12 +962,10 @@ def get_data_to_be_plotted_with_counts(
     return data_to_be_plotted
 
 
-# [[0,2]], [0], [2]
 def get_data_to_be_plotted_NO_counts(inputFilename, withHeader_var, headers, columns_to_be_plotted, data):
     data_to_be_plotted = []
     for gp in columns_to_be_plotted:
         data.iloc[:, gp[1]].replace("N/A", 0)
-        # data.iloc[:, gp[1]].astype('float')
         data.iloc[:, gp]
         data_to_be_plotted.append(data.iloc[:, gp])
     return data_to_be_plotted
@@ -1160,7 +1048,6 @@ def process_sentenceID_record(
         "",
         True,
     )
-    # range(start, stop, step)
     # end_sentence is always skipped; the range of integers end at end_sentence – 1
     for i in range(start_sentence, end_sentence, 1):
         temp = [""] * len(header)
@@ -1379,7 +1266,6 @@ def complete_sentence_index(file_path):
     # use merge to accelerate the process
     data = data.merge(right=df_sid, how="right", on="Sentence ID")
     data = data.fillna(0)
-    # headers=IO_csv_util.get_csvfile_headers_pandas(file_path)
     data.sort_values(by=["Document ID", "Sentence ID"], ascending=True, inplace=True)
     data.to_csv(file_path, encoding="utf-8", index=False)
     return
@@ -1405,54 +1291,27 @@ def complete_sentence_index(file_path):
 # when NO hover-over data are displayed the Excel filename extension MUST be xlsx and NOT xlsm (becauuse no macro VBA is enabled in this case)
 
 # def df_to_list_w_header(df):
-#     res = []
-#     header = list(df.columns)
-#     res.append(header)
 #     for index, row in df.iterrows():
-#         temp = [row[tag] for tag in header]
-#         res.append(temp)
-#     return res
 #
 #
 # def df_to_list(df):
-#     res = []
-#     header = list(df.columns)
 #     for index, row in df.iterrows():
-#         temp = [row[tag] for tag in header]
-#         res.append(temp)
-#     return res
 #
 #
 # def list_to_df(tag_list):
-#     header = tag_list[0]
-#     df = pd.DataFrame(tag_list[1:], columns=header)
-#     return df
 #
 #
 # def header_check(inputFile):
-#     sentenceID_pos=''
-#     docCol_pos=''
-#     docName_pos=''
 #
 #     if isinstance(inputFile, pd.DataFrame):
-#         header = list(inputFile.columns)
-#     else:
-#         header = IO_csv_util.get_csvfile_headers(inputFile)
 #     if 'Sentence ID' in header:
-#         sentenceID_pos = header.index('Sentence ID')
-#     else:
 #         pass
 #
 #     if 'Document ID' in header:
-#         docCol_pos = header.index('Document ID')
-#     else:
 #         pass
 #
 #     if 'Document' in header:
-#         docName_pos = header.index('Document')
-#     else:
 #         pass
-#     return sentenceID_pos, docCol_pos, docName_pos, header
 #
 
 
@@ -1565,7 +1424,6 @@ def Sankey(data, outputFilename, var1, lengthvar1, var2, lengthvar2, three_way_S
     # if pd.__version__[0] == '2':
     #     mb.showwarning(title='Warning',
     #                    message='The Sankey algorithm is incompatible with a version of pandas higher than 2.0\n\nIn command line, please, pip unistall pandas and pip install pandas==1.5.2.\n\nMake sure you are in the right NLP environment by typing conda activate NLP')
-    #     return
 
     finalframe = pd.DataFrame()
     if type(data) == str:
@@ -1669,42 +1527,15 @@ def Sankey(data, outputFilename, var1, lengthvar1, var2, lengthvar2, three_way_S
 
         labelvector = list(finalframe[var1].unique()) + list(finalframe[var2].unique())
 
-        # data[var1] = data[var1].str.lower()
-        # tempframe = pd.DataFrame(data[var1].value_counts().head(lengthvar1)).reset_index()
-        # try:
-        #     finalframe = data[data[var1].isin(list(set(tempframe['index'])))]
         # except:
         #     mb.showwarning(title='Warning',
         #                    message='The dataframe computed by the Sankey flowchart is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2')
-        #     return
-        #     finalframe = tempframe  # data[data[var1].isin(list(set(tempframe['count'])))]
-        # tempframe2 = pd.DataFrame(finalframe[var2]).value_counts().head(lengthvar2).reset_index()
-        # finalframe = finalframe[finalframe[var2].isin(list(set(tempframe2[var2])))]
-        # finalframe = finalframe.reset_index(drop=True)
-        # sourcelist = list(range(0, len(set(finalframe[var1]))))
         #
-        # source = [item for item in sourcelist for _ in range(len(set(finalframe[var2])))]
-        # target1 = list(range(0, len(set(finalframe[var2]))))
-        # target2 = [x + len(set(finalframe[var1])) for x in target1]
-        # target = target2 * len(set(finalframe[var1]))
-        # labelvector = sorted(list(set(finalframe[var1]))) + sorted(list(set(finalframe[var2])))
-        # valuevector = []
         #
         # for i in sorted(list(set(finalframe[var1]))):
-        #     tempvec = []
-        #     tempdata = pd.DataFrame(finalframe[finalframe[var1] == i][var2].value_counts()).reset_index().rename(
         #         columns={'index': var2, var2: 'Frequency'})
-        #     # tempvec = tempvec + list(np.repeat(0, len(target2) - len(tempvec)))
-        #     # tempvec = list(np.repeat(0, len(set(finalframe[var2]))))
         #     for j in sorted(list(set(tempdata[var2]))):
         #         if j not in list(tempdata[var2]):
-        #             # valuevector.append(0)
-        #             tempvec.append(0)
-        #         else:
-        #             # valuevector.append(list(tempdata[tempdata[var2] == j]['Frequency'])[0])
-        #             tempvec.append(list(tempdata[tempdata[var2] == j]['Frequency'])[0])
-        #     tempvec = tempvec + list(np.repeat(0, len(target2) - len(tempvec)))
-        #     valuevector = valuevector + tempvec
 
     fig = go.Figure(
         go.Sankey(
@@ -1735,7 +1566,6 @@ def separator(data, interest, algorithm):
                 interestvector.append(interest[j])
                 id_list.append(i)  # append the index of the row that contains the interest value
 
-    # finaldata=data.loc[id_list] #filter dataset by row with interest values
     finaldata = data.loc[id_list, :]  # filter dataset by row with interest values
     finaldata["interest"] = interestvector  # add interest column
     if finaldata.empty:
@@ -1779,7 +1609,6 @@ def Sunburst(
             "Warning",
             "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
         )
-        # return
     # the last 3 arguments are optional. If first_sentences is specified and last_sentences is not or vice versa, we return a message stating they must both be specified or absent at the same time
     if (first_sentences is None and last_sentences is not None) or (first_sentences is not None and last_sentences is None):
         return "both number of first sentences and number of last sentences have to be specified or absent at the same time"
@@ -1830,7 +1659,6 @@ def Sunburst(
                             "Warning",
                             "The Sunburst algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.",
                         )
-                # return Plotly.offline.plot(fig)
 
             else:
                 tempdata1 = tempdata[
@@ -1898,7 +1726,6 @@ def Treemap(
             "Warning",
             "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
         )
-        # return
     if extra_dimension_average and type(data[average_variable][0]) != np.float64:
         print(
             "Warning",
@@ -1929,10 +1756,6 @@ def Treemap(
 # if monthly or yearly is passed as true, return monthly or yearly graph respectively
 # Both cannot be simultaneously true
 
-# import pandas as pd
-# import re
-# import numpy as np
-# import Plotly.express as px
 
 # written by Simon Bian
 # September 2023
@@ -2003,7 +1826,6 @@ def visualize_data(
     sorted_rows = numeric_data.sum(axis=1).sort_values(ascending=False).index
     sorted_pivot_data = sorted_pivot_data.loc[sorted_rows]
     transposed_data = sorted_pivot_data.head(top_n)
-    # print("doing calculations...complete!")
     plt.figure(figsize=figsize)
     try:
         sns.heatmap(
@@ -2055,17 +1877,11 @@ def renamedf(df):
 
 def read_filename_color(inputFilename):
     try:
-        # print("Thank you. Data reading success.\n")
         dataFrame = pd.read_csv(inputFilename)
         # Displaying some basic statistics
-        # print(f"Number of Columns: {dataFrame.shape[1]}")
-        # print(f"Number of Rows: {dataFrame.shape[0]}\n")
 
-        # print(f"Column names: {dataFrame.columns.tolist()}\n")
 
         # Display the datatypes
-        # print("Data types for each column:")
-        # print(dataFrame.dtypes, "\n")
 
         # Checking for missing values
         missing_values = dataFrame.isnull().sum()
@@ -2076,15 +1892,10 @@ def read_filename_color(inputFilename):
             print("There are no missing values in the dataset.\n")
         return dataFrame
         # Display summary statistics for numeric columns
-    # choice = input("Would you like summary statistics for numeric columns? (y/n): ").strip().lower()
     # if choice == 'y':
-    #     print("\nSummary Statistics:")
-    #     print(dataFrame.describe())
 
     # Display top 5 rows
-    # choice = input("\nWould you like to see the first 5 rows of the data? (y/n): ").strip().lower()
     # if choice == 'y':
-    #     print(dataFrame.head())
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -2191,7 +2002,6 @@ def main_colormap(inputFilename, outputDir, csv_file_categorical_field_list, par
         dataFrame = read_filename_color(inputFilename)
     WHERE, GROUPBY, SELECT = sql_commands(csv_file_categorical_field_list, dataFrame)
     step1 = process_and_aggregate_data(dataFrame, where_column=WHERE, groupby_column=GROUPBY, select_column=SELECT)
-    # val = 1 #get_transformation_choice(), but we will connect it....
     step2 = transform_data(step1)  # There needs to be a GUI to allow transformation, but...
     # We proceed with default instead perhaps...
     if GROUPBY == "Document":
@@ -2286,7 +2096,6 @@ def Sunburst_Treemap(
     import io
 
     print(fixed_param_var, rate_param_var, base_param_var, filter_options_var)
-    # print("======")
     if file_data != "":
         data = pd.read_csv(io.StringIO(file_data))
     else:
@@ -2300,7 +2109,6 @@ def Sunburst_Treemap(
 
     df_grouped.to_csv(outputDir + os.sep + "Output_Csv_intermediate.csv", index=False)
     print(df_grouped)
-    # df_grouped.head(5)
     if filter_options_var == "Fixed parameter":
         df_grouped = fixed_transform(df_grouped, int(fixed_param_var))
         print("Fixed parameter applied")
@@ -2336,7 +2144,6 @@ def visualize_colormap_data(
     sorted_rows = numeric_data.sum(axis=1).sort_values(ascending=False).index
     sorted_pivot_data = sorted_pivot_data.loc[sorted_rows]
     transposed_data = sorted_pivot_data.head(top_n)
-    # print("doing calculations...complete!")
     plt.figure(figsize=figsize)
     try:
         sns.heatmap(transposed_data, annot=False, fmt=".2f", cmap=color, cbar_kws={"label": normalize})
@@ -2386,7 +2193,6 @@ def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, 
                 step1 = step1.rename(columns={header: "Frequency in: " + tail})
     step1.to_csv(colormap_dataframe_csv_filename, index=True)
 
-    # val = 1 #get_transformation_choice(), but we will connect it....
     step2 = transform_data(step1)  # There needs to be a GUI to allow transformation, but...
     # We proceed with default instead perhaps...
     if GROUPBY == "Document":
@@ -2394,11 +2200,7 @@ def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, 
         # when a specific document part (e.g., Book1 for Harry Potter) is not entered by the user
         #   the document will contain the entire path along with an hypewrlink and this may be very cumbersome to display in the X axis
         #   must remove hyperlink and display document tail only
-        # print('Must REMOVE hyperlink and display document tail only, not path')
         # for i in range(len(list(step2.columns.values))):
-        #     header=list(step2.columns.values)[i]
-        #     head, tail = os.path.split(header)
-        #     step2 = step2.rename(columns = {header:tail})
         renamedf(step2)  # We rename to file relative location, not absolute location
     try:
         cmap = cmaps(eval(params[1]), eval(params[2]))

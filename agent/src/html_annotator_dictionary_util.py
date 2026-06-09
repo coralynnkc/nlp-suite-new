@@ -56,7 +56,6 @@ def readCsv(wordColNum, catColNum, dictFile, csvValue_color_list):
 # returns list of a list of terms with appropriate annotations for each file
 # annotation allows custom tagging style (via csv, etc.)
 # NOTICE:
-#   csv_field1_var ['Name']
 #   csvValue_color_list should be a list, for gender is csvValue_color_list = [genderCol, '|', 'FEMALE', 'red', '|', 'MALE', 'blue', '|']
 #   tagAnnotations is also a list, for gender  ['<span style="color: blue; font-weight: bold">', '</span>']
 def dictionary_annotate(
@@ -105,10 +104,8 @@ def dictionary_annotate(
                 return
             wordColNum.append(col)
         catColNum = []
-        # csvValue_color_list=[csvValue_color_list]
         if len(csvValue_color_list) > 0:
             # for field in str(csvValue_color_list[0]):
-            #     catColNum.append(IO_csv_util.get_columnNumber_from_headerValue(headers, field, dict_file))
             field = csvValue_color_list[0]
             catColNum.append(IO_csv_util.get_columnNumber_from_headerValue(headers, field, dict_file))
 
@@ -152,7 +149,6 @@ def dictionary_annotate(
             term_intextID = 0
             for term in terms:
                 termID = termID + 1
-                # print("Processing dictionary field '" + csv_field1_var + "' " + str(termID) + "/" + str(len(terms)) + " " + term)
                 print(f"Processing dictionary field '{csv_field1_var}' {termID}/{len(terms)} term")
                 if re.search(r"\b" + term + r"\b", text) is None:
                     continue

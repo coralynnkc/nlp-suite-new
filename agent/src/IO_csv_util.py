@@ -117,7 +117,6 @@ def get_csvfile_headers(csvFile, ask_Question=False, inputFileData=""):
 
 def get_csvfile_headers_pandas(inputFilename):
     # index_col = 0 excludes the first column, an ID column; but... we need that column
-    # headers = pd.read_csv(inputFilename, index_col=0, nrows=0).columns.tolist()
     try:
         headers = pd.read_csv(inputFilename, nrows=0, encoding="utf-8", on_bad_lines="skip").columns.tolist()
     except:
@@ -265,7 +264,6 @@ def df_to_csv(data_frame, outputFilename, headers=None, index=False, language_en
                 data_frame.to_csv(outputFilename, columns=headers, header=None, index=index, encoding=language_encoding)
             break  # exit loop
         except OSError as e:
-            # mb.showwarning(title='Output file error', message="Could not write the file " + outputFilename + "\n\nA file with the same name is already open. Please, close the Excel file and then click OK to resume.")
             print(
                 "Output file error",
                 "Could not write the file " + outputFilename + "\n\n" + str(e) + "\n\nCLOSE THE FILE TO EXIT LOOP...",
@@ -405,7 +403,6 @@ def remove_hyperlinks(inputFilename):
     except:
         print("Error: failed to read the csv file named: " + inputFilename)
         return False, ""
-    # data = pd.read_csv(inputFilename)
     try:
         document = data["Document"]
     except:

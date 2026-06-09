@@ -1,5 +1,4 @@
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"data_manipulation_util.py", ['os', 'tkinter', 'pandas', 'functools'])==False:
-#     sys.exit(0)
 
 import os.path
 
@@ -44,7 +43,7 @@ def select_csv(files, cols=None):
                 df = pd.read_csv(file, usecols=cols, encoding="utf-8", on_bad_lines="skip")
         except:
             # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
-            raise (Exception("Missing fields"))
+            raise (Exception("Missing fields")) from None
             # mb.showwarning(title='Missing field(s)',
             #                message="Processing the file\n\n" + file + "\n\ngenerated an error. Most likely, the file has more columns in some rows that the number of column headers.\n\nPlease, check your input file and try again.")
             yield df
@@ -67,10 +66,6 @@ def get_cols(dfs: list, headers: list):
 
 # operation_results_text_list -----------------------------------------------------------------------
 
-# filePath = [s.split(',')[0] for s in operation_results_text_list]  # file filePath
-# data_files = [file for file in data_manipulation_util.select_csv(filePath)]  # dataframes
-# headers = [s.split(',')[1] for s in operation_results_text_list]  # headers
-# data_cols = [file for file in data_manipulation_util.get_cols(data_files, headers)]  # selected cols
 
 
 # APPEND ----------------------------------------------------------------------------------------------
@@ -163,7 +158,6 @@ def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".
     value_var = []
     and_or = []
     # operation_results_text_list: the various comma-separated items in the [] list cannot have spaces after each comma
-    #       operation_results_text_list.append(str(outputFilenameCSV1_new) + ',VERB,<>,be,and')
     #       and not         operation_results_text_list.append(str(outputFilenameCSV1_new) + ', VERB, <>, be, and')
     i = 0
     for s in operation_results_text_list:
@@ -178,12 +172,10 @@ def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".
         value_var = value_var + [s.split(",")[3]]
         and_or = and_or + [s.split(",")[4]]
 
-    # os.path.dirname(files[0])
     outputFilename = IO_files_util.generate_output_file_name(
         files[0], "", outputDir, export_type, "extract", "", "", "", "", False, True
     )
 
-    # data_files = [file for file in select_csv(files,cols)] # dataframes
     data_files = [file for file in select_csv(files, cols)]  # dataframes
     if data_files == []:
         return ""
@@ -194,14 +186,13 @@ def export_csv_to_csv_txt(outputDir, operation_results_text_list, export_type=".
     value: str
     header: str
     if len(operation_results_text_list) == 0:
-        raise (Exception("Missing fields"))
+        raise (Exception("Missing fields")) from None
         # mb.showwarning(title='Missing field(s)',
         #                message="No field(s) to be extracted have been selected.\n\nPlease, select field(s) and try again.")
         return
     for sign, value, and_or, header, df in zip(sign_var, value_var, and_or, headers, data_files, strict=False):
         if sign == "''" and value == "''":
             df_list.append(df[[header]])
-            # queryStr = header + '==' + '\'' + '*' + '\''
         else:
             if sign == "":
                 raise (Exception("Missing sign condition"))
@@ -304,7 +295,7 @@ def MERGE(outputDir, operation_results_text_list):
                 df = pd.merge(df, tdf, on=param_lst, how="inner", suffixes=("", "_"))
                 df = drop_suffixCol(df)
     except (ValueError, TypeError) as err:
-        raise (FileNotFoundError)
+        raise (FileNotFoundError) from err
         # mb.showwarning(title='Error',
         #                 message="An unexpected error occurred while merging the files.\n\nPlease, check the input files and try again.")
         print("Unexpected err", err)

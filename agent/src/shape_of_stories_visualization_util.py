@@ -83,7 +83,6 @@ class Visualizer:
             plt.subplot(row, maxPlotsHorizontally, i + 1)
             plt.title(document, fontsize=8, loc="center")
             plt.plot(range(1, len(vector) + 1), vector, color="black")
-        # fig.tight_layout()
         plt.savefig(os.path.join(self.output_dir, file_name.replace(" ", "_") + "_subplot.png"))
         plt.close()
 
@@ -106,7 +105,6 @@ def visualize_sentiment_arcs(
     plt.title(plot_title, fontsize=12, loc="center")
     PCAFilename = os.path.join(output_fig_path, "PCA_sentiment_scores_" + os.path.basename(output_fig_path) + ".png")
     plt.savefig(PCAFilename)  # optional, commment out if you don't wish to save the figure
-    # plt.show()  # optional, commment out if you don't wish to see the figure
     # return the saved png filename
     plt.close()
     return PCAFilename

@@ -8,7 +8,6 @@ import os
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL table_search_util",
 #                                           ['os', 'tkinter', 'enum', 'typing']) == False:
-#     sys.exit(0)
 from enum import Enum
 
 import charts_util
@@ -84,10 +83,9 @@ def search_deps(token_id_in_sentence, sentence_CoNLL_records, searchedCoNLLField
     try:
         token = sentence_CoNLL_records[int(token_id_in_sentence) - 1]
     except:
-        raise Exception("CoNLL table error")
+        raise Exception("CoNLL table error") from None
         # mb.showwarning(title='CoNLL table error',
         #                message="The records in the CoNLL table appear to be out of sequence, leading to computing errors. Please, make sure that you haven't tinkered with the file sorting the data by any columns other than RecordID.\n\nSort the data by RecordID (col. 9) and try again.")
-        # sys.exit(0)
         return []
     if len(token[SearchField.DEPS.value]) == 0:
         return []
@@ -232,7 +230,6 @@ def filter_output_list(list_queried, header, related_token_DEPREL="*", Sentence_
     deprel_list_queried: a list of filtered output [('the', 'DT', 'det', 2, '1', '1', file_path, whole_sentence, 'pig', 'NN', 'obj')]
     """
     # filter the output list
-    # print ("related_token_POSTAG " + related_token_POSTAG)
     if related_token_POSTAG == "*" and related_token_DEPREL == "*" and Sentence_ID == "*":
         return list_queried
     if "*" not in related_token_POSTAG:
@@ -243,10 +240,8 @@ def filter_output_list(list_queried, header, related_token_DEPREL="*", Sentence_
         postag_list_queried = [token for token in list_queried if token[6] in ["JJ", "JJR", "JJS"]]
     elif related_token_POSTAG == "RB*":
         postag_list_queried = [token for token in list_queried if token[6] in ["RB", "RBR", "RBS"]]
-    # postag_list_queried = list(filter(lambda tok:tok[1] in ['RB','RBR','RBS'],list_queried))
     elif related_token_POSTAG == "VB*":
         postag_list_queried = [token for token in list_queried if token[6] in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]]
-    # postag_list_queried = list(filter(lambda tok:tok[1] in ['VB','VBN','VBG','VBZ','VBP','VBD'],list_queried))
     else:
         postag_list_queried = list_queried
     if "*" not in related_token_DEPREL:
@@ -308,7 +303,6 @@ def search_in_sentence(
     for keyword in keyword_list:
         token_id = keyword[0]
         # search head
-        # head, head_num = search_head(token_id, sentence, __field__)
         # search deps
         head_list = search_deps(token_id, sentence_CoNLL_records, __field__)
         if len(head_list) != 0:
@@ -510,8 +504,6 @@ def search_CoNLL_table(
     if len(deprel_list_queried) == 0:
         print(noResults)
         raise Exception("Empty query results")
-        # mb.showwarning(title='Empty query results', message=noResults)
-        # return outputDir, filesToOpen
 
     if form_of_token == "*":
         pass
@@ -521,8 +513,6 @@ def search_CoNLL_table(
     if len(deprel_list_queried) == 1:  # only headers, list empty
         print(noResults)
         raise Exception("Empty query results")
-        # mb.showwarning(title='Empty query results',message=noResults)
-        # return outputDir, filesToOpen
 
     # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv',
     #                                                            '', srcField_kw, _field_)
@@ -530,8 +520,6 @@ def search_CoNLL_table(
 
     # convert list to dataframe and save
     df = pd.DataFrame(deprel_list_queried)
-    # headers=['list_queried, related_token_DEPREL, Sentence_ID, related_token_POSTAG']
-    # header = ["Searched Token/Word", "ID of Searched Token/Word", "POS Tag of Searched Token/Word", "DepRel of Searched Token/Word" , "Co-occurring Token/Word", " ID of Co-occurring Token/Word", "POS Tag of Co-occurring Token/Word", "DepRel of Co-occurring Token/Word", "Head ID", "Sentence ID", "Sentence", "Document ID", "Document"]
     IO_csv_util.df_to_csv(df, outputFilename, headers=None, index=False, language_encoding="utf-8")
 
     filesToOpen.append(outputFilename)
@@ -740,7 +728,6 @@ def print_result(_list_queried_):
     if len(_list_queried_) == 0:
         print(noResults)
         raise Exception("No Results")
-        # tk.messagebox.showinfo("NO RESULTS", noResults)
 
 
 # %%

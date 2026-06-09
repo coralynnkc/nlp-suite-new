@@ -25,7 +25,6 @@ filesToOpen = []
 multi_name_locations = pd.read_csv(os.path.join(GUI_IO_util.wordLists_libPath, "multi_name_locations.csv"))
 
 # TODO
-# geocode(query, exactly_one=True, timeout=DEFAULT_SENTINEL, limit=None, addressdetails=False, language=False, geometry=None, extratags=False, country_codes=None, viewbox=None, bounded=None)
 # Return a location point by address.
 # Parameters:
 # query (dict or str) –
@@ -60,18 +59,12 @@ def get_geolocator(geocoder, Google_API=""):
         # this will renew the SSL certificate indefinitely
         # pip install pyOpenSSL
         # pip install requests[security]
-        # import ssl
         # # disable TLS certificate verification completely
-        # ctx = ssl.create_default_context()
-        # ctx.check_hostname = False
-        # ctx.verify_mode = ssl.CERT_NONE
 
         geolocator = Nominatim(user_agent="NLP Suite")
-        # geolocator = Nominatim(user_agent="NLP Suite", timeout=10)
 
     else:
         # Country specification
-        # UK: domain = 'maps.google.co.uk'
         geolocator = GoogleV3(api_key=Google_API, domain="maps.google.com")
     return geolocator
 
@@ -83,18 +76,9 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
     # pip install pyOpenSSL
     # pip install requests[security]
 
-    # import ssl
     # # disable TLS certificate verification completely
-    # ctx = ssl.create_default_context()
-    # ctx.check_hostname = False
-    # ctx.verify_mode = ssl.CERT_NONE
 
     # disable TLS certificate verification
-    # import certifi
-    # import geopy.geocoders
-    # geopy.geocoders.options.default_ssl_context = ctx
-    # ctx = ssl.create_default_context(cafile=certifi.where())
-    # geopy.geocoders.options.default_ssl_context = ctx
     # Limits the search to a specific country or a list of countries. Country codes must be in ISO 3166-1 alpha2.
     if country_bias == "":
         country_bias = None
@@ -104,7 +88,6 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
     # https://developer.mapquest.com/documentation/open/nominatim-search/search/ EXPLAINS ALL PARAMS
     # Preferred area to find search results. viewbox=left,top,right,bottom
     # although given on some website the following does NOT work
-    # viewbox = 34.98527546066368, -85.59790207354965, 30.770444751951388, -81.5219744485591
     # bounded can take values 0 (No, do not restrict results) or 1 (Yes, restrict results)
     # def string_to_tuples(string: str):
     """
@@ -112,14 +95,12 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
 	:param string: a string of tuples, e.g. '(1,2.3),(4,5.5)'
 	:return: a list of tuples, e.g. [(1,2.3),(4,5.5)]
 	"""
-    # return [tuple(map(float, t.strip('()').split(','))) for t in string.split('),(')]
 
     if box_tuple == "":
         box_tuple = None
     else:
         box_tuple = box_tuple.replace(" ", "")
         box_tuple = [tuple(map(float, t.strip("()").split(","))) for t in box_tuple.split("),(")]
-        # box_tuple = tuple([(34.98527546066368, -85.59790207354965), (30.770444751951388, -81.5219744485591)])
         # georgia viewbox 	34.98527546066368, -85.59790207354965 (upper left);
         # 					30.770444751951388, -81.5219744485591 (lower right)
 
@@ -158,7 +139,6 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
 # https://developers.google.com/maps/documentation/embed/get-api-key
 # console.developers.google.com/apis
 def google_geocode(geolocator, loc, region=None, timeout=10):
-    # print("Processing Google location for geocoding:",loc)
     region = ".US"
     try:
         return geolocator.geocode(loc, region=region, timeout=timeout)
@@ -180,7 +160,6 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
     if "Google" in geocoder:
         GIS_pipeline_util.getGoogleAPIkey("Google-geocode-API_config.csv", False)
         # if Google_API == '':
-        # 	return Google_API
     kml = simplekml.Kml()
     icon_url = GIS_Google_pin_util.pin_icon_select("Pushpins", "red")
     kmloutputFilename = inputFilename.replace(".csv", ".kml")
@@ -194,7 +173,6 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
         GIS_file_check_util.CoNLL_checker(inputFilename)
     )
     input_df = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
-    # input_df = input_df[['Location', 'Latitude', 'Longitude']]
     input_df = input_df.reset_index()
     for index, row in input_df.iterrows():
         location = row["Location"]
@@ -231,9 +209,7 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
         pnt = kml.newpoint(coords=[(lng, lat)])
         pnt.style.iconstyle.icon.href = icon_url
         # putting the location on the map creates a VERY busy map
-        # pnt.name = location
         pnt.style.labelstyle.scale = "1"
-        # pnt.style.labelstyle.color = simplekml.Color.rgb(int(r_value), int(g_value), int(b_value))
         # the code would break if no sentence is passed (e.g., from DB_PC-ACE)
         try:
             label = "Event"
@@ -318,8 +294,6 @@ def geocode(
         True,
     )
     # if geocoder=='Nominatim':
-    # 	config_filename='GIS-geocode_config.csv'
-    # 	reminders_util.checkReminder(scriptName,["GIS Nominatim geocoder"],'',True)
 
     geoName = "geo-" + str(geocoder[:3])
     geocodedLocationsOutputFilename = IO_files_util.generate_output_file_name(
@@ -328,7 +302,6 @@ def geocode(
     locationsNotFoundoutputFilename = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "GIS", geoName, "LOCATIONS_not-found", locationColumnName, "", False, True
     )
-    # locationsNotFoundoutputFilename = locationsNotFoundoutputFilename.replace('LOCATIONS', 'LOCATIONS_not-found')
 
     locationsNotFoundNonDistinctoutputFilename = IO_files_util.generate_output_file_name(
         inputFilename,
@@ -343,7 +316,6 @@ def geocode(
         False,
         True,
     )
-    # locationsNotFoundNonDistinctoutputFilename = locationsNotFoundNonDistinctoutputFilename.replace('LOCATIONS', 'LOCATIONS_Not-Found-Non-Distinct')
     # TODO MINO GIS create kml record
     kmloutputFilename = geocodedLocationsOutputFilename.replace(".csv", ".kml")
 
@@ -418,7 +390,6 @@ def geocode(
     else:
         # always use the locationColumnName variable passed by algorithms to make sure locations are then matched
         if datePresent:
-            # geowriter.writerow(['Location','NER','Latitude','Longitude','Address','Country from Geocoder','Date'])
             geowriter.writerow(
                 [
                     "Location",
@@ -513,8 +484,6 @@ def geocode(
             # avoid repetition so as not to access the geocoder service several times for the same location;
             # 	location already in list
             if itemToGeocode in distinctGeocodedList:
-                # print(len(distinctGeocodedList))
-                # print("   Geocoding NON-DISTINCT location: " + itemToGeocode)
                 # multi_name_locations is provided in the NLP Suite lib/wordLists to make sure that multiple name locations are processed correctly
                 # e.g., China, People's Republic of China, US, U.S., United States, United States of America
                 for _index, row in multi_name_locations.iterrows():  # For every row in the ConLL
@@ -556,7 +525,6 @@ def geocode(
                     NER_Tag_Nominatim = ""
                     # CoreNLP NER tag for continents is often wrong and as a result Nominatim geocodes them wrongly
                     # we should skip them, particularly when they are lowercase
-                    # continents='Africa, Antarctica, Asia, Australia, Europe, Oceania, North America, South America'
                     if (
                         itemToGeocode == "Africa"
                         or itemToGeocode == "Antarctica"
@@ -610,7 +578,6 @@ def geocode(
                     address = distinctGeocodedLocations[itemToGeocode][2]
                     address_list = address.split(",")
                     country_geocoder = address_list[-1].strip()
-            # print(currRecord + itemToGeocode + str(lat) + str(lng) + address+"\n")
             # WRITE THE RECORD -----------------------------------------------------------------
             if lat != 0 and lng != 0:
                 if inputIsCoNLL:
@@ -656,9 +623,7 @@ def geocode(
                 pnt = kml.newpoint(coords=[(lng, lat)])
                 pnt.style.iconstyle.icon.href = icon_url
                 # putting the location on the map creates a VERY busy map
-                # pnt.name = itemToGeocode
                 pnt.style.labelstyle.scale = "1"
-                # pnt.style.labelstyle.color = simplekml.Color.rgb(int(r_value), int(g_value), int(b_value))
                 # the code would break if no sentence is passed (e.g., from DB_PC-ACE)
                 try:
                     if date != "":
@@ -750,9 +715,7 @@ def geocode(
 def convertToGEP(date):
     GEPdateFormat = ""
     # if 'float' in str(type(date)): # this occurs when dealing with an integer YEAR only
-    # 	date=str(int(date))
     # if 'int' in str(type(date)): # this occurs when dealing with an integer YEAR only
-    # 	date=str(int(date))
     if not pd.isna(date) and date != "":
         if "float" in str(type(date)):  # this occurs when dealing with an integer YEAR only
             date = str(float(date))

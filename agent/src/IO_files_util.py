@@ -30,7 +30,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "."))
 
 # check if a directory exists, remove if it does, and create
 def make_directory(newDirectory, silent=True):
-    # newDirectory=''
     # Got permission denied error if the folder is read-only.
     # Updates permission automatically
     if os.path.exists(newDirectory):
@@ -45,9 +44,7 @@ def make_directory(newDirectory, silent=True):
         os.mkdir(newDirectory, 0o755)
     except Exception as e:
         print("error: ", e.__doc__)
-        # createDir = False
         newDirectory = ""
-    # return createDir
     return newDirectory
 
 
@@ -92,14 +89,12 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
             "Could not create the directory " + outputSubDir + "\n\n" + str(e),
         )
         print("error: ", e.__doc__)
-        # createDir = False
         outputSubDir = ""
 
     return outputSubDir
 
 
 # for folder, subs, files in os.walk(inputDir):
-# 	folderID += 1
 # 	print("\nProcessing folder " + str(folderID) + "/ " + os.path.basename(
 # 		os.path.normpath(folder)))
 # 	for filename in files:
@@ -284,7 +279,6 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
                 + ".\n\nPlease, select the expected file type and try again.",
             )
     configFileName = GUI_IO_util.configPath + os.sep + configFileName
-    # print(inputDir)
 
     # append sort order and separator
     # unfortunately, the sort order is saved as first column in the config file and separator second,
@@ -356,9 +350,7 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
             except:
                 date_pos = 9e999
         # @@@
-        # separator = a['Item separator character(s)'][1]
         # if str(separator)=="nan":
-        #     separator=' '
 
         try:
             files = do_compare(files, fileType, sort_order, separator, date_format, date_pos)
@@ -405,46 +397,39 @@ def getDateFromFileName(file_name, date_format="mm-dd-yyyy", sep="_", date_field
         # the strptime command (strptime(date_string, format) takes date_string and formats it according to format where format has the following values:
         # %m 09 %-m 9 (does not work on all platforms); %d 07 %-d 7 (does not work on all platforms);
         # loop through INPUT date formats and change format to Python style
-        # print('DATEFORMAT',date_format)
         try:
             dateStr = ""
             if date_format == "mm-dd-yyyy":
-                # date = datetime.datetime.strptime(raw_date, '%m-%d-%Y').date()
                 date = datetime.strptime(raw_date, "%m-%d-%Y").date()
                 dateStr = date.strftime("%Y-%m-%d")
                 month = dateStr[5:7]
                 day = dateStr[8:10]
                 year = dateStr[:4]
             elif date_format == "dd-mm-yyyy":
-                # date = datetime.datetime.strptime(raw_date, '%d-%m-%Y').date()
                 date = datetime.strptime(raw_date, "%d-%m-%Y").date()
                 dateStr = date.strftime("%Y-%m-%d")  # '%d-%m-%Y'
                 month = dateStr[5:7]
                 day = dateStr[8:10]
                 year = dateStr[:4]
             elif date_format == "yyyy-mm-dd":
-                # date = datetime.datetime.strptime(raw_date, '%Y-%m-%d').date()
                 date = datetime.strptime(raw_date, "%Y-%m-%d").date()
                 dateStr = date.strftime("%Y-%m-%d")  # '%Y-%m-%d'
                 month = dateStr[5:7]
                 day = dateStr[8:10]
                 year = dateStr[:4]
             elif date_format == "yyyy-dd-mm":
-                # date = datetime.datetime.strptime(raw_date, '%Y-%d-%m').date()
                 date = datetime.strptime(raw_date, "%Y-%d-%m").date()
                 dateStr = date.strftime("%Y-%m-%d")  # '%Y-%d-%m'
                 month = dateStr[5:7]
                 day = dateStr[8:10]
                 year = dateStr[:4]
             elif date_format == "yyyy-mm":
-                # date = datetime.datetime.strptime(raw_date, '%Y-%m').date()
                 date = datetime.strptime(raw_date, "%Y-%m").date()
                 dateStr = date.strftime("%Y-%m")
                 month = dateStr[5:7]
                 day = 0
                 year = dateStr[:4]
             elif date_format == "yyyy":
-                # date = datetime.datetime.strptime(raw_date, '%Y').date()
                 date = datetime.strptime(raw_date, "%Y").date()
                 dateStr = date.strftime("%Y")
                 month = 0
@@ -453,8 +438,6 @@ def getDateFromFileName(file_name, date_format="mm-dd-yyyy", sep="_", date_field
             dateStr = dateStr.replace("/", "-")
         except ValueError:
             if errMsg:
-                # mb.showwarning(title='Date format error in filename', message='You have selected the option that your input filename ('+file_name+') embeds a date.\n\nBut... you may have provided\n\n   1. the wrong date format (' + date_format + ')\n   2. the wrong date in the input filename (' + raw_date + ')\n   3. the wrong date position in the filename ('+str(date_field_position)+')\n   4. the wrong date character separator in the filename ('+sep+').\n\nPlease, check your filename and/or the date options in the GUI.\n\nThe date will be set to blank in the output CoNLL table.')
-                # print('\nDate format error in filename. You have selected the option that your input filename ('+file_name+') embeds a date.\n\nBut... you may have provided\n\n   1. the wrong date format (' + date_format + ')\n   2. the wrong date in the input filename (' + raw_date + ')\n   3. the wrong date position in the filename ('+str(date_field_position)+')\n   4. the wrong date character separator in the filename ('+sep+').\n\nPlease, check your filename and/or the date options in the GUI.\n\nThe date will be set to blank in the output CoNLL table.\n')
                 print(
                     "\nDate format error in filename: "
                     + file_name
@@ -553,14 +536,10 @@ def getFilename(passed_string):
 
 
 # def getFilename(inputFilename):
-#     path, inputfile = ntpath.split(inputFilename)  # remove/take out path
-#     inputfile, extension = os.path.splitext(inputfile)  # remove/take out the extension
-#     return inputfile
 
 
 # inputFilename is the input filename with path
 # returns outFilename with path
-# label1 (SCNLP, QC, NVA,...)
 #  in label1 the following labels are passed by the calling script: SCNLP (Stanford CoreNLP), QC (query conll), NVA (noun verb analysis), FW (function words), TC (tpic modeling), SA (sentiment analysis), CA (concretenss analysis)
 # label2 (sub-field, e.g., pigs_Lemma, or hedonometer)
 # label3,label4,label5 are available options
@@ -646,7 +625,6 @@ def generate_output_file_name(
     if "NLP_CoreNLP_coref" in outFilename:
         if outFilename.count("NLP_CoreNLP_coref") > 1:
             outFilename = outFilename.replace("NLP_CoreNLP_coref", "coref")
-            # outFilename = 'NLP_CoreNLP_coref'+outFilename
     if "CoreNLP_SENNA_SVO_coref" in outFilename:
         outFilename = outFilename.replace("CoreNLP_SENNA_SVO_coref", "_coref")
 
@@ -916,8 +894,6 @@ def gatherCLAs():
     )
     args = parser.parse_args()
 
-    # numArgsProvided = len(vars(args))
-    # print(numArgsProvided)
     if len(sys.argv) != 3:
         return False
     else:

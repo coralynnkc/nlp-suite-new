@@ -11,9 +11,6 @@ http://www.nltk.org/howto/sentiwordnet.html
 """
 
 # The SentiWordNet algorithm outputs sentiment scores to 4 classes of sentiments:
-# neg: Negative
-# neu: Neutral
-# pos: Positive
 # compound: Compound (i.e. aggregated score)
 # The "compound" score, ranging from -1 (most neg) to 1 (most pos)
 #   would provide a single measure of polarity.
@@ -89,7 +86,6 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
 
     from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine
 
-    # sentences = tokenize.sent_tokenize(fulltext)  # split text into sentences
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
 
     # SentiWordNet Interface http://www.nltk.org/howto/sentiwordnet.html
@@ -101,7 +97,6 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
     for s in sentences:
         tagged_sentence = pos_tag(word_tokenize(s))
         # TODO Mino I cannot simply substitute the NLTK pos_tag; what is the Stanza equivalent?
-        # tagged_sentence = pos_tag(word_tokenize_stanza(stanzaPipeLine(s)))
         sentiment = 0
         tokens_count = 0
         label = ""
@@ -110,7 +105,6 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
             if wn_tag not in (wn.NOUN, wn.ADJ, wn.ADV):
                 continue
 
-            # lemma = lemmatizer.lemmatize(word, pos=wn_tag)
             lemma = lemmatize_stanza(stanzaPipeLine(word))
             if not lemma:
                 continue
@@ -147,7 +141,6 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
         )
 
         sentenceID += 1
-    # csvfile.close()
     return output_file
 
 
@@ -221,14 +214,10 @@ def main(
                     filename = os.path.join(inputDir, os.fsdecode(file))
                     if filename.endswith(".txt"):
                         time.time()
-                        # print("Started SentiWordNet sentiment analysis of " + filename + "...")
                         documentID += 1
                         filesToOpen.append(analyzefile(filename, outputDir, outputFilename, mode, documentID, filename))
-                        # print("Finished SentiWordNet sentiment analysis of " + filename + " in " + str((time.time() - start_time)) + " seconds")
-                        # print("Finished SentiWordNet sentiment analysis of " + filename + " in " + str((time.time() - start_time)) + " seconds")
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
-                # sys.exit(1)
     csvfile.close()
 
     if chartPackage != "No charts":

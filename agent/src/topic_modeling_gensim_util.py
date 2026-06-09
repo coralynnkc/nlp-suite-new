@@ -65,7 +65,7 @@ except:
         + msg
     )
     print(message)
-    raise FileNotFoundError(title)
+    raise FileNotFoundError(title) from None
 
     # mb.showerror(title='Library error', message='The Gensim Topic modeling tool could not find the English language spacy library. This needs to be installed. At command promp type:\npython -m spacy download en_core_web_sm\n\nYOU MAY HAVE TO RUN THE COMMAND AS ADMINISTRATOR.\n\nHOW DO YOU DO THAT?'
     #     '\n\nIn Mac, at terminal, type sudo python -m spacy download en_core_web_sm'
@@ -75,8 +75,6 @@ except:
     #     '\n  Right click on Anaconda Prompt'
     #     '\n  Click on More'
     #     '\n  Click on Run as Administrator'
-    #     '\n  At the command prompt, Enter "conda activate NLP" (if NLP is your environment)'
-    #     '\n  Then enter: "python -m spacy download en_core_web_sm" and Return'
     #     '\n\nThis imports the package.')
     sys.exit(0)
 
@@ -121,7 +119,6 @@ def format_topics_sentences(ldamodel, corpus, texts):
     sent_topics_df.columns = ["Dominant topic", "% contribution", "Topic keywords"]
 
     # Add original text to the end of the output
-    # 	    print("Type of texts: ",type(texts))
     contents = pd.Series(texts)
     sent_topics_df = pd.concat([sent_topics_df, contents], axis=1)
     return sent_topics_df
@@ -171,7 +168,6 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
     plt.xlabel("Number of topics")
     plt.ylabel("Coherence value")
     plt.legend(("coherence_values"), loc="best")
-    # plt.show()
     fileName = os.path.join(outputDir, "NLP_Gensim_optimal_topics_number.jpg")
     plt.savefig(fileName)
     filesToOpen.append(fileName)
@@ -210,18 +206,10 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
     df_dominant_topic.to_csv(fileName, encoding="utf-8", index=False)
     filesToOpen.append(fileName)
 
-    # columns_to_be_plotted_xAxis=[], columns_to_be_plotted_yAxis=[[1, 3]]
-    # hover_label = 'Topic_Keywords'
-    # inputFilename = fileName
     # outputFiles = charts_util.run_all(columns_to_be_plotted, inputFilename, outputDir,
-    #                                           outputFileLabel='TM_Gensim',
-    #                                           chart_type_list=["bar"],
-    #                                           chart_title='Number of Documents per Topic',
-    #                                           column_xAxis_label_var='Topic number',
     #                                           hover_info_column_list=hover_label)
     #
     # if outputFiles!=None:
-    #     filesToOpen.append(chart_outputFilename)
 
     # Find the most representative document for each topic
     # Group top 5 sentences under each topic
@@ -286,7 +274,6 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
     topic_num_keywords = df_topic_sents_keywords[["Dominant topic", "Topic keywords"]]
 
     # Concatenate Column wise
-    # 	df_dominant_topics = pd.concat([topic_num_keywords, topic_counts, topic_contribution], axis=1)
 
     # Change Column names
 
@@ -294,11 +281,8 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
 
     num_row = df_dominant_topics.shape[0]
     topic_order_list = df_dominant_topics["Dominant topic"]
-    # 	print(topic_order_list)
-    # 	print(type(topic_order_list))
     num_docs = []
     perc_documents = []
-    # 	print()
     for i in range(num_row):
         topic = topic_order_list.get(i)
         num_docs.append(topic_counts.get(topic))
@@ -318,18 +302,10 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
     df_dominant_topics.to_csv(fileName, encoding="utf-8", index=False)
     filesToOpen.append(fileName)
 
-    # columns_to_be_plotted_xAxis=[], columns_to_be_plotted_yAxis=[[1, 2]]
-    # hover_label = 'Topic keywords'
-    # inputFilename = fileName
     # outputFiles = charts_util.run_all(columns_to_be_plotted, inputFilename, outputDir,
-    #                                           outputFileLabel='TM_Gensim',
-    #                                           chart_type_list=["bar"],
-    #                                           chart_title='Percentage Contribution of Each Topic',
-    #                                           column_xAxis_label_var='Topic number',
     #                                           hover_info_column_list=hover_label)
     #
     # if outputFiles!=None:
-    #     filesToOpen.append(chart_outputFilename)
 
     IO_user_interface_util.timed_alert(
         2000, "Analysis end", "Finished running Mallet LDA topic modeling at", True, "", True, startTime
@@ -342,19 +318,13 @@ def run_Gensim(
     global filesToOpen
     filesToOpen = []
     # if pd.__version__[0]=='2':
-    #     print('Your current version is ', pd.__version__)
-    #     title='Warning'
-    #     message='Gensim is incompatible with a version of pandas higher than 2.0\n\nIn command line, please, pip unistall pandas and pip install pandas==1.5.2 (or even pip install pandas==1.4.4).\n\nMake sure you are in the right NLP environment by typing conda activate NLP'
-    #     print(message)
-    #     raise ValueError(title)
-    #     return
 
     numFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "txt")
     if numFiles == 0:
         title = "Number of files error"
         message = "The selected input directory does NOT contain any file of txt type.\n\nPlease, select a different directory and try again."
         print(message)
-        raise ValueError(title)
+        raise ValueError(title) from None
         return
     elif numFiles == 1:
         title = "Number of files error"
@@ -364,10 +334,9 @@ def run_Gensim(
             + " file of txt type.\n\nTopic modeling requires a large number of files to produce valid results. That is true even if the available file contains several different documents morged together."
         )
         print(message)
-        raise ValueError(title)
+        raise ValueError(title) from None
         return
     elif numFiles < 50:
-        # result = mb.askyesno(title='Number of files warning', message='The selected input directory contains only ' + str(
         #     numFiles) + ' files of txt type.\n\nTopic modeling requires a large number of files (in the hundreds at least; read TIPS file) to produce valid results.\n\nAre you sure you want to continue?',
         #                      default='no')
         message = (
@@ -408,7 +377,6 @@ def run_Gensim(
     stop_words = stopwords.words("english")
     # TODO: (optional) add more stop words that are common but unncesseary for topic modeling
     # stop_words.append(['','']
-    # 	stop_words = stopwords.words('english')
     stop_words.append(["from", "subject", "re", "edu", "use"])
 
     # TODO: import data
@@ -516,22 +484,13 @@ def run_Gensim(
 
     # TODO the coherence lines produce an error
     # Compute Coherence Score
-    # coherence_model_lda = CoherenceModel(model=lda_model, texts=data_lemmatized, dictionary=id2word, coherence='c_v')
-    # coherence_lda = coherence_model_lda.get_coherence()
-    # print('\nCoherence Score: ', coherence_lda)
 
     # Print the Keywords in the topics
     # TODO visualize most relevant topics in Excel bar charts, with hover over of the words in each topic
     # step 13 of website
 
-    # 	print("\n")
-    # 	print("List of keywords and their weights for each of the " + str(num_topics) + " topics analyzed:")
-    # 	print("\n")
     pprint(lda_model.print_topics())
-    # 	print("Type of lda_model.print_topics(): ", type(lda_model.print_topics()))
-    # 	print("\n\n")
     lda_model[corpus]
-    # 	print("Type of doc_lda: ", type(doc_lda))
     # visualize and generate html
     # step 15 in website
     # https://stackoverflow.com/questions/46379763/typeerror-object-of-type-complex-is-not-json-serializable-while-using-pyldavi
@@ -544,7 +503,7 @@ def run_Gensim(
         title = ("Output html file error",)
         message = "Gensim failed to generate the html output file."
         print(message)
-        raise ValueError(title)
+        raise ValueError(title) from None
         return
 
     IO_user_interface_util.timed_alert(
@@ -558,12 +517,8 @@ def run_Gensim(
 
     # # open and display on web
     # def show_web(vis):
-    #     pyLDAvis.display(vis)
-    #     pyLDAvis.show(vis)
-    #     pyLDAvis.kill()
 
     # # necessary to avoid having to do Ctrl+C to kill pyLDAvis to continue running the code
-    # start_new_thread(show_web, (vis,))
 
     if run_Mallet:
         # check that the CoreNLPdir as been setup
@@ -580,7 +535,5 @@ def run_Gensim(
         malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data)
 
     # if openOutputFiles==True:
-    #     IO_files_util.OpenOutputFiles(openOutputFiles, filesToOpen, outputDir)
-    #     filesToOpen=[] # to avoid opening files twice, here and in calling function
 
     return filesToOpen
