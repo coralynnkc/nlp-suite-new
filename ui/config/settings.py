@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    "ui.apps.UIConfig",
+    "app.apps.AppConfig",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
     "django.contrib.messages",
@@ -44,14 +44,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
-ROOT_URLCONF = "nlp-suite-ui.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(BASE_DIR, "templates"),
-            os.path.join(BASE_DIR, "ui", "templates"),
+            os.path.join(BASE_DIR, "app", "templates"),
         ],
         "APP_DIRS": False,
         "OPTIONS": {
@@ -64,7 +64,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "nlp-suite-ui.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

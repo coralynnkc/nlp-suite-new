@@ -21,6 +21,10 @@ __pycache__/
 venv/
 *.egg-info/
 
+# Django
+db.sqlite3
+media/
+
 # Environment / secrets
 .env
 .env.*
