@@ -61,3 +61,37 @@ Keys stored in local `.env`, never committed.
 - Fixtures: small `.txt` sample files in `agent/tests/fixtures/`
 - No mocks for NLP logic — tests call real processing functions
 - CoreNLP-dependent tests marked with `@pytest.mark.integration` and skipped unless CoreNLP service is up
+
+---
+
+## Tech debt
+
+### Phase 3 — endpoints not yet wired
+All six source files exist in `agent/src/` but none have routes in `main.py`:
+
+| Endpoint | Source file | Blocker |
+|----------|-------------|---------|
+| `POST /ner` | `NER_main.py` | Route missing |
+| `POST /wordnet` | `knowledge_graphs_WordNet_main.py` | Route missing |
+| `POST /gender_analysis` | — | `html_annotator_gender_main.py` not copied to `agent/src/`; locate in original repo |
+| `POST /shape_of_stories` | `shape_of_stories_main.py` | Route missing |
+| `POST /excel_plotly_charts` | `excel_plotly_charts.py` | Route missing (plan named it `charts_Excel_main.py`; actual file differs) |
+| `POST /boxplot` | `boxplot_chart.py` | Route missing |
+
+### Phase 4 — settings page not started
+No `settings.html` template, no view, and no URL route exist in the UI. Phase 4 is entirely unstarted.
+
+### Phase 5 — Docker orchestration missing
+- `docker-compose.yml` does not exist at repo root
+- `scripts/start.sh` does not exist (`scripts/` directory absent)
+- Individual `Dockerfile`s in each service dir are present
+
+### Phase 6 — tests in wrong location
+Existing test files (`test_*.py`) are colocated with source in `agent/src/` instead of `agent/tests/`. No `agent/tests/fixtures/` directory exists. Tests need to be moved and fixtures added before Phase 6 is complete.
+
+### `agent/src/main.py` — code issues
+- **`gender_guesser` silently ignored** (line 481): the `/style_analysis` route accepts `gender_guesser` as a form param but immediately overrides it to `False`; the param is dead weight and confusing.
+- **`outputDirectory` param accepted but overridden** (lines 158, 224, 307, etc.): every route hardcodes `~/nlp-suite/output` and discards the incoming value — the form field serves no purpose.
+- **CORS wildcard** (line 34): `allow_origins=["*", ...]` — the `"*"` makes all specific origins redundant; tighten for production.
+- **Commented-out error-handling block** (lines 55–63, 91–106): incomplete `app.worker_exception` design left in; either finish or remove.
+- **`app.worker` not thread-safe**: the boolean flag is read and set without a lock; concurrent requests could race.
