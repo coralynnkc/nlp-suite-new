@@ -1,5 +1,6 @@
 # Written by Roberto Franzosi Fall 2020
 import argparse
+import functools
 import logging
 import math
 import ntpath  # to split the path from filename
@@ -135,9 +136,6 @@ def getFileList_SubDir(inputFilename, inputDir, fileType=".*", silent=False):
 # returns a list of either a single file or all files in a directory
 #   examples of calls
 # https://thispointer.com/python-how-to-get-list-of-files-in-directory-and-sub-directories/
-
-import functools
-import os
 
 logger = logging.getLogger(__name__)
 

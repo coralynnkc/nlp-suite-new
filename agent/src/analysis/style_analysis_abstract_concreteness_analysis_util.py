@@ -13,12 +13,13 @@ import IO_files_util
 import IO_user_interface_util
 import lib_util
 import pandas as pd
+from app_constants import WORD_LISTS_DIR
 from util import collect
 
 logger = logging.getLogger(__name__)
-
-fin = open("../lib/wordLists/stopwords.txt")
+fin = open(WORD_LISTS_DIR / "stopwords.txt")
 stops = set(fin.read().splitlines())
+fin.close()
 
 ratings = GUI_IO_util.concreteness_libPath + os.sep + "Concreteness_ratings_Brysbaert_et_al_BRM.csv"
 if not os.path.isfile(ratings):
@@ -33,6 +34,7 @@ if not os.path.isfile(ratings):
     sys.exit()
 data = pd.read_csv(ratings, encoding="utf-8", on_bad_lines="skip")
 data_dict = {col: list(data[col]) for col in data.columns}
+_word_index = {w: i for i, w in enumerate(data_dict["Word"])}
 
 
 # performs concreteness analysis on inputFile using the Brysbaert et al. concreteness ratings, outputting results to a new CSV file in outputDir
@@ -77,15 +79,14 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
         words = tokenize_stanza_text(stanzaPipeLine(s.lower()))
 
         filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
-        for index, w in enumerate(filtered_words):
+        for w in filtered_words:
             # don't process stopwords
             if w in stops:
                 continue
             lemma = lemmatize_stanza_word(stanzaPipeLine(w))
             all_words.append(str(lemma))
-            if lemma in data_dict["Word"]:
-                index = data_dict["Word"].index(lemma)
-                score = round(float(data_dict["Conc.M"][index]), 2)
+            if lemma in _word_index:
+                score = round(float(data_dict["Conc.M"][_word_index[lemma]]), 2)
                 found_words.append("(" + str(lemma) + ", " + str(score) + ")")
                 score_list.append(score)
             else:

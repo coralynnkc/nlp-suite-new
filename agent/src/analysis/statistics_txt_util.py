@@ -138,8 +138,10 @@ def word_count(text):
 
 
 def excludeStopWords_list(words):
-    fin = open("../lib/wordLists/stopwords.txt")
+    from app_constants import WORD_LISTS_DIR
+    fin = open(WORD_LISTS_DIR / "stopwords.txt")
     stop_words = set(fin.read().splitlines())
+    fin.close()
     # since stop_words are lowercase exclude initial-capital words (He, I)
     words_excludeStopWords = [word for word in words if word.lower() not in stop_words]
     words = words_excludeStopWords

@@ -37,22 +37,17 @@ def create_google_heatmap(outputFilename, gmaps_list):
     js_template_loc = (
         GUI_IO_util.Google_heatmaps_libPath + os.sep + "heatmap_template.html"
     )
-    open_js = open(js_template_loc)
-    js_contents = open_js.readlines()
-    js_template = "".join(js_contents)
-    open_js.close()
+    with open(js_template_loc) as open_js:
+        js_template = open_js.read()
 
     js_to_write = js_template.split(
         "//DO NOT REMOVE! PROGRAM INSERTS THE CORRECT JS HERE!"
     )
-    s = ""
-    for item in gmaps_list:
-        s += str(item + "\n")
-    js_output_file = open(outputFilename, "w+")
-    js_output_file.write(js_to_write[0].replace("<YOUR API KEY HERE>", api_key))
-    js_output_file.write(s)
-    js_output_file.write(js_to_write[1])
-    js_output_file.close()
+    s = "".join(str(item) + "\n" for item in gmaps_list)
+    with open(outputFilename, "w+") as js_output_file:
+        js_output_file.write(js_to_write[0].replace("<YOUR API KEY HERE>", api_key))
+        js_output_file.write(s)
+        js_output_file.write(js_to_write[1])
     return
 
 

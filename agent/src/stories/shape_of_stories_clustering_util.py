@@ -79,16 +79,7 @@ class NMFClustering:
 
     @staticmethod
     def group_elements(H):
-        cluster_ids = []
-        for row in range(H.shape[0]):
-            best_cl = -1
-            best_cl_v = -1
-            for col in range(H.shape[1]):
-                if H[row][col] > best_cl_v:
-                    best_cl = col
-                    best_cl_v = H[row][col]
-            cluster_ids.append(best_cl)
-        return cluster_ids
+        return np.argmax(H, axis=1).tolist()
 
     def cluster(self, vectors):
         """

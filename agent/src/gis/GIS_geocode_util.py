@@ -28,6 +28,11 @@ filesToOpen = []
 multi_name_locations = pd.read_csv(
     os.path.join(GUI_IO_util.wordLists_libPath, "multi_name_locations.csv")
 )
+_alias_map = {
+    alias.strip(): row["Location single name"]
+    for _, row in multi_name_locations.iterrows()
+    for alias in str(row[0]).split(", ")
+}
 
 # TODO
 # Return a location point by address.
@@ -341,8 +346,6 @@ def geocode(
         datePresent,
         filenamePositionInCoNLLTable,
     ) = GIS_file_check_util.CoNLL_checker(inputFilename)
-    pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
-
     startTime = IO_user_interface_util.timed_alert(
         2000,
         "GIS geocoder",
@@ -586,22 +589,7 @@ def geocode(
             # avoid repetition so as not to access the geocoder service several times for the same location;
             # 	location already in list
             if itemToGeocode in distinctGeocodedList:
-                # multi_name_locations is provided in the NLP Suite lib/wordLists to make sure that multiple name locations are processed correctly
-                # e.g., China, People's Republic of China, US, U.S., United States, United States of America
-                for (
-                    _index,
-                    row,
-                ) in multi_name_locations.iterrows():  # For every row in the ConLL
-                    multi_name_location = row[0]
-                    multi_name_location = multi_name_location.split(", ")
-                    for loc_name in multi_name_location:  # "Location multiple names"
-                        if itemToGeocode == loc_name:
-                            itemToGeocode = row["Location single name"]
-                            row["NER_Tag"]
-                            row["NER_Tag_Nominatim"]
-                            break
-                    if itemToGeocode == loc_name:
-                        break
+                itemToGeocode = _alias_map.get(itemToGeocode, itemToGeocode)
                 if itemToGeocode in notGeocodedList:
                     notGeocodedList.append(itemToGeocode)
                     notGeocodedFull.append((itemToGeocode, NER_Tag))
@@ -616,20 +604,7 @@ def geocode(
                     country_geocoder = address_list[-1].strip()
             else:
                 logger.info("   Geocoding DISTINCT location: " + itemToGeocode)
-                for (
-                    _index1,
-                    row1,
-                ) in multi_name_locations.iterrows():  # For every row in the ConLL
-                    multi_name_location = row1[0]
-                    multi_name_location = multi_name_location.split(", ")
-                    for loc_name in multi_name_location:  # "Location multiple names"
-                        if itemToGeocode == loc_name:
-                            itemToGeocode = row1["Location single name"]
-                            row1["NER_Tag"]
-                            row1["NER_Tag_Nominatim"]
-                            break
-                    if itemToGeocode == loc_name:
-                        break
+                itemToGeocode = _alias_map.get(itemToGeocode, itemToGeocode)
                 distinctGeocodedList.append(itemToGeocode)
                 if geocoder == "Nominatim":
                     NER_Tag_Nominatim = ""

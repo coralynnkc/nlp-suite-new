@@ -246,12 +246,7 @@ def extract_csvFile_locations(
                 # GPE is location NER tag for spaCy and Stanza
                 # the code would break if no NER is passed (e.g., from DB_PC-ACE)
                 try:
-                    if (
-                        row["NER"] == "LOCATION"
-                        or row["NER"] == "CITY"
-                        or row["NER"] == "STATE_OR_PROVINCE"
-                        or row["NER"] == "COUNTRY"
-                    ) or ("GPE" in row["NER"]):
+                    if row["NER"] in {"LOCATION", "CITY", "STATE_OR_PROVINCE", "COUNTRY"} or "GPE" in row["NER"]:
                         # check next row
                         try:
                             nextrow = dt.iloc[index + 1]
