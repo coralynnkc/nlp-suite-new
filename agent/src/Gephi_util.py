@@ -991,10 +991,10 @@ class GexfImport:
             if attr == "end":
                 start = node_xml.attrib[attr]
             if attr == "startopen":
-                start = attvalue_xml.attrib[attr]
+                start = node_xml.attrib[attr]
                 startopen = True
             if attr == "endopen":
-                end = attvalue_xml.attrib[attr]
+                end = node_xml.attrib[attr]
                 endopen = True
             if attr == "pid":
                 pid = node_xml.attrib[attr]

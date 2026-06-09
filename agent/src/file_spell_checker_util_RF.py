@@ -166,7 +166,7 @@ def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFil
                 filesToOpen.extend(outputFiles)
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen)
+        IO_files_util.OpenOutputFiles(None, openOutputFiles, filesToOpen)
         filesToOpen = []  # do not open twice, hee and calling function
     # already shown in NLP.py
     for u in unusual:
