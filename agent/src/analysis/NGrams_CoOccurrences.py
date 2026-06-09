@@ -8,6 +8,7 @@ import IO_csv_util
 import IO_files_util
 import NGrams_CoOccurrences_util
 import pandas as pd
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -204,10 +205,7 @@ def run_ngrams(
                             file, dataTransformation
                         ).to_csv(file, index=False)
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
             # # character n-grams
             # if ngrams_character_var or bySentenceIndex_character_var:
@@ -263,10 +261,7 @@ def run_ngrams(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # VIEWER ____________________________________________________________________________________________
 
@@ -411,9 +406,6 @@ def run_ngrams(
             )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         return filesToOpen

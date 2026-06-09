@@ -8,602 +8,152 @@ import simplekml
 
 logger = logging.getLogger(__name__)
 
-# icon_type are the different types of icon, like pushpin, paddle teardrop, paddle square....
-# 	Expected input will be a string, for example: icon_type == "pushpin"
-# icon_style are the different styles of a specific icon, like pushpin has different colors, paddle teardrop has more styles including numbers, letters, colors and more
-# Expected input will be a string, for example: icon_style == "blue"
-# View all icon types and styles here:
-# http://kml4earth.appspot.com/icons.html#pushpin
+# Icon URLs from http://kml4earth.appspot.com/icons.html#pushpin
+_TRACK = "http://earth.google.com/images/kml-icons/track-directional/track-"
+_PADDLE = "http://maps.google.com/mapfiles/kml/paddle/"
+_PUSH = "http://maps.google.com/mapfiles/kml/pushpin/"
+_SHAPE = "http://maps.google.com/mapfiles/kml/shapes/"
+
+_ICON_URLS: dict[str, dict[str, str]] = {
+    "Directions": {
+        "none": f"{_TRACK}none.png",
+        **{"North (track 0)": f"{_TRACK}0.png"},
+        **{f"Northeast (track {i})": f"{_TRACK}{i}.png" for i in range(1, 4)},
+        **{"East (track 4)": f"{_TRACK}4.png"},
+        **{f"Southeast (track {i})": f"{_TRACK}{i}.png" for i in range(5, 8)},
+        **{"South (track 8)": f"{_TRACK}8.png"},
+        **{f"Southwest (track {i})": f"{_TRACK}{i}.png" for i in range(9, 12)},
+        **{"West (track 12)": f"{_TRACK}12.png"},
+        **{f"Northwest (track {i})": f"{_TRACK}{i}.png" for i in range(13, 16)},
+    },
+    "Paddles (teardrop)": {
+        **{str(i): f"{_PADDLE}{i}.png" for i in range(1, 11)},
+        **{c: f"{_PADDLE}{c}.png" for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+        "go-sign(green)": f"{_PADDLE}go.png",
+        "pause-sign(yellow)": f"{_PADDLE}pause.png",
+        "stop-sign(red)": f"{_PADDLE}stop.png",
+        "blue-blank": f"{_PADDLE}blu-blank.png",
+        "blue-circle": f"{_PADDLE}blu-circle.png",
+        "blue-diamond": f"{_PADDLE}blu-diamond.png",
+        "blue-square": f"{_PADDLE}blu-square.png",
+        "blue-stars": f"{_PADDLE}blu-stars.png",
+        "green-blank": f"{_PADDLE}grn-blank.png",
+        "green-circle": f"{_PADDLE}grn-circle.png",
+        "green-diamond": f"{_PADDLE}grn-diamond.png",
+        "green-square": f"{_PADDLE}grn-square.png",
+        "green-stars": f"{_PADDLE}grn-stars.png",
+        "light-blue-blank": f"{_PADDLE}ltblu-blank.png",
+        "light-blue-circle": f"{_PADDLE}ltblu-circle.png",
+        "light-blue-diamond": f"{_PADDLE}ltblu-diamond.png",
+        "light-blue-square": f"{_PADDLE}ltblu-square.png",
+        "light-blue-stars": f"{_PADDLE}ltblu-stars.png",
+        "pink-blank": f"{_PADDLE}pink-blank.png",
+        "pink-circle": f"{_PADDLE}pink-circle.png",
+        "pink-diamond": f"{_PADDLE}pink-diamond.png",
+        "pink-square": f"{_PADDLE}pink-square.png",
+        "pink-stars": f"{_PADDLE}pink-stars.png",
+        "purple-blank": f"{_PADDLE}purple-blank.png",
+        "purple-circle": f"{_PADDLE}purple-circle.png",
+        "purple-diamond": f"{_PADDLE}purple-diamond.png",
+        "purple-square": f"{_PADDLE}purple-square.png",
+        "purple-stars": f"{_PADDLE}purple-stars.png",
+        "red-circle": f"{_PADDLE}red-circle.png",
+        "red-diamond": f"{_PADDLE}red-diamond.png",
+        "red-square": f"{_PADDLE}red-square.png",
+        "red-stars": f"{_PADDLE}red-stars.png",
+        "white-blank": f"{_PADDLE}wht-blank.png",
+        "white-circle": f"{_PADDLE}wht-circle.png",
+        "white-diamond": f"{_PADDLE}wht-diamond.png",
+        "white-square": f"{_PADDLE}wht-square.png",
+        "white-stars": f"{_PADDLE}wht-stars.png",
+        "yellow-blank": f"{_PADDLE}ylw-blank.png",
+        "yellow-circle": f"{_PADDLE}ylw-circle.png",
+        "yellow-diamond": f"{_PADDLE}ylw-diamond.png",
+        "yellow-square": f"{_PADDLE}ylw-square.png",
+        "yellow-stars": f"{_PADDLE}ylw-stars.png",
+        "orange-blank": f"{_PADDLE}orange-blank.png",
+        "orange-circle": f"{_PADDLE}orange-circle.png",
+        "orange-diamond": f"{_PADDLE}orange-diamond.png",
+        "orange-square": f"{_PADDLE}orange-square.png",
+        "orange-stars": f"{_PADDLE}orange-stars.png",
+    },
+    "Paddles (square)": {
+        **{str(i): f"{_PADDLE}{i}-lv.png" for i in range(1, 11)},
+        "go-sign(green)": f"{_PADDLE}go-lv.png",
+        "pause-sign(yellow)": f"{_PADDLE}pause-lv.png",
+        "stop-sign(red)": f"{_PADDLE}stop-lv.png",
+        "blue-blank": f"{_PADDLE}blu-blank-lv.png",
+        "blue-circle": f"{_PADDLE}blu-circle-lv.png",
+        "blue-diamond": f"{_PADDLE}blu-diamond-lv.png",
+        "blue-square": f"{_PADDLE}blu-square-lv.png",
+        "blue-stars": f"{_PADDLE}blu-stars-lv.png",
+        "green-blank": f"{_PADDLE}grn-blank-lv.png",
+        "green-circle": f"{_PADDLE}grn-circle-lv.png",
+        "green-diamond": f"{_PADDLE}grn-diamond-lv.png",
+        "green-square": f"{_PADDLE}grn-square-lv.png",
+        "green-stars": f"{_PADDLE}grn-stars-lv.png",
+        "purple-blank": f"{_PADDLE}purple-blankv.png",
+        "purple-circle": f"{_PADDLE}purple-circle-lv.png",
+        "purple-diamond": f"{_PADDLE}purple-diamond-lv.png",
+        "purple-square": f"{_PADDLE}purple-square-lv.png",
+        "purple-stars": f"{_PADDLE}purple-stars-lv.png",
+        "red-circle": f"{_PADDLE}red-circle-lv.png",
+        "red-diamond": f"{_PADDLE}red-diamond-lv.png",
+        "red-square": f"{_PADDLE}red-square-lv.png",
+        "red-stars": f"{_PADDLE}red-stars-lv.png",
+        "white-blank": f"{_PADDLE}wht-blank-lv.png",
+        "white-circle": f"{_PADDLE}wht-circle-lv.png",
+        "white-diamond": f"{_PADDLE}wht-diamond-lv.png",
+        "white-square": f"{_PADDLE}wht-square-lv.png",
+        "white-stars": f"{_PADDLE}wht-stars-lv.png",
+        "yellow-blank": f"{_PADDLE}ylw-blank-lv.png",
+        "yellow-circle": f"{_PADDLE}ylw-circle-lv.png",
+        "yellow-diamond": f"{_PADDLE}ylw-diamond-lv.png",
+        "yellow-square": f"{_PADDLE}ylw-square-lv.png",
+        "yellow-stars": f"{_PADDLE}ylw-stars-lv.png",
+    },
+    "Pushpins": {
+        "blue": f"{_PUSH}blue-pushpin.png",
+        "green": f"{_PUSH}grn-pushpin.png",
+        "light_blue": f"{_PUSH}ltblu-pushpin.png",
+        "pink": f"{_PUSH}pink-pushpin.png",
+        "purple": f"{_PUSH}purple-pushpin.png",
+        "red": f"{_PUSH}red-pushpin.png",
+        "white": f"{_PUSH}wht-pushpin.png",
+        "yellow": f"{_PUSH}ylw-pushpin.png",
+    },
+    "Shapes": {s: f"{_SHAPE}{s}.png" for s in [
+        "airports", "arrow-reverse", "arrow", "arts", "bars", "broken_link",
+        "bus", "camera", "campfire", "campground", "capital_big",
+        "capital_big_highlight", "capital_small", "capital_small_highlight",
+        "caution", "church", "coffee", "convenience", "cross-hairs",
+        "cross-hairs_highlight", "cycling", "dining", "dollar", "donut",
+        "earthquake", "electronics", "euro", "falling_rocks", "ferry",
+        "firedept", "fishing", "flag", "forbidden", "gas_stations", "golf",
+        "grocery", "heliport", "highway", "hiker", "homegardenbusiness",
+        "horsebackriding", "hospitals", "info-i", "info", "info_circle",
+        "lodging", "man", "marina", "mechanic", "motorcycling", "mountains",
+        "movies", "open-diamond", "parking_lot", "parks", "pharmacy_rx",
+        "phone", "picnic", "placemark_circle", "placemark_circle_highlight",
+        "placemark_square", "placemark_square_highlight", "play", "poi",
+        "police", "polygon", "post_office", "rail", "ranger_station",
+        "realestate", "road_shield1", "road_shield2", "road_shield3", "ruler",
+        "sailing", "salon", "schools", "shaded_dot", "shopping", "ski",
+        "snack_bar", "square", "star", "subway", "swimming", "target",
+        "terrain", "toilets", "trail", "tram", "triangle", "truck", "volcano",
+        "water", "webcam", "wheel_chair_accessible", "woman", "yen",
+        "sunny", "partly_cloudy", "snowflake_simple", "rainy", "thunderstorm",
+    ]},
+}
+# cabs reuses the arts URL
+_ICON_URLS["Shapes"]["cabs"] = f"{_SHAPE}arts.png"
+
+_DEFAULT_ICON = f"{_PUSH}ylw-pushpin.png"
 
 
-# called from GIS_GUI
-# must be connected to the internet
-def pin_icon_select(icon_type, icon_style):
-    icon_url = "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"
-    if icon_type == "Directions":
-        # direction style, 17 styles in total
-        if icon_style == "none":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-none.png"
-        elif icon_style == "North (track 0)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-0.png"
-            )
-        elif icon_style == "Northeast (track 1)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-1.png"
-            )
-        elif icon_style == "Northeast (track 2)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-2.png"
-            )
-        elif icon_style == "Northeast (track 3)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-3.png"
-            )
-        elif icon_style == "East (track 4)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-4.png"
-            )
-        elif icon_style == "Southeast (track 5)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-5.png"
-            )
-        elif icon_style == "Southeast (track 6)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-6.png"
-            )
-        elif icon_style == "Southeast (track 7)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-7.png"
-            )
-        elif icon_style == "South (track 8)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-8.png"
-            )
-        elif icon_style == "Southwest (track 9)":
-            icon_url = (
-                "http://earth.google.com/images/kml-icons/track-directional/track-9.png"
-            )
-        elif icon_style == "Southwest (track 10)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-10.png"
-        elif icon_style == "Southwest (track 11)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-11.png"
-        elif icon_style == "West (track 12)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-12.png"
-        elif icon_style == "Northwest (track 13)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-13.png"
-        elif icon_style == "Northwest (track 14)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-14.png"
-        elif icon_style == "Northwest (track 15)":
-            icon_url = "http://earth.google.com/images/kml-icons/track-directional/track-15.png"
-
-    # Paddle teardrop styles
-    elif icon_type == "Paddles (teardrop)":
-        # Number style, from 1 to 10
-        if icon_style == "1":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/1.png"
-        elif icon_style == "2":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/2.png"
-        elif icon_style == "3":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/3.png"
-        elif icon_style == "4":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/4.png"
-        elif icon_style == "5":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/5.png"
-        elif icon_style == "6":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/6.png"
-        elif icon_style == "7":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/7.png"
-        elif icon_style == "8":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/8.png"
-        elif icon_style == "9":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/9.png"
-        elif icon_style == "10":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/10.png"
-
-        # Letter style, from A to Z
-        elif icon_style == "A":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/A.png"
-        elif icon_style == "B":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/B.png"
-        elif icon_style == "C":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/C.png"
-        elif icon_style == "D":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/D.png"
-        elif icon_style == "E":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/E.png"
-        elif icon_style == "F":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/F.png"
-        elif icon_style == "G":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/G.png"
-        elif icon_style == "H":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/H.png"
-        elif icon_style == "I":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/I.png"
-        elif icon_style == "J":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/J.png"
-        elif icon_style == "K":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/K.png"
-        elif icon_style == "L":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/L.png"
-        elif icon_style == "M":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/M.png"
-        elif icon_style == "N":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/N.png"
-        elif icon_style == "O":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/O.png"
-        elif icon_style == "P":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/P.png"
-        elif icon_style == "Q":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/Q.png"
-        elif icon_style == "R":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/R.png"
-        elif icon_style == "S":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/S.png"
-        elif icon_style == "T":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/T.png"
-        elif icon_style == "U":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/U.png"
-        elif icon_style == "V":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/V.png"
-        elif icon_style == "W":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/W.png"
-        elif icon_style == "X":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/X.png"
-        elif icon_style == "Y":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/Y.png"
-        elif icon_style == "Z":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/Z.png"
-
-        # Go/Pause/Stop style, 3 styles in total (go is green, pause is yellow, stop is red)
-        elif icon_style == "go-sign(green)":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/go.png"
-        elif icon_style == "pause-sign(yellow)":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pause.png"
-        elif icon_style == "stop-sign(red)":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/stop.png"
-
-        # Color and pattern style, 9 styles in total (blue, green, light blue, pink, purple, red, white, yellow, orange)
-        elif icon_style == "blue-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-blank.png"
-        elif icon_style == "blue-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-circle.png"
-        elif icon_style == "blue-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-diamond.png"
-        elif icon_style == "blue-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-square.png"
-        elif icon_style == "blue-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-stars.png"
-
-        elif icon_style == "green-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png"
-        elif icon_style == "green-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png"
-        elif icon_style == "green-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-diamond.png"
-        elif icon_style == "green-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-square.png"
-        elif icon_style == "green-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-stars.png"
-
-        elif icon_style == "light-blue-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ltblu-blank.png"
-        elif icon_style == "light-blue-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png"
-        elif icon_style == "light-blue-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ltblu-diamond.png"
-        elif icon_style == "light-blue-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ltblu-square.png"
-        elif icon_style == "light-blue-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ltblu-stars.png"
-
-        elif icon_style == "pink-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pink-blank.png"
-        elif icon_style == "pink-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pink-circle.png"
-        elif icon_style == "pink-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pink-diamond.png"
-        elif icon_style == "pink-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pink-square.png"
-        elif icon_style == "pink-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pink-stars.png"
-
-        elif icon_style == "purple-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-blank.png"
-        elif icon_style == "purple-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-circle.png"
-        elif icon_style == "purple-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-diamond.png"
-        elif icon_style == "purple-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-square.png"
-        elif icon_style == "purple-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-stars.png"
-
-        elif icon_style == "red-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-circle.png"
-        elif icon_style == "red-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-diamond.png"
-        elif icon_style == "red-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-square.png"
-        elif icon_style == "red-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-stars.png"
-
-        elif icon_style == "white-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-blank.png"
-        elif icon_style == "white-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-circle.png"
-        elif icon_style == "white-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-diamond.png"
-        elif icon_style == "white-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-square.png"
-        elif icon_style == "white-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-stars.png"
-
-        elif icon_style == "yellow-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-blank.png"
-        elif icon_style == "yellow-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png"
-        elif icon_style == "yellow-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-diamond.png"
-        elif icon_style == "yellow-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-square.png"
-        elif icon_style == "yellow-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-stars.png"
-
-        elif icon_style == "orange-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/orange-blank.png"
-        elif icon_style == "orange-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/orange-circle.png"
-        elif icon_style == "orange-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/orange-diamond.png"
-        elif icon_style == "orange-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/orange-square.png"
-        elif icon_style == "orange-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/orange-stars.png"
-
-    # Paddle square styles
-    elif icon_type == "Paddles (square)":
-        # Number style, from 1 to 10
-        if icon_style == "1":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/1-lv.png"
-        elif icon_style == "2":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/2-lv.png"
-        elif icon_style == "3":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/3-lv.png"
-        elif icon_style == "4":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/4-lv.png"
-        elif icon_style == "5":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/5-lv.png"
-        elif icon_style == "6":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/6-lv.png"
-        elif icon_style == "7":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/7-lv.png"
-        elif icon_style == "8":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/8-lv.png"
-        elif icon_style == "9":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/9-lv.png"
-        elif icon_style == "10":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/10-lv.png"
-
-        # Go/Pause/Stop style, 3 styles in total (go is green, pause is yellow, stop is red)
-        elif icon_style == "go-sign(green)":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/go-lv.png"
-        elif icon_style == "pause-sign(yellow)":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/pause-lv.png"
-        elif icon_style == "stop-sign(red)":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/stop-lv.png"
-
-        # Color and pattern style, 6 styles in total (blue, green, purple, red, white, yellow)
-        elif icon_style == "blue-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-blank-lv.png"
-        elif icon_style == "blue-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-circle-lv.png"
-        elif icon_style == "blue-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-diamond-lv.png"
-        elif icon_style == "blue-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-square-lv.png"
-        elif icon_style == "blue-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/blu-stars-lv.png"
-
-        elif icon_style == "green-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png"
-        elif icon_style == "green-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-circle-lv.png"
-        elif icon_style == "green-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-diamond-lv.png"
-        elif icon_style == "green-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-square-lv.png"
-        elif icon_style == "green-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/grn-stars-lv.png"
-
-        elif icon_style == "purple-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-blankv.png"
-        elif icon_style == "purple-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-circle-lv.png"
-        elif icon_style == "purple-diamond":
-            icon_url = (
-                "http://maps.google.com/mapfiles/kml/paddle/purple-diamond-lv.png"
-            )
-        elif icon_style == "purple-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-square-lv.png"
-        elif icon_style == "purple-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/purple-stars-lv.png"
-
-        elif icon_style == "red-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-circle-lv.png"
-        elif icon_style == "red-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-diamond-lv.png"
-        elif icon_style == "red-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-square-lv.png"
-        elif icon_style == "red-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/red-stars-lv.png"
-
-        elif icon_style == "white-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-blank-lv.png"
-        elif icon_style == "white-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-circle-lv.png"
-        elif icon_style == "white-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-diamond-lv.png"
-        elif icon_style == "white-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-square-lv.png"
-        elif icon_style == "white-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/wht-stars-lv.png"
-
-        elif icon_style == "yellow-blank":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-blank-lv.png"
-        elif icon_style == "yellow-circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-circle-lv.png"
-        elif icon_style == "yellow-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-diamond-lv.png"
-        elif icon_style == "yellow-square":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-square-lv.png"
-        elif icon_style == "yellow-stars":
-            icon_url = "http://maps.google.com/mapfiles/kml/paddle/ylw-stars-lv.png"
-
-    # Pushpin styles
-    elif icon_type == "Pushpins":
-        # All colors, 8 in total (blue, green, light blue, pink, purple, red, white, yellow)
-        if icon_style == "blue":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png"
-        elif icon_style == "green":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png"
-        elif icon_style == "light_blue":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png"
-        elif icon_style == "pink":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png"
-        elif icon_style == "purple":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png"
-        elif icon_style == "red":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png"
-        elif icon_style == "white":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/wht-pushpin.png"
-        elif icon_style == "yellow":
-            icon_url = "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"
-
-    # Shapes style
-    elif icon_type == "Shapes":
-        # 103 shapes in total, first 98 are in alphabetic order of their first letter
-        # last 5 are different weathers
-        if icon_style == "airports":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/airports.png"
-        elif icon_style == "arrow-reverse":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/arrow-reverse.png"
-        elif icon_style == "arrow":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/arrow.png"
-        elif icon_style == "arts":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/arts.png"
-        elif icon_style == "bars":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/bars.png"
-        elif icon_style == "broken_link":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/broken_link.png"
-        elif icon_style == "bus":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/bus.png"
-        elif icon_style == "cabs":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/arts.png"
-        elif icon_style == "camera":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/camera.png"
-        elif icon_style == "campfire":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/campfire.png"
-        elif icon_style == "campground":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/campground.png"
-        elif icon_style == "capital_big":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/capital_big.png"
-        elif icon_style == "capital_big_highlight":
-            icon_url = (
-                "http://maps.google.com/mapfiles/kml/shapes/capital_big_highlight.png"
-            )
-        elif icon_style == "capital_small":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/capital_small.png"
-        elif icon_style == "capital_small_highlight":
-            icon_url = (
-                "http://maps.google.com/mapfiles/kml/shapes/capital_small_highlight.png"
-            )
-        elif icon_style == "caution":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/caution.png"
-        elif icon_style == "church":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/church.png"
-        elif icon_style == "coffee":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/coffee.png"
-        elif icon_style == "convenience":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/convenience.png"
-        elif icon_style == "cross-hairs":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/cross-hairs.png"
-        elif icon_style == "cross-hairs_highlight":
-            icon_url = (
-                "http://maps.google.com/mapfiles/kml/shapes/cross-hairs_highlight.png"
-            )
-        elif icon_style == "cycling":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/cycling.png"
-        elif icon_style == "dining":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/dining.png"
-        elif icon_style == "dollar":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/dollar.png"
-        elif icon_style == "donut":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/donut.png"
-        elif icon_style == "earthquake":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/earthquake.png"
-        elif icon_style == "electronics":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/electronics.png"
-        elif icon_style == "euro":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/euro.png"
-        elif icon_style == "falling_rocks":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/falling_rocks.png"
-        elif icon_style == "ferry":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/ferry.png"
-        elif icon_style == "firedept":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/firedept.png"
-        elif icon_style == "fishing":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/fishing.png"
-        elif icon_style == "flag":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/flag.png"
-        elif icon_style == "forbidden":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/forbidden.png"
-        elif icon_style == "gas_stations":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/gas_stations.png"
-        elif icon_style == "golf":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/golf.png"
-        elif icon_style == "grocery":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/grocery.png"
-        elif icon_style == "heliport":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/heliport.png"
-        elif icon_style == "highway":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/highway.png"
-        elif icon_style == "hiker":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/hiker.png"
-        elif icon_style == "homegardenbusiness":
-            icon_url = (
-                "http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png"
-            )
-        elif icon_style == "horsebackriding":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/horsebackriding.png"
-        elif icon_style == "hospitals":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/hospitals.png"
-        elif icon_style == "info-i":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/info-i.png"
-        elif icon_style == "info":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/info.png"
-        elif icon_style == "info_circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/info_circle.png"
-        elif icon_style == "lodging":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/lodging.png"
-        elif icon_style == "man":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/man.png"
-        elif icon_style == "marina":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/marina.png"
-        elif icon_style == "mechanic":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/mechanic.png"
-        elif icon_style == "motorcycling":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/motorcycling.png"
-        elif icon_style == "mountains":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/mountains.png"
-        elif icon_style == "movies":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/movies.png"
-        elif icon_style == "open-diamond":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/open-diamond.png"
-        elif icon_style == "parking_lot":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/parking_lot.png"
-        elif icon_style == "parks":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/parks.png"
-        elif icon_style == "pharmacy_rx":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/pharmacy_rx.png"
-        elif icon_style == "phone":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/phone.png"
-        elif icon_style == "picnic":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/picnic.png"
-        elif icon_style == "placemark_circle":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png"
-        elif icon_style == "placemark_circle_highlight":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png"
-        elif icon_style == "placemark_square":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/placemark_square.png"
-        elif icon_style == "placemark_square_highlight":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/placemark_square_highlight.png"
-        elif icon_style == "play":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/play.png"
-        elif icon_style == "poi":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/poi.png"
-        elif icon_style == "police":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/police.png"
-        elif icon_style == "polygon":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/polygon.png"
-        elif icon_style == "post_office":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/post_office.png"
-        elif icon_style == "rail":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/rail.png"
-        elif icon_style == "ranger_station":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/ranger_station.png"
-        elif icon_style == "realestate":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/realestate.png"
-        elif icon_style == "road_shield1":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/road_shield1.png"
-        elif icon_style == "road_shield2":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/road_shield2.png"
-        elif icon_style == "road_shield3":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/road_shield3.png"
-        elif icon_style == "ruler":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/ruler.png"
-        elif icon_style == "sailing":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/sailing.png"
-        elif icon_style == "salon":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/salon.png"
-        elif icon_style == "schools":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/schools.png"
-        elif icon_style == "shaded_dot":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/shaded_dot.png"
-        elif icon_style == "shopping":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/shopping.png"
-        elif icon_style == "ski":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/ski.png"
-        elif icon_style == "snack_bar":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/snack_bar.png"
-        elif icon_style == "square":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/square.png"
-        elif icon_style == "star":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/star.png"
-        elif icon_style == "subway":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/subway.png"
-        elif icon_style == "swimming":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/swimming.png"
-        elif icon_style == "target":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/target.png"
-        elif icon_style == "terrain":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/terrain.png"
-        elif icon_style == "toilets":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/toilets.png"
-        elif icon_style == "trail":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/trail.png"
-        elif icon_style == "tram":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/tram.png"
-        elif icon_style == "triangle":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/triangle.png"
-        elif icon_style == "truck":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/truck.png"
-        elif icon_style == "volcano":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/volcano.png"
-        elif icon_style == "water":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/water.png"
-        elif icon_style == "webcam":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/webcam.png"
-        elif icon_style == "wheel_chair_accessible":
-            icon_url = (
-                "http://maps.google.com/mapfiles/kml/shapes/wheel_chair_accessible.png"
-            )
-        elif icon_style == "woman":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/woman.png"
-        elif icon_style == "yen":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/yen.png"
-        elif icon_style == "sunny":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/sunny.png"
-        elif icon_style == "partly_cloudy":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/partly_cloudy.png"
-        elif icon_style == "snowflake_simple":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/snowflake_simple.png"
-        elif icon_style == "rainy":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/rainy.png"
-        elif icon_style == "thunderstorm":
-            icon_url = "http://maps.google.com/mapfiles/kml/shapes/thunderstorm.png"
-
-    return icon_url
+def pin_icon_select(icon_type: str, icon_style: str) -> str:
+    """Return the KML icon URL for a given type/style combination."""
+    return _ICON_URLS.get(icon_type, {}).get(icon_style, _DEFAULT_ICON)
 
 
 # inputFilename is a csv file generated by the NER_extractor

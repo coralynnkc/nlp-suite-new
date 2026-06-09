@@ -18,29 +18,22 @@ there is also kbp.maxlen, ner.maxlen, and pos.maxlen but they be less necessary 
 WE DO NOT USE ANY OF THESE RECOMMENDATIONS
 """
 
-import csv
-import json
 import logging
 import os
-import re
 import string
 import time
 
-import charts_util
 import file_splitter_ByLength_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
-import nltk
 
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
 import pandas as pd
 import parsers_annotators_visualization_util
 import reminders_util
-import Stanford_CoreNLP_clause_util
-import Stanford_CoreNLP_SVO_enhanced_dependencies_util  # Enhanced++ dependencies
 from pycorenlp import StanfordCoreNLP
 
 logger = logging.getLogger(__name__)
@@ -1225,10 +1218,7 @@ def CoreNLP_annotate(
                     dataTransformation,
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     # filesErroris a double list [[]] of headers and errors
     if len(filesError) > 0:
@@ -1388,16 +1378,9 @@ from corenlp_json_discourse import (
     process_json_quote,
 )
 from corenlp_json_gis import (
-    check_pronouns,
     count_pronouns,
-    get_csv_column_unique_val_list,
-    similar_string_floor_filter,
-    visualize_GIS_maps,
 )
 from corenlp_json_ner import (
-    check_NER_tokenBegin_tokenEnd,
-    date_get_info,
-    date_get_tense,
     process_json_ner,
     process_json_normalized_date,
     process_json_sentiment,
@@ -1411,6 +1394,6 @@ from corenlp_json_syntax import (
     process_json_parser,
     process_json_postag,
     process_json_sentence,
-    process_json_single_annotation,
     process_json_SVO_enhanced_dependencies,
 )
+from util import collect

@@ -41,13 +41,14 @@ import reminders_util
 IO_libraries_util.import_nltk_resource("corpora/stopwords", "stopwords")
 
 from nltk.corpus import stopwords
+from util import collect
 
 logger = logging.getLogger(__name__)
 
 # https://spacy.io/usage/models OTHER LANGUAGES ARE AVAILABLE; CHECK WEBSITE!
 try:
     spacy.load("en_core_web_sm")
-except Exception:
+except OSError:
     if platform == "darwin":
         msg = "\n\nAt terminal, type sudo python -m spacy download en_core_web_sm"
     if platform == "win32":
@@ -135,7 +136,7 @@ def malletModelling(
         ldamallet = gensim.models.wrappers.LdaMallet(
             MalletDir, corpus=corpus, num_topics=num_topics, id2word=id2word
         )
-    except Exception:
+    except (RuntimeError, OSError):
         head, scriptName = os.path.split(os.path.basename(__file__))
         reminders_util.getReminders_list(scriptName)
         reminders_util.checkReminder(
@@ -283,10 +284,7 @@ def malletModelling(
     )
 
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # Topic distribution across documents
     # Number of Documents for Each Topic
@@ -373,7 +371,6 @@ def run_Gensim(
     nounsOnly,
     run_Mallet,
 ):
-    global filesToOpen
     filesToOpen = []
     # if pd.__version__[0]=='2':
 
@@ -576,12 +573,10 @@ def run_Gensim(
     pyLDAvis.prepared_data_to_html(vis)
     try:
         pyLDAvis.save_html(vis, outputFilename)
-    except Exception:
-        title = ("Output html file error",)
+    except OSError as e:
         message = "Gensim failed to generate the html output file."
         logger.info(message)
-        raise ValueError(title) from None
-        return
+        raise ValueError(message) from e
 
     IO_user_interface_util.timed_alert(
         2000,

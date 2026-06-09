@@ -6,18 +6,11 @@ import io
 import logging
 import os
 import re
-from collections import Counter
 
-import charts_Excel_util
-import charts_Plotly_util
 import IO_csv_util
-import IO_user_interface_util
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
-import statistics_csv_util
-from plotly.subplots import make_subplots
 
 
 def extract_file_name(link_string):
@@ -160,10 +153,7 @@ def interpolate_colors(color1, color2, num_colors):
 def cmaps(start_color, end_color):
     colors = interpolate_colors(start_color, end_color, 256)
     cmap_custom = LinearSegmentedColormap.from_list("custom", colors, N=256)
-    try:
-        return cmap_custom
-    except Exception:
-        return "YlOrBr"
+    return cmap_custom
 
 
 def main_colormap(
@@ -185,7 +175,7 @@ def main_colormap(
         renamedf(step2)  # We rename to file relative location, not absolute location
     try:
         cmap = cmaps(eval(params[1]), eval(params[2]))
-    except Exception:
+    except (ValueError, TypeError):
         cmap = cmaps((135, 207, 236), (0, 0, 255))
     import IO_files_util
 
@@ -334,8 +324,8 @@ def visualize_colormap_data(
             cmap=color,
             cbar_kws={"label": normalize},
         )
-    except Exception:
-        logger.info("There appears to be ann error with cmap; we revert to default ")
+    except (ValueError, TypeError):
+        logger.info("There appears to be an error with cmap; we revert to default")
         sns.heatmap(
             transposed_data,
             annot=False,
@@ -411,7 +401,7 @@ def colormap(
         renamedf(step2)  # We rename to file relative location, not absolute location
     try:
         cmap = cmaps(eval(params[1]), eval(params[2]))
-    except Exception:
+    except (ValueError, TypeError):
         cmap = cmaps((135, 207, 236), (0, 0, 255))
     import IO_files_util
 
@@ -518,22 +508,22 @@ def timechart(
         for i in range(0, len(data[date_field])):
             try:
                 date.append(re.search(r"\d.*\d", data[date_field][i])[0])
-            except Exception:
+            except (TypeError, IndexError):
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 year.append(re.search(r"\d{4}", date[i])[0])
-            except Exception:
+            except (TypeError, IndexError):
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 month.append(year[i] + "-" + date[i][0:2])
-            except Exception:
+            except (TypeError, IndexError):
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 day.append(month[i] + "-" + date[i][3:5])
-            except Exception:
+            except (TypeError, IndexError):
                 continue
         data["year"] = year
         data["month"] = month

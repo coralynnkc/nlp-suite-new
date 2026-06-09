@@ -2,6 +2,7 @@ import logging
 
 import charts_util
 import IO_csv_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -80,10 +81,7 @@ def run_excel_plotly_charts(
         inputFileData=inputFileData,
     )  # TODO to be changed
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     return outputFiles
 

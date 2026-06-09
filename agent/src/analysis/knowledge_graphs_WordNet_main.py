@@ -11,6 +11,7 @@ import IO_libraries_util
 import knowledge_graphs_WordNet_util
 import pandas as pd
 import Stanford_CoreNLP_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -293,10 +294,7 @@ def run_kg_wordnet(
                     language_var,
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
             if nouns_var:
                 temp_csv_file = files[1]  # Nouns but... double check
@@ -316,10 +314,7 @@ def run_kg_wordnet(
                     language_var,
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     if aggregate_bySentenceID_var == 1:
         # check that input file is a CoNLL table
@@ -340,7 +335,4 @@ def run_kg_wordnet(
             dataTransformation,
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)

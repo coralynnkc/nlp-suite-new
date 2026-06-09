@@ -12,6 +12,7 @@ import charts_util
 import IO_files_util
 import pandas as pd
 import statistics_txt_util
+from util import collect
 
 
 def k_sent(
@@ -176,10 +177,7 @@ def k_sent(
                 chart_title_label="",
             )  #'Concreteness Statistics')
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     for i in range(1, max(conll["Document ID"]) + 1):
         doc_conll = conll.loc[conll["Document ID"] == i]
@@ -316,9 +314,6 @@ def k_sent(
                 chart_title_label="",
             )  #'Concreteness Statistics')
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     return outputDir, filesToOpen

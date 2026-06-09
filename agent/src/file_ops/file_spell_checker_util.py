@@ -31,6 +31,7 @@ from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from spellchecker import SpellChecker
 from textblob import Word
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -256,10 +257,7 @@ def nltk_unusual_words(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -357,10 +355,7 @@ def check_for_typo_sub_dir(
             chart_title_label="",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -1072,10 +1067,7 @@ def check_for_typo(
             chart_title_label="",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     if openOutputFiles:
         IO_files_util.OpenOutputFiles(openOutputFiles, filesToOpen, outputDir)
@@ -1601,10 +1593,7 @@ def language_detection(
             count_var=1,
         )
         if chartPackage == "Excel" and outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # if openOutputFiles:
     return filesToOpen

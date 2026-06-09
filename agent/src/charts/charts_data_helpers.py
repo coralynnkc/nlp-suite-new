@@ -2,22 +2,12 @@
 # Written by Yuhang Feng November 2019-April 2020
 # Edited by Roberto Franzosi, Tony May 2022
 # Edited by Samir Kaddoura, March 2023
-import io
-import logging
 import os
-import re
 from collections import Counter
 
-import charts_Excel_util
-import charts_Plotly_util
 import IO_csv_util
 import IO_user_interface_util
-import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import statistics_csv_util
-from plotly.subplots import make_subplots
 
 
 def build_timed_alert_message(chart_type, withHeader_var, count_var):

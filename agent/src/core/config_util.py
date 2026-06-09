@@ -137,7 +137,6 @@ def write_external_software_config_file(
         ]
 
         csv_file.to_csv(config_filename_path, encoding="utf-8", index=False)
-        csv_file.to_csv(config_filename_path, encoding="utf-8", index=False)
 
         IO_user_interface_util.timed_alert(
             2000,
@@ -453,7 +452,7 @@ def get_missing_IO_values(
     # loop through the 4 input/output options: input filename, input man dir, input secondary dir, output dir
     index = 0
     # index ranges 0-3: Input filename, input main dir, input secondary dir, output dir
-    while index <= len(config_input_output_alphabetic_options):
+    while index < len(config_input_output_alphabetic_options):
         if index == 0:  # filename;
             # if the filename is an option (config_input_output_numeric_options[index-1])
             #   and its path value is config_option_csv[index-1][1] is blank check directory
@@ -504,43 +503,10 @@ def check_missing_IO(
 ):
     if config_filename == "NLP_config.csv" or "NLP_menu_main" in scriptName:
         config_filename = "NLP_default_IO_config.csv"
-    # the IO_button_name error message changes depending upon the call
-    # there is no RUN button when setting up IO information so the call to check_missing_IO should be silent
-    # setup all potential error messages
-
-    # similar messages for run_button_disabled_msg are displayed in GUIO_util.activateRunButton
-    if "NLP_menu_main" in scriptName:
-        pass
-    else:
-        pass
-    if "setup_IO_main" in scriptName:
-        pass
-    elif "NLP_menu_main" in scriptName:
-        pass
-    else:
-        if not IO_setup_display_brief:
-            pass  #'Press OK to enter the required I/O information using the \'Select INPUT and Select OUTPUT\' buttons at the top of the GUI.\nPress CANCEL to exit without entering I/O information.'
-        else:
-            pass
-    if IO_setup_display_brief:
-        pass  # when displaying brief
-    if not IO_setup_display_brief:
-        if "NLP_menu_main" in scriptName:
-            pass  # when displaying from NLP_menu_main
-        else:
-            pass
     Run_Button_Off = False
-    # do not check IO requirements for NLP.py; too many IO options available depending upon the script run
-    # if config_filename=="NLP_config.csv" or config_filename=="social-science-research_config.csv":
     if config_filename == "social-science-research_config.csv":
-        # RUN button always active since several options are available and IO gets checked in the respective scripts
         Run_Button_Off = False
         missing_IO = ""
-    # test for "filename with path" since the actual label could be "Input txt filename with path" or "Input csv filename with path"
-    if "filename with path" in missing_IO and "Input files directory" in missing_IO:
-        pass
-    assert missing_IO == ""
-
     if Run_Button_Off:
         run_button_state = "disabled"
     else:

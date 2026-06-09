@@ -90,13 +90,16 @@ def get_csvfile_headers(csvFile, ask_Question=False, inputFileData=""):
     headers = ""
     answer = True
 
-    if inputFileData:
+    if inputFileData is not None and (isinstance(inputFileData, pd.DataFrame) or inputFileData != ""):
         # Handle inputFileData if provided
         try:
-            data = pd.read_csv(
-                io.StringIO(inputFileData), encoding="utf-8-sig", on_bad_lines="skip"
-            )
-            headers = data.columns.tolist()
+            if isinstance(inputFileData, pd.DataFrame):
+                headers = inputFileData.columns.tolist()
+            else:
+                data = pd.read_csv(
+                    io.StringIO(inputFileData), encoding="utf-8-sig", on_bad_lines="skip"
+                )
+                headers = data.columns.tolist()
         except Exception as e:
             logger.info(f"Error while processing inputFileData: {e}")
             headers = ""

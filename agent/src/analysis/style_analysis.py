@@ -7,6 +7,7 @@ import IO_libraries_util
 import Stanza_util
 import statistics_txt_util
 import style_analysis_abstract_concreteness_analysis_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -127,10 +128,7 @@ def run_style_analysis(
                 language,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "Hapax legomena" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.process_words(
@@ -145,10 +143,7 @@ def run_style_analysis(
                 language,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if (
             "*" in vocabulary_analysis_menu_var
@@ -172,10 +167,7 @@ def run_style_analysis(
                     language,
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "Repetition: Words" in vocabulary_analysis_menu_var:
             if "*" in vocabulary_analysis_menu_var:
@@ -194,10 +186,7 @@ def run_style_analysis(
                 language,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "Repetition: Last" in vocabulary_analysis_menu_var:
             if "*" in vocabulary_analysis_menu_var:
@@ -217,10 +206,7 @@ def run_style_analysis(
                 language,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "Stanza" in vocabulary_analysis_menu_var:
             annotator = "Lemma"
@@ -244,10 +230,7 @@ def run_style_analysis(
                 limit_sentence_length_var,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "capital" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.process_words(
@@ -261,10 +244,7 @@ def run_style_analysis(
                 "capital",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "Word length" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.process_words(
@@ -278,10 +258,7 @@ def run_style_analysis(
                 "Word length",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "Vowel" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.process_words(
@@ -295,10 +272,7 @@ def run_style_analysis(
                 "Vowel",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "pathos" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.process_words(
@@ -312,10 +286,7 @@ def run_style_analysis(
                 "pathos",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" == vocabulary_analysis_menu_var or "NLTK" in vocabulary_analysis_menu_var:
             # TODO: file_spell_checker_util.py warning line 186
@@ -323,10 +294,7 @@ def run_style_analysis(
                 inputFilename, inputDir, outputDir_style, config_filename, chartPackage, dataTransformation
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" == vocabulary_analysis_menu_var or "Abstract" in vocabulary_analysis_menu_var:
             if language == "English":
@@ -340,10 +308,7 @@ def run_style_analysis(
                     processType="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
             else:
                 if not "*" == vocabulary_analysis_menu_var:
                     logger.info(
@@ -366,10 +331,7 @@ def run_style_analysis(
                     processType="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
             else:
                 if not "*" == vocabulary_analysis_menu_var:
                     logger.info("Warning, The Iconicity analysis algorithm is only available for the English language.")
@@ -377,10 +339,7 @@ def run_style_analysis(
         if "*" == vocabulary_analysis_menu_var or "Yule" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.yule(inputFilename, inputDir, outputDir, config_filename)
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "*" in vocabulary_analysis_menu_var or "detection" in vocabulary_analysis_menu_var:
             outputFiles = file_spell_checker_util.language_detection(
@@ -393,10 +352,7 @@ def run_style_analysis(
                 dataTransformation,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     if gender_guesser_var:
         IO_files_util.runScript_fromMenu_option(

@@ -20,6 +20,7 @@ import IO_files_util
 import IO_user_interface_util
 import pandas as pd
 import reminders_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -503,10 +504,7 @@ def GIS_pipeline(
             )
 
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     if not inputIsGeocoded:
         if locationsNotFoundNonDistinctoutputFilename != "":
@@ -588,10 +586,7 @@ def GIS_pipeline(
                     chart_title_label="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     nRecordsFound, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
         geocodedLocationsOutputFilename
