@@ -9,11 +9,10 @@ modified by Siyan Pu November 2021
 # 										  ['csv', 'os', 'collections', 'tkinter']) == False:
 from collections import Counter
 
-import pandas as pd
-
 import charts_util
 import IO_csv_util
 import IO_files_util
+import pandas as pd
 import reminders_util
 import Stanford_CoreNLP_tags_util
 
@@ -155,7 +154,7 @@ def verb_voice_data_preparation(data):
             tok for tok in data if (tok[3] in verb_postags or tok[6] in verb_deprel)
         ]
         return data_2
-    except:
+    except Exception:
         print(
             "ERROR: INPUT MUST BE THE CoNLL TABLE CONTAINING THE SENTENCE ID. Program will exit."
         )

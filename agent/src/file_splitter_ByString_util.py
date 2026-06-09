@@ -42,7 +42,7 @@ def splitDocument_byStrings(inputFilename, outputPath, target, spot_one, spot_tw
             else:
                 loc.append(False)
         else:
-            if len(c) < spot_two or type(spot_two) != int or type(spot_one) != int:
+            if len(c) < spot_two or not isinstance(spot_two, int) or not isinstance(spot_one, int):
                 loc.append(False)
             else:
                 if spot_one == spot_two:
@@ -91,10 +91,10 @@ def split_by_blanks(inputFilename, outputPath):
     subfileIndex = 1
     subfilename = subfilename = outputPath + "/" + title + "_splited_" + str(subfileIndex) + ".txt"
     subfile = open(subfilename, "w", encoding="utf-8", errors="ignore")  # first split file
-    for l in lines:
-        if len(l.strip()) == 0:  # a line without character --> a new subfile
+    for line in lines:
+        if len(line.strip()) == 0:  # a line without character --> a new subfile
             subfileIndex += 1
             subfilename = subfilename = outputPath + "/" + title + "_splited_" + str(subfileIndex) + ".txt"
             subfile = open(subfilename, "w", encoding="utf-8", errors="ignore")
         else:
-            subfile.write(l + "\n")
+            subfile.write(line + "\n")

@@ -15,11 +15,10 @@ import shutil
 import tkinter.messagebox as mb
 from datetime import datetime, timedelta
 
-import pandas as pd
-
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
+import pandas as pd
 
 
 def create_timedelta(date_distance_value, date_type):

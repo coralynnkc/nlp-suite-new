@@ -33,14 +33,14 @@ def run(inputFilename, outputPath, post_number_string=""):
     )  # first splitfile: the contents before the first number at the head of one line
     subfile = open(subfilename, "w", encoding="utf-8", errors="ignore")
     j = len(post_number_string)
-    for l in lines:
-        spaceless = l.lstrip()  # get rid of spaces at the head of one line
+    for line in lines:
+        spaceless = line.lstrip()  # get rid of spaces at the head of one line
         recognized = True
         if len(spaceless) > 0 and spaceless[0].isdigit():  # not a blank line and the head character is a number
             num = ""  # string of number
             i = 0
             while spaceless[i].isdigit():  # colect all digits of the number
-                num += l.lstrip()[i]
+                num += line.lstrip()[i]
                 i += 1
 
             if (
@@ -57,6 +57,6 @@ def run(inputFilename, outputPath, post_number_string=""):
                 subfilename = outputPath + "/" + title + "_" + num + "_" + str(i) + ".txt"
                 i += 1
             subfile = open(subfilename, "w", encoding="utf-8", errors="ignore")
-            subfile.write(l + "\n")
+            subfile.write(line + "\n")
         else:  # no number at the head or the number not followed by the post_number_string
-            subfile.write(l + "\n")
+            subfile.write(line + "\n")

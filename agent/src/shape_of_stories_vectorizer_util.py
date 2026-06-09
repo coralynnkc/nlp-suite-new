@@ -217,7 +217,7 @@ class Vectorizer:
                 try:
                     # Divides left hand operand by right hand operand and returns remainder
                     mod = i % addIndex  # decides which bucket the row goes into
-                except:
+                except Exception:
                     pass
                 if mod == 0 and bucket > 0:
                     bucket -= 1  # go to the next bucket

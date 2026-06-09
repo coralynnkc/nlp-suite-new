@@ -227,7 +227,7 @@ def spaCy_annotate(
         # process given text with spaCy annotator
         try:
             Spacy_output = nlp(text)
-        except:
+        except Exception:
             print(
                 "Warning",
                 "spaCy encountered an error trying to download the language pack "
@@ -401,7 +401,7 @@ def convertSpacyDoctoDf(spacy_doc, inputFilename, inputDir, tail, docID, annotat
         rec_ID = 0
         sent_ID = 1
         for sent in spacy_doc.sents:
-            for i, token in enumerate(sent):
+            for _, token in enumerate(sent):
                 out_df.at[rec_ID, "Form"] = token.text
                 out_df.at[rec_ID, "NER"] = token.ent_type_
                 # add necessary columns after the loop

@@ -6,12 +6,11 @@
 
 import os
 
-import pandas as pd
-
 import charts_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
+import pandas as pd
 
 #
 clause_position = 8  # NEW CoNLL_U

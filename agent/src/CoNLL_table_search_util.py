@@ -10,13 +10,12 @@ import os
 #                                           ['os', 'tkinter', 'enum', 'typing']) == False:
 from enum import Enum
 
-import pandas as pd
-
 import charts_util
 import CoNLL_util
 import Gephi_util
 import IO_csv_util
 import IO_files_util
+import pandas as pd
 import Stanford_CoreNLP_tags_util
 
 dict_POSTAG, dict_DEPREL = (
@@ -86,7 +85,7 @@ def search_deps(token_id_in_sentence, sentence_CoNLL_records, searchedCoNLLField
     """
     try:
         token = sentence_CoNLL_records[int(token_id_in_sentence) - 1]
-    except:
+    except Exception:
         raise Exception("CoNLL table error") from None
         # mb.showwarning(title='CoNLL table error',
         #                message="The records in the CoNLL table appear to be out of sequence, leading to computing errors. Please, make sure that you haven't tinkered with the file sorting the data by any columns other than RecordID.\n\nSort the data by RecordID (col. 9) and try again.")

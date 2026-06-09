@@ -236,7 +236,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                 val2 = parse_date(filename2, date_format)
                 if val1 is not None and val2 is not None:
                     return -1 if val1 < val2 else 1
-        except:
+        except Exception:
             # The following pair of filenames are incompatible with the
             print(
                 "Non fatal filename error: date error. Error ignored.\nThe date format "
@@ -308,7 +308,7 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
 
         try:
             sort_order = str(a["Sort order"][0])  # changed to 0 from 1
-        except:
+        except Exception:
             sort_order = str(a["Sort order"][1])  # changed to 0 from 1
 
         if str(sort_order) == "nan":
@@ -326,12 +326,12 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
             aa = float(sort_order)
             aa = int(aa)
             sort_order = str(aa)
-        except:
+        except Exception:
             pass
 
         try:
             separator = a["Item separator character(s)"][0]  # changed to 0 from 1
-        except:
+        except Exception:
             separator = a["Item separator character(s)"][1]  # changed to 0 from 1
 
         if str(separator) == "nan":
@@ -339,22 +339,22 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
 
         try:
             date_format = a["Date format"][0]  # changed to 0 from 1
-        except:
+        except Exception:
             date_format = a["Date format"][1]
 
         try:
             date_pos = int(a["Date position"][0])  # changed to 0 from 1
-        except:
+        except Exception:
             try:
                 date_pos = int(a["Date position"][1])  # changed to 0 from 1
-            except:
+            except Exception:
                 date_pos = 9e999
         # @@@
         # if str(separator)=="nan":
 
         try:
             files = do_compare(files, fileType, sort_order, separator, date_format, date_pos)
-        except:
+        except Exception:
             files.sort()
         return files
 
@@ -705,7 +705,7 @@ def getScript(pydict, script):
 
     try:
         val = pydict[script]
-    except:
+    except Exception:
         if "---------------------" in script or len(script) == 0:
             print(
                 "Warning",

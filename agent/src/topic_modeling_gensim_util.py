@@ -10,6 +10,7 @@ from sys import platform
 # Gensim
 import gensim
 import gensim.corpora as corpora
+import IO_libraries_util
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -21,8 +22,6 @@ import pyLDAvis.gensim
 import spacy
 from gensim.models import CoherenceModel
 from gensim.utils import simple_preprocess
-
-import IO_libraries_util
 
 logging.basicConfig(
     format="%(asctime)s : %(levelname)s : %(message)s", level=logging.ERROR
@@ -47,7 +46,7 @@ from nltk.corpus import stopwords
 # https://spacy.io/usage/models OTHER LANGUAGES ARE AVAILABLE; CHECK WEBSITE!
 try:
     spacy.load("en_core_web_sm")
-except:
+except Exception:
     if platform == "darwin":
         msg = "\n\nAt terminal, type sudo python -m spacy download en_core_web_sm"
     if platform == "win32":
@@ -146,7 +145,7 @@ def malletModelling(
         ldamallet = gensim.models.wrappers.LdaMallet(
             MalletDir, corpus=corpus, num_topics=num_topics, id2word=id2word
         )
-    except:
+    except Exception:
         head, scriptName = os.path.split(os.path.basename(__file__))
         reminders_util.getReminders_list(scriptName)
         reminders_util.checkReminder(
@@ -587,7 +586,7 @@ def run_Gensim(
     pyLDAvis.prepared_data_to_html(vis)
     try:
         pyLDAvis.save_html(vis, outputFilename)
-    except:
+    except Exception:
         title = ("Output html file error",)
         message = "Gensim failed to generate the html output file."
         print(message)

@@ -588,7 +588,7 @@ def main(
                 date_miss_list,
                 id_date_miss,
             )
-        except:
+        except Exception:
             print("         Unspecified error in processing the file")
             continue
         #############################

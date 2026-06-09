@@ -61,7 +61,7 @@ def import_nltk_resource(resource_path, resource):
         try:
             nltk.data.find(resource_path)
             print("path ", resource_path, " with resource ", resource, " already installed")
-        except:
+        except Exception:
             nltk.data.find(resource_path + ".zip")
     except LookupError:
         IO_user_interface_util.timed_alert(
@@ -84,7 +84,6 @@ def import_nltk_resource(resource_path, resource):
 
 def check_avaialable_memory(software):
     mem = virtual_memory()
-    mem.total  # total physical memory available
     mem_GB = int(mem.total / 1000000000)
     if mem_GB < 10:
         reminders_util.checkReminder(
@@ -158,7 +157,7 @@ def check_java_installation(script):
             "utf-8"
         )  # This is what you see when you run "java -version" in your command line
         java_version = get_java_version(system_output)
-    except:
+    except Exception:
         error_code = 1
 
     url = "https://www.oracle.com/java/technologies/downloads/archive/"
@@ -250,13 +249,13 @@ def check_CoreNLPVersion(CoreNLPdir, calling_script="", silent=False):
     # get latest downloadable version
     try:
         response = requests.get("https://api.github.com/repos/stanfordnlp/CoreNLP/releases/latest")
-    except:
+    except Exception:
         # no internet
         return
     try:
         # for bizarre reasons, the code sometimes breaks with keyerror on "name"
         github_version = response.json()["name"][1:]
-    except:
+    except Exception:
         return
     # get local stanford corenlp version
     onlyfiles = [f for f in os.listdir(CoreNLPdir) if os.path.isfile(os.path.join(CoreNLPdir, f))]
@@ -568,7 +567,7 @@ def get_existing_software_config(external_software_config_file=""):
     try:
         csv_file = open(software_config, newline="")
         existing_software_config = list(csv.reader(csv_file, delimiter=","))
-    except:
+    except Exception:
         existing_software_config = list()
         existing_software_config = initialize_software_config_fields(existing_software_config)
     return existing_software_config

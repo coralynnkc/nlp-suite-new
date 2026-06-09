@@ -148,7 +148,7 @@ def save_location(datePresent, currLocation, sentence, document, row):
         try:
             # NER may not be present when an external input csv file of locations is passed
             locList.append([currLocation, row["Date"], row["NER"], row["Sentence"], row["Document"]])
-        except:
+        except Exception:
             locList.append([currLocation, row["Date"], row["Sentence"], row["Document"]])
     else:
         locList.append([currLocation, row["NER"], row["Sentence"], row["Document"]])
@@ -169,7 +169,7 @@ def extract_csvFile_locations(
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
         count_row = dt.shape[0]  # gives number of row count
-    except:
+    except Exception:
         print(
             "Input file error, There was an error in the function 'Extract csv locations' reading the input csv file\n"
             + str(inputFilename)
@@ -209,7 +209,7 @@ def extract_csvFile_locations(
                         # check next row
                         try:
                             nextrow = dt.iloc[index + 1]
-                        except:
+                        except Exception:
                             nextrow = row
                         # spaCy and Stanza do not contain tokenEnd tokenBegin headers; code would break
                         sentence = row["Sentence"]
@@ -227,12 +227,12 @@ def extract_csvFile_locations(
                                     currLocation = currLocation + " " + row["Location"]
                                 else:
                                     currLocation = row["Location"]
-                        except:
+                        except Exception:
                             currLocation = row["Location"]
                             pass
                         locList.append(save_location(datePresent, currLocation, sentence, document, row)[0])
                         currLocation = ""
-                except:
+                except Exception:
                     currLocation = row["Location"]
                     locList.append([row[locationColumnNumber], row[1]])
                     currLocation = ""

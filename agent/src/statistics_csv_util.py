@@ -55,9 +55,9 @@ def data_transformation(infile, arg):
                 if "Document" not in col and is_numeric_dtype(df[col]):
                     if "Frequencies" in col or "Frequency" in col:
                         df[col] = df.apply(
-                            lambda row: normalize_data(
+                            lambda row, _col=col: normalize_data(
                                 row,
-                                col,
+                                _col,
                                 get_file_size(
                                     row["Document"].replace('=hyperlink("', "").replace('")', "").rstrip('"'),
                                     file_size_dict,
@@ -185,7 +185,7 @@ def compute_csv_column_statistics_NoGroupBy(
             #   but you do know it has just a single column.
             #   In that case you can safely call squeeze to ensure you have a Series.
             df = pd.read_csv(inputFilename, encoding="utf-8", index_col=False, on_bad_lines="skip", squeeze=True)
-        except:
+        except Exception:
             print(
                 "Data encoding error",
                 "The input file\n\n"
@@ -206,8 +206,6 @@ def compute_csv_column_statistics_NoGroupBy(
                 nDocs = 1
             # need at least 3 values to compute skewness and kurtosis
             # mode always returns a series and t must be processed lambda x: stats.mode(x, keepdims=False)[0]
-            print(lambda x: df.iloc[:, currentColumn].mode(x, keepdims=False)[0])
-
             currentStats = (
                 nDocs,
                 df.iloc[:, currentColumn].sum(),
@@ -344,7 +342,7 @@ def compute_csv_column_statistics_groupBy(
     # reading csv file
     try:
         df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip", squeeze=True)
-    except:
+    except Exception:
         print(
             "Data encoding error",
             "The input file\n\n"
@@ -396,7 +394,7 @@ def compute_csv_column_statistics_groupBy(
         column_name = plotField[0]
         try:
             df_group = df_group[[column_name]]
-        except:
+        except Exception:
             return None
         df_list = [pd.concat([df_group[column_name]], keys=[column_name], names=["Column header"])]
     else:
@@ -587,7 +585,7 @@ def compute_csv_column_frequencies(
     if "Document" in headers:
         try:
             removed_hyperlinks, inputFilename = IO_csv_util.remove_hyperlinks(inputFilename)
-        except:
+        except Exception:
             pass
     data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     # TODO check if data is empty exit
@@ -603,7 +601,7 @@ def compute_csv_column_frequencies(
             try:
                 if data["Document"].nunique() <= 1:
                     tracked = False  # if we find a non byDoc , exit immediately
-            except:
+            except Exception:
                 pass
         else:
             file_label = "by" + group_cols[0]  # add only the first element
@@ -634,7 +632,7 @@ def compute_csv_column_frequencies(
                 data.columns = hdr
                 temp_str = "%s" + "\n%s" * (len(hover_col) - 1)
                 data["Hover_over: " + hover_header] = data.apply(
-                    lambda x: temp_str % tuple(x[h] for h in hover_col), axis=1
+                    lambda x, _hcol=hover_col: temp_str % tuple(x[h] for h in _hcol), axis=1
                 )
                 data.drop(hover_col, axis=1, inplace=True)
             else:

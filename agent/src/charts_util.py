@@ -8,17 +8,16 @@ import os
 import re
 from collections import Counter
 
-import numpy as np
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
 import charts_Excel_util
 import charts_Plotly_util
 import IO_csv_util
 import IO_user_interface_util
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import statistics_csv_util
+from plotly.subplots import make_subplots
 
 # Prepare the data (data_to_be_plotted) to be used in charts_Excel_util.create_excel_chart with the format:
 #   one series: [[['Name1','Frequency'], ['A', 7]]]
@@ -74,7 +73,7 @@ def prepare_data_to_be_plotted_inExcel(
         try:
             if not inputFileData:
                 data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
-        except:
+        except Exception:
             try:
                 if not inputFileData:  # Handle encoding fallback only for inputFilename
                     data = pd.read_csv(inputFilename, encoding="ISO-8859-1", on_bad_lines="skip")
@@ -747,7 +746,7 @@ def run_all(
         df = pd.DataFrame(data[1:], columns=data[0])
         df.to_csv(csv_file_path, index=False)
 
-    if type(data_to_be_plotted[0]) == list:
+    if isinstance(data_to_be_plotted[0], list):
         list_of_lists_to_csv(data_to_be_plotted[0], "temptemp2.csv")
         df = statistics_csv_util.data_transformation("temptemp2.csv", dataTransformation)
         os.remove("temptemp2.csv")
@@ -1015,7 +1014,7 @@ def header_check(inputFile):
         try:
             for i in range(0, len(result)):
                 frequency_pos.append(header.index(result[i]))
-        except:
+        except Exception:
             pass
     else:
         pass
@@ -1377,7 +1376,7 @@ def boxplot(data, outputFilename, var, points, bycategory=None, category=None, c
 
     if inputFileData:
         data = pd.read_csv(io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip")
-    elif type(data) == str:
+    elif isinstance(data, str):
         data = pd.read_csv(inputFileData, encoding="utf-8", on_bad_lines="skip")
 
     if "int" not in str(type(data[var][0])) and "float" not in str(type(data[var][0])):
@@ -1425,10 +1424,10 @@ def Sankey(data, outputFilename, var1, lengthvar1, var2, lengthvar2, three_way_S
     #                    message='The Sankey algorithm is incompatible with a version of pandas higher than 2.0\n\nIn command line, please, pip unistall pandas and pip install pandas==1.5.2.\n\nMake sure you are in the right NLP environment by typing conda activate NLP')
 
     finalframe = pd.DataFrame()
-    if type(data) == str:
+    if isinstance(data, str):
         try:
             data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
-        except:
+        except Exception:
             print(
                 "Warning, the input file ",
                 data,
@@ -1436,8 +1435,8 @@ def Sankey(data, outputFilename, var1, lengthvar1, var2, lengthvar2, three_way_S
             )
             return
 
-    if type(data[var1][0]) != float:  # nan values are float, but do not need to be checked here
-        if type(data[var1][0]) != str or type(data[var2][0]) != str:
+    if not isinstance(data[var1][0], float):  # nan values are float, but do not need to be checked here
+        if not isinstance(data[var1][0], str) or not isinstance(data[var2][0], str):
             print(
                 "Waring, all csv file fields should be categorical for a Saneky flowchart.\n\nPlease, select categorical field(s) (i.e., fields with string values), rather than continuous numeric field(s), and try again. "
             )
@@ -1448,7 +1447,7 @@ def Sankey(data, outputFilename, var1, lengthvar1, var2, lengthvar2, three_way_S
         tempframe = pd.DataFrame(data[var1].value_counts().head(lengthvar1)).reset_index()
         try:
             finalframe = data[data[var1].isin(list(set(tempframe["index"])))]
-        except:
+        except Exception:
             if len(finalframe) == 0:
                 print(
                     "Warning The dataframe computed by the Sankey flowchart is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2"
@@ -1598,12 +1597,12 @@ def Sunburst(
     last_sentences=None,
     half_text=None,
 ):
-    if type(data) == str:
+    if isinstance(data, str):
         data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
         # @@@ nan values will break the code
         data = data.fillna("Blank/missing value")
     # The presence of a Nan value will classify the object as float
-    if type(data[label][0]) != str:
+    if not isinstance(data[label][0], str):
         print(
             "Warning",
             "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
@@ -1719,15 +1718,15 @@ def Treemap(
     extra_dimension_average,
     average_variable=None,
 ):
-    if type(data) == str:  # convert data to dataframe
+    if isinstance(data, str):  # convert data to dataframe
         data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
     # The presence of a Nan value will classify the object as float
-    if type(data[csv_file_field][0]) != str:
+    if not isinstance(data[csv_file_field][0], str):
         print(
             "Warning",
             "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
         )
-    if extra_dimension_average and type(data[average_variable][0]) != np.float64:
+    if extra_dimension_average and not isinstance(data[average_variable][0], np.float64):
         print(
             "Warning",
             "The csv file field selected should be numeric.\n\nYou should select a numeric field, rather than an alphabetic field, and try again.",
@@ -1836,7 +1835,7 @@ def visualize_data(
             cmap=color,
             cbar_kws={"label": normalize},
         )
-    except:
+    except Exception:
         print("There appears to be ann error with cmap; we revert to default ")
         sns.heatmap(
             transposed_data,
@@ -1991,7 +1990,7 @@ def cmaps(start_color, end_color):
     cmap_custom = LinearSegmentedColormap.from_list("custom", colors, N=256)
     try:
         return cmap_custom
-    except:
+    except Exception:
         return "YlOrBr"
 
 
@@ -2008,7 +2007,7 @@ def main_colormap(inputFilename, outputDir, csv_file_categorical_field_list, par
         renamedf(step2)  # We rename to file relative location, not absolute location
     try:
         cmap = cmaps(eval(params[1]), eval(params[2]))
-    except:
+    except Exception:
         cmap = cmaps((135, 207, 236), (0, 0, 255))
     import IO_files_util
 
@@ -2147,7 +2146,7 @@ def visualize_colormap_data(
     plt.figure(figsize=figsize)
     try:
         sns.heatmap(transposed_data, annot=False, fmt=".2f", cmap=color, cbar_kws={"label": normalize})
-    except:
+    except Exception:
         print("There appears to be ann error with cmap; we revert to default ")
         sns.heatmap(transposed_data, annot=False, fmt=".2f", cmap="YlOrBr", cbar_kws={"label": normalize})
     ax = plt.gca()
@@ -2204,7 +2203,7 @@ def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, 
         renamedf(step2)  # We rename to file relative location, not absolute location
     try:
         cmap = cmaps(eval(params[1]), eval(params[2]))
-    except:
+    except Exception:
         cmap = cmaps((135, 207, 236), (0, 0, 255))
     import IO_files_util
 
@@ -2290,22 +2289,22 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
         for i in range(0, len(data[date_field])):
             try:
                 date.append(re.search(r"\d.*\d", data[date_field][i])[0])
-            except:
+            except Exception:
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 year.append(re.search(r"\d{4}", date[i])[0])
-            except:
+            except Exception:
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 month.append(year[i] + "-" + date[i][0:2])
-            except:
+            except Exception:
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 day.append(month[i] + "-" + date[i][3:5])
-            except:
+            except Exception:
                 continue
         data["year"] = year
         data["month"] = month
@@ -2351,7 +2350,6 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
                         temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
-                tester
                 date = np.repeat(i, len(tester))
                 tester["date"] = date
                 tester = tester.reset_index(drop=True)
@@ -2376,7 +2374,6 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
                         temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
-                tester
                 date = np.repeat(i, len(tester))
                 tester["date"] = date
                 tester = tester.reset_index(drop=True)
@@ -2401,7 +2398,6 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
                         temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
-                tester
                 date = np.repeat(i, len(tester))
                 tester["date"] = date
                 tester = tester.reset_index(drop=True)
@@ -2429,7 +2425,6 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
                         temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
-                tester
                 date = np.repeat(i, len(tester))
                 tester["date"] = date
                 tester = tester.reset_index(drop=True)
@@ -2454,7 +2449,6 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
                         temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
-                tester
                 date = np.repeat(i, len(tester))
                 tester["date"] = date
                 tester = tester.reset_index(drop=True)
@@ -2479,7 +2473,6 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
                         temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
-                tester
                 date = np.repeat(i, len(tester))
                 tester["date"] = date
                 tester = tester.reset_index(drop=True)

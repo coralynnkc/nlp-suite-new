@@ -182,7 +182,7 @@ def display_logo():
     # Necessary to avoid creating a circular dependent import
     from IO_libraries_util import install_all_Python_packages
 
-    if install_all_Python_packages(window, "GUI_util", ["tkinter", "os", "subprocess", "PIL"]) == False:
+    if not install_all_Python_packages(window, "GUI_util", ["tkinter", "os", "subprocess", "PIL"]):
         sys.exit(0)
 
     from PIL import Image, ImageTk
@@ -229,7 +229,7 @@ def get_GitHub_release_version(silent=False):
     try:
         GitHub_newest_release = requests.get(release_url).text
         GitHub_release_version_var.set(GitHub_newest_release)
-    except:
+    except Exception:
         if not silent:
             mb.showwarning(
                 title="Internet connection error",
@@ -241,7 +241,7 @@ def get_GitHub_release_version(silent=False):
 
 def check_GitHub_release(local_release_version: str, silent=False):
     GitHub_newest_release = get_GitHub_release_version()
-    if GitHub_newest_release == None or GitHub_newest_release == "0.0.0":  # when not connected to internet
+    if GitHub_newest_release is None or GitHub_newest_release == "0.0.0":  # when not connected to internet
         return
     # split the text string of release version (e.g., 1.5.9) into three parts separated by .
     local_release_version_parts = [local_release_version[i : i + 1] for i in range(0, len(local_release_version), 2)]
@@ -377,11 +377,11 @@ def selectDirectory_set_options(window, input_main_dir_path, output_dir_path, ti
     if directoryName == "":
         directoryName = initialFolder
     if "INPUT" in title:
-        if inputMainDir == True:
+        if inputMainDir:
             # if there is no filename it would give an error
             try:
                 inputFilename.set("")  # inputFilename
-            except:
+            except Exception:
                 pass
             input_main_dir_path.set(directoryName)
         else:
@@ -400,7 +400,6 @@ def selectDirectory_set_options(window, input_main_dir_path, output_dir_path, ti
 # called every time the IO configuration is changed default or GUI-specific
 def display_IO_setup(window, IO_setup_display_brief, config_filename, config_input_output_alphabetic_options, *args):
     y_multiplier_integer = 1
-    silent = False
     missing_IO = ""
     if len(config_input_output_alphabetic_options[0]) == 0:  # the csv file is a wrong file
         return missing_IO
@@ -567,7 +566,7 @@ def set_IO_brief_values(config_filename, y_multiplier_integer):
     if config_input_output_alphabetic_options[0][1] != "":  # check that there is a file path
         try:
             config_input_output_alphabetic_options[0][5]
-        except:
+        except Exception:
             mb.showwarning(
                 title="Warning",
                 message="The config file\n"
@@ -583,7 +582,6 @@ def set_IO_brief_values(config_filename, y_multiplier_integer):
             )
         )
         input_main_dir_path.set("")
-        file_date_label = ""
         if str(config_input_output_alphabetic_options[0][4]) != "":  # date format available
             date_hover_over_label = (
                 date_hover_over_label
@@ -605,7 +603,7 @@ def set_IO_brief_values(config_filename, y_multiplier_integer):
     if config_input_output_alphabetic_options[1][1] != "":  # check that there is a dir path
         try:
             config_input_output_alphabetic_options[1][5]
-        except:
+        except Exception:
             mb.showwarning(
                 title="Warning",
                 message="The config file "
@@ -622,7 +620,6 @@ def set_IO_brief_values(config_filename, y_multiplier_integer):
         )
         if input_main_dir_path.get() != "":
             inputFilename.set("")
-        dir_date_label = ""
         if str(config_input_output_alphabetic_options[1][4]) != "":  # date format available
             date_hover_over_label = (
                 date_hover_over_label
@@ -657,7 +654,6 @@ def set_IO_brief_values(config_filename, y_multiplier_integer):
         IO_setup_display_string = "INPUT DIR: " + str(
             os.path.basename(os.path.normpath(config_input_output_alphabetic_options[1][1]))
         )
-        temp_str = IO_setup_display_string.replace("INPUT DIR: ", "")
         # # replace blanks in the filename or inputdir with - or it will break the argparse code in NLP_setup_IO_main
         #
     # both filename [1] and input Dir [2] are empty
@@ -1325,7 +1321,7 @@ def setup_IO_configuration_options(IO_setup_display_brief, scriptName, silent, o
             missing_IO = display_IO_setup(
                 window, IO_setup_display_brief, config_filename, config_input_output_alphabetic_options
             )
-        except:
+        except Exception:
             config_input_output_numeric_options = [6, 1, 0, 1]
         if missing_IO != "":
             open_setup_IO_GUI = True
@@ -2109,7 +2105,7 @@ def GUI_bottom(
     reminder_options = reminders_util.getReminders_list(scriptName, True)
     # None returned for a faulty reminders.csv
     reminders_error = False
-    if reminder_options == None:
+    if reminder_options is None:
         reminders_error = True
         reminder_options = ["No Reminders available"]
 
@@ -2189,7 +2185,7 @@ def GUI_bottom(
         # global local_release_version, GitHub_newest_release
 
         # hitting the CLOSE button will automatically pull from GitHub the latest release available on GitHub
-        GitHub_newest_release = get_GitHub_release_version()
+        get_GitHub_release_version()
         import NLP_setup_update_util
 
         NLP_setup_update_util.exit_window()
@@ -2219,7 +2215,7 @@ def GUI_bottom(
     #   it is run here otherwise a message will be displayed with an incomplete GUI
     display_release()
 
-    if noLicenceError == True:
+    if noLicenceError:
         mb.showwarning(
             title="Fatal error",
             message="The licence agreement file 'LICENSE-NLP-1.0.txt' could not be found in the 'lib' subdirectory of your main NLP Suite directory\n"
@@ -2260,15 +2256,15 @@ def GUI_bottom(
         message = ""
 
     # this will now display the error message
-    if reminders_error == True:
+    if reminders_error:
         reminders_util.checkReminder(scriptName, reminders_util.reminder_options_GUIfrontend, message)
 
-    title_options = reminders_util.getReminders_list(scriptName)
+    reminders_util.getReminders_list(scriptName)
     result = reminders_util.checkReminder(
         "*", reminders_util.title_options_IO_configuration, reminders_util.message_IO_configuration
     )
-    if result != None:
-        title_options = reminders_util.getReminders_list(scriptName)
+    if result is not None:
+        reminders_util.getReminders_list(scriptName)
 
     window.protocol("WM_DELETE_WINDOW", _close_window)
 

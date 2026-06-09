@@ -12,7 +12,7 @@ def internet_on():
     try:
         urlopen("http://www.google.com/", timeout=10)
         return True
-    except:
+    except Exception:
         return False
 
 

@@ -946,7 +946,7 @@ def spelling_checker_cleaner(window, inputFilename, inputDir, outputDir, openOut
     try:  # make sure the csv have two columns of "original" and "corrected"
         original = df["Original"]
         corrected = df["Corrected"]
-    except:
+    except Exception:
         print(
             "CSV file error, The selected csv file does not have the expected format. The Find & Replace expects 2 column headers 'Original' and 'Corrected'.\n\nPlease, make sure that your csv file has those characteristics and try again. "
         )
@@ -1197,7 +1197,7 @@ def language_detection(
 
     try:
         nlp_stanza = MultilingualPipeline()
-    except:
+    except Exception:
         stanza.download(lang="multilingual", verbose=False)
         nlp_stanza = MultilingualPipeline()
 
@@ -1224,7 +1224,7 @@ def language_detection(
             # head is path, tail is filename
             try:
                 value = detect_langs(text)
-            except:
+            except Exception:
                 filenameSV = (
                     filename  # do not count the same document twice in this and the other algorithms that follow
                 )
@@ -1279,7 +1279,7 @@ def language_detection(
             nlp_spacy.add_pipe("language_detector", last=True)
             try:
                 doc = nlp_spacy(text)
-            except:
+            except Exception:
                 if (
                     filename != filenameSV
                 ):  # do not count the same document twice in this and the other algorithm that follows
@@ -1300,7 +1300,7 @@ def language_detection(
             lang_identifier = LanguageIdentifier.from_modelstring(model, norm_probs=True)
             try:
                 value = lang_identifier.classify(text)
-            except:
+            except Exception:
                 if filename != filenameSV:
                     docErrors_unknown = docErrors_unknown + 1
                     filenameSV = filename

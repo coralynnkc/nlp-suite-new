@@ -27,7 +27,7 @@ def SVO_enhanced_dependencies_sent_data_reorg(sentence):  # reorganize the depen
         if result[idx]["ner"] == "TIME" or result[idx]["ner"] == "DATE":
             try:
                 result[idx]["normalizedNER"] = token["normalizedNER"]
-            except:
+            except Exception:
                 result[idx]["normalizedNER"] = "N/A"
         # reshape the dependencies to generate a dictionary whose syntactical head (governor) is the corrent token
         # the form: {dep: index}
@@ -626,7 +626,7 @@ def SVO_extraction(sent_data, entitymentions):  # returns columns of the final o
                     SVO.extend(svo_acl)
                     N.extend(negation_acl)
 
-    for index, item in enumerate(SVO):
+    for index, _ in enumerate(SVO):
         SVO[index][0] = replace_words_with_full_names(SVO[index][0], person_list)
         SVO[index][0] = replace_words_with_full_names(SVO[index][0], organization_list)
         SVO[index][2] = replace_words_with_full_names(SVO[index][2], person_list)

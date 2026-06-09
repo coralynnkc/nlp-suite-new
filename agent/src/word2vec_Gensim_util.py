@@ -6,6 +6,9 @@ import string
 
 # Gensim
 import gensim
+import IO_csv_util
+import IO_files_util
+import IO_user_interface_util
 
 # for calculating the distance
 import numpy as np
@@ -13,10 +16,6 @@ import pandas as pd
 
 # Stanza for tokenization and lemmatization
 import stanza
-
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 import word2vec_distances_util
 
 fin = open("../lib/wordLists/stopwords.txt")

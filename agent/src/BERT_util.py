@@ -6,13 +6,6 @@ import re
 import sys
 import time
 
-import pandas as pd
-import stanza
-from sentence_transformers import SentenceTransformer
-from sklearn.manifold import TSNE
-from summarizer import Summarizer
-from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
-
 import charts_util
 
 # Visualization
@@ -20,9 +13,15 @@ import IO_csv_util
 import IO_files_util
 import IO_internet_util
 import IO_user_interface_util
+import pandas as pd
+import stanza
 import statistics_txt_util
 import word2vec_distances_util
 import word2vec_tsne_plot_util
+from sentence_transformers import SentenceTransformer
+from sklearn.manifold import TSNE
+from summarizer import Summarizer
+from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
 
 
 # Provides NER tags per sentence for every doc and stores in a csv file

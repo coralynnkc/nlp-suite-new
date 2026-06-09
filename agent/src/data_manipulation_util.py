@@ -2,9 +2,8 @@
 
 import os.path
 
-import pandas as pd
-
 import IO_files_util
+import pandas as pd
 
 
 def listToString(s, sep):
@@ -44,7 +43,7 @@ def select_csv(files, cols=None):
                 df = pd.read_csv(
                     file, usecols=cols, encoding="utf-8", on_bad_lines="skip"
                 )
-        except:
+        except Exception:
             # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
             raise (Exception("Missing fields")) from None
             # mb.showwarning(title='Missing field(s)',
@@ -224,7 +223,7 @@ def export_csv_to_csv_txt(
         # mb.showwarning(title='Missing field(s)',
         #                message="No field(s) to be extracted have been selected.\n\nPlease, select field(s) and try again.")
         return
-    for sign, value, and_or, header, df in zip(
+    for sign, value, cond, header, df in zip(
         sign_var, value_var, and_or, headers, data_files, strict=False
     ):
         if sign == "''" and value == "''":
@@ -244,7 +243,7 @@ def export_csv_to_csv_txt(
             if queryStr == "":
                 queryStr = header + sign + value
             else:
-                queryStr = queryStr + " " + and_or + " " + header + sign + value
+                queryStr = queryStr + " " + cond + " " + header + sign + value
     result = df.query(queryStr, engine="python")
     df_list.append(result)
     df_extract = df_list[0]
@@ -291,7 +290,7 @@ def put_csv(lst):
         if item.endswith(".csv"):
             it = item
             it = it.strip()
-            it = it.strip("[]''")
+            it = it.strip("[]'")
             new_lst.append(it)
     return new_lst
 
@@ -302,7 +301,7 @@ def put_param(lst):
         if not item.endswith(".csv"):
             it = item
             it = it.strip()
-            it = it.strip("[]''")
+            it = it.strip("[]'")
             new_lst.append(it)
     return new_lst
 

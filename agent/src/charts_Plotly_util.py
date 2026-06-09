@@ -5,13 +5,11 @@ import io
 import math
 import os
 
+import IO_csv_util
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-
-import IO_csv_util
 
 ## NOTE:
 ## some graphing functions has a column placed at the end
@@ -72,7 +70,7 @@ def create_Plotly_chart(
                     on_bad_lines="skip",
                     sep="delimiter",
                 )
-            except:
+            except Exception:
                 print("Error: failed to read the csv file: " + inputFilename)
                 return
         except Exception as e:
@@ -93,7 +91,7 @@ def create_Plotly_chart(
 
         try:
             data["Document"] = data["Document"].apply(do)
-        except:
+        except Exception:
             pass
         if not csv_field_Y_axis_list:
             x_cols = headers[cols_to_plot[j][0]]
@@ -124,18 +122,18 @@ def create_Plotly_chart(
                                 </html>
                                 """
 
-            def process_multiple(x_cols, y_cols, lst, df2, ops, types, data):
+            def process_multiple(x_cols, y_cols, lst, df2, ops, types, data, _html_template=html_template):
                 chart_htmls = []
-                for chart_name in lst:
+                for _ in lst:
                     print(df2)
                     try:
                         df2 = eval(df2)
-                    except:
+                    except Exception:
                         pass
                     fig = eval(ops)
                     chart_html = fig.to_html(full_html=False, include_Plotlyjs="cdn")
                     chart_htmls.append(f'<div class="chart">{chart_html}</div>')
-                final_html = html_template.format(charts="".join(chart_htmls))
+                final_html = _html_template.format(charts="".join(chart_htmls))
                 with open(
                     outputDir + os.sep + types + "chart of the " + x_cols + ".html", "w"
                 ) as file:
@@ -488,7 +486,7 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
     # If there is a number column, determine bubble size based on it.
     numeric_columns = df.select_dtypes(include=["number"]).columns
     if not numeric_columns.empty:
-        bubble_size = [math.sqrt(row[numeric_columns[0]]) for l, row in df.iterrows()]
+        bubble_size = [math.sqrt(row[numeric_columns[0]]) for _, row in df.iterrows()]
         df["size"] = bubble_size
         sizeref = 2.0 * max(df["size"]) / (100**2)
     else:

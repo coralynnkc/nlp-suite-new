@@ -230,7 +230,7 @@ def processCluster(
             # cluster_file may not include all sequential indices
             try:
                 documents = cluster_file[i]
-            except:
+            except Exception:
                 continue
             for each in documents:  # each: (narratiefile, sentiment_vector)
                 # ===============ANGEL==============

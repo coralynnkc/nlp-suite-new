@@ -283,7 +283,7 @@ def run_file_manager(
 
     # processFile returns: fileFound, characterCount,creation_date,modification_date,author,date, dateStr
     if include_subdir_var == 1:
-        for inputDir, _subdirs, files in os.walk(inputDir):
+        for current_dir, _subdirs, files in os.walk(inputDir):
             for filename in files:
                 print(f"Processing file: {filename}")
                 (
@@ -295,7 +295,7 @@ def run_file_manager(
                     date,
                     dateStr,
                 ) = file_filename_util.processFile(
-                    inputDir,
+                    current_dir,
                     outputDir,
                     filename,
                     outputFilename,

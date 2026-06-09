@@ -12,16 +12,16 @@ def extract_fileContent_and_fileName(outputDir, fileContent, separator_begin, se
     lines = fileContent.splitlines()
     begin_len = len(separator_begin)
     file_to_save = ""
-    for l in lines:
-        if l[0:begin_len] == separator_begin:
+    for line in lines:
+        if line[0:begin_len] == separator_begin:
             ID += 1
-            file_to_save = os.path.split(l.split(separator_begin)[1].split(separator_end)[0])[1]
+            file_to_save = os.path.split(line.split(separator_begin)[1].split(separator_end)[0])[1]
             print("Processing file " + str(ID) + "/" + str(len(lines)), file_to_save)
         else:
-            if file_to_save != "" and l != "":
+            if file_to_save != "" and line != "":
                 subfilePath = os.path.join(outputDir, file_to_save)
                 subfile = open(subfilePath, "a", encoding="utf-8", errors="ignore")
-                subfile.write(l + "\n")
+                subfile.write(line + "\n")
                 subfile.close()
     return ID
 

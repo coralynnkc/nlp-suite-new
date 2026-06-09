@@ -419,7 +419,7 @@ def Wordnet_bySentenceID(
     # The file is expected to have 2 columns with headers: Word, WordNet Category
     try:
         dict = pd.read_csv(wordnetDict, encoding="utf-8", on_bad_lines="skip")
-    except:
+    except Exception:
         print(
             "The file \n\n"
             + wordnetDict
@@ -434,7 +434,7 @@ def Wordnet_bySentenceID(
         connl = connl[
             ["Form", "Lemma", "POS", "Sentence ID", "Document ID", "Document"]
         ]
-    except:
+    except Exception:
         print(
             "The file \n\n"
             + ConnlTable

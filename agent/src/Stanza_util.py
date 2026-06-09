@@ -4,7 +4,7 @@ import stanza
 
 try:
     stanza.download("en")
-except:
+except Exception:
     import IO_internet_util
 
     IO_internet_util.check_internet_availability_warning(
@@ -301,12 +301,12 @@ def Stanza_annotate(
         Stanza_output = []
         try:
             Stanza_output = nlp(text)
-        except:
+        except Exception:
             if "multilingual" in language:
                 try:
                     nlp = MultilingualPipeline(lang_id_config={"langid_lang_subset": ["en", "multilingual"]})
                     Stanza_output = nlp(text)
-                except:
+                except Exception:
                     print(
                         "Warning",
                         "Stanza encountered an error trying to download the language pack "
@@ -451,7 +451,7 @@ def convertStanzaDoctoDf(stanza_doc, inputFilename, inputDir, tail, docID, annot
             for i in range(len(dicts)):
                 temp_df = pd.DataFrame.from_dict([dicts[i]])
                 out_df = pd.concat([out_df, temp_df], ignore_index=True)
-        except:
+        except Exception:
             dicts = stanza_doc.to_dict()
             for i in range(len(dicts)):
                 temp_df = pd.DataFrame.from_dict(dicts[i])

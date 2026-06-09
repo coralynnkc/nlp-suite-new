@@ -103,7 +103,7 @@ def get_words_minus_K_plus_K(
     for i in range(len(mid)):
         try:
             a = [left[i], right[i]]  # If you would like to retain, just follow the 4 lines above and you can do that.
-        except:
+        except Exception:
             a = ["", ""]
     # a is the word list used for a wordcloud of the set of -K and +K words
     return a
@@ -251,11 +251,11 @@ def search_in_all_sentences_oneDoc(
                     all_adjacent_words_oneDoc.extend(minus_plus_K_words)
                     try:
                         left_words = minus_plus_K_words[0]
-                    except:
+                    except Exception:
                         left_words = ""
                     try:
                         right_words = minus_plus_K_words[1]
-                    except:
+                    except Exception:
                         right_words = ""
                     temp_csv_record_oneSentence = [
                         left_words,
@@ -597,7 +597,7 @@ def search_sentences_documents(
                         # document search works for newspaper articles
                         # document search works for Jiang Li
                         # document search works for CGWR
-                    except:
+                    except Exception:
                         continue
         f_csv.close()
 
@@ -655,7 +655,7 @@ def search_sentences_documents(
                     for j in range(len(all_found_csv_words_minusK_plusK_records_allDocs[i])):
                         try:
                             writer.writerow(all_found_csv_words_minusK_plusK_records_allDocs[i][j])
-                        except:
+                        except Exception:
                             continue
             else:
                 writer.writerow(header)  # write out all the csv file records found
@@ -664,7 +664,7 @@ def search_sentences_documents(
                         try:
                             # [i][j] works for Jiang Li (len 1, 13), newspaper articles (2, 1), CGWR (50, 19)
                             writer.writerow(all_found_csv_sentences_records_allDocs[i][j])
-                        except:
+                        except Exception:
                             continue
             f_csv.close()
 

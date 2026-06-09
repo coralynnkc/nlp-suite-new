@@ -4,16 +4,15 @@
 
 import os
 
-import openpyxl
-import pandas as pd
-from openpyxl import Workbook
-
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
+import openpyxl
+import pandas as pd
 import reminders_util
+from openpyxl import Workbook
 
 
 # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
@@ -89,7 +88,7 @@ def get_hover_column_numbers(withHeader_var, headers, hover_info_column_list):
         else:  # NO headers
             try:
                 x = int(hover_info_column_list[i])
-            except:
+            except Exception:
                 print(
                     "Series No."
                     + str(i + 1)
@@ -237,7 +236,7 @@ def create_excel_chart(
     # while the chart_type_list is complete in the Excel_charts GUI,
     #   when calling this function from other scripts only one chartType is typically passed
     if len(chart_type_list) != n:
-        for i in range(n - 1):
+        for _ in range(n - 1):
             chart_type_list.append(chart_type_list[0])
 
     # TODO unnecessary; creating charts only takes a few seconds
@@ -307,19 +306,19 @@ def create_excel_chart(
                 )
                 chartFile = "scatterchartsample.xlsm"
                 new_data_to_be_plotted = []
-                for l in range(len(data_to_be_plotted)):
+                for idx in range(len(data_to_be_plotted)):
                     new_data_to_be_plotted.append([])
                     index = 0
-                    for i in data_to_be_plotted[l]:
+                    for i in data_to_be_plotted[idx]:
                         index = index + 1
                         try:
                             if index == 1:
-                                new_data_to_be_plotted[l].append(i)
+                                new_data_to_be_plotted[idx].append(i)
                             if index >= 2:
                                 x = float(i[0])
                                 y = float(i[1])
-                                new_data_to_be_plotted[l].append((x, y))
-                        except:
+                                new_data_to_be_plotted[idx].append((x, y))
+                        except Exception:
                             print(
                                 "Scatter Chart error",
                                 "If you selected a scatter chart as the intended chart type to display data, both X-axis and Y-axis can only contain numeric values. Among the columns selected, at least one contains non-numeric values.\n\nPlease, check your input and try again!",

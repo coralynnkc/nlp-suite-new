@@ -1047,7 +1047,7 @@ def CoreNLP_annotate(
                 sentenceID += len(
                     CoreNLP_output["sentences"]
                 )  # update the sentenceID of the first sentence of the next split file
-            except:
+            except Exception:
                 print(
                     "Error processing sentence #: ",
                     sentenceID_SV + 1,
@@ -1447,7 +1447,7 @@ def process_json_normalized_date(config_filename, documentID, document, sentence
                     norm_date = token["normalizedNER"]
                     try:
                         tid = token["timex"]["tid"]
-                    except:
+                    except Exception:
                         print("   tid error")
                         tid = ""
                     info = date_get_info(norm_date)
@@ -1483,7 +1483,7 @@ def process_json_normalized_date(config_filename, documentID, document, sentence
                     norm_date = token["normalizedNER"]
                     try:
                         tid = token["timex"]["tid"]
-                    except:
+                    except Exception:
                         print("   tid error")
                         tid = ""
                     info = date_get_info(norm_date)
@@ -1575,7 +1575,7 @@ def check_NER_tokenBegin_tokenEnd(NER):
         try:
             beginToken_nextRow = NER[index + 1][2]
             NERtag_nextRow = NER[index + 1][1]
-        except:
+        except Exception:
             beginToken_nextRow = None
             NERtag_nextRow = None
         # the NER values but have the same beginning/ending values AND
@@ -1693,7 +1693,7 @@ def process_json_ner(config_filename, documentID, document, sentenceID, json, **
                             else:
                                 # date did not match required format
                                 norm_date = ""
-                        except:
+                        except Exception:
                             print("normalizedNER not available.")
                             norm_date = ""
                         temp.append(norm_date)
@@ -2438,7 +2438,7 @@ def process_json_openIE(config_filename, documentID, document, sentenceID, json,
                 T.append(token["word"])
                 try:
                     T_S.append(token["normalizedNER"])
-                except:
+                except Exception:
                     print("normalizedNER not available.")
             if token["ner"] == "PERSON":
                 person_list.append(token["word"])
@@ -3022,7 +3022,7 @@ def check_pronouns(
                     # some pronouns extracted by CoreNLP coref as such may not be in the list
                     #   e.g., "we both" leading to error
                     pronouns_count[row["Pronoun"].lower()] += 1
-                except:
+                except Exception:
                     continue
         else:
             print("Wrong Option value!")

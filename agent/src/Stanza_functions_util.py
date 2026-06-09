@@ -20,7 +20,7 @@ import stanza
 
 try:
     stanza.download("en")
-except:
+except Exception:
     import IO_internet_util
 
     IO_internet_util.check_internet_availability_warning("Stanza_functions_util.py (stanza.download(en))")
@@ -57,7 +57,7 @@ def sent_tokenize_stanza(doc, return_text=True):
 def lemmatize_stanza(doc):
     try:
         return doc.sentences[0].words[0].lemma
-    except:
+    except Exception:
         # if doc=[]
         return ""
 
@@ -79,7 +79,7 @@ def lemmatize_stanza(doc):
 def lemmatize_stanza_word(text_to_process, return_empty_string=True):
     try:
         return text_to_process.sentences[0].words[0].lemma
-    except:
+    except Exception:
         if return_empty_string:
             return ""
         else:

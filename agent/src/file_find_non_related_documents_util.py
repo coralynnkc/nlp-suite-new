@@ -20,11 +20,10 @@ if not IO_libraries_util.install_all_Python_packages(
 import os
 from glob import glob
 
-from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
-
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 filesToOpen = []
 
@@ -109,7 +108,7 @@ def percent_belongs(one_doc, all_doc):
         list1_sum_squre += freq * freq
         if word in all_doc:
             numerator += one_doc[word] * all_doc[word]
-    for word, freq in all_doc.items():
+    for _, freq in all_doc.items():
         list2_sum_squre += freq * freq
     l1_sqrt = list1_sum_squre**0.5
     l2_sqrt = list2_sum_squre**0.5

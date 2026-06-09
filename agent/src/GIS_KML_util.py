@@ -208,7 +208,7 @@ def generate_kml(
                     # There are various ways to alter strftime so that it handles pre-1900 dates
                     try:
                         GGPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
-                    except:
+                    except Exception:
                         mb.showerror(
                             title="Date error",
                             message="There was an error in processing the date '"
@@ -363,7 +363,7 @@ def generate_kml(
     )
     try:
         kml.save(kmloutputFilename)
-    except:
+    except Exception:
         mb.showwarning(
             title="kml file save failure",
             message="Saving the kml file failed. A typical cause of failure is is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).\n\nThe GIS KML script will now try to automattically clean the kml file, save it in safe mode, and open the kml file in Google Earth Pro.\n\nIf the file cleaning was successful, the map will display correctly. If not, Google Earth Pro will open exactly on the bad character position. Remove the character and save the file. But, you should really clean the original input txt/csv file.",

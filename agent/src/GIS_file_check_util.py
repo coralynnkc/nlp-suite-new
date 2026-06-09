@@ -56,7 +56,7 @@ def geocoded_checker(numColumns, minColumns, headers, locationColumnValue, input
 def location_column_checker(inputFilename, locationColumnValue, encodingValue):
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
-    except:
+    except Exception:
         print(
             "Input file error, there was an error reading the input file\n "
             + str(inputFilename)

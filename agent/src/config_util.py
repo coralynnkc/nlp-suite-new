@@ -12,10 +12,9 @@ import csv
 import os
 from subprocess import call
 
-import pandas as pd
-
 import GUI_IO_util
 import IO_user_interface_util
+import pandas as pd
 
 defaultConfigFilename = "NLP_default_IO_config.csv"
 
@@ -118,7 +117,7 @@ def write_external_software_config_file(
     if os.path.isdir(GUI_IO_util.configPath) is False:
         try:
             os.mkdir(GUI_IO_util.configPath)
-        except:
+        except Exception:
             print(
                 "Permission error?",
                 "The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
@@ -147,7 +146,7 @@ def write_external_software_config_file(
             + config_filename_path,
             False,
         )
-    except:
+    except Exception:
         print(
             "Permission error?",
             "The command failed to save the config file\n\n"
@@ -193,7 +192,7 @@ def read_NLP_package_language_config():
             # TODO any change in the labels MAIN NLP PACKAGE, LEMMATIZER PACKAGE, and LANGUAGE(S) must be carried out
             #   several times in this scripts (search for instance for MAIN NLP PACKAGE and change
             #   they also need to be changed in one line in NLP_setup_package_language_main.py
-        except:
+        except Exception:
             # setup default values if config is not available for first tme users
             package = "Stanford CoreNLP"
             parsers = ["Neural Network", "Probabilistic Context Free Grammar (PCFG)"]
@@ -238,7 +237,7 @@ def write_NLP_package_language_config_file(
     if os.path.isdir(GUI_IO_util.configPath) is False:
         try:
             os.mkdir(GUI_IO_util.configPath)
-        except:
+        except Exception:
             print(
                 "Permission error?",
                 "The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
@@ -274,7 +273,7 @@ def write_NLP_package_language_config_file(
             + config_filename_path,
             False,
         )
-    except:
+    except Exception:
         print(
             "Permission error?",
             "The command failed to save the config file\n\n"
@@ -567,7 +566,7 @@ def write_IO_config_file(
     if not os.path.isdir(GUI_IO_util.configPath):
         try:
             os.mkdir(GUI_IO_util.configPath)
-        except:
+        except Exception:
             print(
                 "Permission error?",
                 "The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
@@ -590,7 +589,7 @@ def write_IO_config_file(
             config_input_output_alphabetic_options.insert(0, header)
             writer.writerows(config_input_output_alphabetic_options)
         csv_file.close()
-    except:
+    except Exception:
         print(
             "Permission error?",
             "The command failed to save the config file\n\n"

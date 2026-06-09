@@ -99,13 +99,13 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
                         df.iloc[k][2] == kwtoken[0] and k + keyword_size < sentence_range
                     ):  # detected first token of the keyword
                         kw = True
-                        l = k + 1
-                        while l < k + keyword_size:
-                            if df.iloc[l][2] != kwtoken[l - k]:  # following tokens do not match
+                        pos = k + 1
+                        while pos < k + keyword_size:
+                            if df.iloc[pos][2] != kwtoken[pos - k]:  # following tokens do not match
                                 kw = False
-                                l = k + keyword_size
+                                pos = k + keyword_size
                             else:
-                                l = l + 1  # keep tracking
+                                pos = pos + 1  # keep tracking
                         if kw:  # if the keyword is detected, build a new subfile
                             frequency += 1
                             if frequency == 1:

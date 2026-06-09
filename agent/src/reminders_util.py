@@ -465,7 +465,7 @@ def displayReminder(df, row_num, title, message, currentStatus, question, seeMsg
     try:
         message = title.replace("title_options_", "message_")
         message = df.at[row_num, "Message"].replace("\\n", os.linesep)
-    except:
+    except Exception:
         pass
     if message == "":  # there is no message to be displayed
         return
@@ -577,7 +577,7 @@ def resetReminder(scriptName, title):
         try:
             df = pd.read_csv(remindersFile, encoding="utf-8", on_bad_lines="skip")
             # get the row number of the routine that we are looking at
-        except:
+        except Exception:
             print(
                 "Reminders file error",
                 'The reminders.csv file saved in the reminders subdirectory is ill formed. Most likely, it contains extra , in one of the three fields (Routine, Title, Message).\n\nPlease, let the NLP Suite development team know the problem so it can be fixed.\n\nIf any of the fields contain , the field content must be enclosed in "".',
@@ -594,7 +594,7 @@ def resetReminder(scriptName, title):
                     row_num = df1.index[0]
                 else:
                     return
-        except:
+        except Exception:
             print(
                 "Reminders file error",
                 "The reminders.csv file saved in the reminders subdirectory does not contain the reminder '"

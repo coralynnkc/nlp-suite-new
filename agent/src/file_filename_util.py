@@ -2,7 +2,6 @@
 # edited July 2020
 
 import csv
-import datetime
 import os
 import os.path
 import platform
@@ -41,7 +40,7 @@ def backup_files(
         print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         try:
             shutil.copy(doc, backup_path + os.sep + os.path.split(doc)[1])
-        except:
+        except Exception:
             print(
                 "The file "
                 + doc
@@ -259,7 +258,7 @@ def writeOutput(
                     ID = ID + 1
             try:
                 writer.writerow(printLine)
-            except:
+            except Exception:
                 # mb.showwarning(title="Filename error",
                 #                message=split_string + "\n\nERROR! The current file has more embedded items than the number of fields first created in the output csv file (" + str(ID) + ").\n\nPlease, check the filename and edit it.")
                 print(
@@ -418,7 +417,7 @@ def processFile(
                 os.rename(
                     inputPath + os.sep + filename, inputPath + os.sep + filenameOut
                 )
-            except:
+            except Exception:
                 print(
                     "Cannot rename file '"
                     + filenameOut
@@ -440,7 +439,7 @@ def processFile(
         if hasFullPath:
             try:
                 shutil.copy(filename, outputPath + os.sep + os.path.split(filename)[1])
-            except:
+            except Exception:
                 print(
                     "The file "
                     + filename
@@ -453,7 +452,7 @@ def processFile(
                     shutil.copy(
                         inputPath + os.sep + filename, outputPath + os.sep + filename
                     )
-                except:
+                except Exception:
                     print(
                         "The file "
                         + filename
@@ -466,7 +465,7 @@ def processFile(
             try:
                 shutil.move(filename, outputPath + os.sep + os.path.split(filename)[1])
                 fileFound = False
-            except:
+            except Exception:
                 print(
                     "The file "
                     + filename
@@ -478,7 +477,7 @@ def processFile(
                     shutil.move(
                         inputPath + os.sep + filename, outputPath + os.sep + filename
                     )
-                except:
+                except Exception:
                     print(
                         "The file "
                         + filename
@@ -490,7 +489,7 @@ def processFile(
         if hasFullPath:
             try:
                 os.unlink(filename)
-            except:
+            except Exception:
                 print(
                     "The file "
                     + filename
@@ -501,7 +500,7 @@ def processFile(
             if fileFound:
                 try:
                     os.unlink(inputPath + os.sep + filename)
-                except:
+                except Exception:
                     print(
                         "The file "
                         + filename
@@ -618,18 +617,18 @@ def get_author(path_to_file):
     # open zipfile
     try:
         zf = zipfile.ZipFile(path_to_file)
-    except:
+    except Exception:
         zf = ""
     # use lxml to parse the xml file we are interested in
     try:
         doc = lxml.etree.fromstring(zf.read("docProps/core.xml"))
-    except:
+    except Exception:
         doc = ""
     # retrieve creator
     ns = {"dc": "http://purl.org/dc/elements/1.1/"}
     try:
         creator = doc.xpath("//dc:creator", namespaces=ns)[0].text
-    except:
+    except Exception:
         creator = ""
     return creator
 
@@ -677,13 +676,13 @@ def get_creation_date(path_to_file):
             creation_date = datetime.strptime(
                 named_tuple, "%a %b %d %H:%M:%S %Y"
             ).strftime("%m/%d/%Y")
-        except:
+        except Exception:
             creation_date = ""
         try:
             modification_date = datetime.fromtimestamp(
                 os.path.getmtime(path_to_file)
             ).strftime("%m/%d/%Y")
-        except:
+        except Exception:
             modification_date = ""
         if creation_date is None or modification_date is None:
             creation_date, modification_date = ""

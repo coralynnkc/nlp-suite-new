@@ -14,9 +14,8 @@ import os
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
 from os.path import splitext
 
-from striprtf.striprtf import rtf_to_text
-
 import IO_files_util
+from striprtf.striprtf import rtf_to_text
 
 # https://pdfminersix.readthedocs.io/en/latest/
 # # https://pypi.org/project/pdfminer/#description

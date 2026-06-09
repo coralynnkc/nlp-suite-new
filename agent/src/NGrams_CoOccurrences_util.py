@@ -475,12 +475,12 @@ def search_ngrams_csv_file(
         return
 
     words = search_keywords_list
-    l = []
+    pivot_dfs = []
     l_sankey = []
     for word in words:
         try:
             b, df2 = process_ngrams(data, word, minus_K_words_var, plus_K_words_var)
-        except:
+        except Exception:
             mb.showwarning(title="Warning", message='The selected input file does not contain the word "' + word + '".')
             return
         expanded_rows = []
@@ -502,8 +502,8 @@ def search_ngrams_csv_file(
             min(data["Document ID"]), max(data["Document ID"]) + 1
         )  # Replace with the actual range or list of your document IDs
         pivot_df = pivot_df.reindex(all_document_ids, fill_value=0)
-        l.append(pivot_df)
-    combined_pivot_df = pd.concat(l, axis=1)
+        pivot_dfs.append(pivot_df)
+    combined_pivot_df = pd.concat(pivot_dfs, axis=1)
     combined_saneky_df = pd.concat(l_sankey)
     a_to_b_mapping = data.drop_duplicates(subset="Document ID").set_index("Document ID")["Document"].to_dict()
     combined_pivot_df["Document ID"] = combined_pivot_df.index
@@ -1311,7 +1311,7 @@ def save_co_occurrences(
                     else:
                         coOcc_results[key]["Co-Occurrence_inDocument_bool"] = "YES"
 
-                for key, res in coOcc_results.items():
+                for _, res in coOcc_results.items():
                     if isinstance(res, dict):
                         # convert list to string
                         search_words_str = ", ".join(res["Search Word(s)"])
@@ -1326,7 +1326,7 @@ def save_co_occurrences(
                         line.extend([res["Document ID"], IO_csv_util.dressFilenameForCSVHyperlink(res["Document"])])
                         writer.writerow(line)
             else:
-                for key, res in coOcc_results.items():
+                for _, res in coOcc_results.items():
                     if isinstance(res, dict):
                         # convert list to string
                         search_words_str = ", ".join(res["Search Word(s)"])

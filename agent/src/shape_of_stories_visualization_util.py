@@ -42,7 +42,7 @@ class Visualizer:
                     + ")"
                 )
                 file_names.append(method_short + "_cluster_" + str(i + 1))
-            except:
+            except Exception:
                 titles.append("empty")
                 file_names.append("empty")
         for i in range(len(grouped_vectors)):

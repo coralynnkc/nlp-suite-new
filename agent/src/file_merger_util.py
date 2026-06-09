@@ -118,7 +118,7 @@ def file_merger(
             try:
                 with open(doc, encoding="utf-8", errors="ignore") as infile:
                     outfile.write(infile.read())
-            except:
+            except Exception:
                 fileError += 1
                 if fileError <= 1:
                     IO_user_interface_util.timed_alert(

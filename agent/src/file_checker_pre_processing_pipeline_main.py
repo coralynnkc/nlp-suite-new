@@ -17,14 +17,13 @@ import tkinter as tk
 import tkinter.messagebox as mb
 from subprocess import call
 
-import pandas as pd
-
 import config_util
 import file_checker_util
 import file_cleaner_util
 import file_spell_checker_util
 import GUI_IO_util
 import IO_files_util
+import pandas as pd
 import statistics_txt_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________

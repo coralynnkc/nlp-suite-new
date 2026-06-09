@@ -2082,7 +2082,7 @@ def compute_sentence_complexity(
     ]
     try:
         nlp = stanza.Pipeline(lang="en", processors="tokenize,pos,constituency", use_gpu=False)
-    except:
+    except Exception:
         import subprocess
         import sys
 

@@ -17,7 +17,7 @@ from PIL import Image
 
 try:
     stanza.download("en")
-except:
+except Exception:
     import IO_internet_util
 
     IO_internet_util.check_internet_availability_warning(
@@ -26,11 +26,10 @@ except:
 import csv
 import ntpath  # to split the path from filename
 
-import matplotlib.pyplot as plt  # pip install matplotlib
-from wordcloud import STOPWORDS, WordCloud
-
 import IO_files_util
 import IO_user_interface_util
+import matplotlib.pyplot as plt  # pip install matplotlib
+from wordcloud import STOPWORDS, WordCloud
 
 
 # written by Tony Chen Gu Feb 22, 2022
@@ -650,7 +649,7 @@ def python_wordCloud(
         # The way the masking functions works is that it requires all white part of the mask should be 255 not 0 (integer type). This value represents the "intensity" of the pixel. Values of 255 are pure white, whereas values of 1 are black. Here, you can use the provided function below to transform your mask if your mask has the same format as above. Notice if you have a mask that the background is not 0, but 1 or 2, adjust the function to match your mask.
         try:
             img = Image.open(selectedImage)
-        except:
+        except Exception:
             print(
                 "An error was encountered opening the input image file\n\n"
                 + selectedImage
@@ -823,7 +822,7 @@ def python_wordCloud(
                             or postags_[j][0:2] == "RB"
                         ):
                             textToProcess = textToProcess + " " + words_[j]
-                except:
+                except Exception:
                     print("doc is not a CoNLL table")
                     raise (
                         FileNotFoundError(

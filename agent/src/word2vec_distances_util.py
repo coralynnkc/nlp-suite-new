@@ -3,14 +3,13 @@ import itertools
 import math
 import time
 
+import charts_util
+import IO_files_util
 import numpy as np
 import pandas as pd
 from numpy.linalg import norm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-import charts_util
-import IO_files_util
 
 
 def compute_word2vec_distances(

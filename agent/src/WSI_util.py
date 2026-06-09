@@ -6,7 +6,6 @@ from collections import Counter
 
 import numpy as np
 from tqdm import tqdm
-
 from WSI_classes import Clusterer, Matcher
 
 tcache_path = f"{os.getcwd()}/cache"
@@ -14,10 +13,9 @@ if not os.path.exists(tcache_path):
     os.makedirs(tcache_path)
 os.environ["TRANSFORMERS_CACHE"] = tcache_path
 
+import IO_files_util
 import spacy
 from transformers import BertModel, BertTokenizer
-
-import IO_files_util
 
 SEED = 0
 batch_size = 32

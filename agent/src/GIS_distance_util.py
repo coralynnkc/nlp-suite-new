@@ -57,7 +57,7 @@ def createCharts(distanceoutputFilename, outputDir, filesToOpen, baselineLocatio
     xlsxFilename = outputFiles.replace(".xlsx", "_Geodesic.xlsx")
     try:
         os.rename(outputFiles, xlsxFilename)
-    except:
+    except Exception:
         # the file already exists and must be removed
         if os.path.isfile(xlsxFilename):
             os.remove(xlsxFilename)
@@ -91,7 +91,7 @@ def createCharts(distanceoutputFilename, outputDir, filesToOpen, baselineLocatio
     xlsxFilename = chart_outputFilename.replace(".xlsx", "_GreatCircle.xlsx")
     try:
         os.rename(chart_outputFilename, xlsxFilename)
-    except:
+    except Exception:
         # the file already exists and must be removed
         if os.path.isfile(xlsxFilename):
             os.remove(xlsxFilename)
@@ -160,7 +160,7 @@ def computePairwiseDistances(
         geowriter = csv.writer(outputFile)
         try:
             dt = pd.read_csv(inputFile, encoding=encodingValue, on_bad_lines="skip")
-        except:
+        except Exception:
             print(
                 "Input file error, There was an error in the function 'Compute GIS distance' reading the input file\n"
                 + str(inputFile)
@@ -217,7 +217,7 @@ def computePairwiseDistances(
                 else:
                     try:
                         float(row[locationColumnNumber + 1])
-                    except:
+                    except Exception:
                         print(
                             "Input file error, Column number "
                             + str(locationColumnNumber + 1)
@@ -229,7 +229,7 @@ def computePairwiseDistances(
                         return filesToOpen
                     try:
                         float(row[locationColumnNumber + 2])
-                    except:
+                    except Exception:
                         print(
                             "Input file error, Column number "
                             + str(locationColumnNumber + 1)
@@ -241,7 +241,7 @@ def computePairwiseDistances(
                         return filesToOpen
                     try:
                         float(row[locationColumnNumber + 4])
-                    except:
+                    except Exception:
                         print(
                             "Input file error, Column number "
                             + str(locationColumnNumber + 4)
@@ -253,7 +253,7 @@ def computePairwiseDistances(
                         return filesToOpen
                     try:
                         float(row[locationColumnNumber + 5])
-                    except:
+                    except Exception:
                         print(
                             "Input file error, Column number "
                             + str(locationColumnNumber + 5)
@@ -408,7 +408,7 @@ def computeDistancesFromSpecificLocation(
 
         try:
             dt = pd.read_csv(geocodedLocationsoutputFilename, encoding=encodingValue, on_bad_lines="skip")
-        except:
+        except Exception:
             print(
                 "File error, There was an error in the function 'Compute GIS distance from specific location' reading the output file\n"
                 + str(geocodedLocationsoutputFilename)
@@ -435,7 +435,7 @@ def computeDistancesFromSpecificLocation(
     else:
         try:
             dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
-        except:
+        except Exception:
             print(
                 "Input file error, There was an error in the function 'Compute GIS distance from specific location' reading the input file\n"
                 + str(inputFilename)
@@ -482,7 +482,7 @@ def computeDistancesFromSpecificLocation(
             if currentLocation != "" and currentLocation != "nan":  # nan Not A Numeric value SHOULD NOT BE NECESSARY!!!
                 try:
                     float(row[locationColumnNumber + 1])
-                except:
+                except Exception:
                     print(
                         "Input file error, Column number "
                         + str(locationColumnNumber + 1)
@@ -494,7 +494,7 @@ def computeDistancesFromSpecificLocation(
                     return filesToOpen
                 try:
                     float(row[locationColumnNumber + 2])
-                except:
+                except Exception:
                     print(
                         "Input file error, Column number "
                         + str(locationColumnNumber + 1)

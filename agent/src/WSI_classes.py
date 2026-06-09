@@ -51,7 +51,7 @@ class Clusterer:
                 all_masks.append(list(np.ones(len(indexed_tokens))))
                 all_users.append("<sep>".join([str(sentence[0]), sentence[-1]]))
 
-        lengths = np.array([len(l) for l in all_data])
+        lengths = np.array([len(item) for item in all_data])
         ordering = np.argsort(lengths)
         # each item in these lists is a sentence
         ordered_data = [None for i in range(len(all_data))]
@@ -249,7 +249,7 @@ class Matcher:
                 all_masks.append(list(np.ones(len(indexed_tokens))))
                 all_users.append("<sep>".join([str(sentence[0]), sentence[-1]]))
 
-        lengths = np.array([len(l) for l in all_data])
+        lengths = np.array([len(item) for item in all_data])
         ordering = np.argsort(lengths)
         # each item in these lists is a sentence
         ordered_data = [None for i in range(len(all_data))]

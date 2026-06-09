@@ -155,13 +155,13 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
         return
     splitText = ""
     subfileIndex = 1
-    l = 0
+    word_count = 0
     for sent in sentences:
         words = word_tokenize_stanza(stanzaPipeLine(sent))
-        if l + len(words) < maxLength:
+        if word_count + len(words) < maxLength:
             splitText += sent + " "
-            l += len(words)
-        elif l + len(words) == maxLength:
+            word_count += len(words)
+        elif word_count + len(words) == maxLength:
             splitText += sent
             subfile = open(
                 output_path + "/" + title + "_" + str(subfileIndex) + ".txt", "w", encoding="utf-8", errors="ignore"
@@ -169,7 +169,7 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
             subfile.write(splitText)
             subfileIndex += 1
             splitText = ""
-            l = 0
+            word_count = 0
         else:
             if inSentence:  # the subfile's word count is less than max limit, but contain no incomplete sentences
                 subfile = open(
@@ -178,9 +178,9 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
                 subfile.write(splitText)
                 subfileIndex += 1
                 splitText = sent + " "
-                l = len(words)
+                word_count = len(words)
             else:
-                diff = maxLength - l  # the index of the last word of this subfile in the sentence
+                diff = maxLength - word_count  # the index of the last word of this subfile in the sentence
                 if (
                     words.index(words[diff - 1]) == diff - 1
                 ):  # no other same word in the setence or that's the first occurrence of the word
@@ -194,7 +194,7 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
                     subfile.write(splitText)
                     subfileIndex += 1
                     splitText = sent.partition(words[diff - 1])[2] + " "
-                    l = len(words) - diff
+                    word_count = len(words) - diff
                 else:
                     subsent = ""
                     restsent = sent
@@ -212,7 +212,7 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
                     subfile.write(splitText + subsent)
                     subfileIndex += 1
                     splitText = restsent + " "
-                    l = len(word_tokenize_stanza(stanzaPipeLine(restsent)))
+                    word_count = len(word_tokenize_stanza(stanzaPipeLine(restsent)))
 
     if len(splitText) > 0:
         subfile = open(

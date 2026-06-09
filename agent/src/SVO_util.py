@@ -61,11 +61,11 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
         Comparison table lists all the same/different SVOs
     """
 
-    def generate_key(S, V, O):
+    def generate_key(S, V, obj):
         """
-        Converts strings S, V, O to a key with the format "{S}, {V}, {O}".
+        Converts strings S, V, obj to a key with the format "{S}, {V}, {obj}".
         If it is a S-V combination, the key would be "{S}, {V}"
-        If it is a V-O combination, the key would be "{V}, {O}"
+        If it is a V-O combination, the key would be "{V}, {obj}"
         :return:
         """
         key = ""
@@ -74,8 +74,8 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
 
         key += V.strip().lower()
 
-        if O:
-            key += "," + O.strip().lower()
+        if obj:
+            key += "," + obj.strip().lower()
 
         return key
 
@@ -93,9 +93,9 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
         #     if not pd.isnull(CoreNLP_df.iloc[i, 5]) and not pd.isnull(CoreNLP_df.iloc[i, 3]):
         if pd.notnull(CoreNLP_df.iloc[i, 1]):
             if not pd.isnull(CoreNLP_df.iloc[i, 2]) and not pd.isnull(CoreNLP_df.iloc[i, 1]):
-                open_ie_svo.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], O=CoreNLP_df.iloc[i, 2]))
+                open_ie_svo.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], obj=CoreNLP_df.iloc[i, 2]))
             elif not pd.isnull(CoreNLP_df.iloc[i, 0]):
-                open_ie_sv.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], O=""))
+                open_ie_sv.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], obj=""))
 
     for i in range(len(senna_df)):
         # if pd.notnull(senna_df.iloc[i, 4]):
@@ -103,9 +103,9 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
         #     elif not pd.isnull(senna_df.iloc[i, 3]):  # Has S, V
         if pd.notnull(senna_df.iloc[i, 1]):  # VERB
             if not pd.isnull(senna_df.iloc[i, 0]) and not pd.isnull(senna_df.iloc[i, 2]):  # Has S and O
-                senna_svo.add(generate_key(S=senna_df.iloc[i, 0], V=senna_df.iloc[i, 1], O=senna_df.iloc[i, 2]))
+                senna_svo.add(generate_key(S=senna_df.iloc[i, 0], V=senna_df.iloc[i, 1], obj=senna_df.iloc[i, 2]))
             elif not pd.isnull(senna_df.iloc[i, 0]):  # Has S, V NO O
-                senna_sv.add(generate_key(S=senna_df.iloc[i, 0], V=senna_df.iloc[i, 1], O=""))
+                senna_sv.add(generate_key(S=senna_df.iloc[i, 0], V=senna_df.iloc[i, 1], obj=""))
 
             # elif not pd.isnull(senna_df.iloc[i, 5]):  # Has V, O
             # else:  # Has V

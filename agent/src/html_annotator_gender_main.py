@@ -150,7 +150,7 @@ def run(
             try:
                 html_annotator_gender_dictionary_util.build_dictionary_state_year(new_SS_folders[0])
                 html_annotator_gender_dictionary_util.build_dictionary_yob(new_SS_folders[1])
-            except:
+            except Exception:
                 html_annotator_gender_dictionary_util.build_dictionary_state_year(new_SS_folders[1])
                 html_annotator_gender_dictionary_util.build_dictionary_yob(new_SS_folders[0])
         if year_state_var == "" or firstName_entry_var == "":

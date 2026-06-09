@@ -1,12 +1,11 @@
 import time
 
+import IO_files_util
 import pandas as pd
 
 # Visualization
 import plotly.express as px
 from sklearn.manifold import TSNE
-
-import IO_files_util
 
 
 def run_word2vec_plot(

@@ -17,7 +17,7 @@ def MALLET_heatmap(
             encoding="utf-8",
             on_bad_lines="skip",
         )
-    except:
+    except Exception:
         topics = pd.read_csv(
             topics_file,
             names=["Topic", "Weight", "Keys"],
@@ -35,7 +35,7 @@ def MALLET_heatmap(
     for index, row in composition.iterrows():
         try:
             int(row["Document ID"])
-        except:
+        except Exception:
             composition.drop(index=index, inplace=True)
 
     composition.drop(["Document ID"], axis=1, inplace=True)

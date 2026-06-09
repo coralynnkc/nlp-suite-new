@@ -8,10 +8,9 @@ edited by Naman Sahni 9/23.2022
 
 import string
 
-import pandas as pd
-
 import charts_util
 import IO_files_util
+import pandas as pd
 import statistics_txt_util
 
 
@@ -85,11 +84,11 @@ def k_sent(
             False,
             True,
         )
-        for l in doc_conll["Form"]:
-            if l in string.punctuation:
-                txt += l + " "
+        for token in doc_conll["Form"]:
+            if token in string.punctuation:
+                txt += token + " "
             else:
-                txt += " " + l
+                txt += " " + token
 
         from Stanza_functions_util import (
             sentence_split_stanza_text,

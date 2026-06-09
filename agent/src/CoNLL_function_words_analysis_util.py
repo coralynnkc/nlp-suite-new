@@ -18,12 +18,11 @@
 import os
 from collections import Counter
 
-import pandas as pd
-
 import charts_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
+import pandas as pd
 import Stanford_CoreNLP_tags_util
 
 dict_POSTAG, dict_DEPREL = (
@@ -589,7 +588,7 @@ def verb_data_preparation_auxiliary(data):
             tok for tok in data if (tok[3] in verb_postags or tok[6] in verb_deprel)
         ]
         return data_2
-    except:
+    except Exception:
         print(
             "ERROR: INPUT MUST BE THE MERGED CoNLL TABLE CONTAINING THE SENTENCE ID. Please use the merge option when generating your CoNLL table in the StanfordCoreNLP.py routine. Program will exit."
         )

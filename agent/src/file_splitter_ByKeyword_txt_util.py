@@ -161,13 +161,13 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization=True
                 )
             subfile.write(sent + " ")
             sentence_index += 1
-        l = len(contents)
-        if l != 0 and first_occurrence:
+        contents_len = len(contents)
+        if contents_len != 0 and first_occurrence:
             f = contents[-1][-1]
             if f > 1:
                 f -= 1
             subpath = contents[-1][2]
-            for i in reversed(range(l)):
+            for i in reversed(range(contents_len)):
                 if contents[i][2] == subpath:
                     contents[i][-1] = f
         writer.writerows(contents)

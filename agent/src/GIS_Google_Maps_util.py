@@ -64,8 +64,8 @@ def create_js(outputFilename, locations, geocoder, latLongList):
     gmaps_list = []
     if not latLongList:
         latLongList = []
-        for l in locations:
-            returned_loc = GIS_geocode_util.nominatim_geocode(geocoder, l)
+        for loc in locations:
+            returned_loc = GIS_geocode_util.nominatim_geocode(geocoder, loc)
             latLongList.append([returned_loc.latitude, returned_loc.longitude])
     else:
         latLongList = locations

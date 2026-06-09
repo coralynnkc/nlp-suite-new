@@ -119,7 +119,7 @@ def get_csvfile_headers_pandas(inputFilename):
     # index_col = 0 excludes the first column, an ID column; but... we need that column
     try:
         headers = pd.read_csv(inputFilename, nrows=0, encoding="utf-8", on_bad_lines="skip").columns.tolist()
-    except:
+    except Exception:
         headers = []
     return headers
 
@@ -222,7 +222,7 @@ def GetMaxValueInCSVField(inputFilename, algorithm="", columnHeader="Document ID
     df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     try:
         column = df[columnHeader]
-    except:
+    except Exception:
         if algorithm != "":
             msg = (
                 "\n\nThe '"
@@ -387,7 +387,7 @@ def dressFilenameForCSVHyperlink(fileName):
 def undressFilenameForCSVHyperlink(fileName):
     try:
         fileName = fileName.replace('=hyperlink("', "")
-    except:
+    except Exception:
         return fileName
     fileName = fileName.replace('")', "")
     return fileName
@@ -400,19 +400,19 @@ def remove_hyperlinks(inputFilename):
         data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     except pd.errors.ParserError:
         data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip", sep="delimiter")
-    except:
+    except Exception:
         print("Error: failed to read the csv file named: " + inputFilename)
         return False, ""
     try:
         document = data["Document"]
-    except:
+    except Exception:
         no_hyperlink_filename = inputFilename
         return True, no_hyperlink_filename
     new_document = []
     for i in document:
         try:
             new_document.append(IO_files_util.getFilename(i)[2])  # 0 for tail; 2 for full path
-        except:
+        except Exception:
             continue
     data["Document"] = new_document
     no_hyperlink_filename = (

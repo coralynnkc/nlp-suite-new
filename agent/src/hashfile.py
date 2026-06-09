@@ -36,7 +36,7 @@ def getcache(outputDir):
             try:
                 ab_id, tokens = cache.split("@@@@----@@@@")
                 hashmap[ab_id] = eval(tokens)
-            except:
+            except Exception:
                 print("That's all for fetching caches...")
     return hashmap
 

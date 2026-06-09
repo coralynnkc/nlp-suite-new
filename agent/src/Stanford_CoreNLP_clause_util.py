@@ -47,7 +47,7 @@ def clausal_info_extract(parsetree):
             full_list[i] = [0]
     try:
         return full_list
-    except:
+    except Exception:
         print("\nERROR IN PARSE-TREE\n", parsetree)
         print(
             "ERROR IN PARSE-TREE",
@@ -65,7 +65,7 @@ def clausal_info_extract_from_string(parse_tree_str):
     try:
         parse_tree = Tree.fromstring(parse_tree_str)
         return clausal_info_extract(parse_tree)
-    except:
+    except Exception:
         print("\nERROR IN NLTK PARSE-TREE\n", parse_tree_str, parse_tree.flatten())
         print(
             "ERROR IN PARSE-TREE",

@@ -50,7 +50,6 @@ def run(inputFilename, folium_pinmap_outputFilename, folium_heatmap_outputFilena
                 icon=folium.Icon(color="red"),
             ).add_to(mappingLocation)
     mappingLocation.save(folium_pinmap_outputFilename)
-    mappingLocation
     filesToOpen.append(folium_pinmap_outputFilename)
 
     # produce heat map --------------------------------------------------------------------------
@@ -70,9 +69,6 @@ def run(inputFilename, folium_pinmap_outputFilename, folium_heatmap_outputFilena
 
     # Plot it on the map
     HeatMap(GISLocation).add_to(heatmap)
-
-    # Display the map
-    heatmap
 
     heatmap.save(folium_heatmap_outputFilename)
     filesToOpen.append(folium_heatmap_outputFilename)

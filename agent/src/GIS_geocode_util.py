@@ -115,7 +115,7 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
             featuretype=featuretype,
         )
         # https: // gis.stackexchange.com / questions / 173569 / avoid - time - out - error - nominatim - geopy - openstreetmap
-    except:
+    except Exception:
         print("******************************************** Nominatim TIMEOUT", timeout)
         if timeout < 20:
             # try again, adding timeout
@@ -129,7 +129,7 @@ def nominatim_geocode(geolocator, loc, country_bias="", box_tuple="", restrict=F
                     timeout=timeout + 2,
                     featuretype=featuretype,
                 )  # add 2 second for the next round
-            except:
+            except Exception:
                 return None
         else:
             print("Maximum number of retries to access Nominatim server exceeded in geocoding " + loc)
@@ -224,13 +224,13 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
             if sentence != "":
                 description = description + "\n" + "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
             pnt.description = description
-        except:
+        except Exception:
             print("Error processing ", location.upper(), ". No sentence available for description field.")
         # TODO MINO GIS date option
         if datePresent:
             try:
                 GEPdateFormat = convertToGEP(date)
-            except:
+            except Exception:
                 print(date)
                 GEPdateFormat = ""
             pnt.timespan.begin = GEPdateFormat
@@ -238,7 +238,7 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
 
     try:
         kml.save(kmloutputFilename)
-    except:
+    except Exception:
         mb.showwarning(
             title="kml file save failure",
             message="Saving the kml file failed. A typical cause of failure is is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).\n\nThe GIS KML script will now try to automattically clean the kml file, save it in safe mode, and open the kml file in Google Earth Pro.\n\nIf the file cleaning was successful, the map will display correctly. If not, Google Earth Pro will open exactly on the bad character position. Remove the character and save the file. But, you should really clean the original input txt/csv file.",
@@ -424,8 +424,8 @@ def geocode(
     for item in locations:
         if ";" in item[0]:
             sep_locs = item[0].split(";")
-            for l in sep_locs:
-                tmp_loc.append([l] + item[1:])
+            for loc in sep_locs:
+                tmp_loc.append([loc] + item[1:])
         else:
             tmp_loc.append(item)
     locations = tmp_loc
@@ -478,7 +478,7 @@ def geocode(
                     try:
                         sentence = item[2]
                         document = os.path.split(IO_csv_util.undressFilenameForCSVHyperlink(item[3]))[1]
-                    except:
+                    except Exception:
                         sentence = ""
                         document = ""
             # avoid repetition so as not to access the geocoder service several times for the same location;
@@ -564,7 +564,7 @@ def geocode(
                             location.longitude,
                             location.address,
                         )  # extracting lat from the request results
-                    except:
+                    except Exception:
                         lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
                         locationsNotFound = locationsNotFound + 1
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
@@ -638,7 +638,7 @@ def geocode(
                                 + "<br/><br/>"
                                 "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
                             )
-                        except:
+                        except Exception:
                             pnt.description = "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
                     else:
                         pnt.description = (
@@ -646,14 +646,14 @@ def geocode(
                             "<i><b>Document</b></i>: " + document + "<br/><br/>"
                             "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
                         )
-                except:
+                except Exception:
                     pnt.description = "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
 
                 # create the date values for the slide bar in Google Earth Pro for dynamic time
                 if datePresent:
                     try:
                         GEPdateFormat = convertToGEP(date)
-                    except:
+                    except Exception:
                         print(date)
                         GEPdateFormat = ""
                     pnt.timespan.begin = GEPdateFormat
@@ -666,7 +666,7 @@ def geocode(
     # TODO MINO GIS create kml record
     try:
         kml.save(kmloutputFilename)
-    except:
+    except Exception:
         mb.showwarning(
             title="kml file save failure",
             message="Saving the kml file failed. A typical cause of failure is is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).\n\nThe GIS KML script will now try to automattically clean the kml file, save it in safe mode, and open the kml file in Google Earth Pro.\n\nIf the file cleaning was successful, the map will display correctly. If not, Google Earth Pro will open exactly on the bad character position. Remove the character and save the file. But, you should really clean the original input txt/csv file.",
@@ -765,7 +765,7 @@ def convertToGEP(date):
                     pass
         try:
             currentDateFormat = dateutil.parser.parse(date)
-        except:
+        except Exception:
             mb.showerror(
                 title="Date error",
                 message="There was an error in processing the date '"
@@ -778,7 +778,7 @@ def convertToGEP(date):
         # pre 1900 dates may give a problem in Windows: ValueError: format %y requires year >= 1900 on Windows
         try:
             GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
-        except:
+        except Exception:
             mb.showerror(
                 title="Date error",
                 message="There was an error in processing the date '"

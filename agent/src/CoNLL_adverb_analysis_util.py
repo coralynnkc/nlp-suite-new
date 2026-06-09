@@ -1,10 +1,9 @@
 from collections import Counter
 
-import pandas as pd
-
 import charts_util
 import IO_csv_util
 import IO_files_util
+import pandas as pd
 import Stanford_CoreNLP_tags_util
 
 dict_POSTAG, dict_DEPREL = (
@@ -38,7 +37,7 @@ def data_preparation(data, tag_list, name_list, tag_pos):
         if tok[tag_pos] in tag_list:
             try:
                 dat.append(tok + [name_list[tag_list.index(tok[tag_pos])]])
-            except:
+            except Exception:
                 print("???")
     dat = sorted(dat, key=lambda x: int(x[recordID_position]))
     return dat

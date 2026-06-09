@@ -338,7 +338,7 @@ def run_CoNLL_table_analyzer(
         if len(data) <= 1000000:
             try:
                 data = sorted(data, key=lambda x: int(x[recordID_position]))
-            except:
+            except Exception:
                 print(
                     "CoNLL table ill formed, The CoNLL table is ill formed. You may have tinkered with it. Please, rerun the Stanford CoreNLP parser since many scripts rely on the CoNLL table."
                 )

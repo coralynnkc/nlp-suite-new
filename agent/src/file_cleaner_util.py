@@ -710,11 +710,6 @@ def remove_characters_between_characters(
             with open(outfile, "w+", encoding="utf_8", errors="ignore") as out:
                 out.write(fullText)
 
-                # export file sizes as a check
-                os.stat(file)
-                os.stat(file).st_size
-                os.stat(outfile)
-                os.stat(outfile).st_size
                 file_sizes.append(
                     [
                         IO_csv_util.dressFilenameForCSVHyperlink(file),
@@ -1336,7 +1331,7 @@ def find_replace_string(
         )
         return
 
-    l = len(string_IN)
+    string_count = len(string_IN)
     docError = 0
     indexSV = 0
     changed_values = []
@@ -1348,7 +1343,7 @@ def find_replace_string(
         with open(doc, "r+", encoding="utf_8", errors="ignore") as file:
             fullText = file.read()
             # process the range of words when coming with the values in a csv file
-            for i in range(l):
+            for i in range(string_count):
                 if str(string_IN[i]) in str(fullText):
                     # # use regular expression replace to check for distinct words (e.g., he not in held)
                     # \b beginning and ending of word

@@ -17,7 +17,6 @@ import tkinter as tk
 import tkinter.messagebox as mb
 
 import chardet
-
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
@@ -77,14 +76,14 @@ _surrogates = re.compile(r"[\uDC80-\uDCFF]")
 
 # https://stackoverflow.com/questions/24616678/unicodedecodeerror-in-python-when-reading-a-file-how-to-ignore-the-error-and-ju
 # https://docstore.mik.ua/orelly/java/javanut/ch11_02.htm
-def detect_decoding_errors_line(l, _s=_surrogates.finditer):
+def detect_decoding_errors_line(line, _s=_surrogates.finditer):
     """Return decoding errors in a line of text
     Works with text lines decoded with the surrogateescape error handler.
     Returns a list of (pos, byte) tuples
     DC80 - DCFF encode bad bytes 80-FF
     """
 
-    return [(m.start(), bytes([ord(m.group()) - 0xDC00])) for m in _s(l)]
+    return [(m.start(), bytes([ord(m.group()) - 0xDC00])) for m in _s(line)]
 
 
 # https://stackoverflow.com/questions/19771751/how-to-use-unidecode-in-python-3-3
