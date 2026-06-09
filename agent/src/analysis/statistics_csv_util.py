@@ -13,6 +13,7 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from scipy import stats
 from scipy.stats import zscore
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -282,10 +283,7 @@ def compute_csv_column_statistics_NoGroupBy(
             remove_hyperlinks=True,
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -462,10 +460,7 @@ def compute_csv_column_statistics_groupBy(
             remove_hyperlinks=True,
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -498,10 +493,7 @@ def compute_csv_column_statistics(
             dataTransformation,
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
     return filesToOpen
 
 
@@ -976,10 +968,7 @@ def compute_csv_column_frequencies(
                 hover_info_column_list=hover_over_header,
             )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
     # we can now remove the no_hyperlinks file (i.e., inputFilename), since the frequency file has been computed
     if removed_hyperlinks:
         os.remove(inputFilename)

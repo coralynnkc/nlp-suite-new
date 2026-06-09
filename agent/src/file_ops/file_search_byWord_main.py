@@ -2,6 +2,7 @@ import logging
 
 # written by Roberto Franzosi October 2019, edited Spring 2020
 import file_search_byWord_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -112,10 +113,7 @@ def run_search_byWord(
             )
 
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
         else:
             filesToOpen = file_search_byWord_util.search_sentences_documents(
                 inputFilename,

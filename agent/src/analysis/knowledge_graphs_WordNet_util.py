@@ -15,6 +15,7 @@ import IO_user_interface_util
 import pandas as pd
 import reminders_util
 import statistics_csv_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -324,10 +325,7 @@ def aggregate_GoingUP(
         chart_title_label="",
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     if noun_verb == "VERB":
         operation_results_text_list = []
@@ -364,10 +362,7 @@ def aggregate_GoingUP(
             chart_title_label="",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         if outputFilenameCSV3_new != "":
             os.remove(outputFilenameCSV3_new)

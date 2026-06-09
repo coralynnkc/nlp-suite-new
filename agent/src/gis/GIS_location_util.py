@@ -6,7 +6,12 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-# convert string to list
+# Common single-word prefixes that form multi-word location names (e.g. "las" → "Las Vegas")
+MULTI_WORD_LOCATION_PREFIX = {
+    "abu", "al", "an", "de", "del", "den", "des", "di", "du",
+    "el", "en", "im", "la", "las", "le", "les", "los", "new",
+    "port", "rio", "san", "santa", "sao", "south", "west",
+}
 
 
 # if 'spatial' in NER_tag_var.get() or 'CITY' in NER_tag_var.get() or 'COUNTRY' in NER_tag_var.get() or 'STATE_OR_PROVINCE' in NER_tag_var.get():
@@ -47,7 +52,7 @@ def extract_index(inputFilename, InputCodedCsvFile, encodingValue, location_var_
 # the CoNLL table includes the filename; the position in the table varies with old and new CoNLL
 # returns filename, location, sentence, date (if present)
 def extract_NER_locations(conllFile, encodingValue, datePresent):
-    global multi_word_location_prefix
+    multi_word_location_prefix = MULTI_WORD_LOCATION_PREFIX
     filenamePositionInCoNLLTable = 12
     # startTime=IO_user_interface_util.timed_alert(window, 2000, 'NER locations extraction', "Started extracting NER locations from CoNLL table at",
     # 											 True,'', True, '', True)
@@ -202,7 +207,6 @@ def extract_csvFile_locations(
     datePresent,
     dateColumnNumber,
 ):
-    global multi_word_location_prefix
     # startTime=IO_user_interface_util.timed_alert(window, 2000, 'csv file locations extraction', "Started extracting locations from csv file at",
     # 											 True,'', True, '', True)
     locList = []
@@ -211,7 +215,7 @@ def extract_csvFile_locations(
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
         count_row = dt.shape[0]  # gives number of row count
-    except Exception:
+    except (OSError, UnicodeDecodeError, pd.errors.ParserError):
         logger.info(
             "Input file error, There was an error in the function 'Extract csv locations' reading the input csv file\n"
             + str(inputFilename)

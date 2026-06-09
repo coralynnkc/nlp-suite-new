@@ -8,17 +8,6 @@ import topic_modeling_mallet_util
 
 logger = logging.getLogger(__name__)
 
-# RUN section ______________________________________________________________________________________________________________________________________________________
-
-"""
-# get CLAs of input dir and output file name
-parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--inputDir", help="Directs the input to your text directory")
-parser.add_argument("-o", "--outputFilename", help="Directs the output to a file name and path of your choice, MUST end in .html")
-args = parser.parse_args()
-"""
-
-
 def run_topic_modeling(
     inputDir,
     outputDir,

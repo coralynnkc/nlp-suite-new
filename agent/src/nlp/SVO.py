@@ -22,6 +22,7 @@ import Stanford_CoreNLP_coreference_util
 import Stanford_CoreNLP_util
 import Stanza_util
 import SVO_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -598,10 +599,7 @@ def run_svo(
                     )
 
                     if outputFiles is not None:
-                        if isinstance(outputFiles, str):
-                            filesToOpen.append(outputFiles)
-                        else:
-                            filesToOpen.extend(outputFiles)
+                        collect(filesToOpen, outputFiles)
 
                 else:  # txt input file
                     # for f in svo_result_list:
@@ -662,10 +660,7 @@ def run_svo(
                         )
 
                         if outputFiles is not None:
-                            if isinstance(outputFiles, str):
-                                filesToOpen.append(outputFiles)
-                            else:
-                                filesToOpen.extend(outputFiles)
+                            collect(filesToOpen, outputFiles)
 
             i += 1
 
@@ -715,10 +710,7 @@ def run_svo(
                 )  # bold_var_list, italic_var_list
 
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     # generate subset of files to be opened
 

@@ -414,10 +414,7 @@ def Stanza_annotate(
                     dataTransformation,
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -817,6 +814,7 @@ lang_dict_rev = {}
 # lang_dict_rev will use alias, instead of lang_name, as found in resources.json
 # e.g., stanza.download(Stanza_util.lang_dict_rev['en'])
 import stanza.resources.common
+from util import collect
 
 logger = logging.getLogger(__name__)
 

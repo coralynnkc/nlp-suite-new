@@ -13,6 +13,7 @@ import IO_files_util
 import IO_user_interface_util
 import lib_util
 import pandas as pd
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -228,10 +229,7 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
         chart_title_label="Concreteness Statistics",
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     IO_user_interface_util.timed_alert(
         2000, "Analysis end", "Finished running CONCRETENESS Analysis at", True, "", True, startTime, True

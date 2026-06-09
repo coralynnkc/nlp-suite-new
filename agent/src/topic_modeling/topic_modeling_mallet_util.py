@@ -7,22 +7,18 @@ import file_converter_util
 import IO_files_util
 import pandas as pd
 import requests
+from app_constants import MALLET_URL, NLP_SUITE_ROOT
+from util import collect
 
 logger = logging.getLogger(__name__)
 
-AGENT_MOUNT_PATH = "/root/nlp-suite"
 
-
-# converts from mallet to point at folders agent knows where
 def mallet_to_agent_path(path):
-    return path.replace("/app", AGENT_MOUNT_PATH)
+    return path.replace("/app", NLP_SUITE_ROOT)
 
 
 def call_mallet_api(command, args):
-    # Helper function to send a request to MALLET API.
-
-    # Server (agent) url
-    api_url = "http://172.16.0.13:5050/run"
+    api_url = MALLET_URL
 
     # Working locally
     payload = {"command": command, "args": args}
@@ -144,11 +140,7 @@ def run_MALLET(
             column_yAxis_label_var=yAxis,
         )
 
-        if outputFiles:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # Generate heatmap
     heatmap_files = charts_matplotlib_seaborn_util.MALLET_heatmap(
@@ -158,10 +150,6 @@ def run_MALLET(
         fig_set={"figure.figsize": (8, 6), "figure.dpi": 300},
         show_topics=True,
     )
-    if heatmap_files:
-        if isinstance(heatmap_files, str):
-            filesToOpen.append(heatmap_files)
-        else:
-            filesToOpen.extend(heatmap_files)
+    collect(filesToOpen, heatmap_files)
 
     return filesToOpen

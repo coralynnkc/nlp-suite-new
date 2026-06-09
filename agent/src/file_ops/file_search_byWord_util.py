@@ -19,6 +19,7 @@ import charts_util
 import IO_csv_util
 import IO_files_util
 import stanza
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -831,10 +832,7 @@ def search_sentences_documents(
             chart_title_label="",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # visualize results for within sentence searches ---------------------------------------------------------------
 
@@ -892,10 +890,7 @@ def search_sentences_documents(
                     chart_title_label="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     # IO_user_interface_util.timed_alert(GUI_util.window,2000,'Analysis end', 'Finished running the Search word function at',
     #                                    True, '', True, startTime,  False)

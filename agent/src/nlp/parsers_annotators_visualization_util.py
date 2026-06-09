@@ -1,6 +1,7 @@
 import charts_util
 import IO_csv_util
 import reminders_util
+from util import collect
 
 
 # outputFilename is actually the file containing fields to be charted
@@ -47,10 +48,7 @@ def parsers_annotators_visualization(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # All POS ________________________________________________________________
@@ -74,10 +72,7 @@ def parsers_annotators_visualization(
             chart_title_label="POS (Part of Speech) Tag Values",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         outputFiles = charts_util.visualize_chart(
             chartPackage,
@@ -97,10 +92,7 @@ def parsers_annotators_visualization(
             chart_title_label="Form Values",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # NER ________________________________________________________________
@@ -127,10 +119,7 @@ def parsers_annotators_visualization(
                 chart_title_label="NER",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
             # plot Form values by NER tag (e.g, Atlanta in LOCATION)
             outputFiles = charts_util.visualize_chart(
@@ -151,10 +140,7 @@ def parsers_annotators_visualization(
                 chart_title_label="Form",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # parser ________________________________________________________________
@@ -183,10 +169,7 @@ def parsers_annotators_visualization(
             chart_title_label="DepRel",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         outputFiles = charts_util.visualize_chart(
             chartPackage,
@@ -207,10 +190,7 @@ def parsers_annotators_visualization(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # SPECIAL ANNOTATORS: date, gender, quote, sentiment, SVO, OpenIE
@@ -239,10 +219,7 @@ def parsers_annotators_visualization(
             chart_title_label="Date Expressions",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
             # normalized dates are in the form PAST_REF, NEXT_IMMEDIATE P1D, ...
         outputFiles = charts_util.visualize_chart(
@@ -263,10 +240,7 @@ def parsers_annotators_visualization(
             chart_title_label="Normalized Dates",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
             # Date types are in the form PAST, PRESENT, OTHER
         outputFiles = charts_util.visualize_chart(
@@ -287,10 +261,7 @@ def parsers_annotators_visualization(
             chart_title_label="Date Types",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # gender ________________________________________________________________
@@ -314,10 +285,7 @@ def parsers_annotators_visualization(
             chart_title_label="Gender",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         outputFiles = charts_util.visualize_chart(
             chartPackage,
@@ -337,17 +305,11 @@ def parsers_annotators_visualization(
             chart_title_label="Gendered Words",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         outputFiles = visualize_html_file(inputFilename, inputDir, outputDir, configFilename, outputFilename)
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         IO_csv_util.get_csvfile_headers(outputFilename)
         Sankey_limit1_var = 12
@@ -375,10 +337,7 @@ def parsers_annotators_visualization(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # quote ________________________________________________________________
@@ -401,10 +360,7 @@ def parsers_annotators_visualization(
             chart_title_label="Quotes",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # sentiment ________________________________________________________________
@@ -428,10 +384,7 @@ def parsers_annotators_visualization(
                 chart_title_label="Sentiment Score Statistics",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if IO_csv_util.get_csvfile_headers(outputFilename, False)[1] == "Sentiment label":
             outputFiles = charts_util.visualize_chart(
@@ -451,10 +404,7 @@ def parsers_annotators_visualization(
                 chart_title_label="Sentiment Label Statistics",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # SVO and OpenIE ________________________________________________________________
@@ -532,10 +482,7 @@ def parsers_annotators_visualization(
             chart_title_label="Subjects (unlemmatized, unfiltered)",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         # plot Verbs
         outputFiles = charts_util.visualize_chart(
@@ -556,10 +503,7 @@ def parsers_annotators_visualization(
             chart_title_label="Verbs (unlemmatized, unfiltered)",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         # plot Objects
         outputFiles = charts_util.visualize_chart(
@@ -580,10 +524,7 @@ def parsers_annotators_visualization(
             chart_title_label="Objects (unlemmatized, unfiltered)",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # generate visualization output ----------------------------------------------------------------
     # coref ________________________________________________________________
@@ -620,10 +561,7 @@ def parsers_annotators_visualization(
                 chart_title_label="",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
             outputFiles = charts_util.visualize_chart(
                 chartPackage,
@@ -643,10 +581,7 @@ def parsers_annotators_visualization(
                 chart_title_label="",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
             IO_csv_util.get_csvfile_headers(outputFilename)
             Sankey_limit1_var = 12
@@ -674,10 +609,7 @@ def parsers_annotators_visualization(
             )
 
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     return filesToOpen
 

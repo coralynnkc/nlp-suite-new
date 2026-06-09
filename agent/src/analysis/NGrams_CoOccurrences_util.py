@@ -21,6 +21,7 @@ from Stanza_functions_util import (
     sentence_split_stanza_text,
     stanzaPipeLine,
 )
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -548,10 +549,7 @@ def search_ngrams_csv_file(
             )
 
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
             return filesToOpen
 
@@ -994,10 +992,7 @@ def NGrams_coOccurrences_VIEWER(
                 hover_info_column_list=hover_label,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     # Co-occurrences VIEWER -------------------------------------------------------------------------------
 
@@ -1061,10 +1056,7 @@ def NGrams_coOccurrences_VIEWER(
 
             # run_all returns a string; must use append
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
             data, headers = IO_csv_util.get_csv_data(coOccFileName, True)
 
@@ -1092,10 +1084,7 @@ def NGrams_coOccurrences_VIEWER(
                 remove_hyperlinks=True,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     return filesToOpen
 

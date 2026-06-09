@@ -3,21 +3,15 @@
 # Edited by Roberto Franzosi, Tony May 2022
 # Edited by Samir Kaddoura, March 2023
 import io
-import logging
 import os
-import re
-from collections import Counter
 
 import charts_Excel_util
 import charts_Plotly_util
 import IO_csv_util
 import IO_user_interface_util
-import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 import statistics_csv_util
-from plotly.subplots import make_subplots
+from util import collect
 
 
 def prepare_data_to_be_plotted_inExcel(
@@ -143,10 +137,7 @@ def visualize_chart_byGroup(
         pivot=pivot,
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # temp_outputFilename[0] is the frequency filename (with no hyperlinks)
 
@@ -337,10 +328,7 @@ def visualize_chart_bySent(
     )
 
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # TODO temporary to measure process time
     IO_user_interface_util.timed_alert(
@@ -516,10 +504,7 @@ def visualize_chart(
         )  # always 1 to get frequencies of values, except for n-grams where we already pass stats
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
         else:
             # no point continuing to process more charts if an error was encountered and None was returned
             #   typically because of too many rows for Excel to handle, when Excel is used
@@ -557,10 +542,7 @@ def visualize_chart(
             )
 
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     # bar chart aggregated by group  (e.g., form values by POS tags) -----------------------------------------------------------------
     #   avoid plotting by ['Document ID', 'Document'] as groupBy; done in chart byDoc
@@ -586,10 +568,7 @@ def visualize_chart(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # line plots by SENTENCE index -----------------------------------------------------------------------
     # sentence index value are the first item in the list [[7,2]] i.e. 7
@@ -638,10 +617,7 @@ def visualize_chart(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     return filesToOpen
 

@@ -130,10 +130,9 @@ def nominatim_geocode(
             featuretype=featuretype,
         )
         # https: // gis.stackexchange.com / questions / 173569 / avoid - time - out - error - nominatim - geopy - openstreetmap
-    except Exception:
-        logger.info("******************************************** Nominatim TIMEOUT", timeout)
+    except Exception as e:
+        logger.info(f"Nominatim TIMEOUT: {e}", timeout)
         if timeout < 20:
-            # try again, adding timeout
             try:
                 return nominatim_geocode(
                     geolocator,
@@ -143,7 +142,7 @@ def nominatim_geocode(
                     bounded=restrict,
                     timeout=timeout + 2,
                     featuretype=featuretype,
-                )  # add 2 second for the next round
+                )
             except Exception:
                 return None
         else:
@@ -273,17 +272,12 @@ def process_geocoded_data_for_kml(
                     + "<br/><br/>"
                 )
             pnt.description = description
-        except Exception:
-            logger.info(
-                "Error processing ",
-                location.upper(),
-                ". No sentence available for description field.",
-            )
-        # TODO MINO GIS date option
+        except (IndexError, KeyError):
+            logger.info(f"No sentence available for description field for location: {location.upper()}")
         if datePresent:
             try:
                 GEPdateFormat = convertToGEP(date)
-            except Exception:
+            except ValueError:
                 logger.info(date)
                 GEPdateFormat = ""
             pnt.timespan.begin = GEPdateFormat
@@ -291,11 +285,10 @@ def process_geocoded_data_for_kml(
 
     try:
         kml.save(kmloutputFilename)
-    except Exception:
+    except OSError:
         logger.info(
             "kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters)."
         )
-        # Save kml regardless of validity. Let the user find any bad characters.
         kml.save(kmloutputFilename, False)
         # Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
         with open(
@@ -587,7 +580,7 @@ def geocode(
                         document = os.path.split(
                             IO_csv_util.undressFilenameForCSVHyperlink(item[3])
                         )[1]
-                    except Exception:
+                    except (IndexError, KeyError):
                         sentence = ""
                         document = ""
             # avoid repetition so as not to access the geocoder service several times for the same location;
@@ -671,7 +664,7 @@ def geocode(
                             location.longitude,
                             location.address,
                         )
-                    except Exception:
+                    except AttributeError:
                         lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
                         locationsNotFound = locationsNotFound + 1
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
@@ -689,7 +682,7 @@ def geocode(
                             location.longitude,
                             location.address,
                         )  # extracting lat from the request results
-                    except Exception:
+                    except AttributeError:
                         lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
                         locationsNotFound = locationsNotFound + 1
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
@@ -788,7 +781,7 @@ def geocode(
                                 + "<br/><br/>"
                                 "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
                             )
-                        except Exception:
+                        except (IndexError, KeyError):
                             pnt.description = (
                                 "<i><b>Location</b></i>: "
                                 + itemToGeocode
@@ -800,7 +793,7 @@ def geocode(
                             "<i><b>Document</b></i>: " + document + "<br/><br/>"
                             "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
                         )
-                except Exception:
+                except (IndexError, KeyError):
                     pnt.description = (
                         "<i><b>Location</b></i>: " + itemToGeocode + "<br/><br/>"
                     )
@@ -809,7 +802,7 @@ def geocode(
                 if datePresent:
                     try:
                         GEPdateFormat = convertToGEP(date)
-                    except Exception:
+                    except ValueError:
                         logger.info(date)
                         GEPdateFormat = ""
                     pnt.timespan.begin = GEPdateFormat
@@ -939,7 +932,7 @@ def convertToGEP(date):
                     pass
         try:
             currentDateFormat = dateutil.parser.parse(date)
-        except Exception:
+        except (ValueError, OverflowError):
             logger.info(
                 f"Date error: There was an error in processing the date '{date}' with format '{fmt}'."
             )
@@ -947,7 +940,7 @@ def convertToGEP(date):
         # pre 1900 dates may give a problem in Windows: ValueError: format %y requires year >= 1900 on Windows
         try:
             GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
-        except Exception:
+        except (ValueError, AttributeError):
             logger.info(
                 f"Date error: There was an error in processing the date '{date}' with format '{fmt}'."
             )

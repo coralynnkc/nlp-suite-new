@@ -45,7 +45,6 @@ def run(
 ):
 
     config_filename = defaultConfigFilename
-    global nSAscoreFiles
     nSAscoreFiles = 0
     filesToOpen = []
 

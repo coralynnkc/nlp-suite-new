@@ -7,6 +7,7 @@ import IO_files_util
 import IO_user_interface_util
 import numpy as np
 import pandas as pd
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -272,10 +273,7 @@ def visualize_SVOs(fileName, outputDir, chartPackage, dataTransformation, filesT
     )
 
     if openFiles and outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     outputFiles = charts_util.visualize_chart(
         chartPackage,
@@ -294,10 +292,7 @@ def visualize_SVOs(fileName, outputDir, chartPackage, dataTransformation, filesT
         chart_title_label="Verbs (" + label + ")",
     )
     if openFiles and outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     outputFiles = charts_util.visualize_chart(
         chartPackage,
@@ -317,10 +312,7 @@ def visualize_SVOs(fileName, outputDir, chartPackage, dataTransformation, filesT
     )
 
     if openFiles and outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -797,10 +789,7 @@ def normalize_date_svo(inputFilename, outputDir, chartPackage="Excel", dataTrans
         chart_title_label="Date Expressions",
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # normalized dates are in the form PAST_REF, NEXT_IMMEDIATE P1D, ...
     outputFiles = charts_util.visualize_chart(
@@ -821,10 +810,7 @@ def normalize_date_svo(inputFilename, outputDir, chartPackage="Excel", dataTrans
         chart_title_label="Normalized Dates",
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # Date types are in the form PAST, PRESENT, OTHER
     outputFiles = charts_util.visualize_chart(
@@ -845,10 +831,7 @@ def normalize_date_svo(inputFilename, outputDir, chartPackage="Excel", dataTrans
         chart_title_label="Date Types (includes " + nEmtyCells + " SVOs with no date)",
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     return filesToOpen
 

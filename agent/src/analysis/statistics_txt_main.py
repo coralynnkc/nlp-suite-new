@@ -1,5 +1,7 @@
 import logging
 
+from util import collect
+
 logger = logging.getLogger(__name__)
 # written by Roberto Franzosi (Spring/summer 2020)
 
@@ -54,10 +56,7 @@ def run_statistics(
                 lemmatize_var,
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
         if "Compute sentence length" in corpus_statistics_options_menu_var or "*" in corpus_statistics_options_menu_var:
             import statistics_txt_util
 
@@ -65,10 +64,7 @@ def run_statistics(
                 inputFilename, inputDir, outputDir, config_filename, chartPackage, dataTransformation
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         if "Compute line length" in corpus_statistics_options_menu_var or "*" in corpus_statistics_options_menu_var:
             import statistics_txt_util
@@ -77,10 +73,7 @@ def run_statistics(
                 config_filename, inputFilename, inputDir, outputDir, False, chartPackage, dataTransformation
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     if corpus_statistics_byPOS_var:
         import config_util
@@ -132,9 +125,6 @@ def run_statistics(
 
         if outputFiles is None:
             return
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     return filesToOpen

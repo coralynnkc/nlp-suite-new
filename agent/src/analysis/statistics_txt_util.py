@@ -38,7 +38,7 @@ if not os.path.exists(EN_MODEL_PATH):
 
         IO_internet_util.check_internet_availability_warning("statistics_txt_util.py (stanza.download('en'))")
 else:
-    logger.info("Englis.h model")
+    logger.info("English model")
 
 
 try:
@@ -323,10 +323,7 @@ def compute_corpus_statistics(
     )  # always 1 to get frequencies of values, except for n-grams where we already pass stats
 
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # compute and chart mean, mode, skewness, kurtosis
     #   need at least 3 values, i.e., 3 documents, to compute skewness and kurtosis
@@ -350,10 +347,7 @@ def compute_corpus_statistics(
     )
 
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     # TODO
     #   we should create 10 classes of values by distance to the median of
@@ -454,10 +448,7 @@ def compute_sentence_length(inputFilename, inputDir, outputDir, configFileName, 
     )
 
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -555,10 +546,7 @@ def compute_line_length(
     )
 
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     return filesToOpen
 
@@ -677,6 +665,7 @@ def process_punctuation(inputFilename, inputDir, excludePunctuation, ngrams_list
 
 
 import NGrams_util
+from util import collect
 
 # hapax_words is True when the user selevcts too export ONLY words, False when hapax will also include numebrs, symbiols, etc.
 
@@ -823,10 +812,7 @@ def get_ngramlist(
                     chart_title_label=str(index + 1) + "-gram",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
         corpus_ngramsList.insert(
             0, [str(index + 1) + "-grams", "Frequency in Document", "Frequency in Corpus", "Document ID", "Document"]
@@ -872,10 +858,7 @@ def get_ngramlist(
                 chart_title_label=str(index + 1) + "-gram",
             )
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
     return filesToOpen
 
 
@@ -1523,10 +1506,7 @@ def process_words(
         )
 
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # ngrams already display the started running... No need to duplicate
     if "unigrams" not in processType:
@@ -1881,10 +1861,7 @@ def compute_sentence_text_readability(
                     chart_title_label="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
                 # 0 (Flesch Reading Ease) has a different scale and 3 (SMOG) is often 0
                 # do NOT plot on the same chart these two measures
@@ -1916,10 +1893,7 @@ def compute_sentence_text_readability(
                     chart_title_label="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
                 # overall numeric grade level
                 outputFiles = charts_util.visualize_chart(
@@ -1939,10 +1913,7 @@ def compute_sentence_text_readability(
                     chart_title_label="Readability Grade Level",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
 
     IO_user_interface_util.timed_alert(
         2000, "Analysis end", "Finished running Text Readability at", True, "", True, startTime
@@ -2178,10 +2149,7 @@ def compute_sentence_complexity(
         chart_title_label="Complexity Scores",
     )
     if outputFiles is not None:
-        if isinstance(outputFiles, str):
-            filesToOpen.append(outputFiles)
-        else:
-            filesToOpen.extend(outputFiles)
+        collect(filesToOpen, outputFiles)
 
     IO_user_interface_util.timed_alert(
         2000, "Analysis end", "Finished running Sentence Complexity at", True, "", True, startTime

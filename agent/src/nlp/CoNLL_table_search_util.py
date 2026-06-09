@@ -18,6 +18,7 @@ import IO_csv_util
 import IO_files_util
 import pandas as pd
 import Stanford_CoreNLP_tags_util
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -635,10 +636,7 @@ def search_CoNLL_table(
             chart_title_label="",
         )  # 'Concreteness Statistics')
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
             columns_to_be_plotted_xAxis = ["DepRel of Searched Token/Word"]
             columns_to_be_plotted_yAxis = ["DepRel of Searched Token/Word"]
@@ -665,10 +663,7 @@ def search_CoNLL_table(
                 chart_title_label="",
             )  # 'Concreteness Statistics')
             if outputFiles is not None:
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
         columns_to_be_plotted_xAxis = ["Co-occurring Token/Word"]
         columns_to_be_plotted_yAxis = ["Co-occurring Token/Word"]
@@ -694,10 +689,7 @@ def search_CoNLL_table(
             chart_title_label="",
         )  # 'Concreteness Statistics')
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         columns_to_be_plotted_xAxis = ["POS Tag of Co-occurring Token/Word"]
         columns_to_be_plotted_yAxis = ["POS Tag of Co-occurring Token/Word"]
@@ -723,10 +715,7 @@ def search_CoNLL_table(
             chart_title_label="",
         )  # 'Concreteness Statistics')
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         columns_to_be_plotted_xAxis = ["DepRel of Co-occurring Token/Word"]
         columns_to_be_plotted_yAxis = ["DepRel of Co-occurring Token/Word"]
@@ -753,10 +742,7 @@ def search_CoNLL_table(
             chart_title_label="",
         )  # 'Concreteness Statistics')
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
         # Gephi network graphs _________________________________________________
 
@@ -771,10 +757,7 @@ def search_CoNLL_table(
             "Sentence ID",
         )
         if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     return outputDir, filesToOpen
 

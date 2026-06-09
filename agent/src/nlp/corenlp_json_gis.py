@@ -19,29 +19,19 @@ WE DO NOT USE ANY OF THESE RECOMMENDATIONS
 """
 
 import csv
-import json
 import logging
 import os
-import re
-import string
-import time
 
 import charts_util
-import file_splitter_ByLength_util
-import GUI_IO_util
 import IO_csv_util
 import IO_files_util
-import IO_libraries_util
 import IO_user_interface_util
 import nltk
 
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
 import pandas as pd
-import parsers_annotators_visualization_util
 import reminders_util
-import Stanford_CoreNLP_clause_util
-import Stanford_CoreNLP_SVO_enhanced_dependencies_util  # Enhanced++ dependencies
-from pycorenlp import StanfordCoreNLP
+from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -322,10 +312,7 @@ def check_pronouns(
                     chart_title_label="",
                 )
                 if outputFiles is not None:
-                    if isinstance(outputFiles, str):
-                        filesToOpen.append(outputFiles)
-                    else:
-                        filesToOpen.extend(outputFiles)
+                    collect(filesToOpen, outputFiles)
     return return_files
 
 

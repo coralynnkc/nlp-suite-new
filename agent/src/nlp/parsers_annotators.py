@@ -7,6 +7,7 @@ import spaCy_util
 import Stanford_CoreNLP_coreference_util
 import Stanford_CoreNLP_util
 from pycorenlp import StanfordCoreNLP
+from util import collect
 
 
 def run_parsers_annotators(
@@ -140,10 +141,7 @@ def run_parsers_annotators(
                     if error_indicator != 0:
                         raise RuntimeError("Stanford CoreNLP Co-Reference Resolution encountered an error.")
                     if outputFiles:
-                        if isinstance(outputFiles, str):
-                            filesToOpen.append(outputFiles)
-                        else:
-                            filesToOpen.extend(outputFiles)
+                        collect(filesToOpen, outputFiles)
                 else:
                     logger.info("Selected annotator not available")
                     logger.warning("Selected annotator is not available. Please select a different option.")
@@ -175,10 +173,7 @@ def run_parsers_annotators(
                 )
                 if outputFiles is None:
                     return
-                if isinstance(outputFiles, str):
-                    filesToOpen.append(outputFiles)
-                else:
-                    filesToOpen.extend(outputFiles)
+                collect(filesToOpen, outputFiles)
 
     # **spaCy**
     elif package == "spaCy":
@@ -228,10 +223,7 @@ def run_parsers_annotators(
             )
             if outputFiles is None:
                 return
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     # **Stanza**
     elif package == "Stanza":
@@ -286,10 +278,7 @@ def run_parsers_annotators(
             )
             if outputFiles is None:
                 return
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
+            collect(filesToOpen, outputFiles)
 
     else:
         raise ValueError(f'The selected NLP package "{package}" is not supported.')
