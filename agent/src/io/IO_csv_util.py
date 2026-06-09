@@ -1,10 +1,13 @@
 import csv
 import io
+import logging
 import os
 
 import IO_files_util
 import IO_user_interface_util
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 # if any column header contains just numbers the function will return FALSE
@@ -18,7 +21,7 @@ def csvFile_has_header(file_path, inputFileData=""):
             first_row = next(reader)
             is_header = not any(cell.isdigit() for cell in first_row)
         except Exception as e:
-            print(f"Error processing inputFileData: {e}")
+            logger.info(f"Error processing inputFileData: {e}")
     else:
         if not os.path.exists(file_path):
             return is_header
@@ -45,13 +48,13 @@ def get_csv_data(inputFilename, withHeader, inputFileData=""):
                 headers = next(reader, None)  # Skip header if specified
             data = [row for row in reader]
         except Exception as e:
-            print(f"Error processing inputFileData: {e}")
+            logger.info(f"Error processing inputFileData: {e}")
             return data, headers
     else:
         # File extension check
         filename, file_extension = os.path.splitext(inputFilename)
         if filename == "" or file_extension != ".csv":
-            print(
+            logger.info(
                 "File type error",
                 f"The file\n\n{inputFilename}\n\nis not an expected CSV file. Please, check the file and try again.",
             )
@@ -61,7 +64,7 @@ def get_csv_data(inputFilename, withHeader, inputFileData=""):
         with open(inputFilename, "rb") as fi:
             file_data = fi.read()
         if b"\x00" in file_data:
-            print(f"Warning: null bytes found in {inputFilename} — removing them and overwriting the file in place.")
+            logger.info(f"Warning: null bytes found in {inputFilename} — removing them and overwriting the file in place.")
             with open(inputFilename, "wb") as fo:
                 fo.write(file_data.replace(b"\x00", b""))
 
@@ -73,7 +76,7 @@ def get_csv_data(inputFilename, withHeader, inputFileData=""):
             data = [row for row in reader]
 
         if len(data) == 0:
-            print(
+            logger.info(
                 "Empty csv file",
                 f"The CSV file\n\n{inputFilename}\n\nis empty. Please, check the file and try again.",
             )
@@ -95,17 +98,17 @@ def get_csvfile_headers(csvFile, ask_Question=False, inputFileData=""):
             )
             headers = data.columns.tolist()
         except Exception as e:
-            print(f"Error while processing inputFileData: {e}")
+            logger.info(f"Error while processing inputFileData: {e}")
             headers = ""
         return headers
 
     # Fallback to using csvFile if inputFileData is not provided
     if not os.path.isfile(csvFile):
-        print("Warning: The csv file " + csvFile + " does not exist.")
+        logger.info("Warning: The csv file " + csvFile + " does not exist.")
         return headers
 
     if ask_Question:
-        print(
+        logger.info(
             "File headers",
             "Does the selected input file\n\n" + csvFile + "\n\nhave headers?",
         )
@@ -116,7 +119,7 @@ def get_csvfile_headers(csvFile, ask_Question=False, inputFileData=""):
                 reader = csv.DictReader(f)
                 headers = reader.fieldnames
         except OSError as e:  # Handle errors for empty or invalid files
-            print(
+            logger.info(
                 "Warning: Opening the csv file "
                 + csvFile
                 + " encountered an error.\n\n"
@@ -147,7 +150,7 @@ def get_columnNumber_from_headerValue(
 
     # Validate the headers
     if not headers or not isinstance(headers, list):
-        print("Error: Headers must be a non-empty list.")
+        logger.info("Error: Headers must be a non-empty list.")
         return column_number
 
     for i in range(len(headers)):
@@ -234,7 +237,7 @@ def GetNumberOf_Records_Columns_inCSVFile(
 
         maxnum = data.shape
     except Exception as e:
-        print(f"Error reading CSV data: {e}")
+        logger.info(f"Error reading CSV data: {e}")
         return nRecords, nColumns
 
     return maxnum
@@ -257,7 +260,7 @@ def GetMaxValueInCSVField(
                 + columnHeader
                 + "' column."
             )
-        print(
+        logger.info(
             "csv file error",
             "The selected csv file\n\n"
             + inputFilename
@@ -307,7 +310,7 @@ def df_to_csv(
                 )
             break  # exit loop
         except OSError as e:
-            print(
+            logger.info(
                 "Output file error",
                 "Could not write the file "
                 + outputFilename
@@ -352,21 +355,21 @@ def openCSVOutputFile(
             return False
     except OSError as e:
         if "Invalid argument" in str(e):
-            print(
+            logger.info(
                 "Output file error",
                 "Could not write the file\n\n"
                 + outputCSVFilename
                 + "\n\nThe filename contains an invalid argument. Please, check the filename and try again!",
             )
         elif "Permission denied" in str(e):
-            print(
+            logger.info(
                 "Output file error",
                 "Could not write the file "
                 + outputCSVFilename
                 + "\n\nA file with the same name is already open. Please, close the csv file and try again!",
             )
         else:
-            print(
+            logger.info(
                 "Output file error",
                 "Could not write the file "
                 + outputCSVFilename
@@ -454,7 +457,7 @@ def remove_hyperlinks(inputFilename):
             inputFilename, encoding="utf-8", on_bad_lines="skip", sep="delimiter"
         )
     except Exception:
-        print("Error: failed to read the csv file named: " + inputFilename)
+        logger.info("Error: failed to read the csv file named: " + inputFilename)
         return False, ""
     try:
         document = data["Document"]
@@ -486,7 +489,7 @@ def remove_hyperlinks(inputFilename):
 def rename_header(inputFilename, header1, header2):
     headerFound = False
     if not inputFilename.endswith(".csv"):
-        print(
+        logger.info(
             "File type error",
             "The file\n\n"
             + inputFilename
@@ -508,7 +511,7 @@ def rename_header(inputFilename, header1, header2):
                 headerFound = True
                 break
     if not headerFound:
-        print(
+        logger.info(
             "File type error",
             "The file\n\n"
             + inputFilename
@@ -527,7 +530,7 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
     filename, file_extension = os.path.splitext(inputFilename)
 
     if inputFilename == "" or file_extension != ".csv":
-        print(
+        logger.info(
             "File type error",
             "The file\n\n"
             + inputFilename
@@ -535,7 +538,7 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
         )
         return
     if column is not None and len(column_list) != 0:
-        print(
+        logger.info(
             "Field(s) input error",
             "Cannot have field and field_list as filter at the same time.\n\nPlease, select one and try again.",
         )
@@ -559,7 +562,7 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
     elif len(column_list) == 0:
         df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
         if column not in df.columns:
-            print(
+            logger.info(
                 "csv file error",
                 "The selected csv file\n\n"
                 + inputFilename
@@ -583,7 +586,7 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
 
         for column in column_list:
             if column not in df.columns:
-                print(
+                logger.info(
                     "csv file error",
                     "The selected csv file\n\n"
                     + inputFilename

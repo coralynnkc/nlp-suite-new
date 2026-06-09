@@ -1,6 +1,7 @@
+import logging
+
 # Written by Roberto Franzosi
 # Modified by Cynthia Dong (November 2019-April 2020)
-
 # if IO_libraries_util.install_all_Python_packages("shape_of_stories_main.py", ['subprocess', 'os', 'tkinter', 'matplotlib','csv','numpy','sklearn','tqdm','codecs']) == False:
 # tqdm, sklearn, and codecs must be installed
 # tqdm provides a progress bar (used in clustering_util)
@@ -18,6 +19,8 @@ import spaCy_util
 import Stanford_CoreNLP_util
 import Stanza_util
 import statistics_txt_util
+
+logger = logging.getLogger(__name__)
 
 defaultConfigFilename = "NLP_default_IO_config.csv"
 
@@ -654,7 +657,7 @@ def check_IO_requirements(
             # txt files required
             # mb.showwarning(title='Input directory error',
             #                message=txt_fileErr)
-            print(txt_fileErr)
+            logger.info(txt_fileErr)
             Error = True
             return Error
 
@@ -664,7 +667,7 @@ def check_IO_requirements(
         if not ("Document" in str2 and "Sentence" in str2 and "Sentiment" in str2):
             # mb.showwarning(title='csv file error',
             #                message=csv_fileErr)
-            print(csv_fileErr)
+            logger.info(csv_fileErr)
             Error = True
             return Error
 
@@ -676,7 +679,7 @@ def check_IO_requirements(
 
         if nSAscoreFiles < 50:
             # too few csv files
-            print(csv_fileWarning)
+            logger.info(csv_fileWarning)
             # answer = mb.askyesno("Data warning: Data reduction algorithms",
             #                      message=csv_fileWarning)
             # if answer == False:
@@ -690,14 +693,14 @@ def check_IO_requirements(
                     # text files required
                     # mb.showwarning(title="Input directory error",
                     #                message=txt_DirErr)
-                    print(txt_DirErr)
+                    logger.info(txt_DirErr)
                     Error = True
                     return Error
                 if nSAscoretxtFiles < 50 and sentimentAnalysis:
                     # too few txt files
                     # answer = mb.askyesno("Input directory warning",
                     #                      message=txt_dirWarning)
-                    print(txt_dirWarning)
+                    logger.info(txt_dirWarning)
                     # if answer == False:
 
             if not sentimentAnalysis:
@@ -723,13 +726,13 @@ def check_IO_requirements(
                                 alternative_msg = "\n\nALTERNATIVELY, tick the checkbox 'Sentiment analysis,' select one of the available sentiment analysis algorithms (neural network highly recommended), and try again. "
                         # mb.showwarning(title="Input directory error",
                         #                message=csv_DirErr+alternative_msg)
-                        print(csv_DirErr + alternative_msg)
+                        logger.info(csv_DirErr + alternative_msg)
                         Error = True
                     elif nSAscorecsvFiles < 50 and sentimentAnalysis:
                         # too few csv files
                         # answer = mb.askyesno("Data reduction algorithms",
                         #                      message=csv_dirWarning)
-                        print(csv_dirWarning)
+                        logger.info(csv_dirWarning)
                         # if answer == False:
                 return Error
 
@@ -758,7 +761,7 @@ def check_IO_requirements(
     if inputDir == "" and (sentimentAnalysis or corpus_analysis):
         # mb.showwarning(title='Input directory error',
         #                message=txt_DirErr)
-        print(txt_DirErr)
+        logger.info(txt_DirErr)
         Error = True
         return Error
 
@@ -773,7 +776,7 @@ def check_IO_requirements(
         if nSAscoreFiles == 0:
             # mb.showwarning(title="Data warning: Data reduction algorithms",
             #                message=csv_DirErr)
-            print(csv_DirErr)
+            logger.info(csv_DirErr)
             Error = True
             return Error
 

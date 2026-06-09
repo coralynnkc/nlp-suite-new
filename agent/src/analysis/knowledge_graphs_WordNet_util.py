@@ -1,8 +1,8 @@
 # Written by Roberto Franzosi
 # Modified by Cynthia Dong (Fall 2019-Spring 2020)
 # Wordnet_bySentenceID and get_case_initial_row written by Yi Wang (April 2020)
-
 import csv
+import logging
 import os
 import subprocess
 
@@ -15,6 +15,8 @@ import IO_user_interface_util
 import pandas as pd
 import reminders_util
 import statistics_csv_util
+
+logger = logging.getLogger(__name__)
 
 filesToOpen = []
 
@@ -38,10 +40,10 @@ def process_keyword(wordNet_keyword_list, noun_verb, wn):
                     0
                 ]  # get the synset of word with its most frequent meaning
         hyponynms = synset.hyponyms()
-        print("=======sub groups are: ======")
+        logger.info("=======sub groups are: ======")
         # find the direct hyponynms
         for each in hyponynms:
-            print(each.lemmas()[0].name())
+            logger.info(each.lemmas()[0].name())
 
 
 def disaggregate_GoingDOWN(WordNetDir, outputDir, wordNet_keyword_list, noun_verb):
@@ -420,7 +422,7 @@ def Wordnet_bySentenceID(
     try:
         dict = pd.read_csv(wordnetDict, encoding="utf-8", on_bad_lines="skip")
     except Exception:
-        print(
+        logger.info(
             "The file \n\n"
             + wordnetDict
             + "\n\ndoes not have the expected 2 columns: Word, WordNet Category. You may have selected the wrong input file.\n\nPlease, select the right input file and try again."
@@ -435,7 +437,7 @@ def Wordnet_bySentenceID(
             ["Form", "Lemma", "POS", "Sentence ID", "Document ID", "Document"]
         ]
     except Exception:
-        print(
+        logger.info(
             "The file \n\n"
             + ConnlTable
             + "\n\ndoes not appear to be a CoNLL table with expected column names: Form,Lemma,POS, SentenceID, DocumentID, Document.\n\nPlease, select the right input file and try again."

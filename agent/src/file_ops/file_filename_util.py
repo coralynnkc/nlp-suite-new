@@ -1,7 +1,7 @@
 # Written by Roberto Franzosi December 2019
 # edited July 2020
-
 import csv
+import logging
 import os
 import os.path
 import platform
@@ -12,6 +12,8 @@ from datetime import datetime
 
 import IO_csv_util
 import IO_files_util
+
+logger = logging.getLogger(__name__)
 
 
 def backup_files(
@@ -37,11 +39,11 @@ def backup_files(
     for doc in inputDocs:
         docID = docID + 1
         head, tail = os.path.split(doc)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
         try:
             shutil.copy(doc, backup_path + os.sep + os.path.split(doc)[1])
         except Exception:
-            print(
+            logger.info(
                 "The file "
                 + doc
                 + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -49,7 +51,7 @@ def backup_files(
     if nDocs != docID:
         # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Warning',
         #                                    str(nDocs-docID) + ' could not be backed up. Check files and try again.)
-        print(
+        logger.info(
             "Warning"
             + str(nDocs - docID)
             + " could not be backed up. Check files and try again."
@@ -62,7 +64,7 @@ def backup_files(
 def dateGreater(d1, d2):
     # This function returns True if d1 is a more recent date than d2, False otherwise
     if d1 == "" or d2 == "":
-        print("Could not compare dates.")
+        logger.info("Could not compare dates.")
         return False
     else:
         dt1 = datetime.strptime(d1, "%m/%d/%Y")
@@ -158,7 +160,7 @@ def purge_partial_matches(
         filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(
             header, filenameCol, inputFilename
         )
-        print(nameColNum, filenameColNum)
+        logger.info(nameColNum, filenameColNum)
         if header is not None:
             for row in csv_reader:
                 if os.path.splitext(row[filenameColNum])[1].lower() == ".pdf":
@@ -166,7 +168,7 @@ def purge_partial_matches(
                 elif os.path.splitext(row[filenameColNum])[1].lower() == ".docx":
                     fill_dictionary(row, docxdict, nameColNum, filenameColNum)
                 else:
-                    print("Unrecognized file:", row[filenameColNum])
+                    logger.info("Unrecognized file:", row[filenameColNum])
 
     deleteList = []
     with open(inputFilename, encoding="utf-8", errors="ignore") as read_obj:
@@ -261,7 +263,7 @@ def writeOutput(
             except Exception:
                 # mb.showwarning(title="Filename error",
                 #                message=split_string + "\n\nERROR! The current file has more embedded items than the number of fields first created in the output csv file (" + str(ID) + ").\n\nPlease, check the filename and edit it.")
-                print(
+                logger.info(
                     "ERROR! The current file has more embedded items ("
                     + str(ID)
                     + ") than the number of fields first created in the output csv file. The file split values cannot be saved."
@@ -358,9 +360,9 @@ def processFile(
             try:
                 # none of these options break the code
                 filename.encode(sys.getfilesystemencoding())
-                print(filename)
+                logger.info(filename)
             except UnicodeEncodeError:
-                print("   Filename " + filename + " is not utf-8")
+                logger.info("   Filename " + filename + " is not utf-8")
         # ASCII_var,
 
         if by_creation_date_var == 1:
@@ -418,7 +420,7 @@ def processFile(
                     inputPath + os.sep + filename, inputPath + os.sep + filenameOut
                 )
             except Exception:
-                print(
+                logger.info(
                     "Cannot rename file '"
                     + filenameOut
                     + "' because a file by that name already exists in the output directory."
@@ -428,7 +430,7 @@ def processFile(
     if "HYPERLINK" in filename:
         filename = IO_csv_util.undressFilenameForCSVHyperlink(filename)
     if len(filename) > 255:
-        print(
+        logger.info(
             "The file "
             + filename
             + " was skipped from processing. The combined length of filename + path exceeds the maximum of 255 characters."
@@ -440,7 +442,7 @@ def processFile(
             try:
                 shutil.copy(filename, outputPath + os.sep + os.path.split(filename)[1])
             except Exception:
-                print(
+                logger.info(
                     "The file "
                     + filename
                     + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -453,7 +455,7 @@ def processFile(
                         inputPath + os.sep + filename, outputPath + os.sep + filename
                     )
                 except Exception:
-                    print(
+                    logger.info(
                         "The file "
                         + filename
                         + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -466,7 +468,7 @@ def processFile(
                 shutil.move(filename, outputPath + os.sep + os.path.split(filename)[1])
                 fileFound = False
             except Exception:
-                print(
+                logger.info(
                     "The file "
                     + filename
                     + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -478,7 +480,7 @@ def processFile(
                         inputPath + os.sep + filename, outputPath + os.sep + filename
                     )
                 except Exception:
-                    print(
+                    logger.info(
                         "The file "
                         + filename
                         + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -490,7 +492,7 @@ def processFile(
             try:
                 os.unlink(filename)
             except Exception:
-                print(
+                logger.info(
                     "The file "
                     + filename
                     + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -501,7 +503,7 @@ def processFile(
                 try:
                     os.unlink(inputPath + os.sep + filename)
                 except Exception:
-                    print(
+                    logger.info(
                         "The file "
                         + filename
                         + " was skipped from processing. An unexpected error occurred when processing the file."
@@ -647,7 +649,7 @@ def get_creation_date(path_to_file):
         return creation_date, modification_date
 
     if len(str(path_to_file)) > 256:
-        print(
+        logger.info(
             "The filename and path "
             + str(path_to_file)
             + " exceeds the 256 character limit of filename length. Please, shorten the filename with its path and try again."
@@ -657,7 +659,7 @@ def get_creation_date(path_to_file):
     if os.path.isfile(path_to_file):
         pass
     else:
-        print(
+        logger.info(
             "The string "
             + str(path_to_file)
             + " is not a filename and path as expected. Document creation and modification date will be skipped."

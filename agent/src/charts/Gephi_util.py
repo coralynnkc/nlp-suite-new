@@ -8,11 +8,10 @@
 #     main developper : Paul Girard, médialab Sciences Po
 #     licence : GPL v3
 #
-
-
 import csv
 import datetime
 import itertools
+import logging
 import os
 import random
 import traceback
@@ -20,9 +19,11 @@ from datetime import date
 
 from lxml import etree
 
+logger = logging.getLogger(__name__)
+
 
 def msg_unexpected_tag(expected, got):
-    print(f"Error : incorrect xml. Expected tag {expected}, not {got}.")
+    logger.info(f"Error : incorrect xml. Expected tag {expected}, not {got}.")
 
 
 def ns_clean(token):
@@ -321,7 +322,7 @@ class Graph:
                 Edge.importXML(edges_xml, graph_obj)
 
     def print_stat(self):
-        print(
+        logger.info(
             self.label
             + " "
             + self.type
@@ -332,8 +333,8 @@ class Graph:
             + " "
             + self.end
         )
-        print("number of nodes : " + str(len(self._nodes)))
-        print("number of edges : " + str(len(self._edges)))
+        logger.info("number of nodes : " + str(len(self._nodes)))
+        logger.info("number of edges : " + str(len(self._edges)))
 
 
 class Attributes(dict):
@@ -686,9 +687,9 @@ class Node:
 
             return nodeXML
         except Exception as e:
-            print(self.label)
-            print(self._attributes)
-            print(e)
+            logger.info(self.label)
+            logger.info(self._attributes)
+            logger.info(e)
             traceback.print_exc()
             exit()
 
@@ -878,8 +879,8 @@ class Edge:
 
             return edgeXML
         except Exception as e:
-            print(self._source + " " + self._target)
-            print(e)
+            logger.info(self._source + " " + self._target)
+            logger.info(e)
             exit()
 
     def getAttributes(self):
@@ -1002,7 +1003,7 @@ class GexfImport:
         return token[i + 1 :]
 
     def msg_unexpected_tag(self, expected, got):
-        print(f"Error : incorrect xml. Expected tag {expected}, not {got}.")
+        logger.info(f"Error : incorrect xml. Expected tag {expected}, not {got}.")
 
     def extract_gexf_obj(self, meta_xml):
         for child in meta_xml:
@@ -1673,7 +1674,7 @@ def create_gexf(
 
     endTime = datetime.datetime.now()
     elapsedTime = endTime - startTime
-    print(
+    logger.info(
         f"Finished running Gephi network graphs in {elapsedTime.total_seconds()} seconds."
     )
 

@@ -1,7 +1,11 @@
+import logging
+
 import CoNLL_util
 import IO_csv_util
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 # returns False if error found
@@ -18,7 +22,7 @@ def geocoded_checker(
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
     except OSError as e:
-        print(
+        logger.info(
             "Input file error,There was an error reading the input file\n"
             + str(inputFilename)
             + "\nwith geocoded input.\n\n"
@@ -45,7 +49,7 @@ def geocoded_checker(
             break
 
     if not check1 or not check2:
-        print(
+        logger.info(
             "Input file error, ou have ticked the geocoded checkbox.\n\nBut the input file does not have two consecutive columns of float type data (in the forms of: columns of latitude in range [-90, 90] and longitude in range [-180, 180]) right after your selected location field, "
             + str(locationColumnValue)
             + ".\n\nPlease, check your input file and/or deselect the geocoded option and try again."
@@ -60,7 +64,7 @@ def location_column_checker(inputFilename, locationColumnValue, encodingValue):
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
     except Exception:
-        print(
+        logger.info(
             "Input file error, there was an error reading the input file\n "
             + str(inputFilename)
             + "\nwith geocoded input. Most likely, the error is due to an encoding error. Your current encoding value is "
@@ -77,7 +81,7 @@ def location_column_checker(inputFilename, locationColumnValue, encodingValue):
             check1 = False
             break
     if not check1:
-        print(
+        logger.info(
             "Input file error The location column you selected, "
             + locationColumnValue
             + ", is not a column of strings, as expected for the column containing location names.\n\nPlease, reselect your location column and try again."
@@ -117,7 +121,7 @@ def restrictions_checker(
     else:
         if len(locationColumnValue) == 0:
             if not inputIsCoNLL:
-                print("option selection error, no location column value")
+                logger.info("option selection error, no location column value")
                 return False
 
     # set default values --------------------------------------------------------------------------------------------------
@@ -130,10 +134,10 @@ def restrictions_checker(
                     location_num = i
                     break
                 if location_num + 2 >= numColumns:
-                    print("input file warning, msg Float")
+                    logger.info("input file warning, msg Float")
                     return False
         else:
-            print("Input file warning, message = two few colms for geocoded.")
+            logger.info("Input file warning, message = two few colms for geocoded.")
             return False
         # Check if the inputfile is REALLY geocoded or not for the two sets of locations
         if not geocoded_checker(

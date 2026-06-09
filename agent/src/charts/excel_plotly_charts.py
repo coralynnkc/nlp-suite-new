@@ -1,5 +1,9 @@
+import logging
+
 import charts_util
 import IO_csv_util
+
+logger = logging.getLogger(__name__)
 
 
 def run_excel_plotly_charts(
@@ -26,7 +30,7 @@ def run_excel_plotly_charts(
 
     # Excel/Plotly charts --------------------------------------------------------------------------------
     if X_axis_var == "":
-        print(
+        logger.info(
             "Warning, No X-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as X-axis and try again."
         )
         return

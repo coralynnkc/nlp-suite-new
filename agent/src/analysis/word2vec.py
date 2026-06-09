@@ -1,5 +1,9 @@
+import logging
+
 import IO_files_util
 import reminders_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -35,7 +39,7 @@ def run_word2vec(
     scriptName = "word2vec.py"
 
     if not BERT_var and not Gensim_var and not WSI_var and not compute_distances_var:
-        print(
+        logger.info(
             "No option has been selected.\n\nPlease select the Word2Vec package you wish to use (BERT and/or Gensim) and try again."
         )
         return
@@ -43,7 +47,7 @@ def run_word2vec(
     filesToOpen = []
 
     if "Do not" not in vis_menu_var:
-        print(
+        logger.info(
             'Visualization via t-SNE: You have selected to run Word2Vec with the t-SNE visualization option ("Plot word vectors"). Depending upon the total number of words in your corpus, this option is computationally VERY demanding.'
         )
         # if not result:
@@ -59,8 +63,8 @@ def run_word2vec(
     Word2Vec_Dir = IO_files_util.make_output_subdirectory(
         inputFilename, inputDir, outputDir, label=label, silent=True
     )
-    print("Word2vec directory")
-    print(Word2Vec_Dir)
+    logger.info("Word2vec directory")
+    logger.info(Word2Vec_Dir)
     if Word2Vec_Dir == "":
         return
 
@@ -72,7 +76,7 @@ def run_word2vec(
         # TODO: file upload functionality
         WSI_keywords_var = keywordInput
         if WSI_keywords_var == "":
-            print(
+            logger.info(
                 'The "Word sense induction" algorithm requires a comma-separated list of case-sensitive keywords taken from the corpus in order to run.\n\nPlease, enter the keywords and try again.'
             )
             return

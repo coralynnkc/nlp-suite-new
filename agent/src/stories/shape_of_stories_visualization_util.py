@@ -1,3 +1,4 @@
+import logging
 import math  # math comes with Python
 import os
 import os.path
@@ -7,6 +8,8 @@ import numpy as np
 import shape_of_stories_clustering_util as cl
 import shape_of_stories_vectorizer_util as ve
 from sklearn.decomposition import PCA
+
+logger = logging.getLogger(__name__)
 
 
 class Visualizer:
@@ -117,12 +120,12 @@ def test():
 
     clustering = cl.Clustering(3.5)
     outfilename, grouped_vectors, vectors_cluster_ids = clustering.cluster(sentiment_vectors)
-    print(f"{len(grouped_vectors):d} clusters")
+    logger.info(f"{len(grouped_vectors):d} clusters")
 
     vis = Visualizer("./output")
     vis.visualize_clusters(grouped_vectors)
 
-    print("ok")
+    logger.info("ok")
 
 
 if __name__ == "__main__":

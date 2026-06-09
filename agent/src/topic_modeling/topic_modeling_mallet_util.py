@@ -1,3 +1,4 @@
+import logging
 import os
 
 import charts_matplotlib_seaborn_util
@@ -6,6 +7,8 @@ import file_converter_util
 import IO_files_util
 import pandas as pd
 import requests
+
+logger = logging.getLogger(__name__)
 
 AGENT_MOUNT_PATH = "/root/nlp-suite"
 
@@ -24,7 +27,7 @@ def call_mallet_api(command, args):
     # Working locally
     payload = {"command": command, "args": args}
 
-    print(f"Calling MALLET: {command} with args {args}")
+    logger.info(f"Calling MALLET: {command} with args {args}")
 
     try:
         response = requests.post(api_url, json=payload)
@@ -47,7 +50,7 @@ def run_MALLET(
     # (Optional) Keep warnings about number of files if you want them
     # if numFiles == 0:
 
-    print("Importing directory into MALLET format")
+    logger.info("Importing directory into MALLET format")
 
     # Convert directory into .mallet file
     import_args = {
@@ -60,13 +63,13 @@ def run_MALLET(
     try:
         import_result = call_mallet_api("import-dir", import_args)
         if import_result.get("status") != "success":
-            print(f"Error: import-dir failed: {import_result}")
+            logger.info(f"Error: import-dir failed: {import_result}")
             return
     except Exception as e:
-        print(f"Error: MALLET import-dir API call failed: {e}")
+        logger.info(f"Error: MALLET import-dir API call failed: {e}")
         return
 
-    print("Training topics")
+    logger.info("Training topics")
 
     #  Train topics on the .mallet file
     train_args = {
@@ -80,13 +83,13 @@ def run_MALLET(
     try:
         train_result = call_mallet_api("train-topics", train_args)
         if train_result.get("status") != "success":
-            print(f"Error: train-topics failed: {train_result}")
+            logger.info(f"Error: train-topics failed: {train_result}")
             return
     except Exception as e:
-        print(f"Error: MALLET train-topics API call failed: {e}")
+        logger.info(f"Error: MALLET train-topics API call failed: {e}")
         return
 
-    print("Topic modeling complete!")
+    logger.info("Topic modeling complete!")
 
     # Map expected local file paths
     Keys_FileName = mallet_to_agent_path("/app/output/TM-MALLET_input/topic_keys.txt")
@@ -94,11 +97,11 @@ def run_MALLET(
         "/app/output/TM-MALLET_input/doc_topics.txt"
     )
 
-    print(Keys_FileName)
-    print(Composition_FileName)
-    print(outputDir)
+    logger.info(Keys_FileName)
+    logger.info(Composition_FileName)
+    logger.info(outputDir)
     if not os.path.isfile(Keys_FileName) or not os.path.isfile(Composition_FileName):
-        print("Error: Expected output files from MALLET API were not found.")
+        logger.info("Error: Expected output files from MALLET API were not found.")
         return
 
     # Convert TSV files (same as your old code)

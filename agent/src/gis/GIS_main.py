@@ -1,9 +1,8 @@
-# FLAGGED
+import logging
 
+# FLAGGED
 # Written by Roberto Franzosi May, September 2020
 # Written by Roberto Franzosi September 2021
-
-
 import pandas as pd
 
 # Ignore error coming from df['Date'][index] = saved_date
@@ -14,6 +13,8 @@ import config_util  # used for Google API
 import GIS_pipeline_util
 import IO_files_util
 import Stanford_CoreNLP_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -59,7 +60,7 @@ def run_GIS(
     ) = config_util.read_NLP_package_language_config()
     language_var = language
     if package_display_area_value == "":
-        print(
+        logger.info(
             "No setup for NLP package and language, The default NLP package and language has not been setup.\n\nPlease, click on the Setup NLP button and try again."
         )
         return
@@ -85,7 +86,7 @@ def run_GIS(
         if (area_var.count("(") + area_var.count(")") != 4) or (
             area_var.count(",") != 3
         ):
-            print(
+            logger.info(
                 "Warning, The area variable is not set correctly. The expected value should be something like this: (34.98527, -85.59790), (30.770444, -81.521974)\n\nThe two sets of values refer to the upper left-hand and lower right-hand corner latitude and longitude coordinates of the area to wich you wish to restrict geocoding.\n\nPlease, enter the correct value and try again."
             )
             area_var.set("(34.98527, -85.59790), (30.770444, -81.521974)")
@@ -94,7 +95,7 @@ def run_GIS(
 
     geocode_locations_var = True
     if not NER_extractor and not geocode_locations_var and GIS_package_var == "":
-        print(
+        logger.info(
             "Warning, no options have been selected.\n\nPlease, select an option to run and try again."
         )
         return
@@ -107,7 +108,7 @@ def run_GIS(
             + GIS_package_var
             + "\n\nPress Cancel then Esc to clear the csv file widget if you want to run the GIS pipeline from your input txt file(s) (you can select a different mapping software using the dropdown menu) and try again."
         )
-        print(result)
+        logger.info(result)
         if not result:
             return
         inputFilename = csv_file
@@ -181,7 +182,7 @@ def run_GIS(
         )
 
         if len(locationFiles) == 0:
-            print(
+            logger.info(
                 "No locations There are no NER locations to be geocoded and mapped in the selected input txt file.\n\nPlease, select a different txt file and try again."
             )
             return
@@ -270,7 +271,7 @@ def run_GIS(
             return filesToOpen
     else:
         if GIS_package_var != "":
-            print(
+            logger.info(
                 "Option not available The "
                 + GIS_package_var
                 + "option is not available yet.\n\nSorry! Please, check back soon..."

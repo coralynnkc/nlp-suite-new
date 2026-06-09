@@ -1,6 +1,10 @@
+import logging
+
 import CoNLL_util
 import IO_csv_util
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 # convert string to list
 
@@ -136,7 +140,7 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
                 currList != [""] and len(currList) > 1
             ):  # sometimes only the filename is printed; no location
                 locList.append(currList)
-            print(
+            logger.info(
                 "Processing NER location "
                 + str(index)
                 + "/"
@@ -155,7 +159,7 @@ def extract_NER_locations(conllFile, encodingValue, datePresent):
             if row[10] != documentID:
                 documentID = row[11]
     if len(locList) == 0:
-        print(
+        logger.info(
             "NER locations, there are no NER tags for 'LOCATION','STATE_OR_PROVINCE','CITY','COUNTRY' in your CoNLL file\n\n"
             + conllFile
             + "\n\nThere is no geocoding to be done."
@@ -208,7 +212,7 @@ def extract_csvFile_locations(
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
         count_row = dt.shape[0]  # gives number of row count
     except Exception:
-        print(
+        logger.info(
             "Input file error, There was an error in the function 'Extract csv locations' reading the input csv file\n"
             + str(inputFilename)
             + "\nMost likely, the error is due to an encoding error. Your current encoding value is '"
@@ -225,7 +229,7 @@ def extract_csvFile_locations(
             dt = dt.rename(columns={"Word": "Location"})
 
         for index, row in dt.iterrows():
-            print(
+            logger.info(
                 "Processing record "
                 + str(index + 1)
                 + "/"
@@ -283,7 +287,7 @@ def extract_csvFile_locations(
     # 		except:
 
     if len(locList) == 0:
-        print(
+        logger.info(
             "Locations,There are no locations in your input file\n\n"
             + inputFilename
             + "\n\nThere is no geocoding to be done.\n\nNo maps can be done. "

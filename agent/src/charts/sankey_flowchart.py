@@ -1,11 +1,13 @@
 # written by Roberto Franzosi November 2019
 # rewritten by Roberto Franzosi January 2023
-
 import json
+import logging
 import os
 
 import charts_util
 import IO_files_util
+
+logger = logging.getLogger(__name__)
 
 
 def _first_csv(path):
@@ -15,7 +17,7 @@ def _first_csv(path):
                 return os.path.join(path, entry)
         return None
     except Exception as e:
-        print("Error", e, " has occurred")
+        logger.info("Error", e, " has occurred")
         return None
 
 
@@ -37,15 +39,15 @@ def run_sankey(
     outputFilename = IO_files_util.generate_output_file_name(file, inputDir, outputDir, ".html", output_label)
     filesToOpen = []
 
-    print(f"Original input: {csv_file_relational_field_list}")  #
+    logger.info(f"Original input: {csv_file_relational_field_list}")  #
     csv_file_relational_field_list = [
         word.strip() for word in csv_file_relational_field_list.split(",") if word.strip()
     ]  # added a ' ' before
-    print(f"Processed list: {csv_file_relational_field_list}")
-    print(f"Length of the list: {len(csv_file_relational_field_list)}")
+    logger.info(f"Processed list: {csv_file_relational_field_list}")
+    logger.info(f"Length of the list: {len(csv_file_relational_field_list)}")
 
     if len(csv_file_relational_field_list) != 2 and len(csv_file_relational_field_list) != 3:
-        print(
+        logger.info(
             "Warning",
             "You must select 2 or 3 csv fields to be used in the computation of a Sankey chart (e.g., Subject, Verb, Object or Subject, Object).\n\nMAKE SURE TO CLICK ON THE + BUTTON AFTER THE LAST SELECTION. CLICK ON THE SHOW BUTTON TO SEE THE CURRENT SELECTION.",
         )

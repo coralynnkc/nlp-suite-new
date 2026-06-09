@@ -1,8 +1,8 @@
 # written by Rafael Piloto October 2021
 # re-written by Roberto Franzosi October 2021
 # completed by Austin Cai October 2021
-
 import csv
+import logging
 import os
 
 import constants_util
@@ -21,6 +21,8 @@ from Stanza_functions_util import (
     sentence_split_stanza_text,
     stanzaPipeLine,
 )
+
+logger = logging.getLogger(__name__)
 
 
 # both A and B are lists []
@@ -410,7 +412,7 @@ def process_ngrams(data, word, minus_K_words_var, plus_K_words_var):
     ].copy()
     initial_filter_data = filtered_data.copy()
     if filtered_data.empty:
-        print("No data rows with the specified conditions.")
+        logger.info("No data rows with the specified conditions.")
         return None  # or handle it as appropriate for your use case
     if ngram_size in [1, 2]:
         filtered_data["Search word"] = filtered_data[column_name].apply(transform)
@@ -449,11 +451,11 @@ def search_ngrams_csv_file(
 
     filesToOpen = []
     if csv_file_var is None:
-        print("empty csv file, do again, this ought not to happen?!")
+        logger.info("empty csv file, do again, this ought not to happen?!")
         return
     data = pd.read_csv(csv_file_var)
     if "gram" not in data.columns[0]:
-        print('Input file error: The selected csv file is not the expected csv N-grams file. This file should contain a header with the word "gram".')
+        logger.info('Input file error: The selected csv file is not the expected csv N-grams file. This file should contain a header with the word "gram".')
         return
 
     # Check the input parameters, i comment it out for now because we don't know the design
@@ -462,7 +464,7 @@ def search_ngrams_csv_file(
         or plus_K_words_var < 0
         or (minus_K_words_var + plus_K_words_var) > int(data.columns[0][0]) - 1
     ):
-        print(f"Warning: The sum of -K and +K values should be < than the n-grams value. The n-grams value in your input csv file is {data.columns[0][0]}.")
+        logger.info(f"Warning: The sum of -K and +K values should be < than the n-grams value. The n-grams value in your input csv file is {data.columns[0][0]}.")
         return
 
     words = search_keywords_list
@@ -472,7 +474,7 @@ def search_ngrams_csv_file(
         try:
             b, df2 = process_ngrams(data, word, minus_K_words_var, plus_K_words_var)
         except Exception:
-            print(f'Warning: The selected input file does not contain the word "{word}".')
+            logger.info(f'Warning: The selected input file does not contain the word "{word}".')
             return
         expanded_rows = []
         for _, row in df2.iterrows():
@@ -503,7 +505,7 @@ def search_ngrams_csv_file(
 
     # Check if the combined DataFrame is empty
     if l_sankey[0].empty:
-        print("Warning: There are no instances of your search word(s) in the selected input file")
+        logger.info("Warning: There are no instances of your search word(s) in the selected input file")
         return
     combined_pivot_df.to_csv(NgramsSearchFileName, index=False)
 
@@ -567,7 +569,7 @@ def search_ngrams_csv_file(
                 q = f.read()
             for word in search_keywords_list:
                 q = q.replace(word, "")
-                print(q, word)
+                logger.info(q, word)
             with open(NgramsSearchFileName_txt, "w", encoding="utf-8") as f:
                 f.write(q)
 
@@ -760,10 +762,10 @@ def NGrams_coOccurrences_VIEWER(
 
     # collect date info
     if dateOption:
-        print("\nProcessing files collecting date information\n")
+        logger.info("\nProcessing files collecting date information\n")
         for file in inputDocs:  # iterate over each file
             head, tail = os.path.split(file)
-            print("Processing file " + str(docIndex) + "/" + str(nDocs) + " " + tail)
+            logger.info("Processing file " + str(docIndex) + "/" + str(nDocs) + " " + tail)
             docIndex += 1
             date, dateStr, month, day, year = IO_files_util.getDateFromFileName(
                 file, dateFormat, itemsDelimiter, datePos
@@ -777,7 +779,7 @@ def NGrams_coOccurrences_VIEWER(
     coOcc_results = {}
 
     # iterate over each file, searching for words
-    print("\nProcessing files for search words\n")
+    logger.info("\nProcessing files for search words\n")
     docIndex = 0
 
     #########NEW FILE##########
@@ -856,7 +858,7 @@ def NGrams_coOccurrences_VIEWER(
     for file in inputDocs:
         docIndex += 1
         head, tail = os.path.split(file)
-        print("Processing file " + str(docIndex) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docIndex) + "/" + str(nDocs) + " " + tail)
         # extract the date from the file name
         date, dateStr, month, day, year = IO_files_util.getDateFromFileName(file, dateFormat, itemsDelimiter, datePos)
         if date == "":

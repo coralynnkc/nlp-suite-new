@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 import subprocess
 import webbrowser
@@ -11,6 +12,8 @@ import IO_user_interface_util
 import reminders_util
 import requests
 from psutil import virtual_memory
+
+logger = logging.getLogger(__name__)
 
 # import pip not used
 # def install(software_name):
@@ -33,7 +36,7 @@ def which_shell():
             + str(shell)
             + "\n\nSince the release of macOS 10.15 (Catalina) on October 7, 2019, the default macOS shell has been switched from bash to zsh. The NLP Suite has been optimized for zsh not bash. The algorithm will exit.\n\nPlease, read carefully the TIPS_NLP_Anaconda NLP environment pip.pdf on how to change shell to zsh."
         )
-        print(f"{error_msg}: TIPS_NLP_Anaconda NLP environment pip.pdf")
+        logger.info(f"{error_msg}: TIPS_NLP_Anaconda NLP environment pip.pdf")
     return shell
 
 
@@ -60,7 +63,7 @@ def import_nltk_resource(resource_path, resource):
 
         try:
             nltk.data.find(resource_path)
-            print(
+            logger.info(
                 "path ",
                 resource_path,
                 " with resource ",
@@ -80,7 +83,7 @@ def import_nltk_resource(resource_path, resource):
             + "...\n\nIf downloading fails, in command line please type python -m nltk.downloader all\n\n Please, be patient...",
             False,
         )
-        print(
+        logger.info(
             "Downloading nltk "
             + resource
             + "If downloading fails, in command line please type: python -m nltk.downloader all"
@@ -134,7 +137,7 @@ def get_java_version(system_output):
 def check_windows_64_bits():
     errorFound = False
     if "PROCESSOR_ARCHITEW6432" in os.environ:
-        print(
+        logger.info(
             "Fatal error",
             "You are not running a Windows 64-bits machine as required by Stanford CoreNLP.\n\nThis will cause an error running Stanford CoreNLP: Could not create the Java Virtual Machine.",
         )
@@ -221,7 +224,7 @@ def check_java_installation(script):
                 if "-Bit" in info:  # find the information about bit
                     if info[:2] != "64":  # check if it's 64 bit
                         message = "You are not using JAVA 64-Bit version.\n\nThis will cause an error running Stanford CoreNLP: Could not create the Java Virtual Machine.\n\nPlease, read carefully the TIPS_NLP_Stanford CoreNLP memory issues.pdf.\n\nAfter checking the Java version installed in your machine, if 32-Bit you will need to uninstall it and download and install the Java 64-Bit version,\n\nTHE PROGRAM WILL EXIT.\n\nDo you want to open the TIPS file now?"
-                        print(
+                        logger.info(
                             "Java version Error",
                             "You are not using JAVA 64-Bit version.\n\nThis will cause an error running Stanford CoreNLP: Could not create the Java Virtual Machine.\n\nPlease, configure your machine to use JAVA 64-Bit.\n\nPlease, read carefully the TIPS_NLP_Stanford CoreNLP memory issues.pdf.\n\nDo you want to open the TIPS file now?",
                         )
@@ -234,7 +237,7 @@ def check_inputPythonJavaProgramFile(programName, subdirectory="src"):
     if not os.path.isfile(
         GUI_IO_util.NLPPath + os.sep + subdirectory + os.sep + programName
     ):
-        print(
+        logger.info(
             "Input file error",
             "The required file "
             + programName
@@ -373,7 +376,7 @@ def check_inputExternalProgramFile(
 
         if software_dir == "":
             if not silent:
-                print("Warning", installation_message)
+                logger.info("Warning", installation_message)
                 return False
         if not os.path.isdir(software_dir):
             if "setup_external_software" in calling_script:
@@ -393,7 +396,7 @@ def check_inputExternalProgramFile(
                 "\n\nIt may have been moved or renamed." + reinstall_string + "."
             )
             if not silent:
-                print("Warning", wrong_software_dir)
+                logger.info("Warning", wrong_software_dir)
                 return False
         else:
             for file in os.listdir(software_dir):
@@ -476,14 +479,14 @@ def check_inputExternalProgramFile(
                 save_software_config(existing_software_config, "", silent=True)
             return True
         if Java_errorFound and not silent:
-            print(
+            logger.info(
                 programName + " installation.",
                 programName + " IS NOT INSTALLED ON YOUR MACHINE.",
             )
             return False
         else:
             if software_dir == "" and not silent:
-                print(
+                logger.info(
                     programName + " installation.",
                     programName
                     + " IS INSTALLED ON YOUR MACHINE (Java version "
@@ -500,7 +503,7 @@ def check_inputExternalProgramFile(
             return True
         # check that MALLET has no spaces in path
         if " " in software_dir:
-            print(
+            logger.info(
                 "MALLET directory error",
                 "The selected "
                 + programName.upper()
@@ -538,7 +541,7 @@ def check_inputExternalProgramFile(
     # if the user has tinkered with the config file adding an extra line, for whatever reason,
     #   it would not be marked with an error message; if message is '' we do not want to display the warning; all is OK
     if message != "" and not silent:
-        print(programName.upper() + " installation error", message)
+        logger.info(programName.upper() + " installation error", message)
     # False is returned when there is an error
     return False
 
@@ -565,7 +568,7 @@ def open_url(
 
     status_code = requests.get(url).status_code
     if status_code != 200:
-        print(
+        logger.info(
             "Warning",
             "Oops! The "
             + website_name
@@ -717,7 +720,7 @@ def save_software_config(
                 + missing_software_string
             )
         if not silent:
-            print("Config installation file saved", message)
+            logger.info("Config installation file saved", message)
 
 
 # software_name is != '' when ...
@@ -863,7 +866,7 @@ def process_Mac_Applications(software_name, software_extension):
             + " and download and install a different release."
         )
 
-    print("Install " + software_name.upper(), installation_message)
+    logger.info("Install " + software_name.upper(), installation_message)
     # download_message, installation_message are set to '' when no new download or installation is desired
     download_message = installation_message
     return software_dir, download_message, installation_message
@@ -1018,7 +1021,7 @@ def display_download_installation_messages(
                 "\n\nDO YOU WANT TO OPEN THE GUI?"
             )
             if not silent:
-                print(software_name + " installation", opening_message)
+                logger.info(software_name + " installation", opening_message)
                 download_message = ""
                 call("python NLP_setup_external_software_main.py", shell=False)
                 # must get software_dir in case it was changed in the NLP_setup_external_software_main GUI
@@ -1118,7 +1121,7 @@ def display_download_installation_messages(
                         software_dir = (
                             "Java version " + str(java_version) + " installed"
                         )
-                        print(
+                        logger.info(
                             software_name + " installation.",
                             software_name
                             + " IS ALREADY INSTALLED ON YOUR MACHINE:\n\n"
@@ -1163,7 +1166,7 @@ def display_download_installation_messages(
                         software_dir = (
                             "Java version " + str(java_version) + " installed"
                         )
-                    print(
+                    logger.info(
                         software_name + " installation.",
                         software_name
                         + " IS ALREADY INSTALLED ON YOUR MACHINE:\n\n"
@@ -1224,7 +1227,7 @@ def display_download_installation_messages(
         # DOWNLOAD ask questions ---------------------------------------------------------------
 
         if download_message != "":
-            print("download " + software_name.upper(), download_message)
+            logger.info("download " + software_name.upper(), download_message)
 
     # INSTALL messages -------------------------------------------------------------------------
 
@@ -1245,7 +1248,7 @@ def display_download_installation_messages(
                 if Java_errorFound:
                     software_dir = "Java version " + str(java_version) + " installed"
                     # @@@
-                    print(
+                    logger.info(
                         software_name + " installation.",
                         software_name
                         + " IS ALREADY INSTALLED ON YOUR MACHINE (but the Java version is not saved in NLP_setup_external_software_config.csv; "
@@ -1287,7 +1290,7 @@ def display_download_installation_messages(
             )
             # @@@ 9/1
             if not error_found:
-                print("Install " + software_name.upper(), installation_message)
+                logger.info("Install " + software_name.upper(), installation_message)
 
         # INSTALL check software_dir ------------------------------------------------------------------------------
 
@@ -1323,7 +1326,7 @@ def display_download_installation_messages(
                 )
                 if not Java_errorFound:
                     software_dir = "Java version " + str(java_version) + " installed"
-                    print(
+                    logger.info(
                         software_name + " installation.",
                         software_name
                         + " IS ALREADY INSTALLED ON YOUR MACHINE:\n\n"
@@ -1388,7 +1391,7 @@ def display_download_installation_messages(
             + software_location_message
         )
 
-        print("Install " + software_name.upper(), installation_directory_message)
+        logger.info("Install " + software_name.upper(), installation_directory_message)
 
         temp_software_dir = GUI_IO_util.libPath
         if temp_software_dir != "":
@@ -1469,7 +1472,7 @@ def external_software_download(
                 software_name
                 + " requires the freeware Java (by Oracle) installed on our machine.\n\nDon't forget to download and install Java JDK."
             )
-            print("Warning", Java_required)
+            logger.info("Warning", Java_required)
     return software_dir, software_url, download_message
 
 

@@ -1,3 +1,5 @@
+import logging
+
 """
 Author: Jack Hester, Spring 2019
 Edited: Cynthia Dong, Roberto Franzosi, Spring 2020
@@ -10,6 +12,8 @@ import sys
 
 import IO_user_interface_util
 import reminders_util
+
+logger = logging.getLogger(__name__)
 
 
 # Jack Hester
@@ -85,7 +89,7 @@ def splitDocument_byLength(
         try:
             os.mkdir(new_splitFiles_folder)
         except Exception as e:
-            print("error: ", e.__doc__)
+            logger.info("error: ", e.__doc__)
         splits = [-1]  # start at -1 not 0 because of +1 later in loop
         if inWords:
             i = maxLength - 5

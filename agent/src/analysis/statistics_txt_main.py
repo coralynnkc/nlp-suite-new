@@ -1,3 +1,6 @@
+import logging
+
+logger = logging.getLogger(__name__)
 # written by Roberto Franzosi (Spring/summer 2020)
 
 
@@ -21,7 +24,7 @@ def run_statistics(
     filesToOpen = []  # Store all files that are to be opened once finished
     config_input_output_numeric_options = [1, 0, 0, 1]
     if not corpus_statistics_var and not corpus_statistics_byPOS_var:
-        print("Warning, No option has been selected.\n\nPlease, select an option and try again.")
+        logger.info("Warning, No option has been selected.\n\nPlease, select an option and try again.")
         return
 
     # corpus statistics --------------------------------------------------------------------

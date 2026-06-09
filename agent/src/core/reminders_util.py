@@ -1,10 +1,13 @@
 # Written by Cynthia Dong April 2020
 # Edited by Roberto Franzosi
 import csv
+import logging
 import os
 
 import GUI_IO_util
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 # reminders content for specific GUIs are set in the csv file reminders
 # check if the user wants tadded the release_version.txt fio see the message again
@@ -426,7 +429,7 @@ def getReminders_list(scriptName, silent=False):
         df = pd.read_csv(remindersFile, encoding="utf-8", on_bad_lines="skip")
     except FileNotFoundError:
         if not silent:
-            print(
+            logger.info(
                 "Reminders file generated: The reminders.csv file saved in the reminders subdirectory was not found. If this is your first time running NLP Suite, do not worry. A default reminders.csv has been automatically generated for you."
             )
         create_remindersFile()
@@ -571,14 +574,14 @@ def resetReminder(scriptName, title):
     routine = get_routine_from_scriptName(scriptName)
     if title != "Open reminders":
         if title == "No Reminders available":
-            print("Reminders warning", "There are no reminders available for this script.")
+            logger.info("Reminders warning", "There are no reminders available for this script.")
             return
         remindersFile = os.path.join(GUI_IO_util.remindersPath, "reminders.csv")
         try:
             df = pd.read_csv(remindersFile, encoding="utf-8", on_bad_lines="skip")
             # get the row number of the routine that we are looking at
         except Exception:
-            print(
+            logger.info(
                 "Reminders file error",
                 'The reminders.csv file saved in the reminders subdirectory is ill formed. Most likely, it contains extra , in one of the three fields (Routine, Title, Message).\n\nPlease, let the NLP Suite development team know the problem so it can be fixed.\n\nIf any of the fields contain , the field content must be enclosed in "".',
             )
@@ -595,7 +598,7 @@ def resetReminder(scriptName, title):
                 else:
                     return
         except Exception:
-            print(
+            logger.info(
                 "Reminders file error",
                 "The reminders.csv file saved in the reminders subdirectory does not contain the reminder '"
                 + title

@@ -1,6 +1,6 @@
 # written by Roberto Franzosi October 2019
-
 import csv
+import logging
 import os
 from collections import Counter
 
@@ -13,6 +13,8 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from scipy import stats
 from scipy.stats import zscore
+
+logger = logging.getLogger(__name__)
 
 
 def get_file_size(file_path, file_size_dict):
@@ -143,7 +145,7 @@ def compute_csv_column_statistics_NoGroupBy(
         columnNumber = []
     filesToOpen = []
     if inputFilename[-4:] != ".csv":
-        print(
+        logger.info(
             "File type error",
             "The input file\n\n"
             + inputFilename
@@ -186,7 +188,7 @@ def compute_csv_column_statistics_NoGroupBy(
             #   In that case you can safely call squeeze to ensure you have a Series.
             df = pd.read_csv(inputFilename, encoding="utf-8", index_col=False, on_bad_lines="skip", squeeze=True)
         except Exception:
-            print(
+            logger.info(
                 "Data encoding error",
                 "The input file\n\n"
                 + inputFilename
@@ -321,7 +323,7 @@ def compute_csv_column_statistics_groupBy(
     )
 
     if not set(groupByField).issubset(set(IO_csv_util.get_csvfile_headers(inputFilename))):
-        print(
+        logger.info(
             "Groupby field error",
             "The selected groupby fields ("
             + ", ".join(groupByField)
@@ -332,7 +334,7 @@ def compute_csv_column_statistics_groupBy(
         )
 
     if inputFilename[-4:] != ".csv":
-        print(
+        logger.info(
             "File type error",
             "The input file\n\n"
             + inputFilename
@@ -343,7 +345,7 @@ def compute_csv_column_statistics_groupBy(
     try:
         df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip", squeeze=True)
     except Exception:
-        print(
+        logger.info(
             "Data encoding error",
             "The input file\n\n"
             + inputFilename
@@ -611,7 +613,7 @@ def compute_csv_column_frequencies(
     )  # + '_col-freq'
     # the outputFilename may get too long and lead to code breakdown when saving the file
     if len(plot_cols) == 0:
-        print(
+        logger.info(
             "Missing field",
             "You have not selected the csv field for which to compute frequencies.\n\nPlease, select the field and try again.",
         )
@@ -639,7 +641,7 @@ def compute_csv_column_frequencies(
                 data.columns = hdr
             if complete_sid:
                 # TODO Samir
-                print("Completing sentence index...")
+                logger.info("Completing sentence index...")
                 charts_util.add_missing_IDs(outputFilename, outputFilename)
         data.to_csv(outputFilename, encoding="utf-8", index=False)
         filesToOpen.append(outputFilename)
@@ -849,7 +851,7 @@ def compute_csv_column_frequencies(
             data.fillna(0, inplace=True)
         if complete_sid:
             # TODO Samir
-            print("Completing sentence index...")
+            logger.info("Completing sentence index...")
             charts_util.add_missing_IDs(outputFilename, outputFilename)
         if tracked:
             data.to_csv(outputFilename, encoding="utf-8", index=False)

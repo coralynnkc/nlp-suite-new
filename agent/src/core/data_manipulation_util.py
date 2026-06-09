@@ -1,9 +1,12 @@
-# if IO_libraries_util.install_all_Python_packages(GUI_util.window,"data_manipulation_util.py", ['os', 'tkinter', 'pandas', 'functools'])==False:
+import logging
 
+# if IO_libraries_util.install_all_Python_packages(GUI_util.window,"data_manipulation_util.py", ['os', 'tkinter', 'pandas', 'functools'])==False:
 import os.path
 
 import IO_files_util
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 def listToString(s, sep):
@@ -342,7 +345,7 @@ def MERGE(outputDir, operation_results_text_list):
         raise (FileNotFoundError) from err
         # mb.showwarning(title='Error',
         #                 message="An unexpected error occurred while merging the files.\n\nPlease, check the input files and try again.")
-        print("Unexpected err", err)
+        logger.info("Unexpected err", err)
         raise
     outputFilename = IO_files_util.generate_output_file_name(
         csv_lst[0],

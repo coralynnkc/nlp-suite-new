@@ -1,11 +1,11 @@
+import logging
+
 # Written by Gabriel Wang 2018
 # Modified by Cynthia Dong (Fall 2019-Spring 2020)
 # Modified by Matthew Chau (Spring 2021)
 # Modified by Roberto Franzosi (Spring-Fall 2021, Fall 2022)
 # Modified by Cynthia Dong (Fall 2021)
-
 # https://stackoverflow.com/questions/61121239/how-to-extract-subject-verb-object-using-nlp-java-for-every-sentence
-
 import os
 
 # to install stanfordnlp, first install
@@ -22,6 +22,8 @@ import Stanford_CoreNLP_coreference_util
 import Stanford_CoreNLP_util
 import Stanza_util
 import SVO_util
+
+logger = logging.getLogger(__name__)
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -91,7 +93,7 @@ def run_svo(
     #     config_filename, config_input_output_numeric_options)
 
     if package_display_area_value == "":
-        print(
+        logger.info(
             "No setup for NLP package and language, the default NLP package and language has not been setup.\n\nPlease, click on the Setup NLP button and try again. "
         )
         return
@@ -99,19 +101,19 @@ def run_svo(
     # the merge option refers to merging the txt files into one
 
     if not coref_var and package_display_area_value == "":
-        print("No option selected, please, select an option and try again. ")
+        logger.info("No option selected, please, select an option and try again. ")
 
         return
 
     if inputFilename[-4:] == ".csv":
         if "SVO_" not in inputFilename:
-            print(
+            logger.info(
                 "Input file error, the selected input is a csv file, but... not an _svo.csv file.\n\nPlease, select an _svo.csv file (or txt file(s)) and try again."
             )
 
             return
         if coref_var or manual_coref_var:
-            print(
+            logger.info(
                 "Input file/option error, the data analysis option(s) you have selected require in input a txt file, rather than a csv file.\n\nPlease, check your input file and/or algorithm selections and try again."
             )
             return
@@ -165,7 +167,7 @@ def run_svo(
     if coref_var:
         # must be changed
         if language_var != "English" and language_var != "Chinese":
-            print(
+            logger.info(
                 "Language, The Stanford CoreNLP coreference resolution annotator is only available for English and Chinese."
             )
             return
@@ -204,7 +206,7 @@ def run_svo(
         or (filter_verbs and not lemmatize_verbs)
         or (filter_objects and not lemmatize_objects)
     ):
-        print(
+        logger.info(
             "Warning, Filtering for either S or V or O requires lemmatizing the respective object, S or V or O. \n\nFiltering is based on WordNet and all WWordNet entries are lemmatized. "
         )
         return
@@ -224,7 +226,7 @@ def run_svo(
 
     if package_var == "CoreNLP" and inputFilename[-4:] != ".csv":
         if language_var == "Arabic" or language_var == "Hungarian":
-            print("language, The Stanford CoreNLP dependency parsing is is not available for Arabic and Hungarian.")
+            logger.info("language, The Stanford CoreNLP dependency parsing is is not available for Arabic and Hungarian.")
             return
 
         if not IO_libraries_util.check_inputPythonJavaProgramFile("Stanford_CoreNLP_util.py"):
@@ -311,7 +313,7 @@ def run_svo(
     # Stanford CoreNLP OpenIE _____________________________________________________
     if "OpenIE" in package_var and inputFilename[-4:] != ".csv":
         if language_var != "English":
-            print("language, The Stanford CoreNLP OpenIE annotator is only available for English.")
+            logger.info("language, The Stanford CoreNLP OpenIE annotator is only available for English.")
             return
 
         outputFiles = Stanford_CoreNLP_util.CoreNLP_annotate(
@@ -736,7 +738,7 @@ def run_svo(
                 filesToOpenSubset.append(file)
 
         filesToOpenSubset_string = ", \n   ".join(filesToOpenSubset)
-        print(
+        logger.info(
             "Subset of the "
             + str(len(filesToOpenSubset))
             + " SVO files from the different subfolders to be opened:\n   "

@@ -1,3 +1,5 @@
+import logging
+
 """
 Python 3 script
 author: Roberto Franzosi, May 2019
@@ -8,13 +10,15 @@ import subprocess
 
 import GUI_IO_util
 
+logger = logging.getLogger(__name__)
+
 
 def check_lib_stopwords():
     lib_filename = "stopwords.txt"
     stopwords_libPath = GUI_IO_util.libPath + os.sep + "wordLists"
     stopwords_file_withPath = stopwords_libPath + os.sep + lib_filename
     if not os.path.isfile(stopwords_file_withPath):
-        print(
+        logger.info(
             "lib warning",
             "The lib file "
             + stopwords_file_withPath
@@ -42,7 +46,7 @@ def get_lib(libfile):
 # called by sentiment/concreteness scripts
 def checklibFile(libfile, script):
     if not os.path.isfile(libfile):
-        print(
+        logger.info(
             "File not found",
             "The script "
             + script
@@ -58,7 +62,7 @@ def checklibFile(libfile, script):
 
 def checkLibLicense(libfile):
     if not os.path.isfile(GUI_IO_util.libPath + os.sep + libfile):
-        print(
+        logger.info(
             "License agreement file not found",
             "The NLP Suite expects a license agreement file "
             + libfile
@@ -71,7 +75,7 @@ def checkLibLicense(libfile):
 def checklibDir():
     lib_dir_exists = True
     if not os.path.isdir("lib" + os.sep):
-        print(
+        logger.info(
             "lib Warning",
             "The lib directory "
             + GUI_IO_util.libPath

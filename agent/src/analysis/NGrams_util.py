@@ -1,3 +1,4 @@
+import logging
 import string
 from pathlib import Path
 
@@ -91,7 +92,7 @@ def readandsplit(
     global called
     global nlp
     head, tail = os.path.split(filename)
-    print("   Processing file " + str(index + 1) + "/" + str(nFiles) + " " + tail)
+    logger.info("   Processing file " + str(index + 1) + "/" + str(nFiles) + " " + tail)
     with open(filename, encoding="utf_8", errors="ignore") as f:
         out = f.read()
     if excludePunctuation:
@@ -133,6 +134,8 @@ def find_ngrams(words, n):
 
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 
 def find_frequencies(sentences_ngrams, major_ngrams, files):
     major_freq = Counter(major_ngrams)
@@ -162,7 +165,7 @@ def operateongram(documents, files, ngramsNumber):
         ngrams.extend(find_ngrams(document, ngramsNumber))
     documents_ngram = [find_ngrams(document, ngramsNumber) for document in documents]
     ngram_freq = find_frequencies(documents_ngram, ngrams, files)
-    print(ngramsNumber, "gram of your corpus is complete.")
+    logger.info(ngramsNumber, "gram of your corpus is complete.")
     return ngram_freq
 
 

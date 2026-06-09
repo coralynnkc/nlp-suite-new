@@ -1,7 +1,7 @@
 # add parameter to exclude duplicates? also mean or median analysis
-
 import argparse
 import csv
+import logging
 import os
 import statistics
 import sys
@@ -14,17 +14,19 @@ import IO_user_interface_util
 import lib_util
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 fin = open("../lib/wordLists/stopwords.txt")
 stops = set(fin.read().splitlines())
 
 ratings = GUI_IO_util.concreteness_libPath + os.sep + "Concreteness_ratings_Brysbaert_et_al_BRM.csv"
 if not os.path.isfile(ratings):
-    print(
+    logger.info(
         "The file "
         + ratings
         + " could not be found. The CONCRETENESS analysis routine expects a csv dictionary file 'Concreteness_ratings_Brysbaert_et_al_BRM.csv' in a directory 'lib' expected to be a subdirectory of the directory where the concreteness_analysis.py script is stored.\n\nPlease, check your lib directory and try again."
     )
-    print(
+    logger.info(
         "File not found, The concreteness analysis routine expects a csv dictionary file 'Concreteness_ratings_Brysbaert_et_al_BRM.csv' in a directory 'lib' expected to be a subdirectory of the directory where the concreteness_analysis.py script is stored.\n\nPlease, check your lib directory and try again"
     )
     sys.exit()
@@ -54,8 +56,8 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
-        print(f"Error: The file '{inputFilename}' is empty.\n\nPlease, use another file and try again.")
-        print("Empty file ", inputFilename)
+        logger.info(f"Error: The file '{inputFilename}' is empty.\n\nPlease, use another file and try again.")
+        logger.info("Empty file ", inputFilename)
         return
 
     # otherwise, split into sentences
@@ -135,10 +137,10 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
         return
 
     if len(outputDir) < 0 or not os.path.exists(outputDir):  # empty output
-        print("No output directory specified, or path does not exist")
+        logger.info("No output directory specified, or path does not exist")
         sys.exit(0)
     elif len(inputFilename) == 0 and len(inputDir) == 0:  # empty input
-        print("No input specified. Please give either a single file or a directory of files to analyze.")
+        logger.info("No input specified. Please give either a single file or a directory of files to analyze.")
         sys.exit(1)
 
     # create a subdirectory of the output directory
@@ -174,11 +176,11 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
 
         if len(inputFilename) > 0:  # handle single file
             head, tail = os.path.split(inputFilename)
-            print("Processing file 1/1 " + tail)
+            logger.info("Processing file 1/1 " + tail)
             if os.path.exists(inputFilename):
                 filesToOpen.append(analyzefile(inputFilename, outputDir, outputFilename, 1, inputFilename))
             else:
-                print('Input file "' + inputFilename + '" is invalid.')
+                logger.info('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(0)
         elif len(inputDir) > 0:  # handle directory
             head, tail = os.path.split(inputDir)
@@ -200,11 +202,11 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
                     if filename.endswith(".txt"):
                         index = index + 1
                         head, tail = os.path.split(filename)
-                        print("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
+                        logger.info("Processing file " + str(index) + "/" + str(Ndocs) + " " + tail)
                         documentID += 1
                         analyzefile(filename, outputDir, outputFilename, documentID, filename)  # LINE ADDED (edited)
             else:
-                print('Input directory "' + inputDir + '" is invalid.')
+                logger.info('Input directory "' + inputDir + '" is invalid.')
                 sys.exit(0)
 
         # should sort by Document ID and Sentence ID

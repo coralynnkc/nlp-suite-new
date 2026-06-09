@@ -1,6 +1,9 @@
 import json
+import logging
 
 import charts_util
+
+logger = logging.getLogger(__name__)
 
 
 def run_colormap(
@@ -17,7 +20,7 @@ def run_colormap(
     all_fields = []
     intermediate_fields = []
     csv_file_categorical_field_list = json.loads(csv_file_categorical_field_list)
-    print(csv_file_categorical_field_list)
+    logger.info(csv_file_categorical_field_list)
     for i in range(len(csv_file_categorical_field_list)):
         if i > 0 and i < len(csv_file_categorical_field_list) - 1:
             intermediate_fields.append(
@@ -89,9 +92,9 @@ def main():
             normalize_var,
             inputFileData=inputFileData,
         )
-        print("Output files generated:", output_files)
+        logger.info("Output files generated:", output_files)
     except Exception as e:
-        print("An error occurred during testing:", e)
+        logger.info("An error occurred during testing:", e)
 
 
 if __name__ == "__main__":

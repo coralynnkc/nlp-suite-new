@@ -1,3 +1,5 @@
+import logging
+
 """
 Generates html files from input text files annotated with the use of dictionary terms
 by Jack Hester
@@ -11,6 +13,8 @@ from csv import reader
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
+
+logger = logging.getLogger(__name__)
 
 
 # the function associates specific values of a csv file to a specific color
@@ -104,7 +108,7 @@ def dictionary_annotate(
                 headers, field, dict_file
             )
             if col is None:
-                print(
+                logger.info(
                     "Input file error",
                     "The selected dictionary file\n\n"
                     + dict_file
@@ -146,7 +150,7 @@ def dictionary_annotate(
     for file in files:
         head, tail = os.path.split(file)
         i += 1
-        print("Processing file " + str(i) + "/" + str(nFile) + " " + tail)
+        logger.info("Processing file " + str(i) + "/" + str(nFile) + " " + tail)
         text = open(file, encoding="utf-8", errors="ignore").read()
         # put filename in bold
         tail = "<b>" + tail + "</b>"
@@ -164,7 +168,7 @@ def dictionary_annotate(
             term_intextID = 0
             for term in terms:
                 termID = termID + 1
-                print(
+                logger.info(
                     f"Processing dictionary field '{csv_field1_var}' {termID}/{len(terms)} term"
                 )
                 if re.search(r"\b" + term + r"\b", text) is None:
@@ -180,7 +184,7 @@ def dictionary_annotate(
                         terms.remove(str(term1))
                         continue
                 term_intextID = term_intextID + 1
-                print(
+                logger.info(
                     "   Annotating '"
                     + term
                     + "' in text "
@@ -205,7 +209,7 @@ def dictionary_annotate(
                     tagAnnotations = ['<span style="color: ' + color + '">', "</span>"]
                 for term in terms:
                     termID = termID + 1
-                    print(
+                    logger.info(
                         "Processing dictionary field value "
                         + str(termID)
                         + "/"
@@ -227,7 +231,7 @@ def dictionary_annotate(
                             terms.remove(str(term1))
                             continue
                     term_intextID = term_intextID + 1
-                    print(
+                    logger.info(
                         "   Annotating '"
                         + term
                         + "' in text "

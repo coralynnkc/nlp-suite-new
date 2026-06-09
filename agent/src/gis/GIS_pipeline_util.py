@@ -2,8 +2,8 @@
 # Cynthia Dong May 2020
 # Roberto Franzosi September 2020
 # Mino Cha September 2022
-
 import csv
+import logging
 import os
 
 import charts_util
@@ -20,6 +20,8 @@ import IO_files_util
 import IO_user_interface_util
 import pandas as pd
 import reminders_util
+
+logger = logging.getLogger(__name__)
 
 
 def getGoogleAPIkey(Google_config, display_key=False):
@@ -59,7 +61,7 @@ def getGoogleAPIkey(Google_config, display_key=False):
             )
             answer = print("Warning " + message)
             if answer:
-                print("Search and open: TIPS_NLP_GIS_Google API Key.pdf")
+                logger.info("Search and open: TIPS_NLP_GIS_Google API Key.pdf")
         if "Maps" in Google_config:
             config_type = "Maps"
         else:
@@ -161,16 +163,16 @@ def GIS_pipeline(
     os_temp = platform.system()
 
     if os_temp == "Darwin":
-        print("os is darwin")
+        logger.info("os is darwin")
 
     elif os_temp == "Windows":
-        print("os is darwin")
+        logger.info("os is darwin")
 
     elif os_temp == "Linux":
-        print("os is linux")
+        logger.info("os is linux")
 
     else:
-        print("unsure of os, defaulting to mac directory")
+        logger.info("unsure of os, defaulting to mac directory")
 
     # if GoogleEarthProDir == None or GoogleEarthProDir == '': #We dont need this potentially
 
@@ -659,7 +661,7 @@ def GIS_pipeline(
             for i in range(len(lat)):
                 coordList.append([lat[i], lon[i]])
         else:
-            print(
+            logger.info(
                 "Warning, the input csv file\n\n' + geocodedLocationsOutputFilename + '\n\ndoes not contain geocoded data with Latitude or Longitude columns required for Google Maps to produce heat maps.\n\nPlease, select a geocoded csv file in input and try again."
             )
             return

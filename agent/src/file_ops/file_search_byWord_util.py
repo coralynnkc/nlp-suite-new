@@ -1,3 +1,5 @@
+import logging
+
 #!/usr/bin/env Python
 """
 Created on Wed Jun 10 21:37:40 2020
@@ -17,6 +19,8 @@ import charts_util
 import IO_csv_util
 import IO_files_util
 import stanza
+
+logger = logging.getLogger(__name__)
 
 
 # sentences is a list of all sentences
@@ -479,7 +483,7 @@ def search_sentences_documents(
     for file in files:
         docIndex += 1
         _, tail = os.path.split(file)
-        print("Processing file " + str(docIndex) + "/" + str(nFile) + " " + tail)
+        logger.info("Processing file " + str(docIndex) + "/" + str(nFile) + " " + tail)
         # if search_by_dictionary:
         #     break
         if search_by_dictionary or search_by_search_keywords:
@@ -797,7 +801,7 @@ def search_sentences_documents(
     if create_subcorpus_var and len(corpus_to_copy) > 0:
         for file in corpus_to_copy:
             shutil.copy(file, subCorpusDir)
-        print(
+        logger.info(
             "Warning",
             ' The search function has created a subcorpus of the files containing the search word(s) "'
             + str(search_keywords_list)
@@ -836,7 +840,7 @@ def search_sentences_documents(
 
     else:
         if not search_keywords_found:
-            print(
+            logger.info(
                 "Search word(s) not found",
                 "The search keywords:\n\n   "
                 + search_keywords_str
@@ -849,7 +853,7 @@ def search_sentences_documents(
             try:
                 df = pd.read_csv(outputFilename_csv_word)
             except UnicodeEncodeError:
-                print(
+                logger.info(
                     "Input file error",
                     "Could not read the file "
                     + outputFilename_csv_word

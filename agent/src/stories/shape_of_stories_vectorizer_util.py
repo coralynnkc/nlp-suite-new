@@ -1,11 +1,14 @@
 import codecs  # must be installed
 import csv
+import logging
 import os
 
 import IO_csv_util  # Angel
 import numpy as np
 import pandas as pd  # Angel
 from sklearn.decomposition import PCA
+
+logger = logging.getLogger(__name__)
 
 """
 Name of variables should follow python notation:
@@ -46,12 +49,12 @@ class Vectorizer:
                 readerList = list(reader)
                 df = pd.read_csv(narrativeFile, encoding="utf-8", on_bad_lines="skip")  # ANGEL
                 if len(readerList) == 0 or "Sentiment score" not in df.columns:
-                    print(f"Sentiment Analysis Score Error: {narrativeFile} doesn't have any sentiment score. The file will be dropped from the analyses.")
+                    logger.info(f"Sentiment Analysis Score Error: {narrativeFile} doesn't have any sentiment score. The file will be dropped from the analyses.")
                     filesToDelete.append(narrativeFile)
                     continue
                 # ============== Angel ================= added additional checks for merged file
                 elif "Document" in df.columns or "Document Name" in df.columns:  # a merged file
-                    print(len(self.narrative_file_paths))
+                    logger.info(len(self.narrative_file_paths))
                     if "Document Name" in df.columns:  # sometimes "Document" sometimes "Document Name"
                         df["Document"] = df["Document Name"]
                     doc_ls = [y for y, x in df.groupby(df["Document"])]
@@ -59,14 +62,14 @@ class Vectorizer:
                     for index, sub_df in enumerate(splitted):
                         if len(sub_df) == 1:
                             if not self.doNotRepeat1:
-                                print(f"Sentiment Analysis Score Error: Document {doc_ls[index]} only contains one sentiment score. This document will be dropped from the analyses.")
+                                logger.info(f"Sentiment Analysis Score Error: Document {doc_ls[index]} only contains one sentiment score. This document will be dropped from the analyses.")
                             splitted.pop(index)
                             continue  # won't add to doclengths list
                         elif len(sub_df) < 10:
                             result = False
                             if not self.doNotRepeat2:
                                 # TODO should export csv file with culprit files
-                                print(f"Sentiment Analysis Score Error: Document {doc_ls[index]} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
+                                logger.info(f"Sentiment Analysis Score Error: Document {doc_ls[index]} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
                             if result:
                                 splitted.pop(index)
                                 continue
@@ -81,14 +84,14 @@ class Vectorizer:
                     if len(readerList) == 1:
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
-                            print(f"Sentiment Analysis Score Error: {narrativeFile} only contains one sentiment score. The file will be dropped from the analyses.")
+                            logger.info(f"Sentiment Analysis Score Error: {narrativeFile} only contains one sentiment score. The file will be dropped from the analyses.")
                         filesToDelete.append(narrativeFile)
                         continue
                     elif len(readerList) < 10:
                         result = False
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
-                            print(f"Sentiment Analysis Score Error: {narrativeFile} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
+                            logger.info(f"Sentiment Analysis Score Error: {narrativeFile} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
                         if result:
                             filesToDelete.append(narrativeFile)
                             continue
@@ -180,7 +183,7 @@ class Vectorizer:
             file_list.append(df.iloc[0]["Document"])  # append document name
             scoresFile_list.update({str(df.iloc[0]["Document"]): str(df.iloc[0]["scoresFilename"])})  # ANGEL
         sentimentVectors = np.array(sentimentVectors)
-        print(sentimentVectors)
+        logger.info(sentimentVectors)
         return sentimentVectors, file_list, scoresFile_list
 
     @staticmethod
@@ -188,7 +191,7 @@ class Vectorizer:
         n_features = len(sentiment_vectors[0])
         pca = PCA(n_components=n_features)
         if len(sentiment_vectors) < n_features:
-            print("Corpus size error: The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.")
+            logger.info("Corpus size error: The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.")
             return None
         pca.fit(sentiment_vectors)
         expl_vars = -np.sort(-pca.explained_variance_ratio_)
@@ -197,7 +200,7 @@ class Vectorizer:
             sum += expl_vars[i]
             if sum >= expl_var_thr:
                 return i
-        print(n_features)
+        logger.info(n_features)
         return n_features
 
 
@@ -209,8 +212,8 @@ def test():
     rec_n_clusters = vectz.compute_suggested_n_clusters(
         sentiment_vectors,
     )
-    print(f"The recommended number of clusters is: {rec_n_clusters:d}")
-    print("ok")
+    logger.info(f"The recommended number of clusters is: {rec_n_clusters:d}")
+    logger.info("ok")
 
 
 if __name__ == "__main__":

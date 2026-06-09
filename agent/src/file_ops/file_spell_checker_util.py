@@ -1,5 +1,6 @@
 import collections
 import csv
+import logging
 import math
 import os
 import re
@@ -30,6 +31,8 @@ from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from spellchecker import SpellChecker
 from textblob import Word
+
+logger = logging.getLogger(__name__)
 
 
 def lemmatizing(word):  # edited by Claude Hu 08/2020
@@ -111,7 +114,7 @@ def nltk_unusual_words(
     filesToOpen.append(NLTK_corpus_lemmatized)
 
     if not os.path.exists(NLTK_corpus_lemmatized):
-        print(
+        logger.info(
             "Warning, The csv file of NLTK corpus of lemmatized English words was not found in the lib subdir ' + GUI_IO_util.wordLists_libPath + '\n\nThe script will now run the much slower lemmatization function.\n\nPlease, alert the NLP Suite developers of the missing file."
         )
         # this approach is extremely slow
@@ -121,7 +124,7 @@ def nltk_unusual_words(
         for corpus_index, w in enumerate(nltk.corpus):
             lemma = lemmatize_stanza_word(stanzaPipeLine(w))
             NLTK_english_vocab_lemmatized.append(lemma)
-            print(
+            logger.info(
                 "   NLTK corpus word "
                 + str(corpus_index)
                 + "/"
@@ -158,7 +161,7 @@ def nltk_unusual_words(
     for file in files:
         documentID = documentID + 1
         head, tail = os.path.split(file)
-        print("Processing file " + str(documentID) + "/" + str(nFile) + " " + tail)
+        logger.info("Processing file " + str(documentID) + "/" + str(nFile) + " " + tail)
         text = open(file, encoding="utf-8", errors="ignore").read()
         # the NLTK vocab is lowercase, lemmatized; must lemmatize your input
         # lemmatize the input corpus, to be comparable to the lemmatized NLTK corpus
@@ -305,7 +308,7 @@ def check_for_typo_sub_dir(
         return
     subdir = [f.path for f in os.scandir(inputDir) if f.is_dir()]
     if subdir == []:
-        print(
+        logger.info(
             "Check Subdir option There are no sub directories under the selected input directory\n\n"
             + inputDir
             + "\n\nPlease, uncheck your subdir option if you want to process this directory and try again."
@@ -639,10 +642,10 @@ def check_for_typo(
         # Check if there is repetition in the dictionary file
 
         if len(true_spellings) != len(df):
-            print("There are repeated words in the dictionary file.")
+            logger.info("There are repeated words in the dictionary file.")
             return
         else:
-            print("All words in the dictionary file are distinct.")
+            logger.info("All words in the dictionary file are distinct.")
 
     # startTime=IO_user_interface_util.timed_alert(3000, 'Word similarity start', 'Started running Word similarity at',
     #                                              True, '', True, '', True)
@@ -661,12 +664,12 @@ def check_for_typo(
     )
     time.sleep(5)
 
-    print("Starting to run Stanford CoreNLP to prepare data for each folder and file.")
+    logger.info("Starting to run Stanford CoreNLP to prepare data for each folder and file.")
 
     for folder, subs, files in os.walk(inputDir):
         nFolders = len(subs) + 1
         folderID += 1
-        print(
+        logger.info(
             "\nProcessing folder "
             + str(folderID)
             + "/"
@@ -679,7 +682,7 @@ def check_for_typo(
             fileID += 1
             if not filename.endswith(".txt"):
                 continue
-            print(
+            logger.info(
                 "  Processing file "
                 + str(fileID)
                 + "/"
@@ -734,8 +737,8 @@ def check_for_typo(
         header_row_list_to_check = header_rows
 
     else:
-        print("Running NER on each file...")
-        print("documents: ", documents)
+        logger.info("Running NER on each file...")
+        logger.info("documents: ", documents)
 
         NER = [
             [
@@ -782,7 +785,7 @@ def check_for_typo(
 
         word_list = list(set(word_list))
         processed_words = preprocess_word_list(word_list, true_spellings)
-        print("Now word_list: ", word_list)
+        logger.info("Now word_list: ", word_list)
         unused_spells = find_unused_spells(true_spellings, set(word_list))
         potential_new_spells = find_potential_new_spells(documents, true_spellings)
 
@@ -794,14 +797,14 @@ def check_for_typo(
     # for each element in list_to_check, it is in this format:
     # word, NamedEntity, sentenceID, documentID, fileName
 
-    print(
+    logger.info(
         "Finished running Stanford CoreNLP to prepare data for folder "
         + str(folderID)
         + " and "
         + str(fileID)
         + " files."
     )
-    print(
+    logger.info(
         "   Processed "
         + str(len(header_row_list_to_check))
         + " words and "
@@ -878,7 +881,7 @@ def check_for_typo(
                 header_row.append(spell_status)
                 speller = SpellChecker()
                 respelled_word = speller.correction(word)
-                print(
+                logger.info(
                     "      Processing DISTINCT word "
                     + str(processed_wordID)
                     + "/"
@@ -1086,7 +1089,7 @@ def check_for_typo(
 def spelling_checker_cleaner(
     window, inputFilename, inputDir, outputDir, openOutputFiles, configFileName
 ):
-    print(
+    logger.info(
         "Find & Replace csv file (with 'Original' and 'Corrected' headers) Please, select the csv file that contains the information about words that need correcting.\n\nMostly likely this file was created by the spell checker algorithms and edited by you keeping only correct entries.\n\nThe Find & Replace will expect 2 column headers 'Original' and 'Corrected'.\n\nPlease, make sure that your csv file has those characteristics."
     )
 
@@ -1098,11 +1101,11 @@ def spelling_checker_cleaner(
         original = df["Original"]
         corrected = df["Corrected"]
     except Exception:
-        print(
+        logger.info(
             "CSV file error, The selected csv file does not have the expected format. The Find & Replace expects 2 column headers 'Original' and 'Corrected'.\n\nPlease, make sure that your csv file has those characteristics and try again. "
         )
 
-        print(
+        logger.info(
             "The selected csv file does not have the expected format. The Find & Replace expects 2 column headers 'Original' and 'Corrected'.\n\nPlease, make sure that your csv file has those characteristics and try again."
         )
         return
@@ -1272,11 +1275,11 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
 
     for filename in files:
         if check_withinDir:
-            print("Processing file:", filename)
+            logger.info("Processing file:", filename)
         fileID = fileID + 1
         # with open(inputFilenames_path, 'r', encoding='utf-8', errors='ignore') as opened_file:
         with open(filename, encoding="utf-8", errors="ignore") as opened_file:
-            print("  Processing file:", filename)
+            logger.info("  Processing file:", filename)
             originalText = opened_file.read()
             os.path.join(inputDir, filename)
             if checker_value_var == "*" or "autocorrect" in checker_value_var:
@@ -1287,7 +1290,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
                 csv["Document ID"] = [fileID] * csv.shape[0]
                 autocorrect_df = pandas.concat([autocorrect_df, csv], ignore_index=True)
                 autocorrect_df = autocorrect_df.drop_duplicates()
-                print("AUTOCORRECT\n", text)
+                logger.info("AUTOCORRECT\n", text)
 
             if checker_value_var == "*" or "pyspellchecker" in checker_value_var:
                 text, csv = spellchecking_pyspellchecker(originalText, filename)
@@ -1299,7 +1302,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
                     [pyspellchecker_df, csv], ignore_index=True
                 )
                 pyspellchecker_df = pyspellchecker_df.drop_duplicates()
-                print("PYSPELLCHECKER\n", text)
+                logger.info("PYSPELLCHECKER\n", text)
 
             if checker_value_var == "*" or "textblob" in checker_value_var:
                 text, csv = spellchecking_text_blob(originalText, filename)
@@ -1309,7 +1312,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
                 csv["Document ID"] = [fileID] * csv.shape[0]
                 textblob_df = pandas.concat([textblob_df, csv], ignore_index=True)
                 textblob_df = textblob_df.drop_duplicates()
-                print("TEXTBLOB\n", text)
+                logger.info("TEXTBLOB\n", text)
 
             head, tail = os.path.split(filename)
             # head is path, tail is filename
@@ -1322,7 +1325,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
         inputDir, corrected_files_path, "INPUT", "spell checker"
     )
 
-    print(
+    logger.info(
         "Spell checking, Spell checker algorithms are not very accurate, perhaps pyspellchecker perfoming better than autocorrect and textblob performing the worse.\n\nThe spell checkers generate in output\n  1. corrected txt file(s) in a subdirectory 'spell_checked' of the input file and/or input directory;\n  2. csv files (one for each of the 3 available algorithms if run together) with the headers 'Original' and 'Corrected' that list all the words that would have been edited for misspellings in the output files.\n\nPLEASE, CAREFULLY INSPECT THE OUTPUT CSV FILE(S), DELETE ANY WRONGLY CORRECTED WORDS FROM EACH CELL UNDER THE 'Corrected' COLUMN, THEN, RUN THE 'Find & Replace string (Spelling checker cleaner)' SCRIPT TO EDIT THE ORIGINAL INPUT FILE(S). "
     )
 
@@ -1403,10 +1406,10 @@ def language_detection(
         for filename in files:
             fileID = fileID + 1
             head, tail = os.path.split(filename)
-            print("Processing file " + str(fileID) + "/" + str(len(files)) + " " + tail)
+            logger.info("Processing file " + str(fileID) + "/" + str(len(files)) + " " + tail)
             text = open(filename, encoding="utf-8", errors="ignore").read()
             if len(text) == 0:
-                print("  The file is empty. It will be discarded from processing.")
+                logger.info("  The file is empty. It will be discarded from processing.")
                 docErrors_empty = docErrors_empty + 1
                 continue
             # split text into paragraphs, paragraph = text.split('\n\n')
@@ -1418,7 +1421,7 @@ def language_detection(
             except Exception:
                 filenameSV = filename  # do not count the same document twice in this and the other algorithms that follow
                 docErrors_unknown = docErrors_unknown + 1
-                print("  Unknown file read error.")
+                logger.info("  Unknown file read error.")
                 continue
 
             # LANGDETECT ----------------------------------------------------------
@@ -1434,7 +1437,7 @@ def language_detection(
             # hi, hr, hu, id, it, ja, kn, ko, lt, lv, mk, ml, mr, ne, nl, no, pa, pl,
             # pt, ro, ru, sk, sl, so, sq, sv, sw, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw
             # ISO codes https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-            print("   LANGDETECT", language, probability)
+            logger.info("   LANGDETECT", language, probability)
             currentLine = [
                 [
                     "LANGDETECT",
@@ -1463,7 +1466,7 @@ def language_detection(
             # pt, qu, ro, ru, rw, se, si, sk, sl, sq,
             # sr, sv, sw, ta, te, th, tl, tr, ug, uk,
             # ur, vi, vo, wa, xh, zh, zu
-            print("   LANGID", language, probability)  # ('en', 0.999999999999998)
+            logger.info("   LANGID", language, probability)  # ('en', 0.999999999999998)
             currentLine.append(
                 [
                     "LANGID",
@@ -1486,14 +1489,14 @@ def language_detection(
                 ):  # do not count the same document twice in this and the other algorithm that follows
                     docErrors_unknown = docErrors_unknown + 1
                     filenameSV = filename
-                print("  spaCy Unknown file read error.")
+                logger.info("  spaCy Unknown file read error.")
                 break  # continue
             value = doc._.language
             language = value["language"]
             language = lang_dict.get(language)
             probability = round(float(value["score"]), 2)
             #
-            print(
+            logger.info(
                 "   SPACY", language, probability
             )  # {'language': 'en', 'score': 0.9999978351575265}
             currentLine.append(
@@ -1515,7 +1518,7 @@ def language_detection(
                 if filename != filenameSV:
                     docErrors_unknown = docErrors_unknown + 1
                     filenameSV = filename
-                print("  spaCy Unknown file read error.")
+                logger.info("  spaCy Unknown file read error.")
                 break  # continue
 
             # Stanza  ----------------------------------------------------------
@@ -1524,7 +1527,7 @@ def language_detection(
             language = doc.lang
             language = lang_dict.get(language)
             probability = float(1)
-            print("   Stanza", language, probability)
+            logger.info("   Stanza", language, probability)
             currentLine.append(
                 [
                     "Stanza",
@@ -1566,7 +1569,7 @@ def language_detection(
                     + " document(s) read with unknown errors."
                 )
 
-        print(
+        logger.info(
             "File read errors,"
             + "msg+ '\n\nFaulty files are listed in command line/terminal. Please, search for 'File read error' and inspect each file carefully."
         )
@@ -1574,7 +1577,7 @@ def language_detection(
     filesToOpen.append(outputFilenameCSV)
     # IO_user_interface_util.timed_alert(1000, 'Analysis end',
     #                                    'Finished running Language Detection at', True,'Languages detected are exported via the ISO 639 two-letter code. ISO 639 is a standardized nomenclature used to classify languages. Check the ISO list at https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.', True, startTime, True)
-    print(
+    logger.info(
         "Languages detected are exported via the ISO 639 two-letter code. ISO 639 is a standardized nomenclature used to classify languages. Check the ISO list at https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes."
     )
     if chartPackage != "No charts":

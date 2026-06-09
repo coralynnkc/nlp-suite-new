@@ -1,3 +1,4 @@
+import logging
 
 import stanza
 
@@ -140,7 +141,7 @@ def Stanza_annotate(
     filesToOpen = []
 
     if len(language) == 0:
-        print("Warning", "The language list is empty.\n\nPlease, select a language and try again.")
+        logger.info("Warning", "The language list is empty.\n\nPlease, select a language and try again.")
         return filesToOpen
 
     available_language = check_Stanza_available_languages(language)
@@ -273,7 +274,7 @@ def Stanza_annotate(
         if filename_embeds_date_var:
             global date_str
             date_str = date_in_filename(doc, **kwargs)
-        print("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
+        logger.info("Processing file " + str(docID) + "/" + str(nDocs) + " " + tail)
 
         if (
             len(language) > 1 or "multilingual" in language
@@ -281,7 +282,7 @@ def Stanza_annotate(
             with open(doc, encoding=language_encoding) as f:
                 text = f.read()
                 if text == "":
-                    print(
+                    logger.info(
                         "Warning",
                         "The input file\n"
                         + tail
@@ -306,7 +307,7 @@ def Stanza_annotate(
                     nlp = MultilingualPipeline(lang_id_config={"langid_lang_subset": ["en", "multilingual"]})
                     Stanza_output = nlp(text)
                 except Exception:
-                    print(
+                    logger.info(
                         "Warning",
                         "Stanza encountered an error trying to download the language pack "
                         + str(language)
@@ -314,7 +315,7 @@ def Stanza_annotate(
                     )
                     return
             else:
-                print(
+                logger.info(
                     "Warning",
                     "Stanza encountered an error trying to download the selected language pack " + str(language),
                 )
@@ -816,6 +817,8 @@ lang_dict_rev = {}
 # lang_dict_rev will use alias, instead of lang_name, as found in resources.json
 # e.g., stanza.download(Stanza_util.lang_dict_rev['en'])
 import stanza.resources.common
+
+logger = logging.getLogger(__name__)
 
 EFAULT_MODEL_DIR = stanza.resources.common.DEFAULT_MODEL_DIR
 resources_path = os.path.join(DEFAULT_MODEL_DIR, "resources.json")

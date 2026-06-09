@@ -1,11 +1,13 @@
 # file_manager_service.py
-
 from __future__ import annotations
 
 import csv
+import logging
 import os
 
 import file_filename_util
+
+logger = logging.getLogger(__name__)
 
 
 def run_file_manager(
@@ -104,7 +106,7 @@ def run_file_manager(
         outputFilename = "split_files_" + currentSubfolder + ".csv"
 
     if options == 0:
-        print(
+        logger.info(
             "No file manager option has been selected.\n\nPlease, select one option (list, rename, copy, move, delete, count, split) and try again."
         )
         return
@@ -117,13 +119,13 @@ def run_file_manager(
                 and not by_prefix_var
                 and not by_substring_var
             ):
-                print(
+                logger.info(
                     "You have selected a file manager option, but no specific criteria for managing the files: By file type, By prefix value, or By substring value.\n\nPlease, select the file criteria to use and try again."
                 )
                 return
 
     if options > 1:
-        print(
+        logger.info(
             "Only one option at a time can be selected. You have selected "
             + str(options)
             + " options.\n\nPlease, deselect some options and try again."
@@ -132,7 +134,7 @@ def run_file_manager(
 
     if by_embedded_items_var:
         if embedded_item_character_value_var == "":
-            print(
+            logger.info(
                 "You have selected the option 'By number of embedded items' but you have not entered the 'Separator character(s)'.\n\nPlease, enter the character(s) and try again."
             )
             return
@@ -171,7 +173,7 @@ def run_file_manager(
                 break
 
         if not first_filename:
-            print("No files found for split operation.")
+            logger.info("No files found for split operation.")
             return
 
         filename_items = first_filename.split(embedded_item_character_value_var)
@@ -205,17 +207,17 @@ def run_file_manager(
             and not by_foldername_var
             and not by_embedded_items_var
         ):
-            print(
+            logger.info(
                 "You have selected the option to Rename files but you have not selected any of the available options for renaming the files.\n\nPlease, make a selection and enter the appropriate values and try again."
             )
             return
         if (by_prefix_var or by_substring_var) and string_entry_var == "":
-            print(
+            logger.info(
                 "You have selected the option to Rename files by prefix/sub-string value but you have not entered the values necessary for renaming the filename.\n\nPlease, enter the missing values in the fields 'Enter value' and/or 'New renaming value' and try again."
             )
             return
         if by_foldername_var and folder_character_separator_var == "":
-            print(
+            logger.info(
                 "You have selected the option to Rename files by Folder name but you have not entered the Separator character(s).\n\nPlease, enter appropriate values in the 'Separator character(s)' field and try again."
             )
             return
@@ -224,14 +226,14 @@ def run_file_manager(
         msg = 'of type "' + file_type_menu_var + '" '
 
     if by_prefix_var and by_substring_var:
-        print(
+        logger.info(
             'Only one option at a time, "By prefix value" or "By sub-string value," can be selected.\n\nPlease, deselect one option and try again.'
         )
         return
 
     if by_prefix_var:
         if len(string_entry_var) == 0:
-            print(
+            logger.info(
                 'You have selected the option "By prefix value" but no string value has been entered.\n\nPlease, enter the prefix value in the "Enter value" field and try again.'
             )
             return
@@ -242,7 +244,7 @@ def run_file_manager(
 
     if by_substring_var == 1:
         if len(string_entry_var) == 0:
-            print(
+            logger.info(
                 'You have selected the option "By sub-string value" but no string value has been entered.\n\nPlease, enter the sub-string value in the "Enter value" field and try again.'
             )
             return
@@ -285,7 +287,7 @@ def run_file_manager(
     if include_subdir_var == 1:
         for current_dir, _subdirs, files in os.walk(inputDir):
             for filename in files:
-                print(f"Processing file: {filename}")
+                logger.info(f"Processing file: {filename}")
                 (
                     fileFound,
                     characterCount,
@@ -338,7 +340,7 @@ def run_file_manager(
         if (
             hasFullPath
         ):  # This is used when full paths are present in the CSV file, we ignore the input directory
-            print(
+            logger.info(
                 "Full path present, processing regardless of existence in input directory"
             )
             for filename in fileList:
@@ -392,7 +394,7 @@ def run_file_manager(
         elif not count_file_manager_var:  # list, copy, move, delete
             for filename in os.listdir(inputDir):
                 if not os.path.isdir(os.path.join(inputDir, filename)):
-                    print(f"Processing file: {filename}")
+                    logger.info(f"Processing file: {filename}")
                     if selectedCsvFile_var != "":
                         if filename in fileList:
                             processFile = True
@@ -477,7 +479,7 @@ def run_file_manager(
 
     if i > 0:
         if rename_var == 1:
-            print(
+            logger.info(
                 str(i)
                 + " files "
                 + msg
@@ -489,7 +491,7 @@ def run_file_manager(
                 + "."
             )
         elif copy_var == 1:
-            print(
+            logger.info(
                 str(i)
                 + " files "
                 + msg
@@ -501,10 +503,10 @@ def run_file_manager(
                 + "."
             )
         else:
-            print(str(i) + " files " + msg + operation + ".")
+            logger.info(str(i) + " files " + msg + operation + ".")
             filesToOpen.append(os.path.join(outputDir, outputFilename))
     else:
-        print(
+        logger.info(
             "No files "
             + msg
             + operation

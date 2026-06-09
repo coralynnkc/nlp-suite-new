@@ -5,10 +5,9 @@
 #   docx --> txt
 #   tsv --> csv
 #   csv --> txt
-
-
 import csv
 import errno
+import logging
 import os
 
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
@@ -16,6 +15,8 @@ from os.path import splitext
 
 import IO_files_util
 from striprtf.striprtf import rtf_to_text
+
+logger = logging.getLogger(__name__)
 
 # https://pdfminersix.readthedocs.io/en/latest/
 # # https://pypi.org/project/pdfminer/#description
@@ -98,22 +99,22 @@ def csv_converter(
         if inputFilename[:2] != "~$" and inputFilename[-4:] == ".csv":
             pass
         else:
-            print(
+            logger.info(
                 f"INFO: The input file {inputFilename} is not of type csv. Please select a csv type file for input and try again."
             )
             return
     else:
         if inputDir != "":
-            print(
+            logger.info(
                 "INFO: No input filename. The csv converter works only on a single csv file, rather than a whole directory. Please select an input csv file and try again."
             )
             return
         else:
-            print(
+            logger.info(
                 "INFO: No input filename. Please select an input csv file and try again."
             )
             return
-        print("INFO: The function is still under construction.\nSorry!")
+        logger.info("INFO: The function is still under construction.\nSorry!")
         return
         # TODO add a REMINDER that if they need to use some of the csv fields as filters,
         #   they need to use first the Data manipulation to extract specific fields by specific values
@@ -162,16 +163,16 @@ def rtf_converter(
         if inputFilename[:2] != "~$" and inputFilename[-4:] == ".rtf":
             inputRTFs = [inputFilename]
         else:
-            print(
+            logger.info(
                 f"INFO: The input file {inputFilename} is not of type rtf. Please select a rtf type file for input and try again."
             )
             return
         inputRTFs = [inputFilename]
     else:
-        print("INFO: No input filename or directory specified. The program will exit.")
+        logger.info("INFO: No input filename or directory specified. The program will exit.")
         return
     if len(inputRTFs) == 0:
-        print(
+        logger.info(
             "WARNING: There are no rtf files in the input directory. The program will exit."
         )
         return
@@ -179,7 +180,7 @@ def rtf_converter(
 
     for docNum, doc in enumerate(inputRTFs):
         head, tail = os.path.split(doc)
-        print(
+        logger.info(
             "Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail
         )
         fileExtension = doc.split(".")[-1]
