@@ -10,7 +10,6 @@ from sys import platform
 # Gensim
 import gensim
 import gensim.corpora as corpora
-import IO_libraries_util
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -23,7 +22,11 @@ import spacy
 from gensim.models import CoherenceModel
 from gensim.utils import simple_preprocess
 
-logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.ERROR)
+import IO_libraries_util
+
+logging.basicConfig(
+    format="%(asctime)s : %(levelname)s : %(message)s", level=logging.ERROR
+)
 import warnings
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -81,18 +84,28 @@ except:
 
 # find the optimal number of topics for LDA
 def compute_coherence_values(MalletDir, dictionary, corpus, texts, start, limit, step):
-    IO_user_interface_util.timed_alert(2000, "Analysis start", "Started computing the coherence value for each topic")
+    IO_user_interface_util.timed_alert(
+        2000, "Analysis start", "Started computing the coherence value for each topic"
+    )
     coherence_values = []
     model_list = []
     for num_topics in range(start, limit, step):
         IO_user_interface_util.timed_alert(
-            2000, "Analysis start", "Computing coherence value for topic number " + str(num_topics)
+            2000,
+            "Analysis start",
+            "Computing coherence value for topic number " + str(num_topics),
         )
-        model = gensim.models.wrappers.LdaMallet(MalletDir, corpus=corpus, num_topics=num_topics, id2word=dictionary)
+        model = gensim.models.wrappers.LdaMallet(
+            MalletDir, corpus=corpus, num_topics=num_topics, id2word=dictionary
+        )
         model_list.append(model)
-        coherencemodel = CoherenceModel(model=model, texts=texts, dictionary=dictionary, coherence="c_v")
+        coherencemodel = CoherenceModel(
+            model=model, texts=texts, dictionary=dictionary, coherence="c_v"
+        )
         coherence_values.append(coherencemodel.get_coherence())
-    IO_user_interface_util.timed_alert("Analysis end", "Finished computing the coherence value for each topic")
+    IO_user_interface_util.timed_alert(
+        "Analysis end", "Finished computing the coherence value for each topic"
+    )
     return model_list, coherence_values
 
 
@@ -110,7 +123,8 @@ def format_topics_sentences(ldamodel, corpus, texts):
                 wp = ldamodel.show_topic(topic_num)
                 topic_keywords = ", ".join([word for word, prop in wp])
                 sent_topics_df = sent_topics_df.append(
-                    pd.Series([int(topic_num), round(prop_topic, 4), topic_keywords]), ignore_index=True
+                    pd.Series([int(topic_num), round(prop_topic, 4), topic_keywords]),
+                    ignore_index=True,
                 )
             else:
                 break
@@ -122,17 +136,24 @@ def format_topics_sentences(ldamodel, corpus, texts):
     return sent_topics_df
 
 
-def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data):
+def malletModelling(
+    MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data
+):
     startTime = IO_user_interface_util.timed_alert(
         2000, "Analysis start", "Started running Mallet LDA topic modeling at", True
     )
     try:
-        ldamallet = gensim.models.wrappers.LdaMallet(MalletDir, corpus=corpus, num_topics=num_topics, id2word=id2word)
+        ldamallet = gensim.models.wrappers.LdaMallet(
+            MalletDir, corpus=corpus, num_topics=num_topics, id2word=id2word
+        )
     except:
         head, scriptName = os.path.split(os.path.basename(__file__))
         reminders_util.getReminders_list(scriptName)
         reminders_util.checkReminder(
-            scriptName, reminders_util.title_options_gensim_release, reminders_util.message_gensim_release, True
+            scriptName,
+            reminders_util.title_options_gensim_release,
+            reminders_util.message_gensim_release,
+            True,
         )
         reminders_util.getReminders_list(scriptName)
         return
@@ -150,14 +171,24 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
         model=ldamallet, texts=data_lemmatized, dictionary=id2word, coherence="c_v"
     )
     startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Compute Mallet LDA coherence values for each topic.\n\nPlease, be patient..."
+        2000,
+        "Analysis start",
+        "Compute Mallet LDA coherence values for each topic.\n\nPlease, be patient...",
     )
     coherence_ldamallet = coherence_model_ldamallet.get_coherence()
     print("\nCoherence value: ", coherence_ldamallet)
     model_list, coherence_values = compute_coherence_values(
-        MalletDir, dictionary=id2word, corpus=corpus, texts=data_lemmatized, start=2, limit=limit, step=6
+        MalletDir,
+        dictionary=id2word,
+        corpus=corpus,
+        texts=data_lemmatized,
+        start=2,
+        limit=limit,
+        step=6,
     )
-    startTime = IO_user_interface_util.timed_alert(2000, "Analysis start", "Compute graph of optimal topics number.")
+    startTime = IO_user_interface_util.timed_alert(
+        2000, "Analysis start", "Compute graph of optimal topics number."
+    )
     limit = limit
     start = 2
     step = 6
@@ -193,11 +224,19 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
     for index, text in enumerate(data):
         data[index] = text.replace("\n", " ")
 
-    df_topic_sents_keywords = format_topics_sentences(ldamodel=optimal_model, corpus=corpus, texts=data)
+    df_topic_sents_keywords = format_topics_sentences(
+        ldamodel=optimal_model, corpus=corpus, texts=data
+    )
 
     # Format
     df_dominant_topic = df_topic_sents_keywords.reset_index()
-    df_dominant_topic.columns = ["Document ID", "Dominant topic", "Topic % contribution", "Topic keywords", "Text"]
+    df_dominant_topic.columns = [
+        "Document ID",
+        "Dominant topic",
+        "Topic % contribution",
+        "Topic keywords",
+        "Text",
+    ]
 
     # Save csv file
     fileName = os.path.join(outputDir, "NLP_Gensim_dominant_topic.csv")
@@ -215,16 +254,25 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
 
     sent_topics_outdf_grpd = df_topic_sents_keywords.groupby("Dominant topic")
 
-    for i, grp in sent_topics_outdf_grpd:
+    for _i, grp in sent_topics_outdf_grpd:
         sent_topics_sorteddf_mallet = pd.concat(
-            [sent_topics_sorteddf_mallet, grp.sort_values(["% contribution"], ascending=[0]).head(1)], axis=0
+            [
+                sent_topics_sorteddf_mallet,
+                grp.sort_values(["% contribution"], ascending=[0]).head(1),
+            ],
+            axis=0,
         )
 
     # Reset Index
     sent_topics_sorteddf_mallet.reset_index(drop=True, inplace=True)
 
     # Format
-    sent_topics_sorteddf_mallet.columns = ["Topic number", "Topic % contribution", "Topic keywords", "Text"]
+    sent_topics_sorteddf_mallet.columns = [
+        "Topic number",
+        "Topic % contribution",
+        "Topic keywords",
+        "Text",
+    ]
 
     # Save csv file
     fileName = os.path.join(outputDir, "NLP_Gensim_representative_document.csv")
@@ -287,10 +335,20 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
         perc_documents.append(topic_contribution.get(topic))
     df_dominant_topics["Number of documents"] = num_docs
     df_dominant_topics["% documents"] = perc_documents
-    df_dominant_topics.columns = ["Dominant topic", "Topic keywords", "Number of documents", "% documents"]
+    df_dominant_topics.columns = [
+        "Dominant topic",
+        "Topic keywords",
+        "Number of documents",
+        "% documents",
+    ]
 
     # dominant_topics seems to create duplicate records; the .drop_duplicates() method will solve the problem
-    df_dominant_topics.columns = ["Dominant topic", "Topic keywords", "Number of documents", "% documents"]
+    df_dominant_topics.columns = [
+        "Dominant topic",
+        "Topic keywords",
+        "Number of documents",
+        "% documents",
+    ]
     df_dominant_topics = df_dominant_topics.drop_duplicates()
 
     print("Number of rows of topic_distribution.csv: ", df_dominant_topics.shape[0])
@@ -306,12 +364,25 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
     # if outputFiles!=None:
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running Mallet LDA topic modeling at", True, "", True, startTime
+        2000,
+        "Analysis end",
+        "Finished running Mallet LDA topic modeling at",
+        True,
+        "",
+        True,
+        startTime,
     )
 
 
 def run_Gensim(
-    inputDir, outputDir, config_filename, num_topics, remove_stopwords_var, lemmatize, nounsOnly, run_Mallet
+    inputDir,
+    outputDir,
+    config_filename,
+    num_topics,
+    remove_stopwords_var,
+    lemmatize,
+    nounsOnly,
+    run_Mallet,
 ):
     global filesToOpen
     filesToOpen = []
@@ -351,17 +422,23 @@ def run_Gensim(
         "Depending upon corpus size, computations may take a while... Please, be patient...",
     )
 
-    outputFilename = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".html", "Gensim_topic_modeling")
+    outputFilename = IO_files_util.generate_output_file_name(
+        "", inputDir, outputDir, ".html", "Gensim_topic_modeling"
+    )
 
     content = []
-    inputDocs = IO_files_util.getFileList("", inputDir, fileType=".txt", silent=False, configFileName=config_filename)
+    inputDocs = IO_files_util.getFileList(
+        "", inputDir, fileType=".txt", silent=False, configFileName=config_filename
+    )
     nFile = len(inputDocs)
     if nFile == 0:
         return
 
     for fileName in inputDocs:
         if fileName.endswith(".txt"):
-            with open(os.path.join(inputDir, fileName), encoding="utf-8", errors="ignore") as file:
+            with open(
+                os.path.join(inputDir, fileName), encoding="utf-8", errors="ignore"
+            ) as file:
                 content.append(file.read())
             file.close()
 
@@ -387,7 +464,9 @@ def run_Gensim(
     data_words = list(sent_to_words(data))
 
     # Build the bigram and trigram models
-    bigram = gensim.models.Phrases(data_words, min_count=5, threshold=100)  # higher threshold fewer phrases.
+    bigram = gensim.models.Phrases(
+        data_words, min_count=5, threshold=100
+    )  # higher threshold fewer phrases.
     trigram = gensim.models.Phrases(bigram[data_words], threshold=100)
 
     # Faster way to get a sentence clubbed as a trigram/bigram
@@ -399,7 +478,10 @@ def run_Gensim(
 
     # Define functions for stopwords, bigrams, trigrams and lemmatization
     def remove_stopwords(texts):
-        return [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in texts]
+        return [
+            [word for word in simple_preprocess(str(doc)) if word not in stop_words]
+            for doc in texts
+        ]
 
     def make_bigrams(texts):
         return [bigram_mod[doc] for doc in texts]
@@ -415,9 +497,13 @@ def run_Gensim(
         for sent in texts:
             doc = nlp(" ".join(sent))
             if lemmatize:
-                texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
+                texts_out.append(
+                    [token.lemma_ for token in doc if token.pos_ in allowed_postags]
+                )
             else:
-                texts_out.append([token for token in doc if token.pos_ in allowed_postags])
+                texts_out.append(
+                    [token for token in doc if token.pos_ in allowed_postags]
+                )
         return texts_out
 
     # Remove Stop Words
@@ -436,11 +522,15 @@ def run_Gensim(
     if lemmatize:
         if nounsOnly:
             # Do lemmatization keeping only noun
-            data_lemmatized = lemmatization(data_words_bigrams, lemmatize, allowed_postags=["NOUN"])
+            data_lemmatized = lemmatization(
+                data_words_bigrams, lemmatize, allowed_postags=["NOUN"]
+            )
         else:
             # Do lemmatization keeping only noun, adj, vb, adv
             data_lemmatized = lemmatization(
-                data_words_bigrams, lemmatize, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]
+                data_words_bigrams,
+                lemmatize,
+                allowed_postags=["NOUN", "ADJ", "VERB", "ADV"],
             )
     else:
         data_lemmatized = data_words_bigrams
@@ -509,7 +599,9 @@ def run_Gensim(
         "Analysis end",
         "Finished running Gensim topic modeling at",
         True,
-        "\n\nThe file " + outputFilename + " was created. The results will display shortly on the web browser.",
+        "\n\nThe file "
+        + outputFilename
+        + " was created. The results will display shortly on the web browser.",
     )
     # \n\nYou now need to exit the server.\n\nAt command prompt, enter Ctrl+C, perhaps repeatedly, to exit the server.'
 
@@ -520,8 +612,14 @@ def run_Gensim(
 
     if run_Mallet:
         # check that the CoreNLPdir as been setup
-        MalletDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
-            "topic_modeling_gensim_util", "MALLET", "", silent=False, errorFound=False
+        MalletDir, existing_software_config, errorFound = (
+            IO_libraries_util.external_software_install(
+                "topic_modeling_gensim_util",
+                "MALLET",
+                "",
+                silent=False,
+                errorFound=False,
+            )
         )
 
         if MalletDir is None or MalletDir == "":
@@ -530,7 +628,16 @@ def run_Gensim(
         MalletDir = os.path.join(MalletDir, "bin/mallet")
 
         # building LDA Mallet Model
-        malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data)
+        malletModelling(
+            MalletDir,
+            outputDir,
+            corpus,
+            num_topics,
+            id2word,
+            data_lemmatized,
+            lda_model,
+            data,
+        )
 
     # if openOutputFiles==True:
 

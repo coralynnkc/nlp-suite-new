@@ -1,4 +1,5 @@
 import hashlib
+import os
 
 
 def calculate_checksum(filename):  # This very fast option could ensure we don't
@@ -8,9 +9,6 @@ def calculate_checksum(filename):  # This very fast option could ensure we don't
         for byte_block in iter(lambda: f.read(4096), b""):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
-
-
-import os
 
 
 def checkOut(outputDir):

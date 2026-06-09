@@ -37,14 +37,16 @@ import os
 import sys
 import time
 
-import IO_libraries_util
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-IO_libraries_util.import_nltk_resource("vader_lexicon", "vader_lexicon")
 import charts_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import IO_libraries_util
+
+IO_libraries_util.import_nltk_resource("vader_lexicon", "vader_lexicon")
+
 
 # if VADER fails, run: "python -m nltk.downloader all"
 
@@ -93,11 +95,21 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
-        print("File empty", "The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+        print(
+            "File empty",
+            "The file "
+            + inputFilename
+            + " is empty.\n\nPlease, use another file and try again.",
+        )
         print("Empty file ", inputFilename)
         return
 
-    from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
+    from Stanza_functions_util import (
+        lemmatize_stanza,
+        sent_tokenize_stanza,
+        stanzaPipeLine,
+        word_tokenize_stanza,
+    )
 
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
     sid = SentimentIntensityAnalyzer()  # create sentiment analyzer
@@ -129,7 +141,9 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
         # search for each valid word's sentiment in VADER database
         words = word_tokenize_stanza(stanzaPipeLine(s.lower()))
-        filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
+        filtered_words = [
+            word for word in words if word.isalpha()
+        ]  # strip out words with punctuation
         for index, w in enumerate(filtered_words):
             # don't process stops
             if w in stops:
@@ -173,7 +187,14 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
     return outputFilename
 
 
-def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTransformation="No transformation"):
+def main(
+    inputFilename,
+    inputDir,
+    outputDir,
+    mode,
+    chartPackage="Excel",
+    dataTransformation="No transformation",
+):
     """
     Runs analyzefile on the appropriate files, provided that the input paths are valid.
     :param inputFilename:
@@ -205,7 +226,9 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
         inputFilename, inputDir, outputDir, ".csv", "VADER", "", "", "", "", False, True
     )
 
-    with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
+    with open(
+        outputFilename, "w", encoding="utf-8", errors="ignore", newline=""
+    ) as csvfile:
         # VADER, as is, cannot compute mean and median because compound refers to the value of the entire sentence
         #   look at hedonometer to compute separate values and word list of words found
         # if mode == 'both':
@@ -214,15 +237,28 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
         global Sentiment_measure, Sentiment_label
         Sentiment_measure = "Sentiment score"
         Sentiment_label = "Sentiment label"
-        fieldnames = [Sentiment_measure, Sentiment_label, "Sentence ID", "Sentence", "Document ID", "Document"]
+        fieldnames = [
+            Sentiment_measure,
+            Sentiment_label,
+            "Sentence ID",
+            "Sentence",
+            "Document ID",
+            "Document",
+        ]
         global writer
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
         if len(inputFilename) > 0:  # handle single file
             if os.path.exists(inputFilename):
-                filesToOpen.append(analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename))
-                analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename)
+                filesToOpen.append(
+                    analyzefile(
+                        inputFilename, outputDir, outputFilename, mode, 1, inputFilename
+                    )
+                )
+                analyzefile(
+                    inputFilename, outputDir, outputFilename, mode, 1, inputFilename
+                )
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(1)
@@ -235,7 +271,16 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                     if filename.endswith(".txt"):
                         documentID += 1
                         time.time()
-                        filesToOpen.append(analyzefile(filename, outputDir, outputFilename, mode, documentID, filename))
+                        filesToOpen.append(
+                            analyzefile(
+                                filename,
+                                outputDir,
+                                outputFilename,
+                                mode,
+                                documentID,
+                                filename,
+                            )
+                        )
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
                 sys.exit(1)
@@ -295,7 +340,9 @@ if __name__ == "__main__":
         default="",
         help='a string to hold the path of the OUTPUT directory; use "" if path contains spaces',
     )
-    parser.add_argument("--outfile", type=str, dest="outputFilename", default="", help="output file")
+    parser.add_argument(
+        "--outfile", type=str, dest="outputFilename", default="", help="output file"
+    )
 
     parser.add_argument(
         "--mode",
@@ -307,4 +354,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # run main
-    sys.exit(main(args.inputFilename, args.inputDir, args.outputDir, args.outputFilename, args.mode))
+    sys.exit(
+        main(
+            args.inputFilename,
+            args.inputDir,
+            args.outputDir,
+            args.outputFilename,
+            args.mode,
+        )
+    )

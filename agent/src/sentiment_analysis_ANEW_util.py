@@ -24,6 +24,7 @@ Parameters:
     cd "C:\\Program files (x86)\\PC-ACE\\NLP\\SentimentAnalysis" & Python SentimentAnalysisAnew.py --file "C:\\Users\\rfranzo\\Documents\\My Publications\\My Papers\\IN PROGRESS\\PC-ACE - QNA - CAQDAS - NLP\\SAGE Encyclopedia\\Data\\The Three Little Pigs.txt" --out C:\\Users\\rfranzo\\Desktop\\NLP_output\\
 
 """
+
 # add parameter to exclude duplicates? also mean or median analysis
 
 import argparse
@@ -32,12 +33,13 @@ import os
 import sys
 import time
 
+import numpy as np  # np
+import pandas as pd
+
 import charts_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
-import numpy as np  # np
-import pandas as pd
 
 fin = open("../lib/wordLists/stopwords.txt")
 stops = set(fin.read().splitlines())
@@ -55,7 +57,9 @@ data_dict = {col: list(data[col]) for col in data.columns}
 
 
 # performs sentiment analysis on inputFile using the ANEW database, outputting results to a new CSV file in outputDir
-def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Document_ID, Document):
+def analyzefile(
+    inputFilename, outputDir, outputFilename, csvfile, mode, Document_ID, Document
+):
     """
     Performs sentiment analysis on the text file given as input using the ANEW database.
     Outputs results to a new CSV file in outputFilename.
@@ -74,11 +78,21 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
-        print("File empty", "The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+        print(
+            "File empty",
+            "The file "
+            + inputFilename
+            + " is empty.\n\nPlease, use another file and try again.",
+        )
         print("Empty file ", inputFilename)
         return
 
-    from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
+    from Stanza_functions_util import (
+        lemmatize_stanza,
+        sent_tokenize_stanza,
+        stanzaPipeLine,
+        word_tokenize_stanza,
+    )
 
     # otherwise, split into sentences
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
@@ -95,7 +109,9 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
 
         # search for each valid word's sentiment in ANEW
         words = word_tokenize_stanza(stanzaPipeLine(s.lower()))
-        filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
+        filtered_words = [
+            word for word in words if word.isalpha()
+        ]  # strip out words with punctuation
         for index, w in enumerate(filtered_words):
             # don't process stops
             if w in stops:
@@ -243,7 +259,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
                         "Arousal label (Mean)": arousal_label,
                         "Dominance score (Mean)": Dominance_mean_score,
                         "Dominance label (Mean)": dominance_label,
-                        "Found Words": ("%d out of %d" % (len(found_words), total_words)),
+                        f"Found Words: ({len(found_words)} out of {total_words})"
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
                         "Sentence": s,
@@ -260,7 +276,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
                         "Arousal label (Median)": arousal_label,
                         "Dominance score (Median)": Dominance_median_score,
                         "Dominance label (Median)": dominance_label,
-                        "Found Words": ("%d out of %d" % (len(found_words), total_words)),
+                        f"Found Words: ({len(found_words)} out of {total_words})"
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
                         "Sentence": s,
@@ -283,7 +299,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
                         "Arousal label (Median)": arousal_label,
                         "Dominance score (Median)": Dominance_median_score,
                         "Dominance label (Median)": dominance_label,
-                        "Found Words": ("%d out of %d" % (len(found_words), total_words)),
+                        f"Found Words: ({len(found_words)} out of {total_words})"
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
                         "Sentence": s,
@@ -295,7 +311,14 @@ def analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, Documen
     return outputFilename
 
 
-def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTransformation="No transformation"):
+def main(
+    inputFilename,
+    inputDir,
+    outputDir,
+    mode,
+    chartPackage="Excel",
+    dataTransformation="No transformation",
+):
     """
     Runs analyzefile on the appropriate files, provided that the input paths are valid.
     :param inputFilename:
@@ -328,7 +351,9 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
     )
 
     filesToOpen.append(outputFilename)
-    with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
+    with open(
+        outputFilename, "w", encoding="utf-8", errors="ignore", newline=""
+    ) as csvfile:
         if mode == "mean":
             fieldnames = [
                 "Sentiment score (Mean)",
@@ -387,7 +412,15 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
         if len(inputFilename) > 0:  # handle single file
             if os.path.exists(inputFilename):
                 filesToOpen.append(
-                    analyzefile(inputFilename, outputDir, outputFilename, csvfile, mode, 1, inputFilename)
+                    analyzefile(
+                        inputFilename,
+                        outputDir,
+                        outputFilename,
+                        csvfile,
+                        mode,
+                        1,
+                        inputFilename,
+                    )
                 )
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
@@ -403,7 +436,15 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                         time.time()
                         Document_ID += 1
                         filesToOpen.append(
-                            analyzefile(filename, outputDir, outputFilename, csvfile, mode, Document_ID, filename)
+                            analyzefile(
+                                filename,
+                                outputDir,
+                                outputFilename,
+                                csvfile,
+                                mode,
+                                Document_ID,
+                                filename,
+                            )
                         )
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
@@ -421,7 +462,11 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                 "Dominance score (Median)",
             ]
         elif mode == "mean":
-            columns_to_be_plotted_yAxis = ["Sentiment score (Mean)", "Arousal score (Mean)", "Dominance score (Mean)"]
+            columns_to_be_plotted_yAxis = [
+                "Sentiment score (Mean)",
+                "Arousal score (Mean)",
+                "Dominance score (Mean)",
+            ]
         elif mode == "median":
             columns_to_be_plotted_yAxis = [
                 "Sentiment score (Median)",
@@ -460,7 +505,11 @@ if __name__ == "__main__":
     # get arguments from command line
     parser = argparse.ArgumentParser(description="Sentiment analysis with ANEW.")
     parser.add_argument(
-        "--file", type=str, dest="inputFilename", default="", help="a string to hold the path of one file to process"
+        "--file",
+        type=str,
+        dest="inputFilename",
+        default="",
+        help="a string to hold the path of one file to process",
     )
     parser.add_argument(
         "--dir",
@@ -470,9 +519,15 @@ if __name__ == "__main__":
         help="a string to hold the path of a directory of files to process",
     )
     parser.add_argument(
-        "--out", type=str, dest="outputFilename", default="", help="a string to hold the path of the output directory"
+        "--out",
+        type=str,
+        dest="outputFilename",
+        default="",
+        help="a string to hold the path of the output directory",
     )
-    parser.add_argument("--outfile", type=str, dest="outputFilename", default="", help="output file")
+    parser.add_argument(
+        "--outfile", type=str, dest="outputFilename", default="", help="output file"
+    )
     parser.add_argument(
         "--mode",
         type=str,
@@ -483,5 +538,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # run main
-    sys.exit(main(args.inputFilename, args.inputDir, args.outputFilename, args.outputFilename, args.mode))
+    sys.exit(
+        main(
+            args.inputFilename,
+            args.inputDir,
+            args.outputFilename,
+            args.outputFilename,
+            args.mode,
+        )
+    )
     # python SentimentAnalysisAnew.py --file "C:\Users\rfranzo\Documents\ACCESS Databases\PC-ACE\NEW\DATA\CORPUS DATA\MURPHY\Murphy Miracles thicker than fog CORENLP.txt" --out C:\Users\rfranzo\Desktop\NLP_output --mode mean

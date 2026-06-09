@@ -21,6 +21,10 @@ import os
 import sys
 import time
 
+from nltk import pos_tag, word_tokenize
+from nltk.corpus import sentiwordnet as swn
+from nltk.corpus import wordnet as wn
+
 import charts_util
 import IO_csv_util
 import IO_files_util
@@ -32,11 +36,9 @@ IO_libraries_util.import_nltk_resource("corpora/WordNet", "wordnet")
 IO_libraries_util.import_nltk_resource("corpora/WordNet", "omw-1.4")
 IO_libraries_util.import_nltk_resource("corpora/WordNet", "sentiwordnet")
 IO_libraries_util.import_nltk_resource("tokenizers/punkt", "punkt")
-IO_libraries_util.import_nltk_resource("averaged_perceptron_tagger", "averaged_perceptron_tagger")
-
-from nltk import pos_tag, word_tokenize
-from nltk.corpus import sentiwordnet as swn
-from nltk.corpus import wordnet as wn
+IO_libraries_util.import_nltk_resource(
+    "averaged_perceptron_tagger", "averaged_perceptron_tagger"
+)
 
 fin = open("../lib/wordLists/stopwords.txt")
 stops = set(fin.read().splitlines())
@@ -73,7 +75,17 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
     # cannot use time in the filename or when re-generated n the main sentimen_concreteness_analysis.py it will have a different time stamp and the file will not be found
     if output_file == "":
         output_file = IO_files_util.generate_output_file_name(
-            inputFilename, "", outputDir, ".csv", "SentiWordNet", "", "", "", "", False, True
+            inputFilename,
+            "",
+            outputDir,
+            ".csv",
+            "SentiWordNet",
+            "",
+            "",
+            "",
+            "",
+            False,
+            True,
         )
 
     # read file into string
@@ -81,10 +93,19 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
-        print("File empty", "The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+        print(
+            "File empty",
+            "The file "
+            + inputFilename
+            + " is empty.\n\nPlease, use another file and try again.",
+        )
         return
 
-    from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine
+    from Stanza_functions_util import (
+        lemmatize_stanza,
+        sent_tokenize_stanza,
+        stanzaPipeLine,
+    )
 
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
 
@@ -171,7 +192,17 @@ def main(
         return
 
     outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, inputDir, outputDir, ".csv", "SentiWordNet", "", "", "", "", False, True
+        inputFilename,
+        inputDir,
+        outputDir,
+        ".csv",
+        "SentiWordNet",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     if len(outputDir) < 0 or not os.path.exists(outputDir):
@@ -183,18 +214,33 @@ def main(
         )
         sys.exit(1)
     # check each word in sentence for sentiment and write to output_file
-    with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
+    with open(
+        outputFilename, "w", encoding="utf-8", errors="ignore", newline=""
+    ) as csvfile:
         global Sentiment_measure, Sentiment_label
         Sentiment_measure = "Sentiment score"
         Sentiment_label = "Sentiment label"
-        fieldnames = [Sentiment_measure, Sentiment_label, "Sentence ID", "Sentence", "Document ID", "Document"]
+        fieldnames = [
+            Sentiment_measure,
+            Sentiment_label,
+            "Sentence ID",
+            "Sentence",
+            "Document ID",
+            "Document",
+        ]
         global writer
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         if len(inputFilename) > 0:  # handle single file
             if os.path.exists(inputFilename):
-                filesToOpen.append(analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename))
-                analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename)
+                filesToOpen.append(
+                    analyzefile(
+                        inputFilename, outputDir, outputFilename, mode, 1, inputFilename
+                    )
+                )
+                analyzefile(
+                    inputFilename, outputDir, outputFilename, mode, 1, inputFilename
+                )
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(1)
@@ -203,7 +249,11 @@ def main(
             if os.path.isdir(inputDir):
                 os.fsencode(inputDir)
                 inputDocs = IO_files_util.getFileList(
-                    inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+                    inputFilename,
+                    inputDir,
+                    fileType=".txt",
+                    silent=False,
+                    configFileName=configFileName,
                 )
                 nFile = len(inputDocs)
                 if nFile == 0:
@@ -214,7 +264,16 @@ def main(
                     if filename.endswith(".txt"):
                         time.time()
                         documentID += 1
-                        filesToOpen.append(analyzefile(filename, outputDir, outputFilename, mode, documentID, filename))
+                        filesToOpen.append(
+                            analyzefile(
+                                filename,
+                                outputDir,
+                                outputFilename,
+                                mode,
+                                documentID,
+                                filename,
+                            )
+                        )
             else:
                 print('Input directory "' + inputDir + '" is invalid.')
     csvfile.close()
@@ -274,9 +333,15 @@ if __name__ == "__main__":
         help='a string to hold the path of the OUTPUT directory; use "" if path contains spaces',
     )
     parser.add_argument(
-        "--configFileName", type=str, dest="configFileName", default="", help="a string to hold the configFileName"
+        "--configFileName",
+        type=str,
+        dest="configFileName",
+        default="",
+        help="a string to hold the configFileName",
     )
-    parser.add_argument("--outfile", type=str, dest="output_file", default="", help="output file")
+    parser.add_argument(
+        "--outfile", type=str, dest="output_file", default="", help="output file"
+    )
 
     parser.add_argument(
         "--mode",
@@ -288,4 +353,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # run main
-    sys.exit(main(args.inputFilename, args.inputDir, args.outputDir, args.config_filename, args.output_file, args.mode))
+    sys.exit(
+        main(
+            args.inputFilename,
+            args.inputDir,
+            args.outputDir,
+            args.config_filename,
+            args.output_file,
+            args.mode,
+        )
+    )

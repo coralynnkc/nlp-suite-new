@@ -2,30 +2,30 @@
 # The command line should be:
 # Arguments: 1. path of the lynching folder 2. path of compilation folder 3.output path 4. path of stanfordcorenlp 5. whether or not you want to use NER to detect Named Entity Recognition (1 for yes, 0 for no)
 
-import sys
-
-import GUI_util
-import IO_libraries_util
-
-if not IO_libraries_util.install_all_Python_packages(
-    GUI_util.window, "Summary CoreNLP Checker", ["nltk", "stanfordcorenlp", "os", "tkinter", "glob"]
-):
-    sys.exit(0)
-
 import os
+import sys
+import tkinter.messagebox as mb
 from glob import glob
+
+from nltk.stem.wordnet import WordNetLemmatizer
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 import charts_util
 import GUI_IO_util
+import GUI_util
 import IO_files_util
+import IO_libraries_util
 import IO_user_interface_util
-from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
+
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window,
+    "Summary CoreNLP Checker",
+    ["nltk", "stanfordcorenlp", "os", "tkinter", "glob"],
+):
+    sys.exit(0)
 
 # check WordNet
 IO_libraries_util.import_nltk_resource(GUI_util.window, "corpora/WordNet", "WordNet")
-import tkinter.messagebox as mb
-
-from nltk.stem.wordnet import WordNetLemmatizer
 
 lemmatizer = WordNetLemmatizer()
 filesToOpen = []
@@ -100,17 +100,33 @@ def get_article_soc_actors_NER(dir_path, soc_acts, nlp):
         for wordNER, pos in nlp.ner(fcontent):
             wordNER = lemmatizer.lemmatize(wordNER.lower())
             # if (pos == 'LOCATION'):
-            if (pos == "CITY") or (pos == "STATE_OR_PROVINCE") or (pos == "COUNTRY" or (pos == "LOCATION")):
-                if (wordNER, fileName) not in art_location and (wordNER, fileName) not in artActors:
+            if (
+                (pos == "CITY")
+                or (pos == "STATE_OR_PROVINCE")
+                or (pos == "COUNTRY" or (pos == "LOCATION"))
+            ):
+                if (wordNER, fileName) not in art_location and (
+                    wordNER,
+                    fileName,
+                ) not in artActors:
                     art_location.add((wordNER, fileName))
             if pos == "DATE":
-                if (wordNER, fileName) not in art_date and (wordNER, fileName) not in artActors:
+                if (wordNER, fileName) not in art_date and (
+                    wordNER,
+                    fileName,
+                ) not in artActors:
                     art_date.add((wordNER, fileName))
             if pos == "ORGANIZATION":
-                if (wordNER, fileName) not in art_org and (wordNER, fileName) not in artActors:
+                if (wordNER, fileName) not in art_org and (
+                    wordNER,
+                    fileName,
+                ) not in artActors:
                     art_org.add((wordNER, fileName))
             if pos == "PERSON":
-                if (wordNER, fileName) not in art_person and (wordNER, fileName) not in artActors:
+                if (wordNER, fileName) not in art_person and (
+                    wordNER,
+                    fileName,
+                ) not in artActors:
                     art_person.add((wordNER, fileName))
     return artActors, art_location, art_date, art_org, art_person
 
@@ -168,7 +184,17 @@ def get_comp_soc_actors(id, soc_acts, c_path, nlp, checkNER):
 
 
 # This method alllows me to add only distinct missing words. Combine the article sources.
-def addDistinct(addTargetTuple, missings, encode_wrong, article, comp_id, freq_miss, miss_list, id_miss, id):
+def addDistinct(
+    addTargetTuple,
+    missings,
+    encode_wrong,
+    article,
+    comp_id,
+    freq_miss,
+    miss_list,
+    id_miss,
+    id,
+):
     repeat = -1
     oldtuple = ()
     targetWord, targetArticle = addTargetTuple
@@ -235,8 +261,12 @@ def check(
     # get the social actors from article and compilation
     sys.stdout = terminal_out
     if checkNER == 1:
-        article_actors, a_loc, a_date, a_org, a_per = get_article_soc_actors_NER(dir_path, soc_acts, nlp)
-        comp_actors, comp_ner, comp_date = get_comp_soc_actors(id, soc_acts, compilation_path, nlp, checkNER)
+        article_actors, a_loc, a_date, a_org, a_per = get_article_soc_actors_NER(
+            dir_path, soc_acts, nlp
+        )
+        comp_actors, comp_ner, comp_date = get_comp_soc_actors(
+            id, soc_acts, compilation_path, nlp, checkNER
+        )
     else:
         article_actors = get_article_soc_actors(dir_path, soc_acts, nlp)
         comp_actors = get_comp_soc_actors(id, soc_acts, compilation_path, nlp, checkNER)
@@ -247,7 +277,15 @@ def check(
         if article_act not in comp_actors:
             if_act = True
             missings, freq_act_miss, act_miss_list, id_act_miss = addDistinct(
-                act_tup, missings, 0, article, comp_id, freq_act_miss, act_miss_list, id_act_miss, id
+                act_tup,
+                missings,
+                0,
+                article,
+                comp_id,
+                freq_act_miss,
+                act_miss_list,
+                id_act_miss,
+                id,
             )
     # when we need to check each NERs
     if checkNER == 1:
@@ -256,28 +294,60 @@ def check(
             if loc not in comp_ner:
                 if_loc = True
                 missings, freq_loc_miss, loc_miss_list, id_loc_miss = addDistinct(
-                    Locs, missings, 0, article, comp_id, freq_loc_miss, loc_miss_list, id_loc_miss, id
+                    Locs,
+                    missings,
+                    0,
+                    article,
+                    comp_id,
+                    freq_loc_miss,
+                    loc_miss_list,
+                    id_loc_miss,
+                    id,
                 )
         for Dates in a_date:
             Date, article = Dates
             if Date not in comp_date:
                 if_date = True
                 missings, freq_date_miss, date_miss_list, id_date_miss = addDistinct(
-                    Dates, missings, 0, article, comp_id, freq_date_miss, date_miss_list, id_date_miss, id
+                    Dates,
+                    missings,
+                    0,
+                    article,
+                    comp_id,
+                    freq_date_miss,
+                    date_miss_list,
+                    id_date_miss,
+                    id,
                 )
         for Orgs in a_org:
             org, article = Orgs
             if org not in comp_ner:
                 if_org = True
                 missings, freq_org_miss, org_miss_list, id_org_miss = addDistinct(
-                    Orgs, missings, 1, article, comp_id, freq_org_miss, org_miss_list, id_org_miss, id
+                    Orgs,
+                    missings,
+                    1,
+                    article,
+                    comp_id,
+                    freq_org_miss,
+                    org_miss_list,
+                    id_org_miss,
+                    id,
                 )
         for Persons in a_per:
             person, article = Persons
             if person not in comp_ner:
                 if_per = True
                 missings, freq_per_miss, per_miss_list, id_per_miss = addDistinct(
-                    Persons, missings, 0, article, comp_id, freq_per_miss, per_miss_list, id_per_miss, id
+                    Persons,
+                    missings,
+                    0,
+                    article,
+                    comp_id,
+                    freq_per_miss,
+                    per_miss_list,
+                    id_per_miss,
+                    id,
                 )
     my_files = glob(dir_path + "*.txt")
     sorted_missing = sorted(missings, key=lambda x: x[0])
@@ -347,7 +417,15 @@ def main(
     filesToOpen = []
 
     startTime = IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis start", "Started running MISSING CHARACTER at", True, "", True, "", True
+        GUI_util.window,
+        2000,
+        "Analysis start",
+        "Started running MISSING CHARACTER at",
+        True,
+        "",
+        True,
+        "",
+        True,
     )
 
     if len(articles_path) == 0:
@@ -404,13 +482,35 @@ def main(
 
     if checkNER == 1:
         outputFilename = IO_files_util.generate_output_file_name(
-            "", compilations_path, outputDir, ".csv", "SSR", "MA", "NER", "", "", False, True
+            "",
+            compilations_path,
+            outputDir,
+            ".csv",
+            "SSR",
+            "MA",
+            "NER",
+            "",
+            "",
+            False,
+            True,
         )
     else:
         outputFilename = IO_files_util.generate_output_file_name(
-            "", compilations_path, outputDir, ".csv", "SSR", "MA", "", "", "", False, True
+            "",
+            compilations_path,
+            outputDir,
+            ".csv",
+            "SSR",
+            "MA",
+            "",
+            "",
+            "",
+            False,
+            True,
         )
-    fName = GUI_IO_util.libPath + os.sep + "wordLists" + os.sep + "social-actor-list.csv"
+    fName = (
+        GUI_IO_util.libPath + os.sep + "wordLists" + os.sep + "social-actor-list.csv"
+    )
     if not os.path.isfile(fName):
         print(
             "The file "
@@ -510,11 +610,31 @@ def main(
     ##This is to print out evaluation table
     if checkNER == 1:
         outputFilename = IO_files_util.generate_output_file_name(
-            "", compilations_path, outputDir, ".csv", "SSR", "MA", "NER", "freq", "", False, True
+            "",
+            compilations_path,
+            outputDir,
+            ".csv",
+            "SSR",
+            "MA",
+            "NER",
+            "freq",
+            "",
+            False,
+            True,
         )
     else:
         outputFilename = IO_files_util.generate_output_file_name(
-            "", compilations_path, outputDir, ".csv", "SSR", "MA", "freq", "", "", False, True
+            "",
+            compilations_path,
+            outputDir,
+            ".csv",
+            "SSR",
+            "MA",
+            "freq",
+            "",
+            "",
+            False,
+            True,
         )
     f_e = open(outputFilename, "w", encoding="utf-8", errors="ignore")
     sys.stdout = f_e
@@ -787,11 +907,21 @@ def main(
                 filesToOpen.extend(outputFiles)
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir)
+        IO_files_util.OpenOutputFiles(
+            GUI_util.window, openOutputFiles, filesToOpen, outputDir
+        )
         filesToOpen = []  # avoid opening twice in the calling function
 
     IO_user_interface_util.timed_alert(
-        GUI_util.window, 2000, "Analysis end", "Finished running MISSING CHARACTER at", True, "", True, startTime, True
+        GUI_util.window,
+        2000,
+        "Analysis end",
+        "Finished running MISSING CHARACTER at",
+        True,
+        "",
+        True,
+        startTime,
+        True,
     )
 
     return filesToOpen

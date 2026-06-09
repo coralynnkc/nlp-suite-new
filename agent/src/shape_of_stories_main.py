@@ -120,7 +120,13 @@ def run(
     # check corpus statistics
     if corpus_analysis:
         statistics_txt_util.compute_corpus_statistics(
-            inputDir, inputDir, outputDir, config_filename, openOutputFiles, chartPackage, dataTransformation
+            inputDir,
+            inputDir,
+            outputDir,
+            config_filename,
+            openOutputFiles,
+            chartPackage,
+            dataTransformation,
         )
 
     # ----------------------------------------------------------------------------------------------------
@@ -167,7 +173,14 @@ def run(
             else:
                 model_path = "cardiffnlp/twitter-roberta-base-sentiment-latest"  # English language model
             tempOutputFiles = BERT_util.sentiment_main(
-                inputFilename, inputDir, outputDir, config_filename, "", chartPackage, dataTransformation, model_path
+                inputFilename,
+                inputDir,
+                outputDir,
+                config_filename,
+                "",
+                chartPackage,
+                dataTransformation,
+                model_path,
             )
             if tempOutputFiles is None:
                 return
@@ -181,7 +194,9 @@ def run(
             # check internet connection
             import IO_internet_util
 
-            if not IO_internet_util.check_internet_availability_warning("spaCy Sentiment Analysis"):
+            if not IO_internet_util.check_internet_availability_warning(
+                "spaCy Sentiment Analysis"
+            ):
                 return
             #     flag="true" do NOT produce individual output files when processing a directory; only merged file produced
             #     flag="false" or flag="" ONLY produce individual output files when processing a directory; NO  merged file produced
@@ -223,12 +238,16 @@ def run(
             # check internet connection
             import IO_internet_util
 
-            if not IO_internet_util.check_internet_availability_warning("Stanford CoreNLP Sentiment Analysis"):
+            if not IO_internet_util.check_internet_availability_warning(
+                "Stanford CoreNLP Sentiment Analysis"
+            ):
                 return
             #     flag="true" do NOT produce individual output files when processing a directory; only merged file produced
             #     flag="false" or flag="" ONLY produce individual output files when processing a directory; NO  merged file produced
 
-            if not IO_libraries_util.check_inputPythonJavaProgramFile("Stanford_CoreNLP_util.py"):
+            if not IO_libraries_util.check_inputPythonJavaProgramFile(
+                "Stanford_CoreNLP_util.py"
+            ):
                 return
             tempOutputFiles = Stanford_CoreNLP_util.CoreNLP_annotate(
                 config_filename,
@@ -254,7 +273,9 @@ def run(
             # check internet connection
             import IO_internet_util
 
-            if not IO_internet_util.check_internet_availability_warning("Stanza Sentiment Analysis"):
+            if not IO_internet_util.check_internet_availability_warning(
+                "Stanza Sentiment Analysis"
+            ):
                 return
 
             annotator = "sentiment"
@@ -291,7 +312,9 @@ def run(
     # step 2 ----------------------------------------------------------------------------------------------------
 
     if hierarchical_clustering or SVD or NMF or best_topic_estimation:
-        nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(sentiment_scores_input, "Shape of Stories", "Document ID")
+        nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(
+            sentiment_scores_input, "Shape of Stories", "Document ID"
+        )
 
         # step 2: vectorize
         # the sentiment_scores_input can either be a single merged csv file or a directory with multiple SA scores files
@@ -309,8 +332,6 @@ def run(
         # sentiment_vector_size
         # val = GUI_IO_util.slider_widget("Please, select the value for sentiment vector size. Sentiment vector size is the number of values "
         #              + ".", 1, vectz.min_doc_len, vectz.ideal_sent_v_size)
-        vectz.ideal_sent_v_size
-
         vectz.sentiment_vector_size = val
 
         sentiment_vectors, file_list, scoresFile_list = vectz.vectorize()  # ANGEl
@@ -332,12 +353,16 @@ def run(
     # hierarchical clustering
     if hierarchical_clustering:
         # create HC subdir
-        outputHCDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="HC_cluster", silent=True)
+        outputHCDir = IO_files_util.make_output_subdirectory(
+            "", "", outputDir, label="HC_cluster", silent=True
+        )
         if outputHCDir == "":
             return
         hier = cl.Clustering(rec_n_clusters)
 
-        DendogramFilename, grouped_vectors, clusters_indices, vectors = hier.cluster(sentiment_vectors, outputHCDir)
+        DendogramFilename, grouped_vectors, clusters_indices, vectors = hier.cluster(
+            sentiment_vectors, outputHCDir
+        )
         filesToOpen.append(DendogramFilename)
         sentiment_vectors = vectors
         clusters_file = cl.processCluster(
@@ -350,22 +375,41 @@ def run(
             inputDir,
         )
         vis = viz.Visualizer(outputHCDir)
-        vis.visualize_clusters(nSAscoreFiles, grouped_vectors, "Hierarchical Clustering (HC)", "HC", clusters_file)
+        vis.visualize_clusters(
+            nSAscoreFiles,
+            grouped_vectors,
+            "Hierarchical Clustering (HC)",
+            "HC",
+            clusters_file,
+        )
         for i in range(rec_n_clusters):
-            filesToOpen.append(os.path.join(outputHCDir, "HC_Cluster_" + str(i + 1) + ".png"))
-            filesToOpen.append(os.path.join(outputHCDir, "HC_Cluster_" + str(i + 1) + "_subplot.png"))
-        filesToOpen.append(os.path.join(outputHCDir, "Hierarchical_Clustering_Documents.csv"))
+            filesToOpen.append(
+                os.path.join(outputHCDir, "HC_Cluster_" + str(i + 1) + ".png")
+            )
+            filesToOpen.append(
+                os.path.join(outputHCDir, "HC_Cluster_" + str(i + 1) + "_subplot.png")
+            )
+        filesToOpen.append(
+            os.path.join(outputHCDir, "Hierarchical_Clustering_Documents.csv")
+        )
 
     # svd
     if SVD:
         # create SVD subdir
-        outputSVDDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="SVD_cluster", silent=True)
+        outputSVDDir = IO_files_util.make_output_subdirectory(
+            "", "", outputDir, label="SVD_cluster", silent=True
+        )
         if outputSVDDir == "":
             return
         svd = cl.SVDClustering(rec_n_clusters)
-        pos_vector_clusters, pos_clusters_indices, pos_modes, neg_vector_clusters, neg_clusters_indices, neg_modes = (
-            svd.cluster(sentiment_vectors)
-        )
+        (
+            pos_vector_clusters,
+            pos_clusters_indices,
+            pos_modes,
+            neg_vector_clusters,
+            neg_clusters_indices,
+            neg_modes,
+        ) = svd.cluster(sentiment_vectors)
         clusters_file = cl.processCluster(
             pos_clusters_indices,
             scoresFile_list,
@@ -403,16 +447,26 @@ def run(
             modes=neg_modes,
         )
         for i in range(rec_n_clusters):
-            filesToOpen.append(os.path.join(outputSVDDir, "SVD_Positive_Cluster_" + str(i + 1) + ".png"))
+            filesToOpen.append(
+                os.path.join(
+                    outputSVDDir, "SVD_Positive_Cluster_" + str(i + 1) + ".png"
+                )
+            )
         for i in range(rec_n_clusters):
-            filesToOpen.append(os.path.join(outputSVDDir, "SVD_Negative_Cluster_" + str(i + 1) + ".png"))
+            filesToOpen.append(
+                os.path.join(
+                    outputSVDDir, "SVD_Negative_Cluster_" + str(i + 1) + ".png"
+                )
+            )
         filesToOpen.append(os.path.join(outputSVDDir, "SVD_Positive_Documents.csv"))
         filesToOpen.append(os.path.join(outputSVDDir, "SVD_Negative_Documents.csv"))
 
     # NMF
     if NMF:
         # create NMF subdir
-        outputNMFDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="NMF_cluster", silent=True)
+        outputNMFDir = IO_files_util.make_output_subdirectory(
+            "", "", outputDir, label="NMF_cluster", silent=True
+        )
         if outputNMFDir == "":
             return
 
@@ -430,11 +484,19 @@ def run(
         )
         vis = viz.Visualizer(outputNMFDir)
         vis.visualize_clusters(
-            nSAscoreFiles, grouped_vectors, "Non-negative Matrix Factorization (NMF)", "NMF", clusters_file
+            nSAscoreFiles,
+            grouped_vectors,
+            "Non-negative Matrix Factorization (NMF)",
+            "NMF",
+            clusters_file,
         )
         for i in range(rec_n_clusters):
-            filesToOpen.append(os.path.join(outputNMFDir, "NMF_Cluster_" + str(i + 1) + ".png"))
-            filesToOpen.append(os.path.join(outputNMFDir, "NMF_Cluster_" + str(i + 1) + "_subplot.png"))
+            filesToOpen.append(
+                os.path.join(outputNMFDir, "NMF_Cluster_" + str(i + 1) + ".png")
+            )
+            filesToOpen.append(
+                os.path.join(outputNMFDir, "NMF_Cluster_" + str(i + 1) + "_subplot.png")
+            )
         filesToOpen.append(os.path.join(outputNMFDir, "NMF_Documents.csv"))
 
     # best topic estimate
@@ -448,15 +510,29 @@ def run(
         )
         filesToOpen = cl.estimate_best_k(sentiment_vectors, outputDir, filesToOpen)
         IO_user_interface_util.timed_alert(
-            2000, "Analysis end", "Finished running estimate_best_k at", True, "", True, startTime1
+            2000,
+            "Analysis end",
+            "Finished running estimate_best_k at",
+            True,
+            "",
+            True,
+            startTime1,
         )
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running Shape of Stories at", True, "", True, startTime1
+        2000,
+        "Analysis end",
+        "Finished running Shape of Stories at",
+        True,
+        "",
+        True,
+        startTime1,
     )
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(openOutputFiles, filesToOpen, outputDir, scriptName)
+        IO_files_util.OpenOutputFiles(
+            openOutputFiles, filesToOpen, outputDir, scriptName
+        )
 
 
 # GUI section ______________________________________________________________________________________________________________________________________________________
@@ -591,7 +667,9 @@ def check_IO_requirements(
             Error = True
             return Error
 
-        nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(inputFilename, "Shape of Stories", "Document ID")
+        nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(
+            inputFilename, "Shape of Stories", "Document ID"
+        )
         if nSAscoreFiles == 0:
             return
 
@@ -604,7 +682,9 @@ def check_IO_requirements(
     else:  # inputDir
         if inputDir != "":
             if sentimentAnalysis or corpus_analysis:
-                nSAscoretxtFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "txt")
+                nSAscoretxtFiles = IO_files_util.GetNumberOfDocumentsInDirectory(
+                    inputDir, "txt"
+                )
                 if nSAscoretxtFiles == 0:
                     # text files required
                     # mb.showwarning(title="Input directory error",
@@ -621,10 +701,16 @@ def check_IO_requirements(
 
             if not sentimentAnalysis:
                 if hierarchical_clustering or SVD or NMF or best_topic_estimation:
-                    nSAscorecsvFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "csv")
+                    nSAscorecsvFiles = IO_files_util.GetNumberOfDocumentsInDirectory(
+                        inputDir, "csv"
+                    )
                     if nSAscorecsvFiles == 0:
                         alternative_msg = ""
-                        nSAscoretxtFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "txt")
+                        nSAscoretxtFiles = (
+                            IO_files_util.GetNumberOfDocumentsInDirectory(
+                                inputDir, "txt"
+                            )
+                        )
                         if nSAscoretxtFiles > 0:
                             if nSAscoretxtFiles < 50:
                                 alternative_msg = (
@@ -653,7 +739,9 @@ def check_IO_requirements(
         and not corpus_analysis
         and (hierarchical_clustering or SVD or NMF)
     ):
-        nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(inputFilename, "Shape of Stories", "Document ID")
+        nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(
+            inputFilename, "Shape of Stories", "Document ID"
+        )
         if nSAscoreFiles == 0:
             Error = True
             return Error
@@ -674,7 +762,12 @@ def check_IO_requirements(
         return Error
 
     # check data reduction and IO input values
-    if inputDir != "" and not sentimentAnalysis and not corpus_analysis and (hierarchical_clustering or SVD or NMF):
+    if (
+        inputDir != ""
+        and not sentimentAnalysis
+        and not corpus_analysis
+        and (hierarchical_clustering or SVD or NMF)
+    ):
         nSAscoreFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "csv")
         if nSAscoreFiles == 0:
             # mb.showwarning(title="Data warning: Data reduction algorithms",

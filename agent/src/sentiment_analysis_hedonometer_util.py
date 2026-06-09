@@ -68,7 +68,9 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
     if len(fulltext) < 1:
         print(
             "File empty",
-            "The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.",
+            "The file "
+            + inputFilename
+            + " is empty.\n\nPlease, use another file and try again.",
         )
         return
 
@@ -92,7 +94,9 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
 
         # search for each valid word's sentiment in hedonometer database
         words = word_tokenize_stanza(stanzaPipeLine(s.lower()))
-        filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
+        filtered_words = [
+            word for word in words if word.isalpha()
+        ]  # strip out words with punctuation
         for index, w in enumerate(filtered_words):
             # don't process stops
             if w in stops:
@@ -168,7 +172,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
                     {
                         "Sentiment score (Mean)": sentiment_mean,
                         "Sentiment label (Mean)": label_mean,
-                        "Found Words": ("%d out of %d" % (len(found_words), total_words)),
+                        f"Found Words: ({len(found_words)} out of {total_words})"
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
                         "Sentence": s,
@@ -181,7 +185,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
                     {
                         "Sentiment score (Median)": sentiment_median,
                         "Sentiment label (Median)": label_median,
-                        "Found Words": ("%d out of %d" % (len(found_words), total_words)),
+                        f"Found Words: ({len(found_words)} out of {total_words})"
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
                         "Sentence": s,
@@ -196,7 +200,9 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
                         "Sentiment label (Mean)": label_mean,
                         "Sentiment score (Median)": sentiment_median,
                         "Sentiment label (Median)": label_median,
-                        "Found Words": ("%d out of %d" % (len(found_words), total_words)),
+                        "Found Words": (
+                            "%d out of %d" % (len(found_words), total_words)
+                        ),
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
                         "Sentence": s,
@@ -242,10 +248,14 @@ def main(
         print("No output directory specified, or path does not exist")
         sys.exit(0)
     elif len(inputFilename) == 0 and len(inputDir) == 0:  # empty input
-        print("No input specified. Please give either a single file or a directory of files to analyze.")
+        print(
+            "No input specified. Please give either a single file or a directory of files to analyze."
+        )
         sys.exit(1)
 
-    with open(outputFilename, "w", encoding="utf-8", errors="ignore", newline="") as csvfile:
+    with open(
+        outputFilename, "w", encoding="utf-8", errors="ignore", newline=""
+    ) as csvfile:
         if mode == "both":
             fieldnames = [
                 "Sentiment score (Mean)",
@@ -288,8 +298,14 @@ def main(
 
         if len(inputFilename) > 0:  # handle single file
             if os.path.exists(inputFilename):
-                filesToOpen.append(analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename))
-                analyzefile(inputFilename, outputDir, outputFilename, mode, 1, inputFilename)
+                filesToOpen.append(
+                    analyzefile(
+                        inputFilename, outputDir, outputFilename, mode, 1, inputFilename
+                    )
+                )
+                analyzefile(
+                    inputFilename, outputDir, outputFilename, mode, 1, inputFilename
+                )
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(0)
@@ -379,7 +395,9 @@ if __name__ == "__main__":
         default="",
         help="a string to hold the path of the output directory",
     )
-    parser.add_argument("--outfile", type=str, dest="outputFilename", default="", help="output file")
+    parser.add_argument(
+        "--outfile", type=str, dest="outputFilename", default="", help="output file"
+    )
     parser.add_argument(
         "--mode",
         type=str,
