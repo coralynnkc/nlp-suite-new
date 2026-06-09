@@ -1,26 +1,23 @@
 import os
-import requests
-import IO_files_util
-import file_converter_util
-import charts_util
-import pandas as pd
-import charts_matplotlib_seaborn_util
-from sys import platform
 
-import os
+import charts_matplotlib_seaborn_util
+import charts_util
+import file_converter_util
+import IO_files_util
+import pandas as pd
 import requests
 
 AGENT_MOUNT_PATH = "/root/nlp-suite"
 
 
-#converts from mallet to point at folders agent knows where 
+#converts from mallet to point at folders agent knows where
 def mallet_to_agent_path(path):
     return path.replace("/app", AGENT_MOUNT_PATH)
-    
-    
+
+
 def call_mallet_api(command, args):
     #Helper function to send a request to MALLET API.
-    
+
     #Server (agent) url
     api_url = "http://172.16.0.13:5050/run"
 
@@ -46,7 +43,7 @@ def call_mallet_api(command, args):
 
 def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeInterval, numTopics):
     filesToOpen = []
-    
+
     # Validate text files in inputDir
     numFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, 'txt')
 
@@ -160,6 +157,6 @@ def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeIn
             filesToOpen.extend(heatmap_files)
 
 
-  
+
 
     return filesToOpen

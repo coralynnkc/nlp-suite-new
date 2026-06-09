@@ -1,12 +1,11 @@
 # written by Roberto Franzosi October 2019, edited Spring 2020
 
-import GUI_util
-
-from subprocess import call
-import tkinter as tk
 import os
+import tkinter as tk
+from subprocess import call
 
 import GUI_IO_util
+import GUI_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 

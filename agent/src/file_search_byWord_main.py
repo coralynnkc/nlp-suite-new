@@ -1,18 +1,8 @@
 # written by Roberto Franzosi October 2019, edited Spring 2020
 
-import sys
-import IO_libraries_util
 
-import os
-from subprocess import call
 
-import GUI_IO_util
-import IO_files_util
 import file_search_byWord_util
-import IO_user_interface_util
-import reminders_util
-import constants_util
-import config_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -39,14 +29,14 @@ def run_search_byWord(inputFilename,inputDir, outputDir,
     config_filename = 'NLP_default_IO_config.csv'
 
     filesToOpen = []
-    extra_GUIs_var = False 
-    
+    extra_GUIs_var = False
+
     if extra_GUIs_var==False and search_by_dictionary==False and search_by_keyword==False:
             print("Input error, No search options have been selected.\n\nPlease, select a search option and try again.")
             return
 
-    if search_options_menu_var !='' and not search_options_menu_var in str(search_options_list) :
-        
+    if search_options_menu_var !='' and search_options_menu_var not in str(search_options_list) :
+
         print("Warning, There is a search value '" + str(search_options_menu_var.get()) + "' that has not been added (using the + button) to the csv file fields to be processed.\n\nAre you sure you want to continue?")
         return
 
@@ -66,8 +56,8 @@ def run_search_byWord(inputFilename,inputDir, outputDir,
     # if outputDir == '':
     #     return
 
-    if not 'Search within document' in search_options_list:
-        if not 'Search within sentence (default)' in search_options_list:
+    if 'Search within document' not in search_options_list:
+        if 'Search within sentence (default)' not in search_options_list:
             search_options_list.append('Search within sentence (default)')
 
     if 'Lemmatize' in str(search_options_list):

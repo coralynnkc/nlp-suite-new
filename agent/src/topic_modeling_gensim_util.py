@@ -1,38 +1,36 @@
-import sys
-import IO_libraries_util
-
+#enable logging for gensim
+import logging
 import os
-import pandas as pd
+import sys
+
+# necessary to avoid having to do Ctrl+C to kill pyLDAvis to continue running the code
 from pprint import pprint
 from sys import platform
 
 #Gensim
 import gensim
 import gensim.corpora as corpora
-from gensim.utils import simple_preprocess
-from gensim.models import CoherenceModel
-
-# necessary to avoid having to do Ctrl+C to kill pyLDAvis to continue running the code
-from _thread import start_new_thread
-
-#spacy for lemmatization
-import spacy
+import IO_libraries_util
+import matplotlib.pyplot as plt
+import pandas as pd
 
 #plotting tools
 import pyLDAvis
 import pyLDAvis.gensim
-import matplotlib
-import matplotlib.pyplot as plt
 
-#enable logging for gensim
-import logging
+#spacy for lemmatization
+import spacy
+from gensim.models import CoherenceModel
+from gensim.utils import simple_preprocess
+
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
 import warnings
+
 warnings.filterwarnings("ignore",category=DeprecationWarning)
 
+import charts_util
 import IO_files_util
 import IO_user_interface_util
-import charts_util
 import reminders_util
 
 #whether stopwordst were already downloaded can be tested, see stackoverflow
@@ -147,7 +145,7 @@ def malletModelling(MalletDir, outputDir, corpus,num_topics, id2word,data_lemmat
     print('\nCoherence value: ', coherence_ldamallet)
     model_list, coherence_values = compute_coherence_values(MalletDir, dictionary=id2word, corpus=corpus, texts=data_lemmatized, start=2, limit=limit, step=6)
     startTime=IO_user_interface_util.timed_alert(2000,'Analysis start', 'Compute graph of optimal topics number.')
-    limit=limit; start=2; step=6;
+    limit=limit; start=2; step=6
     x = range(start, limit, step)
     plt.plot(x, coherence_values)
     plt.xlabel("Number of topics")
@@ -345,7 +343,7 @@ def run_Gensim(inputDir, outputDir, config_filename, num_topics, remove_stopword
         #     numFiles) + ' files of txt type.\n\nTopic modeling requires a large number of files (in the hundreds at least; read TIPS file) to produce valid results.\n\nAre you sure you want to continue?',
         #                      default='no')
         message = 'Number of files warning:: The selected input directory contains only ' + str(numFiles) + ' files of txt type.\n\nTopic modeling requires a large number of files (in the hundreds at least; read TIPS file) to produce valid results.'
-        
+
 
     startTime=IO_user_interface_util.timed_alert(4000, 'Analysis start',
                                        'Started running Gensim Topic modeling at ', True,
@@ -362,7 +360,7 @@ def run_Gensim(inputDir, outputDir, config_filename, num_topics, remove_stopword
 
     for fileName in inputDocs:
         if fileName.endswith('.txt'):
-            with open(os.path.join(inputDir, fileName), 'r', encoding='utf-8', errors='ignore') as file:
+            with open(os.path.join(inputDir, fileName), encoding='utf-8', errors='ignore') as file:
                 content.append(file.read())
             file.close()
 
@@ -506,7 +504,7 @@ def run_Gensim(inputDir, outputDir, config_filename, num_topics, remove_stopword
     except:
         title='Output html file error',
         message='Gensim failed to generate the html output file.'
-        print(message) 
+        print(message)
         raise ValueError(title)
         return
 

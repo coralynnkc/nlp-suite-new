@@ -6,12 +6,12 @@ class Node:
         self.children = []
         self.text = ''
 
-# make a tree        
+# make a tree
 def make_tree(s):
     stack = []
     nodes = []
     cur = None
-    root = None    
+    root = None
 
     for i, c in enumerate(s):
         if c == '(':

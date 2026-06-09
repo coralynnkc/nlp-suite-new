@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 #
 #     Gexf library in python
@@ -13,19 +12,19 @@
 
 # from lib.gexf._gexf import Gexf, Spells, Node, Edge
 
-import datetime
 import csv
-import random
-import os
-from lxml import etree
-from datetime import date
+import datetime
 import itertools
+import os
+import random
 import traceback
-import IO_libraries_util
-import IO_user_interface_util
+from datetime import date
+
+from lxml import etree
+
 
 def msg_unexpected_tag(expected, got):
-    print("Error : incorrect xml. Expected tag {expected}, not {got}.".format(expected=expected, got=got))
+    print(f"Error : incorrect xml. Expected tag {expected}, not {got}.")
 
 
 def ns_clean(token):
@@ -361,9 +360,9 @@ class Attributes(dict):
                 attValueXML.set("for", str(att["id"]))
                 attValueXML.set("value", att["value"])
                 if "start" in att.keys() and not att["start"] == "":
-                    attValueXML.set("start" if not "startopen" in att.keys() or not att["startopen"] else "startopen", att["start"])
+                    attValueXML.set("start" if "startopen" not in att.keys() or not att["startopen"] else "startopen", att["start"])
                 if "end" in att.keys() and not att["end"] == "":
-                    attValueXML.set("end" if not "endopen" in att.keys() or not att["endopen"] else "endopen", att["end"])
+                    attValueXML.set("end" if "endopen" not in att.keys() or not att["endopen"] else "endopen", att["end"])
             return attValuesXML
         else:
             return None
@@ -791,7 +790,7 @@ class GexfImport:
         return token[i + 1:]
 
     def msg_unexpected_tag(self, expected, got):
-        print("Error : incorrect xml. Expected tag {expected}, not {got}.".format(expected=expected, got=got))
+        print(f"Error : incorrect xml. Expected tag {expected}, not {got}.")
 
     def extract_gexf_obj(self, meta_xml):
         for child in meta_xml:

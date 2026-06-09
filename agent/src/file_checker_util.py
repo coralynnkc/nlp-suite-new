@@ -2,6 +2,7 @@
 #edited by Cynthia Dong
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -12,9 +13,9 @@ import os
 import re
 import tkinter as tk
 import tkinter.messagebox as mb
+
 import chardet
 import IO_csv_util
-
 import IO_files_util
 import IO_user_interface_util
 
@@ -112,7 +113,7 @@ def check_utf8_compliance(window,inputFilename,inputDir,outputDir,openOutputFile
             # IO_util.timed_alert(window,700,'utf-8 compliance ','Processing file ' + str(docNum+1) + " (out of " + str(numberOfDocs) + ")\n\n" + doc,False)
             # https://geek-tips.github.io/articles/494831/index.html
             # 'surrogateescape' will represent any invalid bytes as code points in the Unicode Private Use Range, ranging from U + DC80 to U + DCFF.
-            with open(doc, 'r',encoding="utf-8", errors="surrogateescape") as f:
+            with open(doc,encoding="utf-8", errors="surrogateescape") as f:
                 for i, line in enumerate(f, 1):
                     errors = detect_decoding_errors_line(line)
                     for (col, b) in errors:
@@ -163,7 +164,7 @@ def check_empty_file(inputFilename, inputDir, configFileName):
         _, tail = os.path.split(filename)
         print("Processing file " + str(docID) + "/" + str(nDocs) + ' ' + tail)
         edited = False
-        with open(filename, 'r', encoding='utf-8', errors='ignore') as myfile:
+        with open(filename, encoding='utf-8', errors='ignore') as myfile:
             # read file into string
             fulltext = myfile.read()
             # end method if file is empty

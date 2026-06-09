@@ -1,11 +1,12 @@
-import codecs # must be installed
+import codecs  # must be installed
 import csv
 import os
 from tkinter import messagebox
+
+import IO_csv_util  #Angel
 import numpy as np
+import pandas as pd  #Angel
 from sklearn.decomposition import PCA
-import pandas as pd #Angel
-import IO_csv_util #Angel
 
 """
 Name of variables should follow python notation: 
@@ -191,7 +192,7 @@ class Vectorizer:
                         pass
                     if mod == 0 and bucket > 0:
                         bucket -= 1 #go to the next bucket
-                        sentimentVector.append((sum(window) / len(window)))
+                        sentimentVector.append(sum(window) / len(window))
                 sentimentVectors.append(sentimentVector)  # hold representative of each file
                 file_list.append(df.iloc[0]['Document']) # append document name
                 scoresFile_list.update({str(df.iloc[0]['Document']):str(df.iloc[0]['scoresFilename'])})#ANGEL

@@ -1,4 +1,6 @@
 import hashlib
+
+
 def calculate_checksum(filename): # This very fast option could ensure we don't
     # do useless work if we already process once
     sha256_hash = hashlib.sha256()
@@ -7,6 +9,8 @@ def calculate_checksum(filename): # This very fast option could ensure we don't
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 import os
+
+
 def checkOut(outputDir):
     outputDir +='Cache'
     # Check if the directory exists

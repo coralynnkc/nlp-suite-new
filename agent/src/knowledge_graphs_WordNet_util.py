@@ -2,29 +2,22 @@
 #Modified by Cynthia Dong (Fall 2019-Spring 2020)
 #Wordnet_bySentenceID and get_case_initial_row written by Yi Wang (April 2020)
 
-import sys
-import IO_libraries_util
+import csv
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"WordNet",['os','csv','tkinter','subprocess','nltk','pandas'])==False:
 #     sys.exit(0)
-
 import os
 import subprocess
-import pandas as pd
-import csv
 
-
-import reminders_util
 import charts_util
-import IO_files_util
-import IO_user_interface_util
 import data_manipulation_util
 import IO_csv_util
+import IO_files_util
+import IO_libraries_util
+import IO_user_interface_util
+import pandas as pd
+import reminders_util
 import statistics_csv_util
-
-import WordNet_API
-
-
 
 filesToOpen=[]
 
@@ -96,10 +89,9 @@ def disaggregate_GoingDOWN(WordNetDir,outputDir, wordNet_keyword_list, noun_verb
 def aggregate_GoingUP(WordNetDir, inputFile, outputDir, config_filename, noun_verb,openOutputFiles,chartPackage, dataTransformation, language_var=''):
     # check WordNet
     IO_libraries_util.import_nltk_resource('corpora/WordNet', 'WordNet')
-    from nltk.corpus import wordnet as wn
 
     filesToOpen=[]
-    
+
     # check that external software WordNet has been setup
     # WordNetDir, existing_software_config, errorFound = IO_libraries_util.external_software_install('knowledge_graphs_WordNet_util',
     #                                                                                      'WordNet',
@@ -156,7 +148,7 @@ def aggregate_GoingUP(WordNetDir, inputFile, outputDir, config_filename, noun_ve
     outputFilenameCSV1_new = outputFilenameCSV1.replace("_output", "")
     # the Java script returns the filenames without VERB or NOUN in the filename
     #   one for # intermediate synsets, the other of frequencies
-    if (not 'VERB' in outputFilenameCSV1_new) and (not 'NOUN' in outputFilenameCSV1_new):
+    if ('VERB' not in outputFilenameCSV1_new) and ('NOUN' not in outputFilenameCSV1_new):
         outputFilenameCSV1_new = outputFilenameCSV1_new.replace("NLP_WordNet_UP_","NLP_WordNet_UP_"+noun_verb+"_")
         outputFilenameCSV2_new = outputFilenameCSV2.replace("NLP_WordNet_UP_","NLP_WordNet_UP_"+noun_verb+"_")
         # the synsets file already exists and must be removed
@@ -179,7 +171,7 @@ def aggregate_GoingUP(WordNetDir, inputFile, outputDir, config_filename, noun_ve
     # Since the original output file returned by the JAVA script WordNet_Search_UP.jar contains
     #   the header Intermediate Synsets, this must be renamed to Intermediate synset 1
     IO_csv_util.rename_header(outputFilenameCSV1_new, "Intermediate Synsets","Intermediate synset 1")
-    if (not 'VERB' in outputFilenameCSV2) and (not 'NOUN' in outputFilenameCSV2):
+    if ('VERB' not in outputFilenameCSV2) and ('NOUN' not in outputFilenameCSV2):
         outputFilenameCSV2_new = outputFilenameCSV1.replace("NLP_WordNet_UP_","NLP_WordNet_UP_"+noun_verb+"_")
         # the file already exists and must be removed
         if os.path.isfile(outputFilenameCSV2_new):
@@ -317,7 +309,7 @@ def Wordnet_bySentenceID(ConnlTable, wordnetDict, outputFilename, outputDir, nou
                                                                        df,
                                                                        outputDir,
                                                                        openOutputFiles,
-                                                                       
+
                                                                        chartPackage,
                                                                        dataTransformation,
                                                                        [[4, 5]],

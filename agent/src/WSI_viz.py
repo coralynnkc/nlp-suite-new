@@ -2,15 +2,15 @@ import matplotlib.pyplot as plt
 
 
 def sense_bar_chart(Word2Vec_Dir,  figsize=(20, 10), fontsize=32):
-     
-    with open(f'{Word2Vec_Dir}/output/senses', 'r') as f:
+
+    with open(f'{Word2Vec_Dir}/output/senses') as f:
         tokens = list(set(f.read().split('\n')[:-1]))
     tokens = [tok.split('\t') for tok in tokens]
     vocab = list(set([tok[1] for tok in tokens]))
     v_paths = []
-    for w in vocab: 
+    for w in vocab:
         chart_title = f"Frequency Distribution of Senses of '{w}'"
-        senses = sorted(list(set([tok[-1] for tok in tokens if tok[1] == w]))) 
+        senses = sorted(list(set([tok[-1] for tok in tokens if tok[1] == w])))
         sense_labels = [f'Sense {sense}' for sense in senses]
         occs = [tok for tok in tokens if tok[1] == w]
         total = len(occs)
@@ -25,5 +25,5 @@ def sense_bar_chart(Word2Vec_Dir,  figsize=(20, 10), fontsize=32):
         plt.ylabel('Relative Frequency', fontsize=fontsize)
         fig.savefig(f'{Word2Vec_Dir}/results/{w}/{chart_title}.png')
         v_paths.append(f'{Word2Vec_Dir}/results/{w}/{chart_title}.png')
-    
+
     return v_paths

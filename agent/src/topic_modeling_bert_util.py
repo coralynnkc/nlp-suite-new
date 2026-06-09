@@ -1,9 +1,10 @@
-import os
 import json
-from sklearn.feature_extraction.text import CountVectorizer
-from sentence_transformers import SentenceTransformer
-import pandas as pd
+import os
+
 from bertopic import BERTopic
+from sentence_transformers import SentenceTransformer
+from sklearn.feature_extraction.text import CountVectorizer
+
 
 def get_docs(inputDir, split_docs_var):
     docs = []
@@ -11,11 +12,11 @@ def get_docs(inputDir, split_docs_var):
     for f_name in paths:
         file_path = os.path.join(inputDir, f_name)
         if not split_docs_var:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 docs.append(f.read())
         else:
             chunks = []
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 paras = [para for para in f.read().split('\n') if para.strip()]
             for para in paras:
                 sentences = [sentence.strip() for sentence in para.split('. ')]

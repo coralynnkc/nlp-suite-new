@@ -1,4 +1,3 @@
-import sys
 # import IO_libraries_util
 #
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL_util",
@@ -7,13 +6,11 @@ import sys
 
 import os
 import time
-import io
-import pandas as pd
 
-
-import IO_user_interface_util
-import Stanford_CoreNLP_tags_util
 import IO_csv_util
+import IO_user_interface_util
+import pandas as pd
+import Stanford_CoreNLP_tags_util
 
 global sentenceID_position, documentID_position, document_position
 
@@ -238,7 +235,7 @@ def compute_sentence(CoNLL_table, recordID, sentenceID, documentID):
     :type documentID: object
     """
     # Open ConLL
-    df = pd.read_csv(io.open(CoNLL_table, 'rb'), sep=',', index_col=False, encoding='utf-8',on_bad_lines='skip')
+    df = pd.read_csv(open(CoNLL_table, 'rb'), sep=',', index_col=False, encoding='utf-8',on_bad_lines='skip')
     df = df[df["Sentence ID"] == sentenceID]
     df = df[df["Document ID"] == documentID]
     rows = []  # Store data
@@ -271,7 +268,7 @@ def compute_sentence_table(CoNLL_table, output_path):
         IO_user_interface_util.timed_alert(4000, 'Analysis start', 'Started computing the Sentence table at', True)
     # tk.messagebox.showinfo("Stanford CoreNLP has finished", "Started computing the Sentence table at " + str(startTime[3]) + ':' + str(startTime[4]))
     # df = pd.read_csv(io.open(os.path.join(output_path,CoNLL_table), 'rb'), sep='\t', header=None, index_col=False) # Open ConLL
-    df = pd.read_csv(io.open(os.path.join(output_path, CoNLL_table), 'rb'), sep=',', index_col=False, encoding='utf-8',on_bad_lines='skip')  # Open ConLL
+    df = pd.read_csv(open(os.path.join(output_path, CoNLL_table), 'rb'), sep=',', index_col=False, encoding='utf-8',on_bad_lines='skip')  # Open ConLL
     rows = []  # Store data
     sent_str = ""  # Build string
     # Keep track of variables

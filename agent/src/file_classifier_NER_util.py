@@ -1,25 +1,25 @@
-#coding=utf-8
 
 #Edited by Elaine Dong, Jan 30, 2021.
 
 # this version uses cosine similarity.
 import sys
+
 import GUI_util
 import IO_libraries_util
 
 if IO_libraries_util.install_all_Python_packages(GUI_util.window,"Find Non-related Documents",['stanza','tkinter','stanfordcorenlp','os','tkinter','glob'])==False:
     sys.exit(0)
 
-from stanfordcorenlp import StanfordCoreNLP # python wrapper for Stanford CoreNLP
 import os
-from glob import glob
 import tkinter.messagebox as mb
+from glob import glob
 
-import GUI_IO_util
-import IO_files_util
-import IO_csv_util
-import IO_user_interface_util
 import charts_util
+import GUI_IO_util
+import IO_csv_util
+import IO_files_util
+import IO_user_interface_util
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 # from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_word
 
@@ -41,7 +41,7 @@ def load_soc_actors():
 #CM soc_acts is the input. I filtered out all social actors in dir_path
 # Version 2: when we need to filter out NERs.
 def get_article_soc_actors_NER(dir_path, soc_acts, nlp, keywords, printing):
-    from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_word
+    from Stanza_functions_util import lemmatize_stanza_word, stanzaPipeLine
     my_files = glob(dir_path+'*.txt')
     num_doc = 0
     for file in my_files:

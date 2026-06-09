@@ -2,6 +2,7 @@ import os
 
 from parsers_annotators import run
 
+
 def test_parsers_annotators():
     inputFilename = '/Users/is2ac/nlp-suite/input/example.txt'
     inputDir = os.path.join(os.path.expanduser("~"), "nlp-suite", "input")
@@ -15,12 +16,12 @@ def test_parsers_annotators():
     single_quote = False
     CoNLL_table_analyzer_var = False
     annotators_var = True  # Set to True to test annotators
-    annotators_menu_var = 'NER annotator'  
+    annotators_menu_var = 'NER annotator'
 
     try:
         output_files = run(
             inputFilename=inputFilename,
-            inputDir = 'C:/Users/sherry/OneDrive/Desktop/QTM446W/Input', #inputDir=inputDir, 
+            inputDir = 'C:/Users/sherry/OneDrive/Desktop/QTM446W/Input', #inputDir=inputDir,
             outputDir = 'C:/Users/sherry/OneDrive/Desktop/QTM446W/Output', #outputDir=outputDir,
             openOutputFiles=openOutputFiles,
             chartPackage=chartPackage,
@@ -44,6 +45,6 @@ def test_parsers_annotators():
 
     except Exception as e:
         print(f"Test failed with exception: {e}")
-        
+
 if __name__ == "__main__":
     test_parsers_annotators()

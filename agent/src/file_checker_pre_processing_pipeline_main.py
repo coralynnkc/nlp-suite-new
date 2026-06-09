@@ -1,6 +1,7 @@
 #written by Roberto Franzosi November 2023
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -11,16 +12,15 @@ import os
 import tkinter as tk
 import tkinter.messagebox as mb
 from subprocess import call
-import pandas as pd
 
-import GUI_IO_util
-import IO_files_util
 import config_util
-import statistics_txt_util
-
 import file_checker_util
 import file_cleaner_util
 import file_spell_checker_util
+import GUI_IO_util
+import IO_files_util
+import pandas as pd
+import statistics_txt_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -36,7 +36,7 @@ run_script_command=lambda: run(GUI_util.inputFilename.get(),
 #the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 def run(inputFilename,inputDir, outputDir,
         openOutputFiles,
-        
+
         chartPackage,
         dataTransformation,
         utf8_var,
@@ -107,7 +107,7 @@ def run(inputFilename,inputDir, outputDir,
     if lower_case_words_after_end_of_sentence_var.get():
         # @@@ case_sensitive
         output = statistics_txt_util.process_words(GUI_util.window, config_filename, inputFilename, inputDir,
-                                                   outputDir, openOutputFiles, 
+                                                   outputDir, openOutputFiles,
                                                    chartPackage, dataTransformation,
                                                    processType='Lower case words after end-of-sentence punctuation', language='English',
                                                    excludeStopWords=True, word_length=3,

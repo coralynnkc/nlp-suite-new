@@ -1,4 +1,5 @@
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -14,39 +15,42 @@ import IO_libraries_util
 if not IO_libraries_util.install_all_Python_packages(GUI_util.window,"spell_checker_util",['nltk','tkinter','os','langdetect','spacy','spacy_langdetect','langid','csv','spellchecker','textblob','autocorrect','stanfordcorenlp','pandas','collections']):
     sys.exit(0)
 
-import os
-#from nltk.stem import WordNetLemmatizer
-from tkinter import filedialog
-#from nltk import tokenize
-from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
-import nltk
-# IO_libraries_util.import_nltk_resource(GUI_util.window,'tokenizers/punkt','punkt')
-import pandas
-import pandas as pd
-from stanfordcorenlp import StanfordCoreNLP
 import collections
-import tkinter.messagebox as mb
-from autocorrect import Speller
-from spellchecker import SpellChecker
-from textblob import Word
-from pandas import DataFrame
-import math
-from langdetect import DetectorFactory, detect, detect_langs
-import spacy
-from spacy_langdetect import LanguageDetector
-import langid
-from langid.langid import LanguageIdentifier, model
 import csv
+import math
+import os
 import subprocess
 import time
+import tkinter.messagebox as mb
 
-import file_cleaner_util
+#from nltk.stem import WordNetLemmatizer
+from tkinter import filedialog
+
 import charts_util
+import file_cleaner_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-from IO_files_util import make_directory
+import nltk
+
+# IO_libraries_util.import_nltk_resource(GUI_util.window,'tokenizers/punkt','punkt')
+import pandas
+import pandas as pd
 import reminders_util
+import spacy
+from autocorrect import Speller
+from IO_files_util import make_directory
+from langdetect import detect_langs
+from langid.langid import LanguageIdentifier, model
+from pandas import DataFrame
+from spacy_langdetect import LanguageDetector
+from spellchecker import SpellChecker
+from stanfordcorenlp import StanfordCoreNLP
+
+#from nltk import tokenize
+from Stanza_functions_util import lemmatize_stanza_word, stanzaPipeLine, tokenize_stanza_text
+from textblob import Word
+
 
 def lemmatizing(word):#edited by Claude Hu 08/2020
     #https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
@@ -86,7 +90,7 @@ def nltk_unusual_words(window,inputFilename,inputDir,outputDir, openOutputFiles,
         documentID=documentID+1
         head, tail = os.path.split(file)
         print("Processing file " + str(documentID) + "/" + str(nFile) + ' ' + tail)
-        text = (open(file, "r", encoding="utf-8", errors="ignore").read())
+        text = (open(file, encoding="utf-8", errors="ignore").read())
         #lemmatizer = WordNetLemmatizer()
         # text_vocab = set(lemmatizer.lemmatize(w.lower()) for w in text.split(" ") if w.isalpha())
         text_vocab = set(lemmatizing(w.lower()) for w in text.split(" ") if w.isalpha())
@@ -274,7 +278,7 @@ def check_for_typo(inputDir, outputDir, openOutputFiles, chartPackage, dataTrans
                 continue
             print("  Processing file "+str(fileID)+"/"+str(len(files)) + ": " + filename)
             dir_path = os.path.join(folder, filename)
-            with open(dir_path, 'r', encoding='utf-8', errors='ignore') as src:
+            with open(dir_path, encoding='utf-8', errors='ignore') as src:
                 text = src.read().replace("\n", " ")
                 NLP = StanfordCoreNLP('http://localhost', port=9000)
             # sentences = tokenize.sent_tokenize(text)
@@ -685,7 +689,7 @@ def spellcheck(inputFilename,inputDir, checker_value_var, check_withinDir):
         fileID = fileID + 1
         # inputFilenames_path = os.path.join(folder, filename)
         # with open(inputFilenames_path, 'r', encoding='utf-8', errors='ignore') as opened_file:
-        with open(filename, 'r', encoding='utf-8', errors='ignore') as opened_file:
+        with open(filename, encoding='utf-8', errors='ignore') as opened_file:
             print("  Processing file:", filename)
             originalText = opened_file.read()
             path_to_file = os.path.join(inputDir, filename)
@@ -778,7 +782,7 @@ def language_detection(window, inputFilename, inputDir, outputDir, openOutputFil
             fileID = fileID + 1
             head, tail = os.path.split(filename)
             print("Processing file " + str(fileID) + "/" + str(len(files)) + ' ' + tail)
-            text = open(filename, 'r', encoding='utf-8', errors='ignore').read()
+            text = open(filename, encoding='utf-8', errors='ignore').read()
             if len(text)==0:
                 print("  The file is empty. It will be discarded from processing.")
                 docErrors_empty=docErrors_empty+1

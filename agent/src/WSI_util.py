@@ -1,23 +1,22 @@
 # import statements
-from WSI_classes import Clusterer, Matcher
-import re
-import numpy as np
-import random
-import pickle
-from collections import Counter
-from tqdm import tqdm
 import os
+import pickle
+import random
+import re
+from collections import Counter
+
+import numpy as np
+from tqdm import tqdm
+from WSI_classes import Clusterer, Matcher
+
 tcache_path = f'{os.getcwd()}/cache'
 if not os.path.exists(tcache_path):
     os.makedirs(tcache_path)
 os.environ['TRANSFORMERS_CACHE'] = tcache_path
 
-from transformers import BertModel, BertTokenizer
-from collections import Counter
-import spacy
-
 import IO_files_util
-
+import spacy
+from transformers import BertModel, BertTokenizer
 
 SEED = 0
 batch_size = 32
@@ -27,14 +26,14 @@ bert_dim = 768
 alphabets = "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
 suffixes = "(Inc|Ltd|Jr|Sr|Co)"
-starters = "(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
+starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
 acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
 websites = "[.](com|net|org|io|gov)"
 digits = "([0-9])"
 
 
 def get_vocab(sentences, u_vocab='', top_n=0.01, min_count=50, add_stopwords=['said']):
-    
+
     if u_vocab == '':
         text = ' '.join([tpl[1] for tpl in sentences]).split()
         en = spacy.load('en_core_web_sm')
@@ -50,7 +49,7 @@ def get_vocab(sentences, u_vocab='', top_n=0.01, min_count=50, add_stopwords=['s
 
 
 def split_into_sentences(text, docID):
-    
+
     text = text.replace('--', '')
     text = " " + text + "  "
     text = text.replace("\n", " ")
@@ -63,7 +62,7 @@ def split_into_sentences(text, docID):
     text = re.sub(digits + "[.]" + digits, "\\1<prd>\\2", text)
     if "..." in text: text = text.replace("...", "<prd><prd><prd>")
     if "Ph.D" in text: text = text.replace("Ph.D.", "Ph<prd>D<prd>")
-    text = re.sub("\s" + alphabets + "[.] ", " \\1<prd> ", text)
+    text = re.sub(r"\s" + alphabets + "[.] ", " \\1<prd> ", text)
     text = re.sub(acronyms + " " + starters, "\\1<stop> \\2", text)
     text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
     text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
@@ -87,7 +86,7 @@ def split_into_sentences(text, docID):
 
 def get_sent(doc, o_path):
 
-    with open(doc, 'r', encoding='utf-8', errors='ignore') as f:
+    with open(doc, encoding='utf-8', errors='ignore') as f:
         fullText = f.read().lower()
     fullText.replace('\n', ' ')
     docID = doc.split('/')[-1]
@@ -133,16 +132,16 @@ def get_centroids(all_sent, all_vocab, Word2Vec_Dir, k_range, sample=None):
     if not os.path.exists(c_path):
         os.makedirs(c_path)
     #get centroids
-    for w in tqdm(all_vocab, total=len(all_vocab), desc=f'Generating sense centroids...'):
+    for w in tqdm(all_vocab, total=len(all_vocab), desc='Generating sense centroids...'):
         if sample is None:
             seq = [tpl for tpl in all_sent if w in tpl[1].split()]
         else:
             seq = random.sample([tpl for tpl in all_sent if w in tpl[1].split()], sample)
-    
+
         if len(seq) == 0:
             print(f':-( There are no occurrences of "{w}" in the dataset. Check for misspellings and/or input other forms of the word, e.g., plural/singular forms, different tenses, etc.')
-            raise ValueError(f':-( There are no occurrences of "{w}" in the dataset. Check for misspellings and/or input other forms of the word, e.g., plural/singular forms, different tenses, etc.') 
-        
+            raise ValueError(f':-( There are no occurrences of "{w}" in the dataset. Check for misspellings and/or input other forms of the word, e.g., plural/singular forms, different tenses, etc.')
+
         batched_data, batched_words, batched_masks, batched_users = model.get_batches(seq, batch_size)
         embeddings, do_wordpiece = model.get_embeddings(batched_data, batched_words, batched_masks, batched_users, w)
         data = model.group_wordpiece(embeddings, w, do_wordpiece)
@@ -171,7 +170,7 @@ def match_embeddings(all_sent, all_vocab, Word2Vec_Dir):
 def get_cluster_sentences(Word2Vec_Dir):
 
     s_paths = []
-    with open(f'{Word2Vec_Dir}/output/senses', 'r') as f:
+    with open(f'{Word2Vec_Dir}/output/senses') as f:
         tokens = f.read().split('\n')[:-1]
     vocab = list(set([tok.split('\t')[1] for tok in tokens]))
     tokens = [tok.split('\t') for tok in tokens]
@@ -211,7 +210,7 @@ def get_cluster_sentences(Word2Vec_Dir):
 
 def main():
 
-    with open('/home/gog/work/NLP-Suite/lib/sampleData/Bunin - Gentle breath.txt', 'r') as f:
+    with open('/home/gog/work/NLP-Suite/lib/sampleData/Bunin - Gentle breath.txt') as f:
         text = f.read().lower()
     vocab =  get_vocab(text, vocab=['olia'])
     print(vocab)

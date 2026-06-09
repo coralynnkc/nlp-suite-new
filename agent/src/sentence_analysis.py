@@ -1,12 +1,8 @@
 # written by Roberto Franzosi (Spring/summer 2020)
-import sys
-import IO_libraries_util
-
 import os
-from subprocess import call
 
-import GUI_IO_util
 import IO_files_util
+import IO_libraries_util
 import statistics_txt_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
@@ -68,7 +64,7 @@ def run_sentence_analysis(inputFilename, inputDir, outputDir,openOutputFiles,cha
         # subprocess.call(['java', '-jar', 'DependenSee.Jar', inputFilename, outputDir])
         # mb.showwarning(title='Analysis end',message='Finished running the Dependency tree viewer (png graphs).\n\nMake sure to open the png files in output, one graph for each sentence.')
 
-        
+
         def first_file(path):
             try:
                 entries = os.listdir(path)
@@ -78,12 +74,12 @@ def run_sentence_analysis(inputFilename, inputDir, outputDir,openOutputFiles,cha
                     if entry.endswith(".txt"):
                         first = os.path.join(path, entry)
                         return first
-            
+
                 return None
-            
+
             except Exception as e:
                 print("Error ", e , " has occurred.")
-                return None 
+                return None
 
         inputFilename = first_file(inputDir)
         statistics_txt_util.sentence_structure_tree(inputFilename, outputDir, num_sentences)

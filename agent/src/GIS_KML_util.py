@@ -1,20 +1,16 @@
-import sys
-import sys
-import IO_libraries_util
 
 
-import tkinter.messagebox as mb
-import simplekml
 import csv
+import tkinter.messagebox as mb
 from datetime import datetime
-import dateutil
 
-import GIS_location_util
+import dateutil
 import GIS_Google_pin_util
+import GIS_location_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-
+import simplekml
 
 # generates .kml file based on CSV of geocoded locations with row format filename,loc type,name,lat,lng
 # headers row(s) are NOT expected
@@ -217,7 +213,7 @@ def generate_kml(inputFilename, inputGeocodedCsvFile,
 							try:
 								t = datetime.strptime(e, fmt)
 								break
-							except ValueError as err:
+							except ValueError:
 								pass
 					currentDateFormat = dateutil.parser.parse(date)
 					# years before 1900 cannot be used
@@ -321,7 +317,7 @@ def generate_kml(inputFilename, inputGeocodedCsvFile,
 						values_row_num.append(n)
 
 			index = 0
-			inputfile = csv.reader(open(inputGeocodedCsvFile, 'r', encoding=encodingValue, errors='ignore'))
+			inputfile = csv.reader(open(inputGeocodedCsvFile, encoding=encodingValue, errors='ignore'))
 			nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(inputGeocodedCsvFile, encodingValue)
 			for row in inputfile:
 				for b in range(len(values_row_num)):
@@ -357,8 +353,8 @@ def generate_kml(inputFilename, inputGeocodedCsvFile,
 		# Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
 		with open(kmloutputFilename, 'r+', encoding='utf_8', errors='ignore') as kmlfile:
 			content = kmlfile.read()
-			content = content.replace(u"\u000B", "")
-			content = content.replace(u"\u001F", "")
+			content = content.replace("\u000B", "")
+			content = content.replace("\u001F", "")
 			kmlfile.seek(0)
 			kmlfile.write(content)
 			kmlfile.truncate()

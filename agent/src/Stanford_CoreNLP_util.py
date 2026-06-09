@@ -25,14 +25,7 @@ import json
 import os
 import re
 import string
-import subprocess
-import sys
 import time
-from typing import Tuple
-
-# not using stanfordcorenlp because it is not recognizing sentiment annotator
-import pandas as pd
-from pycorenlp import StanfordCoreNLP
 
 import charts_util
 import file_splitter_ByLength_util
@@ -41,10 +34,14 @@ import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
+
+# not using stanfordcorenlp because it is not recognizing sentiment annotator
+import pandas as pd
 import parsers_annotators_visualization_util
 import reminders_util
 import Stanford_CoreNLP_clause_util
 import Stanford_CoreNLP_SVO_enhanced_dependencies_util  # Enhanced++ dependencies
+from pycorenlp import StanfordCoreNLP
 
 url = "https://stanfordnlp.github.io/CoreNLP/human-languages.html"
 CoreNLP_web = (
@@ -96,7 +93,7 @@ def create_output_directory(
 
 def check_CoreNLP_available_languages(language):
     available_language = True
-    if not language in available_languages:
+    if language not in available_languages:
         available_language = False
         website_name = "CoreNLP website"
         message_title = "CoreNLP website"
@@ -615,8 +612,8 @@ def CoreNLP_annotate(
         )
     if (
         "SVO" in str(annotator_params)
-        and not "gender" in str(annotator_params)
-        and not "quote" in str(annotator_params)
+        and "gender" not in str(annotator_params)
+        and "quote" not in str(annotator_params)
     ):
         reminders_util.checkReminder(
             scriptName,
@@ -624,14 +621,14 @@ def CoreNLP_annotate(
             reminders_util.message_CoreNLP_SVO_timing,
             True,
         )
-    if "gender" in str(annotator_params) and not "SVO" in str(annotator_params):
+    if "gender" in str(annotator_params) and "SVO" not in str(annotator_params):
         reminders_util.checkReminder(
             scriptName,
             reminders_util.title_options_CoreNLP_gender_timing,
             reminders_util.message_CoreNLP_gender_timing,
             True,
         )
-    if "quote" in str(annotator_params) and not "SVO" in str(annotator_params):
+    if "quote" in str(annotator_params) and "SVO" not in str(annotator_params):
         reminders_util.checkReminder(
             scriptName,
             reminders_util.title_options_CoreNLP_quote_timing,
@@ -713,7 +710,7 @@ def CoreNLP_annotate(
     for annotator in annotator_params:
         # if not check_CoreNLP_annotator_availability(config_filename, annotator, language):
         #     continue
-        if "coref" in annotator and not "coref" in SVO_annotators:
+        if "coref" in annotator and "coref" not in SVO_annotators:
             reminders_util.checkReminder(
                 scriptName,
                 reminders_util.title_options_CoreNLP_coref_timing,
@@ -721,9 +718,9 @@ def CoreNLP_annotate(
                 True,
             )
             SVO_annotators.append("coref")
-        if "quote" in annotator and not "quote" in SVO_annotators:
+        if "quote" in annotator and "quote" not in SVO_annotators:
             SVO_annotators.append("quote")
-        if "gender" in annotator and not "gender" in SVO_annotators:
+        if "gender" in annotator and "gender" not in SVO_annotators:
             SVO_annotators.append("gender")
         if (
             "gender" in annotator
@@ -750,7 +747,7 @@ def CoreNLP_annotate(
             # param_number_NN = 0
             for param in annotators_:
                 if (
-                    not param in param_string_NN
+                    param not in param_string_NN
                 ):  # the needed annotator property is not containted in the string
                     param_number_NN += 1
                     if param_string_NN == "":
@@ -793,7 +790,7 @@ def CoreNLP_annotate(
         else:
             for param in annotators_:
                 if (
-                    not param in param_string
+                    param not in param_string
                 ):  # the needed annotator property is not containted in the string
                     param_number += 1
                     if param_string == "":
@@ -906,9 +903,9 @@ def CoreNLP_annotate(
     # DOES NOT WORK Test to see if file splitting process influences the performance
 
     nlp = StanfordCoreNLP("http://172.16.0.12:9000")
-    
+
     # local test
-    # nlp = StanfordCoreNLP("http://localhost:9000/") 
+    # nlp = StanfordCoreNLP("http://localhost:9000/")
 #     The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.
 
 # Please, select a different corpus directory and try again.
@@ -946,7 +943,7 @@ def CoreNLP_annotate(
                     + tail_split
                 )
             text = (
-                open(doc_split, "r", encoding=language_encoding, errors="ignore")
+                open(doc_split, encoding=language_encoding, errors="ignore")
                 .read()
                 .replace("\n", " ")
             )
@@ -2038,7 +2035,7 @@ def process_json_coref(
                 output_word = token["word"]
                 # check lemmas as well as tags for possessive pronouns in case of tagging errors
                 if token["lemma"] in possessives or token["pos"] == "PRP$":
-                    if not "'s" in output_word and output_word not in pronouns:
+                    if "'s" not in output_word and output_word not in pronouns:
                         output_word += "'s"  # add the possessive morpheme
                 output_word += token["after"]
                 if output_word == ". ":
@@ -3124,7 +3121,7 @@ def process_json_parser(
                 temp.append(depLib[depID][0])
                 # Add enhanced dep here
                 depString = ""
-                dep: Tuple[int, str]
+                dep: tuple[int, str]
                 for dep in enhancedDepLib[depID]:
                     if len(depString) != 0:
                         depString = depString + "|"

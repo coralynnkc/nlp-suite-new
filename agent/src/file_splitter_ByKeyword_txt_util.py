@@ -1,5 +1,4 @@
 #!/usr/bin/env Python
-# -*- coding: utf-8 -*-
 """
 Created on Sun May 24 21:45:41 2020
 
@@ -8,18 +7,25 @@ Created on Sun May 24 21:45:41 2020
 
 #source: https://www.nltk.org/_modules/nltk/tokenize.html
 import sys
+
 import GUI_util
 import IO_libraries_util
 
 if IO_libraries_util.install_all_Python_packages(GUI_util.window,"file_splitter_ByKeyword_txt",['os','tkinter','nltk'])==False:
     sys.exit(0)
 
-import os
-import pandas as pd
 import csv
-from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
+import os
 
-from nltk.corpus import wordnet#lemmatization
+import pandas as pd
+from nltk.corpus import wordnet  #lemmatization
+from Stanza_functions_util import (
+    lemmatize_stanza_word,
+    sentence_split_stanza_text,
+    stanzaPipeLine,
+    tokenize_stanza_text,
+)
+
 #https://wordnet.princeton.edu/documentation/morphy7wn
 #https://stackoverflow.com/questions/31016540/lemmatize-plural-nouns-using-nltk-and-wordnet
 
@@ -65,10 +71,10 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
     csvExist = os.path.exists(csvtitle)
     with open(csvtitle, "a",newline = "", encoding='utf-8',errors='ignore') as csvFile:
         writer = csv.writer(csvFile)
-        if csvExist == False: 
+        if csvExist == False:
             writer.writerow(["Document ID", "Document", 'SPLIT_Document', "SEARCH_WORD", "SENTENCE", "Sentence ID of FIRST_OCCURRENCE", "RELATIVE_POSITION", "FREQUENCY of OCCURRENCE"])
             docIndex = 1
-        else: 
+        else:
              df = pd.read_csv(csvtitle, encoding="ISO-8859-1",on_bad_lines='skip')
              if len(df) == 0:
                  docIndex = 1
@@ -79,7 +85,7 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
         contents = []
         head, docname = os.path.split(inputFilename)
         title = docname.partition('.')[0]
-        f = open(inputFilename, "r",encoding='utf-8',errors='ignore')
+        f = open(inputFilename,encoding='utf-8',errors='ignore')
         docText = f.read()
         f.close()
         # sentences_ = sent_tokenize(docText)#the list of sentneces in corpus
@@ -88,16 +94,16 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
         subfilePath = outputPath+os.sep+title+"_"+str(subfileindex)+'.txt'
         if first_occurrence == True:
             subfilePath = outputPathone+os.sep+title+"_"+str(subfileindex)+'.txt'
-            
+
         subfile = open(subfilePath, 'w',encoding='utf-8',errors='ignore')
         sentence_index = 1
 
-        for sent in sentences_: 
+        for sent in sentences_:
             # tokens_ = word_tokenize(sent)
             tokens_ = tokenize_stanza_text(stanzaPipeLine(sent))
             kwindex = 0
             kw = False
-            for token in tokens_: 
+            for token in tokens_:
                 t = token.lower()
                 if kwindex == len(kwlist):
                     break
@@ -106,7 +112,7 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
                         #(2) the lemmatized form in corpus match the keyword token(for nouns or adjectives)
                     kw = True
                     kwindex += 1
-                else: 
+                else:
                     kw = False
                     kwindex = 0
             if kw == True:#if keyword is detected, generate the next subfile
@@ -114,7 +120,7 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
                 presubfile = subfilePath
                 if frequency == 1:
                     first_occurrence_index = sentence_index
-                if first_occurrence == False or frequency <= 1: 
+                if first_occurrence == False or frequency <= 1:
                     subfileindex += 1
                     subfilePath = outputPath+os.sep+title+"_"+str(subfileindex)+'.txt'
                     if first_occurrence == True and subfileindex == 1:
@@ -122,7 +128,7 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
                     if first_occurrence == True and subfileindex == 2:
                         subfilePath = outputPathtwo+os.sep+title+"_"+str(subfileindex)+'.txt'
                     subfile = open(subfilePath, 'w',encoding='utf-8',errors='ignore')
-                    
+
                 contents.append([docIndex, inputFilename, presubfile, keyword, sent, first_occurrence_index, sentence_index / len(sentences_), frequency])
                 # writer.writerow([docIndex, inputFilename, presubfile, keyword, sent, first_occurrence_index, sentence_index / len(sentences_), frequency])
             subfile.write(sent+" ")
@@ -130,8 +136,8 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
         # print(contents)
         l = len(contents)
         # print("length:",l)
-        if l != 0 and first_occurrence: 
-            f = contents[-1][-1] 
+        if l != 0 and first_occurrence:
+            f = contents[-1][-1]
             if f > 1: f -= 1
             # print(f)
             subpath = contents[-1][2]
@@ -139,7 +145,7 @@ def run(inputFilename, outputPath, keyword, first_occurrence, lemmatization = Tr
                 # print(contents[i][2])
                 if contents[i][2] == subpath:
                     contents[i][-1] = f
-                # elif l > 1:                 
+                # elif l > 1:
                 #     f = contents[i][-1] - 1
                 #     contents[i][-1] = f
                 #     subpath = contents[i][2]

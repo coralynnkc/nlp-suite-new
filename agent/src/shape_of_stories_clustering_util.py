@@ -1,18 +1,17 @@
 import csv
-from tqdm import tqdm
+import os.path
+import re  #ANGEL
+
+import IO_csv_util
 import numpy as np
+import shape_of_stories_vectorizer_util as vec
+import shape_of_stories_visualization_util as viz
+from matplotlib import pyplot as plt
+from scipy.cluster.hierarchy import dendrogram
 from scipy.linalg import svd as sp_svd
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.decomposition import NMF
-from scipy.cluster.hierarchy import dendrogram, linkage
-from matplotlib import pyplot as plt
-import os.path
-import re #ANGEL
-
-import IO_csv_util
-import IO_user_interface_util
-import shape_of_stories_vectorizer_util as vec
-import shape_of_stories_visualization_util as viz
+from tqdm import tqdm
 
 
 class SVDClustering:
@@ -169,7 +168,7 @@ class Clustering:
         assert self.n_clust >= 1
         assert self.n_clust < len(vectors)
         # cluster = AgglomerativeClustering(n_clusters=self.n_clust, affinity='euclidean', linkage = 'ward')
-        cluster = AgglomerativeClustering(n_clusters=self.n_clust, linkage = 'ward')      
+        cluster = AgglomerativeClustering(n_clusters=self.n_clust, linkage = 'ward')
 
         cluster.fit_predict(vectors)
         clusters_indices = cluster.labels_

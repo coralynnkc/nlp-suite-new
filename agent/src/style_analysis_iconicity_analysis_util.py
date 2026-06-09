@@ -25,29 +25,23 @@ Uses iconicity measures by for 14,000+ English words.” Behavioral Research Met
 """
 # add parameter to exclude duplicates? also mean or median analysis
 
-import sys
-
-import IO_libraries_util
-import IO_files_util
-
-
+import argparse
 import csv
 import os
 import statistics
-import time
-import argparse
-import pandas as pd
-import IO_user_interface_util
-import lib_util
+import sys
+
+import charts_util
 
 # from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
-
 import GUI_IO_util
 import IO_csv_util
-import charts_util
-import statistics_csv_util
+import IO_files_util
+import IO_user_interface_util
+import lib_util
+import pandas as pd
 
-fin = open('../lib/wordLists/stopwords.txt', 'r')
+fin = open('../lib/wordLists/stopwords.txt')
 stops = set(fin.read().splitlines())
 
 # a 7-point rating scale going from (1) “Not iconic at all” and (7) “Very iconic.”
@@ -85,7 +79,7 @@ def analyzefile(inputFilename, inputDir, outputDir, outputFilename,  documentID,
 
 	# from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
 	# read file into string
-	with open(inputFilename, 'r', encoding='utf-8', errors='ignore') as myfile:
+	with open(inputFilename, encoding='utf-8', errors='ignore') as myfile:
 		fulltext = myfile.read()
 	# end method if file is empty
 	if len(fulltext) < 1:
@@ -201,7 +195,12 @@ def main(inputFilename, inputDir, outputDir,  configFileName, chartPackage, data
 	#  	max_rating_sd = 2
 
 	global stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
-	from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
+	from Stanza_functions_util import (
+		lemmatize_stanza_word,
+		sentence_split_stanza_text,
+		stanzaPipeLine,
+		tokenize_stanza_text,
+	)
 
 	startTime = IO_user_interface_util.timed_alert(2000,'Analysis start',
 	                                               'Started running Iconicity Analysis at', True,silent=True)

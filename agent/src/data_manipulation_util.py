@@ -1,13 +1,12 @@
-import sys
-import IO_libraries_util
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"data_manipulation_util.py", ['os', 'tkinter', 'pandas', 'functools'])==False:
 #     sys.exit(0)
 
-import pandas as pd
 import os.path
 
 import IO_files_util
+import pandas as pd
+
 
 def listToString(s, sep):
     str1 = ""

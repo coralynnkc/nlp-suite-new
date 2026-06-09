@@ -1,32 +1,34 @@
 import sys
+
 import stanza
+
 try:
     stanza.download('en')
 except:
     import IO_internet_util
     IO_internet_util.check_internet_availability_warning("Stanza_functions_util.py","stanza","json","re","tkinter","warnings")
 
-from stanza.pipeline.multilingual import MultilingualPipeline
-
-import pandas as pd
-import sys
 import os
 import re
 import warnings
 
-# from tenacity import retry_unless_exception_type
-
-import IO_files_util
-import IO_csv_util
-import GUI_IO_util
-import IO_user_interface_util
 import constants_util
+import GUI_IO_util
+import IO_csv_util
+
+# from tenacity import retry_unless_exception_type
+import IO_files_util
+import IO_user_interface_util
+import pandas as pd
 import parsers_annotators_visualization_util
+from stanza.pipeline.multilingual import MultilingualPipeline
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import json
+
 import stanza.resources.common
+
 DEFAULT_MODEL_DIR = stanza.resources.common.DEFAULT_MODEL_DIR
 
 # https://stanfordnlp.github.io/stanza/available_models.html
@@ -263,7 +265,7 @@ def Stanza_annotate(configFilename, inputFilename, inputDir,
                 text = text.split('\n\n')
                 text = [t for t in text if not re.match(r'^\s*$', t)]
         else: # if regular annotation, open file with as string
-            text = open(doc, 'r', encoding=language_encoding, errors='ignore').read().replace("\n", " ")
+            text = open(doc, encoding=language_encoding, errors='ignore').read().replace("\n", " ")
 
         if "%" in text:
             text = text.replace("%","percent")
@@ -345,7 +347,7 @@ def Stanza_annotate(configFilename, inputFilename, inputDir,
                 outputFilename = filesToVisualize[j]
                 outputFiles = parsers_annotators_visualization_util.parsers_annotators_visualization(
                     configFilename, inputFilename, inputDir, outputDir,
-                    outputFilename, annotator_params, kwargs, 
+                    outputFilename, annotator_params, kwargs,
                     chartPackage, dataTransformation)
                 if outputFiles!=None:
                     if isinstance(outputFiles, str):

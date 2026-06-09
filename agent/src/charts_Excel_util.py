@@ -4,17 +4,15 @@
 
 import os
 
-import openpyxl
-import pandas as pd
-from openpyxl import Workbook
-
-import charts_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
+import openpyxl
+import pandas as pd
 import reminders_util
+from openpyxl import Workbook
 
 
 # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
@@ -145,7 +143,7 @@ def create_excel_chart(
 ):
     # TODO perhaps all these different imports can be consolidated into a single import?
     if "pie" in str(chart_type_list).lower():
-        from openpyxl.chart import PieChart, ProjectedPieChart, Reference
+        from openpyxl.chart import PieChart, Reference
     if "bar" in str(chart_type_list).lower():
         from openpyxl.chart import BarChart, Reference, Series
     if "line" in str(chart_type_list).lower():
@@ -722,7 +720,7 @@ def create_excel_chart(
     # errorFound=False
     try:
         wb.save(chart_outputFilename)
-    except IOError:
+    except OSError:
         print(
             "Output file error",
             "Could not write the Excel chart file "

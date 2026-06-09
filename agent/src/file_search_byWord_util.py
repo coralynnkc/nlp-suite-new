@@ -1,5 +1,4 @@
 #!/usr/bin/env Python
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jun 10 21:37:40 2020
 
@@ -10,21 +9,16 @@ appended by Mino Cha April 2022
 rewritten entirely by Roberto June 2024
 """
 
-import sys
-import IO_libraries_util
 
-import os
-import shutil # for copy of files
 import csv
-import stanza
-import collections
-import re
+import os
+import shutil  # for copy of files
 
-import IO_user_interface_util
-import IO_files_util
-import IO_csv_util
 import charts_util
-import constants_util
+import IO_csv_util
+import IO_files_util
+import stanza
+
 
 # sentences is a list of all sentences
 # search_sentence is a string containing the sentence around which we want to get -K +K sentences
@@ -208,7 +202,7 @@ def search_in_all_sentences_oneDoc(file,
     nDocsExtractOutput = 0
     nDocsExtractMinusOutput = 0
 
-    from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text
+    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
     sentences = sentence_split_stanza_text(stanzaPipeLine(docText))
     num_sentences=len(sentences)
     search_keywords_NOT_found = []
@@ -418,7 +412,7 @@ def search_sentences_documents(inputFilename, inputDir, outputDir, configFileNam
             output_dir_path = inputDir + os.sep + "search_result_csv"
             if file[-4:] != '.txt':
                 continue
-        f_doc = open(file, "r", encoding='utf-8', errors='ignore')
+        f_doc = open(file, encoding='utf-8', errors='ignore')
         docText = f_doc.read()
         f_doc.close()
         import NGrams_CoOccurrences_util
@@ -680,7 +674,7 @@ def search_sentences_documents(inputFilename, inputDir, outputDir, configFileNam
             except UnicodeEncodeError:
                 print('Input file error', "Could not read the file " +
                                     outputFilename_csv_word + "\n\nThe file is not utf-8")
-                
+
                 df = pd.read_csv(outputFilename_csv_word, encoding="ISO-8859-1")
             # except UnicodeEncodeError:
             #     print('   Filename ' + outputFilename_csv_word + ' is not utf-8')

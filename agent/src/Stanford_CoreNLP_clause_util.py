@@ -1,5 +1,4 @@
 #!/usr/bin/env Python
-# -*- coding: utf-8 -*-
 """
 Created on Fri Apr 26 15:16:10 2019
 
@@ -22,7 +21,7 @@ def sublist_match(flist,sublist):
         for ind_f,tok_f in enumerate(flist):
             if sublist == flist[ind_f:ind_f+comp_len]:
                 return ind_f
-            
+
 
 """
 param:

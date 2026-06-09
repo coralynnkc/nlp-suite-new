@@ -8,13 +8,13 @@
 # every IO widget, files or directories, has a line in the config file
 # config lines can be blank if NOT required by the specific NLP script
 
+import csv
 import os
-import pandas as pd
 from subprocess import call
 
-import IO_user_interface_util
 import GUI_IO_util
-import csv
+import IO_user_interface_util
+import pandas as pd
 
 defaultConfigFilename = 'NLP_default_IO_config.csv'
 
@@ -257,7 +257,7 @@ def read_config_file(config_filename, config_input_output_numeric_options):
     # check that the config file exists
     if os.path.isfile(configFilePath) == True:
         config_file_exists=True
-        csv_file = open(configFilePath, 'r', newline='')
+        csv_file = open(configFilePath, newline='')
         config_input_output_alphabetic_options = list(csv.reader(csv_file, delimiter=','))
         config_input_output_alphabetic_options.pop(0) # skip header
         # if not 'Date format' in config_input_output_alphabetic_options[0]: # len(config_input_output_alphabetic_options[0])==2:
@@ -273,7 +273,7 @@ def read_config_file(config_filename, config_input_output_numeric_options):
                 if os.path.isfile(configFilePath) == False:
                     print('Missing IO configuration data ', "You must enter the appropriate Input/output configuration options in NLP_setup_IO_main.py and SAVE them to exit this loop.")
             # read the newly saved options
-            csv_file = open(configFilePath, 'r', newline='')
+            csv_file = open(configFilePath, newline='')
             config_input_output_alphabetic_options = list(csv.reader(csv_file, delimiter=','))
             config_input_output_alphabetic_options.pop(0)  # skip header
             # cannot use read_config_file again or it returns the old config_input_output_numeric_options

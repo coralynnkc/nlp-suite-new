@@ -3,17 +3,15 @@
 # modified by Jack Hester (February 2019)
 # modified by Roberto Franzosi (February 2019-August 2020), November 2021
 
-import sys
-import IO_libraries_util
 
 import os
-from collections import Counter
+
+import charts_util
+import IO_csv_util
+import IO_files_util
+import IO_user_interface_util
 import pandas as pd
 
-import IO_files_util
-import IO_csv_util
-import IO_user_interface_util
-import charts_util
 #
 clause_position = 8 # NEW CoNLL_U
 recordID_position = 9 # NEW CoNLL_U
@@ -48,7 +46,7 @@ def process_Json(inputFilename, outputDir):
             if Ndocs==0:
                 return None
             for JsonFile in inputDocs:
-                json = open(JsonFile, 'r', encoding='utf-8', errors='ignore').read()
+                json = open(JsonFile, encoding='utf-8', errors='ignore').read()
                 for parsed_sent in json['sentences']:
                     sent_list, sent_examples = Stanford_CoreNLP_clause_util.clausal_info_extract_from_string(parsed_sent['parse'])
                     sent_list_clause.append(sent_list)

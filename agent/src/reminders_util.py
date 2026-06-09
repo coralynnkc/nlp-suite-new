@@ -1,10 +1,10 @@
 # Written by Cynthia Dong April 2020
 # Edited by Roberto Franzosi
-import GUI_IO_util
-
-import os
-import pandas as pd
 import csv
+import os
+
+import GUI_IO_util
+import pandas as pd
 
 # reminders content for specific GUIs are set in the csv file reminders
 # check if the user wants tadded the release_version.txt fio see the message again

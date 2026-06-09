@@ -1,4 +1,5 @@
 from statistics_txt_main import run_statistics
+
 inputDir = '/Users/aidenamaya/nlp-suite/input'
 outputDir = '/Users/aidenamaya/nlp-suite/output'
 inputFilename = ""

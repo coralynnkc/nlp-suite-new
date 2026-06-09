@@ -1,5 +1,4 @@
 #!/usr/bin/env Python
-# -*- coding: utf-8 -*-
 """
 Created on Thu May 28 23:08:58 2020
 
@@ -7,6 +6,7 @@ Created on Thu May 28 23:08:58 2020
 """
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -15,10 +15,9 @@ if IO_libraries_util.install_all_Python_packages(GUI_util.window,"file_splitter_
 
 import csv
 import os
+
 import pandas as pd
-
 from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
-
 
 
 def run(inputCoNLL, outputPath, keyword, first_occurrence):
@@ -26,12 +25,12 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
     head, table_name = os.path.split(inputCoNLL)
     table_title = table_name.partition('.')[0]
     directory_name = table_title
-   
-    if "NLP_SCNLP_" in directory_name:     
+
+    if "NLP_SCNLP_" in directory_name:
         directory_name = directory_name.replace('NLP_SCNLP_', '')
-    if '_mergedCoNLL' in directory_name:      
+    if '_mergedCoNLL' in directory_name:
         directory_name = directory_name.replace('_mergedCoNLL', '')
-    outputPath = head+os.sep+directory_name+"_subfiles&csv"#a directory will be built in the path of input conll table no matter what input outputPath is 
+    outputPath = head+os.sep+directory_name+"_subfiles&csv"#a directory will be built in the path of input conll table no matter what input outputPath is
     os.mkdir(outputPath)
     df = pd.read_csv(inputCoNLL, encoding="ISO-8859-1", on_bad_lines='skip')#problem of utf-8 enconding when read csv file:
     #https://stackoverflow.com/questions/18171739/unicodedecodeerror-when-reading-csv-file-in-pandas-with-python
@@ -79,7 +78,7 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
                 if sentence_range - k <= keyword_size: #the rest tokens are less than number of tokens in key word
                     subfile.write(sentence_str+" ")
                     k = sentence_range
-                else: 
+                else:
                     kw = False
                     if df.iloc[k][2] == kwtoken[0] and k + keyword_size < sentence_range:#detected first token of the keyword
                         kw = True
@@ -88,8 +87,8 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
                             if df.iloc[l][2] != kwtoken[l - k]:#following tokens do not match
                                 kw = False
                                 pointer = l
-                                l = k+keyword_size 
-                            else: 
+                                l = k+keyword_size
+                            else:
                                 l = l + 1#keep tracking
                         if kw: #if the keyword is detected, build a new subfile
                             frequency += 1
@@ -102,7 +101,7 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
                                 subfile.write(sentence_str+" ")
                             k = sentence_range
                             writer.writerow([df.iloc[i][10], df.iloc[i][11], keyword, sentence_str, first_occurrence_id, df.iloc[i][9] / total_length, frequency])
-                        else: 
+                        else:
                             k = l
                     else: k = k+1
             i = k

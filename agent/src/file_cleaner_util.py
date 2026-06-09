@@ -4,14 +4,16 @@
 
 import glob
 import os
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
-import string
 import re
 
-import IO_files_util
+# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+import string
+
 import GUI_IO_util
-import IO_user_interface_util
 import IO_csv_util
+import IO_files_util
+import IO_user_interface_util
+
 
 def create_input_subdir(inputDir, label):
     # create a subdirectory of the input directory
@@ -73,7 +75,7 @@ def add_full_stop_to_paragraph(window, inputFilename, inputDir, outputDir, confi
         head, tail = os.path.split(filename)
         print("Processing file " + str(docID) + "/" + str(nDocs) + ' ' + tail)
         edited = False
-        with open(filename,'r', encoding='utf-8', errors='ignore') as fn:
+        with open(filename, encoding='utf-8', errors='ignore') as fn:
             # add_full_stop_to_paragraph
             outfile = outputDir + os.sep + tail.replace('.txt', label + '.txt')
             paragraphs = get_paragraphs(fn)
@@ -249,7 +251,7 @@ def remove_hard_carriage_returns(window,inputFilename,inputDir, outputDir='', co
             outfile = head + os.sep + tail.replace('.txt', label + '.txt')
         # outfile = outputDir + os.sep + tail.replace('.txt',label+'.txt')
         new_paragraph=''
-        with open(infile,'r', encoding='utf-8', errors='ignore') as fn:
+        with open(infile, encoding='utf-8', errors='ignore') as fn:
             # remove_hard_carriage_returns
             paragraphs = get_paragraphs(fn)
             with open(outfile, 'w', encoding='utf-8',errors='ignore') as out:
@@ -312,7 +314,7 @@ def add_missing_blank_after_punctuation(window,inputFilename,inputDir, outputDir
             outfile = head + os.sep + tail.replace('.txt', label + '.txt')
         # outfile = outputDir + os.sep + tail.replace('.txt',label+'.txt')
         split_sentences=''
-        with open(infile,'r', encoding='utf-8', errors='ignore') as infile:
+        with open(infile, encoding='utf-8', errors='ignore') as infile:
             text = infile.read()
             processed_text = process_text_add_blank(text)
             if processed_text!=text:
@@ -446,7 +448,7 @@ def remove_characters_between_characters(window,inputFilename,inputDir, outputDi
                                                        True, '', True, '', True)
                 else:
                     print('Edits saved: ' + str(i) + ' substrings contained between ' + startCharacter + ' ' + endCharacter +
-                        ' were removed.\n\nThe edits were saved to the file \n\n' + str(outfile) + 
+                        ' were removed.\n\nThe edits were saved to the file \n\n' + str(outfile) +
                         '\n\nin the input directory\n\n' + inputDir)
 
 
@@ -612,7 +614,7 @@ def newspaper_titles(window,inputFilename,inputDir,outputDir, configFileName, op
         docID = docID + 1
         head, tail = os.path.split(filename)
         print("Processing file " + str(docID) + "/" + str(nDocs) + ' ' + tail)
-        with open(filename,'r', encoding='utf-8', errors='ignore') as fn:
+        with open(filename, encoding='utf-8', errors='ignore') as fn:
             # newspaper_titles
             paragraphs = get_paragraphs(fn)
             file_path = os.path.join(path_aritclesWithTitles,tail)
@@ -644,7 +646,7 @@ def newspaper_titles(window,inputFilename,inputDir,outputDir, configFileName, op
         docID = docID + 1
         head, tail = os.path.split(filename)
         print("Processing file " + str(docID) + "/" + str(nDocs) + ' ' + tail)
-        with open(filename,'r', encoding='utf-8', errors='ignore') as fn:
+        with open(filename, encoding='utf-8', errors='ignore') as fn:
             # newspaper_titles
             paragraphs = get_paragraphs(fn)
             file_path = os.path.join(path_documents,tail)
@@ -746,13 +748,13 @@ def convert_2_ASCII(window,inputFilename, inputDir, outputDir, configFileName):
             # 	print("u\u201C")
             # if u"\u201D" in fullText:
             # 	print("u\u201D")
-            if (u"%" in fullText) or (u"\u2018" in fullText) or (u"\u2019" in fullText) or (u"\u201C" in fullText) or (u"\u201D" in fullText):
+            if ("%" in fullText) or ("\u2018" in fullText) or ("\u2019" in fullText) or ("\u201C" in fullText) or ("\u201D" in fullText):
                 # u0027 apostrophe
                 fullText = str(fullText).replace("%", " percent")  # left single quote
-                fullText = str(fullText).replace(u"\u2018", u"\u0027")  # left single quote
-                fullText = str(fullText).replace(u"\u2019", u"\u0027")  # right single quote
-                fullText = str(fullText).replace(u"\u201C", '"') #left double quote
-                fullText = str(fullText).replace(u"\u201D", '"') #right double quote
+                fullText = str(fullText).replace("\u2018", "\u0027")  # left single quote
+                fullText = str(fullText).replace("\u2019", "\u0027")  # right single quote
+                fullText = str(fullText).replace("\u201C", '"') #left double quote
+                fullText = str(fullText).replace("\u201D", '"') #right double quote
                 docError = docError + 1
                 file.seek(0)
                 file.write(fullText)

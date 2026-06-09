@@ -2,21 +2,14 @@
 #Modified by Cynthia Dong (Fall 2019-Spring 2020)
 #Wordnet_bySentenceID and get_case_initial_row written by Yi Wang (April 2020)
 
-import sys
-import IO_libraries_util
-
-import os
-import pandas as pd
-
-import GUI_IO_util
 import config_util
-import IO_files_util
 import CoNLL_util
-import knowledge_graphs_WordNet_util
-import sentence_analysis_util
-import Stanford_CoreNLP_util
-import reminders_util
 import html_annotator_dictionary_util
+import IO_files_util
+import IO_libraries_util
+import knowledge_graphs_WordNet_util
+import pandas as pd
+import Stanford_CoreNLP_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -76,7 +69,7 @@ def run_kg_wordnet(inputFilename, inputDir, outputDir,openOutputFiles,
             csv_file_var = str(filesToOpen[0])
 
     if annotate_file_var:
-        if IO_libraries_util.check_inputPythonJavaProgramFile('html_annotator_dictionary_util.py') == False: #Check if the scrit is here 
+        if IO_libraries_util.check_inputPythonJavaProgramFile('html_annotator_dictionary_util.py') == False: #Check if the scrit is here
             return
         else:
             import IO_csv_util
@@ -175,7 +168,7 @@ def run_kg_wordnet(inputFilename, inputDir, outputDir,openOutputFiles,
         if noun_verb_menu_var == 'VERB':
             csv_file_var = verb_lemma_csv
         hidden_verb_lemma_csv = verb_lemma_csv
-        hidden_noun_lemma_csv = noun_lemma_csv 
+        hidden_noun_lemma_csv = noun_lemma_csv
 
     if aggregate_POS_var == True:
         annotator = ['POS']

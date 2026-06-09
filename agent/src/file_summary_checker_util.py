@@ -1,28 +1,30 @@
-#coding=utf-8
 
 #Edited by Elaine Dong, Feb 18, 2020.
 # The command line should be:
 #Arguments: 1. path of the lynching folder 2. path of compilation folder 3.output path 4. path of stanfordcorenlp 5. whether or not you want to use NER to detect Named Entity Recognition (1 for yes, 0 for no)
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
 if IO_libraries_util.install_all_Python_packages(GUI_util.window,"Summary CoreNLP Checker",['nltk','stanfordcorenlp','os','tkinter','glob'])==False:
     sys.exit(0)
 
-from stanfordcorenlp import StanfordCoreNLP # python wrapper for Stanford CoreNLP
 import os
 from glob import glob
-import IO_files_util
-import GUI_IO_util
+
 import charts_util
+import GUI_IO_util
+import IO_files_util
 import IO_user_interface_util
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 # check WordNet
 IO_libraries_util.import_nltk_resource(GUI_util.window,'corpora/WordNet','WordNet')
-from nltk.stem.wordnet import WordNetLemmatizer
 import tkinter.messagebox as mb
+
+from nltk.stem.wordnet import WordNetLemmatizer
 
 lemmatizer = WordNetLemmatizer()
 filesToOpen = []
@@ -114,8 +116,8 @@ def get_comp_soc_actors(id, soc_acts, c_path, nlp, checkNER):
     print("   Processing compilation: "+id + '.txt')
     #read the compilation, and check that it is not an empty folder
     try:
-        fcontent =open(my_path,'r',encoding="utf-8",errors='ignore').read()
-    except IOError:
+        fcontent =open(my_path,encoding="utf-8",errors='ignore').read()
+    except OSError:
         print("")
         print("   Error: There is no compilation for event ID",id)
         print("")
@@ -317,8 +319,8 @@ def main(CoreNLPDir, input_main_dir_path,input_secondary_dir_path,outputDir,open
         outputFilename = IO_files_util.generate_output_file_name('', compilations_path, outputDir, '.csv', 'SSR', 'MA', '', '', '', False, True)
     fName=GUI_IO_util.libPath+os.sep+'wordLists'+os.sep+'social-actor-list.csv'
     if not os.path.isfile(fName):
-        print("The file "+fName+" could not be found. The routine expects a csv dictionary file 'social-actor-list.csv' in a directory 'lib\wordLists' expected to be a subdirectory of the main NLP directory.\n\nPlease, check your lib\wordLists directory and try again.")
-        mb.showerror(title='File not found', message='The file '+fName+" could not be found.\n\nThe routine expects a csv dictionary file 'social-actor-list.csv' in a directory 'lib\wordLists' expected to be a subdirectory of the main NLP directory.\n\nPlease, check your lib\wordLists directory and try again.")
+        print("The file "+fName+" could not be found. The routine expects a csv dictionary file 'social-actor-list.csv' in a directory 'lib\\wordLists' expected to be a subdirectory of the main NLP directory.\n\nPlease, check your lib\\wordLists directory and try again.")
+        mb.showerror(title='File not found', message='The file '+fName+" could not be found.\n\nThe routine expects a csv dictionary file 'social-actor-list.csv' in a directory 'lib\\wordLists' expected to be a subdirectory of the main NLP directory.\n\nPlease, check your lib\\wordLists directory and try again.")
         sys.exit()
     actors = load_soc_actors(fName)
     f = open(outputFilename, 'w', encoding='utf-8',errors='ignore')

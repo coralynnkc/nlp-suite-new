@@ -1,6 +1,7 @@
 # written by Roberto Franzosi October 2019, edited Spring 2020
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -11,17 +12,17 @@ import os
 import tkinter as tk
 import tkinter.messagebox as mb
 
-import GUI_IO_util
-import IO_user_interface_util
 import file_classifier_date_util
 import file_classifier_NER_util
+import GUI_IO_util
 import IO_files_util
+import IO_user_interface_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
 def run(input_main_dir_path, input_secondary_dir_path, outputDir,
         openOutputFiles,
-        
+
         chartPackage,
         dataTransformation,
         by_date_var,

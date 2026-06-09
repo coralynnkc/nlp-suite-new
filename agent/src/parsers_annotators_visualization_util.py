@@ -1,7 +1,8 @@
 
 import charts_util
-import reminders_util
 import IO_csv_util
+import reminders_util
+
 
 # outputFilename is actually the file containing fields to be charted
 def parsers_annotators_visualization(configFilename, inputFilename, inputDir, outputDir, outputFilename,
@@ -175,7 +176,7 @@ def parsers_annotators_visualization(configFilename, inputFilename, inputDir, ou
 # SPECIAL ANNOTATORS: date, gender, quote, sentiment, SVO, OpenIE
 # date ________________________________________________________________
     # dates are extracted by the date annotator, but also as part of SVO and OpenIE
-    if (('date' in str(annotator_params) and 'date' in outputFilename)) or \
+    if ('date' in str(annotator_params) and 'date' in outputFilename) or \
             ('OpenIE' in str(annotator_params) and 'OpenIE' in outputFilename):
             # (('SVO' in str(annotator_params) and 'SVO' in outputFilename)) or \
             # visualizing normalized-date for SVO is done in SVO_util called in SVO_main
@@ -370,8 +371,9 @@ def parsers_annotators_visualization(configFilename, inputFilename, inputDir, ou
     if ('SVO' in str(annotator_params) and 'SVO' in outputFilename) or \
             ('OpenIE' in str(annotator_params) and 'OpenIE' in outputFilename):
         # create an SVO-unfiltered subdirectory of the main output directory
-        import IO_files_util
         import os
+
+        import IO_files_util
         head, tail = os.path.split(outputDir)
         outputSVOUnFilterDir=head+os.sep+'SVO-form'
         if not os.path.isdir(outputSVOUnFilterDir):

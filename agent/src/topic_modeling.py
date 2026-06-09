@@ -1,9 +1,8 @@
-import topic_modeling_bert_util
-import topic_modeling_mallet_util
-import topic_modeling_gensim_util
-import IO_internet_util
-import reminders_util
 import IO_files_util
+import IO_internet_util
+import topic_modeling_bert_util
+import topic_modeling_gensim_util
+import topic_modeling_mallet_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -24,7 +23,7 @@ def run_topic_modeling(inputDir, outputDir, chartPackage, dataTransformation, nu
                        remove_stopwords_var, lemmatize_var, nounsOnly_var, Gensim_MALLET_var):
 
     filesToOpen = []
-    
+
     labels = []
     if BERT_var:
         labels.append('BERTopic')
@@ -58,14 +57,14 @@ def run_topic_modeling(inputDir, outputDir, chartPackage, dataTransformation, nu
         bert_files = topic_modeling_bert_util.run_BERTopic(inputDir, outputDir, split_docs_var)
         if bert_files:
             filesToOpen.extend(bert_files)
-    
+
     # Run MALLET
     if MALLET_var:
         mallet_files = topic_modeling_mallet_util.run_MALLET(inputDir, outputDir, chartPackage, dataTransformation,
                                                              optimize_intervals_var, num_topics)
         if mallet_files:
             filesToOpen.extend(mallet_files)
-    
+
     # Run Gensim
     if Gensim_var:
         gensim_files = topic_modeling_gensim_util.run_Gensim(inputDir, outputDir, "", num_topics, remove_stopwords_var,
@@ -73,6 +72,6 @@ def run_topic_modeling(inputDir, outputDir, chartPackage, dataTransformation, nu
                                                             Gensim_MALLET_var)
         if gensim_files:
             filesToOpen.extend(gensim_files)
-    
+
 
     return filesToOpen

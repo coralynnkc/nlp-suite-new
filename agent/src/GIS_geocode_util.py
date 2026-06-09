@@ -1,30 +1,23 @@
-import sys
 
-import pandas as pd
-
-import IO_libraries_util
-
-
-import IO_files_util
-import IO_user_interface_util
 import csv
-import os # TODO MINO GIS create kml record
+import os  # TODO MINO GIS create kml record
+from datetime import datetime  # TODO MINO GIS date option
 
-from geopy import Nominatim
-from geopy.geocoders import GoogleV3
-from geopy.exc import GeocoderTimedOut
-import simplekml # TODO MINO GIS create kml record
-import pandas as pd # TODO MINO GIS create kml record
-from datetime import datetime # TODO MINO GIS date option
 import dateutil
-
-import GUI_IO_util
-import GIS_location_util
 import GIS_file_check_util
-import IO_internet_util
+import GIS_Google_pin_util  # TODO MINO GIS create kml record
+import GIS_location_util
 import GIS_pipeline_util
-import GIS_Google_pin_util # TODO MINO GIS create kml record
-import IO_csv_util # TODO MINO GIS create kml record
+import GUI_IO_util
+import IO_csv_util  # TODO MINO GIS create kml record
+import IO_files_util
+import IO_internet_util
+import IO_user_interface_util
+import pandas as pd
+import simplekml  # TODO MINO GIS create kml record
+from geopy import Nominatim
+from geopy.exc import GeocoderTimedOut
+from geopy.geocoders import GoogleV3
 
 filesToOpen = []
 
@@ -253,8 +246,8 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir,
 		# Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
 		with open(kmloutputFilename, 'r+', encoding='utf_8', errors='ignore') as kmlfile:
 			content = kmlfile.read()
-			content = content.replace(u"\u000B", "")
-			content = content.replace(u"\u001F", "")
+			content = content.replace("\u000B", "")
+			content = content.replace("\u001F", "")
 			kmlfile.seek(0)
 			kmlfile.write(content)
 			kmlfile.truncate()
@@ -478,7 +471,7 @@ def geocode(locations, inputFilename, outputDir,
 				if geocoder=='Nominatim':
 					try:
 						lat, lng, address  = location.latitude, location.longitude, location.address
-					except Exception as e:
+					except Exception:
 						lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
 						locationsNotFound=locationsNotFound+1
 						geowriterNotFound.writerow([itemToGeocode, NER_Tag])
@@ -568,8 +561,8 @@ def geocode(locations, inputFilename, outputDir,
 		# Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
 		with open(kmloutputFilename, 'r+', encoding='utf_8', errors='ignore') as kmlfile:
 			content = kmlfile.read()
-			content = content.replace(u"\u000B", "")
-			content = content.replace(u"\u001F", "")
+			content = content.replace("\u000B", "")
+			content = content.replace("\u001F", "")
 			kmlfile.seek(0)
 			kmlfile.write(content)
 			kmlfile.truncate()
@@ -607,7 +600,7 @@ def convertToGEP(date):
 				try:
 					t = datetime.strptime(e, fmt)
 					break
-				except ValueError as err:
+				except ValueError:
 					pass
 		try:
 			currentDateFormat = dateutil.parser.parse(date)

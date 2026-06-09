@@ -5,24 +5,17 @@ modified by Jack Hester and Roberto Franzosi, February, June 2019, November 2021
 modified by Siyan Pu November 2021
 """
 
-import sys
-import IO_libraries_util
-import pandas as pd
-
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "Verb Analysis",
 # 										  ['csv', 'os', 'collections', 'tkinter']) == False:
 # 	sys.exit(0)
-
 from collections import Counter
 
-import CoNLL_util
-import IO_files_util
-import IO_csv_util
-import IO_user_interface_util
 import charts_util
-import statistics_csv_util
-import Stanford_CoreNLP_tags_util
+import IO_csv_util
+import IO_files_util
+import pandas as pd
 import reminders_util
+import Stanford_CoreNLP_tags_util
 
 dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
 
@@ -152,7 +145,7 @@ def verb_voice_data_preparation(data):
 		return data_2
 	except:
 		print("ERROR: INPUT MUST BE THE CoNLL TABLE CONTAINING THE SENTENCE ID. Program will exit.")
-    
+
 		# mb.showinfo("ERROR",
 		# 			"INPUT MUST BE THE MERGED CoNLL TABLE CONTAINING THE SENTENCE ID. Please use the merge option when generating your CoNLL table in the StanfordCoreNLP.py routine. Program will exit.")
 		return

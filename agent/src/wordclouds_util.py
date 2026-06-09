@@ -1,8 +1,6 @@
 # written by Cynthia Dong November 2019
 # edited by Tony Chen Gu Spring 2022
 
-import sys
-import IO_libraries_util
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window,"wordclouds_util",['wordcloud','numpy','matplotlib','ntpath','PIL','stanza','csv'])==False:
 #     sys.exit(0)
@@ -11,25 +9,26 @@ import IO_libraries_util
 # https://amueller.github.io/word_cloud/
 
 import os
-from collections import Counter
+from collections import Counter, defaultdict
+
 import numpy as np
+import pandas as pd
+import stanza
 from PIL import Image
 
-import pandas as pd
-from collections import defaultdict
-import stanza
 try:
     stanza.download('en')
 except:
     import IO_internet_util
     IO_internet_util.check_internet_availability_warning("wordclouds_util.py (stanza.download(en))")
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator, get_single_color_func
-import matplotlib.pyplot as plt #pip install matplotlib
 import csv
-import ntpath #to split the path from filename
+import ntpath  #to split the path from filename
 
 import IO_files_util
 import IO_user_interface_util
+import matplotlib.pyplot as plt  #pip install matplotlib
+from wordcloud import STOPWORDS, WordCloud
+
 
 #written by Tony Chen Gu Feb 22, 2022
 #this function is to tell whether the machine is Mac or Windows
@@ -120,7 +119,7 @@ def transform_format(val):
     return val
 '''
 
-class GroupedColorFunc(object):
+class GroupedColorFunc:
     """Create a color function object which assigns DIFFERENT SHADES of
        specified colors to certain words based on the color to words mapping.
 
@@ -147,7 +146,7 @@ class GroupedColorFunc(object):
     def get_single_color(self, color):
         color = color[1:-1]
         color_list = color.split(", ")
-        return 'rgb({:.0f}, {:.0f}, {:.0f})'.format(int(color_list[0]), int(color_list[1]), int(color_list[2]))
+        return f'rgb({int(color_list[0]):.0f}, {int(color_list[1]):.0f}, {int(color_list[2]):.0f})'
 
     def get_color_func(self, word):
         """Returns a single_color_func associated with the word"""
@@ -394,7 +393,7 @@ def processCsvColumns(inputFilename, inputDir, outputDir, openOutputFiles,csvFie
     prefer_horizontal=.9
     currenttext = ''
     color_to_words = defaultdict(list)
-    with open(inputFilename, 'r', encoding='utf-8', errors='ignore') as myfile:
+    with open(inputFilename, encoding='utf-8', errors='ignore') as myfile:
         if len(csvField_color_list) != 0:
             # process csvField_color_list
             currenttext, color_to_words = processColorList(currenttext, color_to_words, csvField_color_list, myfile)
@@ -598,7 +597,7 @@ def python_wordCloud(inputFilename, inputDir, outputDir, configFileName, selecte
                     #                message=doc + " is not a CoNLL table.\n\nPlease, select in input a proper csv CoNLL file with Form, Lemma, and POS columns and try again.")
                     return
         elif doc[-4:]=='.txt':
-            with open(doc, 'r', encoding='utf-8', errors='ignore') as myfile:
+            with open(doc, encoding='utf-8', errors='ignore') as myfile:
                 textToProcess = ''
                 currenttext = myfile.read()
                 # check for empty file

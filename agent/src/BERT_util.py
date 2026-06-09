@@ -1,32 +1,30 @@
 # import statements
 # BERT is available as a multilingual model in 102 languages
-import sys
-
-import sklearn
-from sklearn.manifold import TSNE
-from summarizer import Summarizer
-from transformers import AutoTokenizer, AutoModelForTokenClassification
-from transformers import pipeline
-from sentence_transformers import SentenceTransformer
-import pandas as pd
-import re
-import os
-import csv
-import time
-import stanza
 import argparse
+import csv
+import os
+import re
+import sys
+import time
+
+import charts_util
+
 # Visualization
 ##from sklearn.decomposition import PCA
-
-
 import IO_csv_util
 import IO_files_util
-import charts_util
-import statistics_txt_util
-import word2vec_tsne_plot_util
-import IO_user_interface_util
-import word2vec_distances_util
 import IO_internet_util
+import IO_user_interface_util
+import pandas as pd
+import stanza
+import statistics_txt_util
+import word2vec_distances_util
+import word2vec_tsne_plot_util
+from sentence_transformers import SentenceTransformer
+from sklearn.manifold import TSNE
+from summarizer import Summarizer
+from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
+
 
 # Provides NER tags per sentence for every doc and stores in a csv file
 def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, chartPackage, dataTransformation):
@@ -60,11 +58,11 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
         print("`Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
 
         header = ["Word", "NER", "Sentence ID", "Sentence", "Document ID", "Document"]
-        with open(doc, "r", encoding="utf-8", errors="ignore") as f:
+        with open(doc, encoding="utf-8", errors="ignore") as f:
             fullText = f.read()
             fullText = fullText.replace('\n', ' ')
 
-        from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
+        from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
         sentences = sent_tokenize_stanza(stanzaPipeLine(fullText))
         sentenceID = 0
 
@@ -90,7 +88,7 @@ def NER_tags_BERT(inputFilename, inputDir, outputDir, configFileName, mode, char
         kwargs = NER_dict
         outputFiles = parsers_annotators_visualization_util.parsers_annotators_visualization(
             configFileName, inputFilename, inputDir, outputDir,
-            outputFilename, ['NER'], kwargs, 
+            outputFilename, ['NER'], kwargs,
             chartPackage, dataTransformation)
         if outputFiles!=None:
             if isinstance(outputFiles, str):
@@ -125,7 +123,7 @@ def doc_summary_BERT(inputFilename, inputDir, outputDir, mode, chartPackage, dat
         # doc_summary
         print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
 
-        with open(doc, "r", encoding="utf-8", errors="ignore") as f:
+        with open(doc, encoding="utf-8", errors="ignore") as f:
             fullText = f.read()
             fullText = fullText.replace('\n', ' ')
 
@@ -201,7 +199,7 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
         # word embeddings
         print("Processing file " + str(documentID) + "/" + str(Ndocs) + " " + tail)
 
-        with open(doc, "r", encoding="utf-8", errors="ignore") as f:
+        with open(doc, encoding="utf-8", errors="ignore") as f:
             fullText = f.read()
             fullText = fullText.replace('\n', ' ')
 
@@ -235,7 +233,7 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
 
     # Plotting the word embeddings
      ## visualization
-    if not 'Do not plot' in vis_menu_var:
+    if 'Do not plot' not in vis_menu_var:
         print(f'\nStarted preparing charts via t-SNE for {len(word_embeddings)} non-distinct words at {time.asctime( time.localtime(time.time()))}')
         if dim_menu_var == '2D':
             tsne = TSNE(n_components=2)
@@ -280,7 +278,7 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
         head, tail = os.path.split(doc)
         documentID = documentID + 1
 
-        with open(doc, "r", encoding="utf-8", errors="ignore") as f:
+        with open(doc, encoding="utf-8", errors="ignore") as f:
             fullText = f.read()
             fullText = fullText.replace('\n', ' ')
 
@@ -469,7 +467,7 @@ def sentiment_analysis_BERT(inputFilename, outputDir, outputFilename, mode, Docu
 
     sentiment_task = pipeline("sentiment-analysis", model=model_path, tokenizer=model_path, truncation=True)
 
-    with open(inputFilename, 'r', encoding='utf-8', errors='ignore') as myfile:
+    with open(inputFilename, encoding='utf-8', errors='ignore') as myfile:
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
@@ -477,7 +475,7 @@ def sentiment_analysis_BERT(inputFilename, outputDir, outputFilename, mode, Docu
         print('Empty file ', inputFilename)
         return
 
-    from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
+    from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))
 
     i = 1
@@ -644,12 +642,11 @@ if __name__ == '__main__':
 
 # very fast method to split a text file into a list whose elements are each sentence in that file. Found on: https://stackoverflow.com/a/31505798
 # -*- coding: utf-8 -*-
-import re
 
 alphabets = "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
 suffixes = "(Inc|Ltd|Jr|Sr|Co)"
-starters = "(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
+starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
 acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
 websites = "[.](com|net|org|io|gov)"
 digits = "([0-9])"
@@ -663,7 +660,7 @@ def split_into_sentences(text):
     text = re.sub(digits + "[.]" + digits, "\\1<prd>\\2", text)
     if "..." in text: text = text.replace("...", "<prd><prd><prd>")
     if "Ph.D" in text: text = text.replace("Ph.D.", "Ph<prd>D<prd>")
-    text = re.sub("\s" + alphabets + "[.] ", " \\1<prd> ", text)
+    text = re.sub(r"\s" + alphabets + "[.] ", " \\1<prd> ", text)
     text = re.sub(acronyms + " " + starters, "\\1<stop> \\2", text)
     text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
     text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)

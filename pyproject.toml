@@ -1,0 +1,18 @@
+[tool.ruff]
+# Lint everything except the vendored NLP-Suite source and migration artifacts
+exclude = [
+    "NLP-Suite/",
+    "nlp-suite-runner/",
+    ".venv",
+    "venv",
+    "__pycache__",
+]
+line-length = 120
+
+[tool.ruff.lint]
+# E/W = pycodestyle  F = pyflakes  I = isort  UP = pyupgrade  B = bugbear
+select = ["E", "W", "F", "I", "UP", "B"]
+ignore = [
+    "E501",   # line too long — reported but not a blocker for research code
+    "UP007",  # X | Y union syntax — requires Python 3.10+
+]

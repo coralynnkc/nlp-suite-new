@@ -18,17 +18,16 @@ http://www.nltk.org/howto/sentiwordnet.html
 #The "compound" score, ranging from -1 (most neg) to 1 (most pos)
 #   would provide a single measure of polarity.
 
-import sys
-import IO_libraries_util
-
+import argparse
 import csv
 import os
+import sys
 import time
-import argparse
 
+import charts_util
 import IO_csv_util
 import IO_files_util
-import charts_util
+import IO_libraries_util
 
 # if SentiWordNet fails, run: "python -m nltk.downloader all"
 
@@ -38,11 +37,11 @@ IO_libraries_util.import_nltk_resource('corpora/WordNet','sentiwordnet')
 IO_libraries_util.import_nltk_resource('tokenizers/punkt','punkt')
 IO_libraries_util.import_nltk_resource('averaged_perceptron_tagger','averaged_perceptron_tagger')
 
-from nltk.corpus import wordnet as wn
+from nltk import pos_tag, word_tokenize
 from nltk.corpus import sentiwordnet as swn
-from nltk import word_tokenize, pos_tag
+from nltk.corpus import wordnet as wn
 
-fin = open('../lib/wordLists/stopwords.txt', 'r')
+fin = open('../lib/wordLists/stopwords.txt')
 stops = set(fin.read().splitlines())
 
 def penn_to_wn(tag):
@@ -78,14 +77,14 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
         output_file = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv', 'SentiWordNet', '', '', '', '', False, True)
 
     # read file into string
-    with open(inputFilename, 'r',encoding='utf-8',errors='ignore') as myfile:
+    with open(inputFilename,encoding='utf-8',errors='ignore') as myfile:
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
         print('File empty', 'The file ' + inputFilename + ' is empty.\n\nPlease, use another file and try again.')
         return
 
-    from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
+    from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine
 
     # sentences = tokenize.sent_tokenize(fulltext)  # split text into sentences
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))

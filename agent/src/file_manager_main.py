@@ -4,14 +4,12 @@ from __future__ import annotations
 
 import csv
 import os
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import IO_csv_util
 import file_filename_util
 
+
 def run_file_manager(inputDir, outputDir,
-        
+
         chartPackage,
         dataTransformation,
         selectedCsvFile_var, selectedCsvFile_colName,
@@ -48,15 +46,15 @@ def run_file_manager(inputDir, outputDir,
         date_format,
         date_separator,
         date_position):
-    
+
     # if inputDir == outputDir and list_var ==False:
     #     print("You have selected the same directory for both input and output.THIS IS NOT A GOOD IDEA, PARTICULARLY IF YOU DO NOT HAVE BACKUPS OF THE FILES IN THE INPUT DIRECTORY.")
     #     return
     # Frontend Implementation
-    
+
     filesToOpen = []
     fileList = []
-    
+
     outputFilename = ''
     options = 0
     i =0
@@ -248,11 +246,11 @@ def run_file_manager(inputDir, outputDir,
 
     # must handle the case in which we use a csv file
     # _________________________________________________________________________________________________________________________________________________
-    
+
     noHeaders = False
     headers = []
     #implemented noHeaders and headers here as it was in GUI section
-    #no need!! 
+    #no need!!
     # csv_file = get_first_csv(inputDir)
     # if selectedCsvFile_var != '':
     #     headers_result = IO_csv_util.get_csv_file_headers(selectedCsvFile_var, True)
@@ -296,7 +294,7 @@ def run_file_manager(inputDir, outputDir,
     if include_subdir_var==1:
         for inputDir, subdirs, files in os.walk(inputDir):
             for filename in files:
-                print ("Processing file: {}".format(filename))
+                print (f"Processing file: {filename}")
                 fileFound, characterCount,\
                 creation_date,modification_date,\
                 author,date, \
@@ -353,7 +351,7 @@ def run_file_manager(inputDir, outputDir,
         elif count_file_manager_var==False: #list, copy, move, delete
             for filename in os.listdir(inputDir):
                 if not os.path.isdir(os.path.join(inputDir,filename)):
-                    print ("Processing file: {}".format(filename))
+                    print (f"Processing file: {filename}")
                     if selectedCsvFile_var != '':
                         if filename in fileList:
                             processFile = True

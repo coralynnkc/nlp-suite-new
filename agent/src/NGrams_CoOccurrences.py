@@ -1,21 +1,14 @@
-import sys
-import IO_libraries_util
 
 
-import os
-import glob
 import datetime
-import pandas as pd
-from subprocess import call
+import glob
+import os
 
-import IO_user_interface_util
-import GUI_IO_util
-import IO_files_util
-import charts_util
 import config_util
-import reminders_util
 import IO_csv_util
+import IO_files_util
 import NGrams_CoOccurrences_util
+import pandas as pd
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -35,7 +28,7 @@ def run_ngrams(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage
         # within_sentence_co_occurrence_search_var,
         date_options,
         temporal_aggregation_var,
-        viewer_options_list, 
+        viewer_options_list,
         language_list,
         config_input_output_numeric_options,
         number_of_years,
@@ -66,8 +59,8 @@ def run_ngrams(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage
         print('Warning, the N-grams VIEWER is temporarily disconnected, while we develop the same fast approach done for the Co-occurrences function.\n\nPlease, check back soon.')
         return
     # if csv_file_var!='':
-    #     
-    #   
+    #
+    #
     #         return
 
     # if extra_GUIs_var.get() and extra_GUIs_menu_var.get()!='':
@@ -276,9 +269,9 @@ def run_ngrams(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage
                                total_file_number) + ' processed in the selected input directory with errors in either the date format or the date position. \n\nThe selected date format is ' +
                                    str(date_format_var) + ' and the selected date position is ' +
                                    str(date_position_var) + '.\n\nClick OK to open a csv file with a list of files with erroneous dates. Check carefully, both date format and date position. Any erroneous file will need to be fixed or removed from the input directory before processing. You may also simply need to select a different date format and/or date position.')
-            
+
             filesToOpen.append(error_output)
-            
+
             # if openOutputFiles == True:
             #     IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName)
             # return
@@ -327,7 +320,7 @@ def run_ngrams(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage
         #                                     config_filename,
         #                                     outputDir,
         #                                     exact_word_match)
-            
+
         #     if outputFiles != None:
         #         if isinstance(outputFiles, str):
         #             filesToOpen.append(outputFiles)
@@ -362,4 +355,4 @@ def run_ngrams(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage
                 filesToOpen.extend(outputFiles)
 
         return filesToOpen
-    
+

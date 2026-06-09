@@ -1,18 +1,11 @@
 
-import sys
-import IO_libraries_util
 from collections import Counter
-import pandas as pd
 
-import IO_files_util
-import IO_csv_util
-import IO_user_interface_util
-import CoNLL_util
 import charts_util
-import statistics_csv_util
+import IO_csv_util
+import IO_files_util
+import pandas as pd
 import Stanford_CoreNLP_tags_util
-
-
 
 dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
 

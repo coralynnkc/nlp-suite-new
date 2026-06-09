@@ -1,24 +1,26 @@
 
-import os
-import pandas as pd
 import math
-#Gensim
-import gensim
-from gensim.models import Word2Vec
-# Stanza for tokenization and lemmatization
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
-import stanza
-# for calculating the distance
-import numpy as np
+import os
+
 #stopwords and punctuations
 import string
 
+#Gensim
+import gensim
+import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-import IO_csv_util
+
+# for calculating the distance
+import numpy as np
+import pandas as pd
+
+# Stanza for tokenization and lemmatization
+# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+import stanza
 import word2vec_distances_util
 
-fin = open('../lib/wordLists/stopwords.txt', 'r')
+fin = open('../lib/wordLists/stopwords.txt')
 stop_words = set(fin.read().splitlines())
 punctuations = set(string.punctuation)
 
@@ -63,7 +65,7 @@ def run_Gensim_word2vec(inputFilename, inputDir, outputDir, configFileName, char
         doc = inputFilename
         head, tail = os.path.split(doc)
         if doc.endswith('.txt'):
-            with open(doc, 'r', encoding='utf-8', errors='ignore') as file:
+            with open(doc, encoding='utf-8', errors='ignore') as file:
                 dId += 1
                 text = file.read()
                 print('Importing single file ' + tail)
@@ -84,7 +86,7 @@ def run_Gensim_word2vec(inputFilename, inputDir, outputDir, configFileName, char
         for doc in inputDocs: # list(os.listdir(inputDir)):
             head, tail = os.path.split(doc)
             if doc.endswith('.txt'):
-                with open(os.path.join(inputDir, doc), 'r', encoding='utf-8', errors='ignore') as file:
+                with open(os.path.join(inputDir, doc), encoding='utf-8', errors='ignore') as file:
                     dId += 1
                     text = file.read()
                     print('Importing file ' + str(dId) + '/' + str(nFile) + ' ' + tail)
@@ -175,7 +177,7 @@ def run_Gensim_word2vec(inputFilename, inputDir, outputDir, configFileName, char
             word_vector_list.append(word_vectors[v])
             filtered_words[v] = words[v]
 
-    if not 'Do not plot' in vis_menu_var:
+    if 'Do not plot' not in vis_menu_var:
         create_plots=True
     else:
         create_plots=False
@@ -245,7 +247,7 @@ def sent_to_words(sent):
     return (gensim.utils.simple_preprocess(sent, deacc=True))
 
 def make_sentences(all_input_docs):
-    from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text
+    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
     all_txt = []
     for doc in all_input_docs:
         # sentences = sent_tokenize(doc)

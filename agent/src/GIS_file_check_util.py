@@ -1,6 +1,7 @@
-import IO_csv_util
 import CoNLL_util
+import IO_csv_util
 import pandas as pd
+
 
 # returns False if error found
 def geocoded_checker(numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue):
@@ -14,7 +15,7 @@ def geocoded_checker(numColumns, minColumns, headers, locationColumnValue, input
     longitude_name = headers[location_num + 2]
     try:
         dt = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines='skip')
-    except IOError as e:
+    except OSError as e:
         print("Input file error,There was an error reading the input file\n" + str(
             inputFilename) + "\nwith geocoded input.\n\n"+str(e))
         #  Most likely, the error is due to an encoding error. Your current encoding value is " + encodingValue + ".\n\nSelect a different encoding value and try again.

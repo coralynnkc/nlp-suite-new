@@ -1,5 +1,7 @@
-from wordcloud_visual import run_wordcloud
 import os
+
+from wordcloud_visual import run_wordcloud
+
 inputDir = '/Users/aidenamaya/nlp-suite/input'
 outputDir = '/Users/aidenamaya/nlp-suite/output'
 

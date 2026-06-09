@@ -1,5 +1,6 @@
 # test_topic_modeling.py
 import os
+
 from GIS_main import run_GIS
 
 # Replace with your input and output directories
@@ -27,17 +28,17 @@ GIS_package_var = "folium"
 
 
 # Run the topic modeling function
-run_GIS(inputFilename = inputFilename, inputDir = inputDir, outputDir = outputDir, openOutputFiles = openOutputFiles, chartPackage = chartPackage, 
+run_GIS(inputFilename = inputFilename, inputDir = inputDir, outputDir = outputDir, openOutputFiles = openOutputFiles, chartPackage = chartPackage,
         dataTransformation = dataTransformation,
         csv_file = csv_file,
         NER_extractor = NER_extractor,
-        location_menu = location_menu, 
+        location_menu = location_menu,
         geocoder = geocoder,
-        geocode_locations="", 
+        geocode_locations="",
         country_bias_var = country_bias_var,
-        area_var = area_var, 
+        area_var = area_var,
         restrict_var = restrict_var,
-        map_locations = "", 
+        map_locations = "",
         GIS_package_var = GIS_package_var,
         GIS_package2_var = False
 )

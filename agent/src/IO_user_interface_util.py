@@ -1,7 +1,7 @@
-import time
-import os
 import json
 import logging
+import os
+import time
 
 import IO_csv_util
 
@@ -72,7 +72,7 @@ def timed_alert(timeout, message_title, message_text, time_needed=False, extraLi
             print_message_text=print_message_text.replace('Opening','\nOpening')
         print(print_message_text)
     if not silent:
-        if not 'Finished' in message_text and not 'Opening' in message_text:
+        if 'Finished' not in message_text and 'Opening' not in message_text:
             message_text = message_text + '\n\nYou can follow the algorithm in command line.'
 
         print( message_title, message_text)

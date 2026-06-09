@@ -1,23 +1,21 @@
 
 # add parameter to exclude duplicates? also mean or median analysis
 
-import sys
-
-import IO_files_util
-
+import argparse
 import csv
 import os
 import statistics
-import argparse
-import pandas as pd
-import IO_user_interface_util
-import lib_util
+import sys
 
+import charts_util
 import GUI_IO_util
 import IO_csv_util
-import charts_util
+import IO_files_util
+import IO_user_interface_util
+import lib_util
+import pandas as pd
 
-fin = open('../lib/wordLists/stopwords.txt', 'r')
+fin = open('../lib/wordLists/stopwords.txt')
 stops = set(fin.read().splitlines())
 
 ratings = GUI_IO_util.concreteness_libPath + os.sep + "Concreteness_ratings_Brysbaert_et_al_BRM.csv"
@@ -41,9 +39,14 @@ def analyzefile(inputFilename, outputDir, outputFilename,  documentID, documentN
 	:return:
 	"""
 
-	from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
+	from Stanza_functions_util import (
+		lemmatize_stanza_word,
+		sentence_split_stanza_text,
+		stanzaPipeLine,
+		tokenize_stanza_text,
+	)
 	# read file into string
-	with open(inputFilename, 'r', encoding='utf-8', errors='ignore') as myfile:
+	with open(inputFilename, encoding='utf-8', errors='ignore') as myfile:
 		fulltext = myfile.read()
 	# end method if file is empty
 	if len(fulltext) < 1:

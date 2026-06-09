@@ -1,7 +1,7 @@
-from subprocess import call
 
-import IO_csv_util
 import charts_util
+import IO_csv_util
+
 
 def run_excel_plotly_charts(inputFilename, outputDir,
         csv_field_visualization_var,
@@ -28,7 +28,7 @@ def run_excel_plotly_charts(inputFilename, outputDir,
     # if csv_field_visualization_var=='':
     #     print("Warning, No Y-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as Y-axis and try again.")
     #     return
-    
+
 # Excel/Plotly charts --------------------------------------------------------------------------------
     if X_axis_var == '':
         print("Warning, No X-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as X-axis and try again.")
@@ -88,20 +88,20 @@ def main():
 
 
     run_excel_plotly_charts(
-        inputFilename=inputFilename, 
+        inputFilename=inputFilename,
         outputDir=outputDir,
         visualizations_menu_var="Excel",
         csv_field_visualization_var="Color",
         X_axis_var="Heritage",
         csv_file_field_Y_axis_list=["Age, Fixed, Weight"],
         #TODO: add these params:
-        charts_type_options="Pie", 
+        charts_type_options="Pie",
         chart_package="Excel",
         data_transformation="None",
         inputFileData=inputFileData
-        
+
     )
-    
+
 if __name__ == "__main__":
     main()
 

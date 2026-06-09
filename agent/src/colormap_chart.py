@@ -1,6 +1,8 @@
 
-import charts_util
 import json
+
+import charts_util
+
 
 def run_colormap(inputFilename, outputDir,
         csv_file_categorical_field_list,
@@ -39,7 +41,7 @@ def run_colormap(inputFilename, outputDir,
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
-    
+
         return outputFiles
 
 
@@ -58,18 +60,18 @@ def main():
 
     outputDir = "/Users/aidenamaya/nlp-suite/output"
     inputFilename = "sample.csv"
-    
-    #                                     #GROUPBY,     WHERE,         SELECT               
+
+    #                                     #GROUPBY,     WHERE,         SELECT
     # csv_file_categorical_field_list = [['Gender|'], ['Fixed|Yes'], ['Weight|']]
     #                                 # GROUPBY format: [field|Val1, Val2...], Vals optional
     #                                 # WHERE format: [field|Val1, Val2...], Vals not optional
     #                                 # SELECT format: [field|]
-                                    
+
     csv_file_categorical_field_list = '[["Age|"],["Weight|"]]'
     max_rows_var = 5
-    color_1_style_var = "135,207,236"  
-    color_2_style_var = "0,0,255"      
-    normalize_var = "log"              
+    color_1_style_var = "135,207,236"
+    color_2_style_var = "0,0,255"
+    normalize_var = "log"
 
     # Run the colormap visualization
     try:
@@ -86,7 +88,7 @@ def main():
         print("Output files generated:", output_files)
     except Exception as e:
         print("An error occurred during testing:", e)
-        
-        
+
+
 if __name__ == '__main__':
     main()

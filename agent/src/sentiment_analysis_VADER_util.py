@@ -34,27 +34,28 @@ The flags --file, --dir, --out MUST be entered before the respective strings but
 # The "compound" score, ranging from -1 (most neg) to 1 (most pos)
 #   would provide a single measure of polarity.
 
-import sys
-import IO_libraries_util
-
+import argparse
 import csv
 import os
+import sys
 import time
-import argparse
+
+import IO_libraries_util
+
 IO_libraries_util.import_nltk_resource('vader_lexicon','vader_lexicon')
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import charts_util
+
 # from nltk import tokenize
 # from nltk import word_tokenize
 # from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
-
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
-import charts_util
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 # if VADER fails, run: "python -m nltk.downloader all"
 
-fin = open('../lib/wordLists/stopwords.txt', 'r')
+fin = open('../lib/wordLists/stopwords.txt')
 stops = set(fin.read().splitlines())
 
 vader = GUI_IO_util.sentiment_libPath + os.sep + "vader_lexicon.txt"
@@ -95,7 +96,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
     #cannot use time in the filename or when re-generated n the main sentimen_concreteness_analysis.py it will have a different time stamp and the file will not be found
 
     # read file into string
-    with open(inputFilename, 'r',encoding='utf-8',errors='ignore') as myfile:
+    with open(inputFilename,encoding='utf-8',errors='ignore') as myfile:
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:
@@ -103,7 +104,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
         print('Empty file ', inputFilename)
         return
 
-    from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
+    from Stanza_functions_util import lemmatize_stanza, sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
 
     # sentences = tokenize.sent_tokenize(fulltext)  # split text into sentences
     sentences = sent_tokenize_stanza(stanzaPipeLine(fulltext))

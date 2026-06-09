@@ -15,27 +15,23 @@
 #   geopy includes a few other models in the distance.ELLIPSOIDS dictionary.
 
 
-import sys
-import IO_libraries_util
 
 
-import os
-import pandas as pd
 import csv
+import os
 
-from geopy import distance
-
-from geopy.distance import great_circle
+import charts_util
+import GIS_geocode_util
 
 # from geopy.extra.rate_limiter import RateLimiter
-
 import GIS_location_util
-import GIS_geocode_util
+import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-import charts_util
-import IO_csv_util
-import IO_internet_util
+import pandas as pd
+from geopy import distance
+from geopy.distance import great_circle
+
 
 def createCharts(distanceoutputFilename, outputDir, filesToOpen, baselineLocation=''):
 
@@ -88,7 +84,7 @@ def createCharts(distanceoutputFilename, outputDir, filesToOpen, baselineLocatio
                                               hover_info_column_list=[],
                                               count_var = 0,
                                               column_yAxis_label_var=yAxis)
-    
+
     chart_outputFilename = "chart_output.xlsx"
     xlsxFilename = chart_outputFilename.replace('.xlsx','_GreatCircle.xlsx')
     try:
@@ -114,7 +110,7 @@ def computePairwiseDistances(window,inputFilename,outputDir,headers,locationColu
 
     #with open(distanceoutputFilename, 'w',newline='',encoding="utf-8",errors='ignore') as csvfile:
     #latin-1
-    with open(inputFilename, 'r',newline='',encoding=encodingValue,errors='ignore') as inputFile, open(distanceoutputFilename, 'w',newline='',encoding=encodingValue,errors='ignore') as outputFile:
+    with open(inputFilename,newline='',encoding=encodingValue,errors='ignore') as inputFile, open(distanceoutputFilename, 'w',newline='',encoding=encodingValue,errors='ignore') as outputFile:
         geowriter = csv.writer(outputFile)
         try:
             dt = pd.read_csv(inputFile,encoding=encodingValue, on_bad_lines='skip')

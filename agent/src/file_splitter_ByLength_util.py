@@ -4,11 +4,13 @@ Edited: Cynthia Dong, Roberto Franzosi, Spring 2020
 
 """
 
-import sys
 import os
 import shutil
+import sys
+
 import IO_user_interface_util
 import reminders_util
+
 
 #Jack Hester
 #the function is used to split a document longer than 100K characters since Stanford CoreNLP can only deal with text files of 100K characters max.
@@ -57,7 +59,7 @@ def splitDocument_byLength( config_filename, filename_path,output_path='', maxLe
     if output_path=='':
         output_path=head
     new_splitFiles_folder = output_path+os.sep+"split_files_"+str(maxLength)+"_"+filename[:-4]
-    with open(filename_path, 'r',encoding='utf-8',errors='ignore') as F:
+    with open(filename_path,encoding='utf-8',errors='ignore') as F:
         text = F.read()
         length = len(text)
         if inWords:
@@ -115,11 +117,11 @@ def splitDocument_byLength( config_filename, filename_path,output_path='', maxLe
 #   making the split_files subdirectory, for this function
 #   the creation of the directory is carried out in the calling script
 def split_byLength(input_path,filename,output_path, maxLength, inSentence=False):
-    from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
+    from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
     #inSentence: no incomplete sentence in subfiles
     docname = os.path.split(filename)[1]
     title = docname.partition('.')[0]#get the title of the file(without path and .txt)
-    with open(filename, 'r',encoding='utf-8',errors='ignore') as F:
+    with open(filename,encoding='utf-8',errors='ignore') as F:
         text = F.read()
         sentences = sent_tokenize_stanza(stanzaPipeLine(text)) #sentnece list of the input txt
     F.close()

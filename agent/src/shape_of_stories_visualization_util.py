@@ -1,14 +1,13 @@
+import math  # math comes with Python
 import os
 import os.path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import math # math comes with Python
-from sklearn.decomposition import PCA
-
-
 import shape_of_stories_clustering_util as cl
 import shape_of_stories_vectorizer_util as ve
+from sklearn.decomposition import PCA
+
 
 class Visualizer:
     def __init__(self, output_dir):

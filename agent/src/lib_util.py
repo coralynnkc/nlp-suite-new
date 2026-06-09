@@ -3,9 +3,11 @@ Python 3 script
 author: Roberto Franzosi, May 2019
 """
 
-import GUI_IO_util
 import os
 import subprocess
+
+import GUI_IO_util
+
 
 def check_lib_stopwords():
     lib_filename="stopwords.txt"
@@ -18,7 +20,7 @@ def check_lib_stopwords():
         check_lib_stopwords=stopwords_file_withPath
     return check_lib_stopwords
 
-# libfile MUST have a path, since lib files are now stored in subdirs of lib 
+# libfile MUST have a path, since lib files are now stored in subdirs of lib
 # it appears that it is never called
 def get_lib(libfile):
     if os.path.isfile(libfile)==False:
@@ -28,7 +30,7 @@ def get_lib(libfile):
         subprocess.Popen([libfile],shell=True)
     return libFile_Exists
 
-# libfile MUST have a path, since lib files are now stored in subdirs of lib 
+# libfile MUST have a path, since lib files are now stored in subdirs of lib
 # called by sentiment/concreteness scripts
 def checklibFile(libfile,script):
     if os.path.isfile(libfile)==False:

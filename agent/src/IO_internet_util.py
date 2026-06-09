@@ -1,4 +1,4 @@
-from urllib.request import urlopen #to check internet connection
+from urllib.request import urlopen  #to check internet connection
 
 #check internet connection
 #if internet connection is available, return True #otherwise, return False

@@ -1,5 +1,7 @@
-import IO_csv_util
 import string
+
+import IO_csv_util
+
 punctuation = string.punctuation
 import stanza
 
@@ -31,7 +33,7 @@ import re
 
 
 def removeart(original_sentence):
-    fin = open('../lib/wordLists/articles.txt', 'r')
+    fin = open('../lib/wordLists/articles.txt')
     articles = list(set(fin.read().splitlines()))
     # from Stanford CoreNLP calculation
     # Create a regex pattern for the determiners, case-insensitive
@@ -58,7 +60,7 @@ def removeart(original_sentence):
 
 # determiners typically include numbers such as one, two, three,... but we cannot list them all and should use a function
 def removedt(original_sentence):
-    fin = open('../lib/wordLists/determiners.txt', 'r')
+    fin = open('../lib/wordLists/determiners.txt')
     determiners = list(set(fin.read().splitlines()))
 
     # from Stanford CoreNLP calculation
@@ -73,7 +75,7 @@ def removedt(original_sentence):
     return final_sentence
 
 def removestop(original_sentence):
-    fin = open('../lib/wordLists/stopwords.txt', 'r')
+    fin = open('../lib/wordLists/stopwords.txt')
     stops = list(set(fin.read().splitlines()))
     dets_pattern = r'\b(?:' + '|'.join(map(re.escape, stops)) + r')\b\s*'
     filtered_sentence = re.sub(dets_pattern, "", original_sentence, flags=re.IGNORECASE)
@@ -87,7 +89,7 @@ def readandsplit(filename, excludePunctuation, excludeArticles, excludeDetermine
     Sentence_ID = 0
     doc_ngramsList = []
     print("   Processing file " + str(index+1) + "/" + str(nFiles) + ' ' + tail)
-    with open(filename,'r', encoding='utf_8', errors='ignore') as f:
+    with open(filename, encoding='utf_8', errors='ignore') as f:
         out = f.read()
     if excludePunctuation:
         out = out.translate(str.maketrans('', '', punctuation))
@@ -120,12 +122,13 @@ def readandsplit(filename, excludePunctuation, excludeArticles, excludeDetermine
 # Stanza typically runs VERY fast as long as we don't repeatedly invoke a call on its pipeline.
 # It seems to be allocating some cache that speeds it up.
 import os
-
 from collections import Counter
+
 
 def find_ngrams(words, n):
     return [tuple(words[i:i+n]) for i in range(len(words)-n+1)]
 import pandas as pd
+
 
 def find_frequencies(sentences_ngrams, major_ngrams,files):
     major_freq = Counter(major_ngrams)

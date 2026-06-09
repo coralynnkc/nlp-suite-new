@@ -3,33 +3,33 @@
 # Roberto Franzosi September 2020
 # Mino Cha September 2022
 
-import os
-import pandas as pd
 import csv
+import os
 
-import IO_files_util
-import IO_csv_util
-import GUI_IO_util
-import reminders_util
+import charts_util
+import config_util
 import GIS_file_check_util
-import GIS_location_util
 import GIS_geocode_util
+
 # import GIS_KML_util
 import GIS_Google_Maps_util
-import IO_libraries_util
-import config_util
-import constants_util
-import charts_util
+import GIS_location_util
+import GUI_IO_util
+import IO_csv_util
+import IO_files_util
 
 # The script is used by SVO_main and by Google_Earth_main to run a csv file that 1. needs geocoding; 2. mapping geocoded location onto Google Earth Pro.
 import IO_user_interface_util
+import pandas as pd
+import reminders_util
+
 
 # Google_config: 'Google-geocode-API_config.csv' or 'Google-Maps-API_config.csv'
 def getGoogleAPIkey(Google_config, display_key=False):
     configFilePath = os.path.join(GUI_IO_util.configPath, Google_config)
     configAPIKey = []
     if os.path.isfile(configFilePath):
-        f_config = open(configFilePath, 'r', encoding='utf-8', errors='ignore')
+        f_config = open(configFilePath, encoding='utf-8', errors='ignore')
         configAPIKey = f_config.readlines()
     if len(configAPIKey) == 0 or display_key:
         if 'Maps' in Google_config:
@@ -109,32 +109,32 @@ def GIS_pipeline(config_filename, inputFilename, inputDir, outputDir,
 
     software=config_filename.replace('_config.csv','')
     # check that the GEP has been setup
-    
-    
+
+
     #<!------------------GOOGLE EARTH PRO DIRECTORY CHECK-------------------------------------------------------------------------------!>
     # GoogleEarthProDir = os.getenv("GOOGLE_EARTH_PATH")
     import platform
-    
+
     os_temp = platform.system()
-    
+
     if os_temp =="Darwin":
         print("os is darwin")
         GoogleEarthProDir = "/Applications/Google Earth Pro.app"
 
     elif os_temp == "Windows":
         print("os is darwin")
-        GoogleEarthProDir = "C:\Program Files\Google\Google Earth Pro\client\googleearth.exe"
-        
+        GoogleEarthProDir = r"C:\Program Files\Google\Google Earth Pro\client\googleearth.exe"
+
     elif os_temp=="Linux":
         print("os is linux")
         GoogleEarthProDir = "/opt/google/earth/pro"
- 
+
     else:
         print("unsure of os, defaulting to mac directory")
 
         GoogleEarthProDir = "'/Applications/Google Earth Pro.app'"
 
-        
+
     # if GoogleEarthProDir == None or GoogleEarthProDir == '': #We dont need this potentially
     #     return
 

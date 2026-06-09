@@ -1,9 +1,9 @@
-import re
 import difflib as df
 import logging
-import Stanford_CoreNLP_util
-import IO_libraries_util
+import re
+
 import IO_user_interface_util
+import Stanford_CoreNLP_util
 from pycorenlp import StanfordCoreNLP
 
 # Set up logging for tracking errors and processes
@@ -85,9 +85,9 @@ def manualCoref(original_file, corefed_file, outputFile):
     Handle manual coreference correction.
     """
     try:
-        with open(original_file, "r", encoding='utf-8', errors='ignore') as f:
+        with open(original_file, encoding='utf-8', errors='ignore') as f:
             original_text = f.read()
-        with open(corefed_file, "r", encoding='utf-8', errors='ignore') as f:
+        with open(corefed_file, encoding='utf-8', errors='ignore') as f:
             corefed_text = f.read()
     except Exception as e:
         logger.error(f"Error reading files for manual coreference: {e}")
@@ -100,7 +100,7 @@ def manualCoref(original_file, corefed_file, outputFile):
         return 1
 
     result = "\n".join(corefed_text.split("\n")[2:])
-    
+
     try:
         with open(outputFile, "w", encoding='utf-8', errors='ignore') as f:
             f.write(result)
@@ -113,7 +113,7 @@ def manualCoref(original_file, corefed_file, outputFile):
 
 def run(config_filename, inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation,
         language_var, memory_var, export_json_var, manual_Coref):
-    
+
     nlp = StanfordCoreNLP("http://172.16.0.12:9000")
     corefed_files = []
     errorFound = False
@@ -137,13 +137,13 @@ def run(config_filename, inputFilename, inputDir, outputDir, openOutputFiles, ch
         else:
             # Handle the case where manual coref is requested for directory processing
             if manual_Coref:
-                IO_user_interface_util.timed_alert(2000, 'Manual Coreference Unavailable', 
-                                                   'Manual Coreference is only available when processing a single file, not a directory.', 
+                IO_user_interface_util.timed_alert(2000, 'Manual Coreference Unavailable',
+                                                   'Manual Coreference is only available when processing a single file, not a directory.',
                                                    silent=True)
             else:
                 # If manual coref is not enabled, proceed normally
                 IO_user_interface_util.timed_alert(2000, 'Coreference Completed', 'Coreference resolution completed.')
-    
+
     except Exception as e:
         logger.error(f"Error in Coreference resolution: {e}")
         return corefed_files, True  # Return error state in case of any exception

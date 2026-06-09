@@ -1,40 +1,34 @@
 import os
-import re
 from threading import Thread
-from typing import Annotated, List
-from enum import Enum
+from typing import Annotated
 
 import uvicorn
-from fastapi import FastAPI, Form, Request, HTTPException
+from boxplot_chart import run as run_boxplot
+from colormap_chart import run_colormap
+from CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
+from excel_plotly_charts import run_excel_plotly_charts
+from fastapi import FastAPI, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import PlainTextResponse, RedirectResponse, JSONResponse
-
+from fastapi.responses import JSONResponse, PlainTextResponse
+from file_manager_main import run_file_manager
+from file_search_byWord_main import run_search_byWord
+from GIS_main import run_GIS
+from html_annotator_gender_main import run as run_gender_analysis
+from knowledge_graphs_WordNet_main import run_kg_wordnet
+from NER_main import run_NER
+from NGrams_CoOccurrences import run_ngrams
 from parsers_annotators import run_parsers_annotators
+from sankey_flowchart import run_sankey
+from sentence_analysis import run_sentence_analysis
 from sentiment_analysis import run_sentiment_analysis
+from shape_of_stories_main import run as run_shape_of_stories
+from statistics_txt_main import run_statistics
+from style_analysis import run_style_analysis
+from sunburst_charts import run_sun_burst
+from SVO import run_svo
 from topic_modeling import run_topic_modeling
 from word2vec import run_word2vec
-from sunburst_charts import run_sun_burst
-from colormap_chart import run_colormap
-from sankey_flowchart import run_sankey
-from CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
 from wordcloud_visual import run_wordcloud
-
-
-from style_analysis import run_style_analysis
-from SVO import run_svo
-from NGrams_CoOccurrences import run_ngrams
-from file_search_byWord_main import run_search_byWord
-from statistics_txt_main import run_statistics
-from sentence_analysis import run_sentence_analysis
-from GIS_main import run_GIS
-
-from file_manager_main import run_file_manager
-from NER_main import run_NER
-from knowledge_graphs_WordNet_main import run_kg_wordnet
-from html_annotator_gender_main import run as run_gender_analysis
-from shape_of_stories_main import run as run_shape_of_stories
-from excel_plotly_charts import run_excel_plotly_charts
-from boxplot_chart import run as run_boxplot
 
 _ENV_PATH = os.path.join(os.path.expanduser("~"), "nlp-suite", ".env")
 
@@ -96,12 +90,12 @@ def run(app, method):
     app.worker = False
 
 # def run(app, method):
-#     try: 
+#     try:
 #         method()
-        
+
 #     except Exception as e:
 #         app.worker_exception = e
-        
+
 #     finally:
 #         app.worker = False
 
@@ -116,8 +110,8 @@ async def single_runner(request: Request, call_next):
     app.worker = True
     response = await call_next(request)
     if response.status_code >= 400:
-        app.worker = False  
-        
+        app.worker = False
+
     return response
 
 @app.get("/status")
@@ -136,7 +130,7 @@ def status():
 #     if hasattr(app, 'worker_exception') and app.worker_exception:
 #         e = app.worker_exception
 #         app.worker_exception = None
-        
+
 #         raise HTTPException(status_code=500, detail=str(e))
 
 #     # thread = Thread(
@@ -152,7 +146,7 @@ def status():
 
 @app.post("/file_manager")
 def file_manager(
-    
+
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
 
@@ -257,11 +251,11 @@ def sentiment_analysis(
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
     algorithm: Annotated[str, Form()],
-    
+
     dataTransformation: Annotated[str, Form()] = "No transformation",
     calculateMean: Annotated[bool, Form()] = False,
     calculateMedian: Annotated[bool, Form()] = False,
-    
+
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
@@ -282,7 +276,7 @@ def sentiment_analysis(
     )
     thread.start()
     return PlainTextResponse("", status_code=200)
-    
+
 
 @app.post("/topic_modeling")
 def topic_modeling(
@@ -290,7 +284,7 @@ def topic_modeling(
     outputDirectory: Annotated[str, Form()],
     numberOfTopics: Annotated[int, Form()],
     optimizeTopicIntervals: Annotated[int, Form()],
-    
+
     dataTransformation: Annotated[str, Form()] = "No transformation",
     topicModelingBERT: Annotated[bool, Form()] = False,
     splitToSentence: Annotated[bool, Form()] = False,
@@ -304,14 +298,14 @@ def topic_modeling(
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
     chartPackage = "Excel"
-    
+
     thread = Thread(
         target=lambda: run(
             app,
             lambda: run_topic_modeling(
                 inputDir=inputDirectory,
                 outputDir=outputDirectory,
-                chartPackage=chartPackage, 
+                chartPackage=chartPackage,
                 dataTransformation=dataTransformation,
                 num_topics=numberOfTopics,
                 BERT_var=topicModelingBERT,
@@ -328,7 +322,7 @@ def topic_modeling(
     )
     thread.start()
     return PlainTextResponse("", status_code=200)
-    
+
 @app.post("/parsers_annotators")
 def parsers_annotators(
     inputDirectory: Annotated[str, Form()],
@@ -361,7 +355,7 @@ def parsers_annotators(
                 openOutputFiles=openOutputFiles,
                 chartPackage=chartPackage,
                 dataTransformation=dataTransformation,
-                manual_Coref=manual_Coref, 
+                manual_Coref=manual_Coref,
                 parser_var=parser_var,
                 parser_menu_var=parser_menu_var,
                 single_quote=single_quote,
@@ -377,7 +371,7 @@ def parsers_annotators(
 
 @app.post("/word2vec")
 def word2vec(
-    # inputFilename: Annotated[str, Form()], 
+    # inputFilename: Annotated[str, Form()],
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
 
@@ -401,13 +395,13 @@ def word2vec(
     range4: Annotated[int, Form()] = 4,
     range6: Annotated[int, Form()] = 6,
     range20: Annotated[int, Form()] = 10,
-    
+
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
     chartPackage = "Excel"
-    
+
     thread = Thread(
         target=lambda: run(
             app,
@@ -416,7 +410,7 @@ def word2vec(
                 inputDir=inputDirectory,
                 outputDir=outputDirectory,
                 chartPackage=chartPackage,
-                dataTransformation=dataTransformation, 
+                dataTransformation=dataTransformation,
                 remove_stopwords_var=remove_stopwords_var,
                 lemmatize_var=lemmatize_var,
                 WSI_var=WSI_var,
@@ -445,13 +439,13 @@ def word2vec(
 @app.post("/CoNLL_table_analyzer_main")
 def CoNLL_table_analyzer(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()], 
-    searchedCoNLLField: Annotated[str, Form()], 
-    postag_var: Annotated[str, Form()], 
-    deprel: Annotated[str, Form()], 
-    co_postag: Annotated[str, Form()], 
+    outputDirectory: Annotated[str, Form()],
+    searchedCoNLLField: Annotated[str, Form()],
+    postag_var: Annotated[str, Form()],
+    deprel: Annotated[str, Form()],
+    co_postag: Annotated[str, Form()],
     co_deprel: Annotated[str, Form()],
-    
+
     inputFilename: Annotated[str, Form()] = "",
     dataTransformation: Annotated[str, Form()] = "No transformation",
     all_analyses_var: Annotated[bool, Form()] = False,
@@ -460,42 +454,42 @@ def CoNLL_table_analyzer(
     Begin_K_sent_var: Annotated[bool, Form()] = False,
     End_K_sent_var: Annotated[bool, Form()] = False,
     compute_sentence_var: Annotated[bool, Form()] = False,
-    search_token_var: Annotated[bool, Form()] = False, 
+    search_token_var: Annotated[bool, Form()] = False,
     k_sentences_var: Annotated[bool, Form()] = False,
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    
+
     chartPackage = "Excel"
     openOutputFiles = False
     WordNet_var = False
 
-    
-    
+
+
     thread = Thread(
         target=lambda: run(
             app,
             lambda: run_CoNLL_table_analyzer(
-                inputFilename = inputFilename, 
-                inputDir = inputDirectory, 
-                outputDir = outputDirectory, 
-                openOutputFiles = openOutputFiles, 
-                chartPackage = chartPackage, 
+                inputFilename = inputFilename,
+                inputDir = inputDirectory,
+                outputDir = outputDirectory,
+                openOutputFiles = openOutputFiles,
+                chartPackage = chartPackage,
                 dataTransformation = dataTransformation,
-                searchedCoNLLField = searchedCoNLLField, 
+                searchedCoNLLField = searchedCoNLLField,
                 searchField_kw = searchField_kw,
                 postag_var = postag_var,
                 deprel =deprel,
-                co_postag = co_postag, 
+                co_postag = co_postag,
                 co_deprel = co_deprel,
                 Begin_K_sent_var = Begin_K_sent_var,
                 End_K_sent_var = End_K_sent_var,
                 all_analyses_var = all_analyses_var,
                 all_analyses = all_analyses,
                 search_token_var = search_token_var,
-                WordNet_var = WordNet_var, 
-                compute_sentence_var = compute_sentence_var, 
+                WordNet_var = WordNet_var,
+                compute_sentence_var = compute_sentence_var,
                 k_sentences_var = k_sentences_var
             ),
         )
@@ -515,7 +509,7 @@ def style_analysis(
         dataTransformation: Annotated[str, Form()] = "No transformation",
         complexity_analysis: Annotated[bool, Form()] = False,
         vocabulary_analysis: Annotated[bool, Form()] = False,
-        gender_guesser: Annotated[bool, Form()] = False, 
+        gender_guesser: Annotated[bool, Form()] = False,
 ):
     inputFilename = ""
     extra_GUIs_var = False
@@ -523,7 +517,7 @@ def style_analysis(
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
     gender_guesser = False
     chartPackage = "Excel"
-        
+
     thread = Thread(
         target=lambda: run(
             app,
@@ -531,7 +525,7 @@ def style_analysis(
                 inputFilename = inputFilename,
                 inputDir = inputDirectory,
                 outputDir = outputDirectory,
-                chartPackage = chartPackage, 
+                chartPackage = chartPackage,
                 dataTransformation = dataTransformation,
                 extra_GUIs_var = extra_GUIs_var,
                 complexity_readability_analysis_var = complexity_analysis,
@@ -557,12 +551,12 @@ def sunburst_charts(
         file_data: Annotated[str, Form()] = "",
         filter_options_var: Annotated[str, Form()] = "No filtering",
         savedPairsToSend: Annotated[str, Form()] = "[]",
-        piechart_var: Annotated[bool, Form()] = False, 
+        piechart_var: Annotated[bool, Form()] = False,
         treemap_var: Annotated[bool, Form()] = False,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    
+
     thread = Thread(
         target=lambda: run(
             app,
@@ -574,7 +568,7 @@ def sunburst_charts(
                 filter_options_var = filter_options_var,
                 selected_pairs_data = savedPairsToSend,
                 piechart_var = piechart_var,
-                treemap_var = treemap_var 
+                treemap_var = treemap_var
             ),
         )
     )
@@ -587,7 +581,7 @@ def colormap_chart(
     outputDirectory: Annotated[str, Form()],
     max_number_of_rows: Annotated[int, Form()],
     less_freq_color_picker: Annotated[str, Form()],
-    csv_file_categorical_field_list_front: Annotated[str, Form()] = '[]', 
+    csv_file_categorical_field_list_front: Annotated[str, Form()] = '[]',
     more_freq_color_picker: Annotated[str, Form()] = False,
     normalize: Annotated[str, Form()] = False,
     file_data: Annotated[str, Form()] = "",
@@ -601,7 +595,7 @@ def colormap_chart(
             lambda: run_colormap(
                 inputFilename=colormap_file_input,
                 outputDir=outputDirectory,
-                csv_file_categorical_field_list=csv_file_categorical_field_list_front, 
+                csv_file_categorical_field_list=csv_file_categorical_field_list_front,
                 max_rows_var= max_number_of_rows,
                 color_1_style_var=less_freq_color_picker,
                 color_2_style_var=more_freq_color_picker,
@@ -618,14 +612,14 @@ def colormap_chart(
 def sankey_flowchart(
         inputDirectory: Annotated[str, Form()],
         outputDirectory: Annotated[str, Form()],
-        variable_1_max: Annotated[int, Form()], 
-        variable_2_max: Annotated[int, Form()], 
-        variable_3_max: Annotated[int, Form()], 
+        variable_1_max: Annotated[int, Form()],
+        variable_2_max: Annotated[int, Form()],
+        variable_3_max: Annotated[int, Form()],
         selected_pairs_data: Annotated[str, Form()] = "[]",
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    
+
     thread = Thread(
         target=lambda: run(
             app,
@@ -648,7 +642,7 @@ def sankey_flowchart(
 def SVO(
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
-    
+
     dataTransformation: Annotated[str, Form()] = "No transformation",
     coreferenceResolution: Annotated[bool, Form()] = False,
     manualCoreference: Annotated[bool, Form()] = False,
@@ -673,10 +667,10 @@ def SVO(
             app,
             lambda: run_svo(
                 inputFilename = inputFilename,
-                inputDir = inputDirectory, 
-                outputDir = outputDirectory, 
-                openOutputFiles = False, 
-                chartPackage = chartPackage, 
+                inputDir = inputDirectory,
+                outputDir = outputDirectory,
+                openOutputFiles = False,
+                chartPackage = chartPackage,
                 dataTransformation = dataTransformation,
                 coref_var = coreferenceResolution,
                 manual_coref_var = manualCoreference,
@@ -707,7 +701,7 @@ def wordcloud(
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
     wordcloudservice: Annotated[str, Form()],
-    font_name: Annotated[str, Form()], 
+    font_name: Annotated[str, Form()],
     maxNumberOfWords: Annotated[int, Form()],
     horizontal: Annotated[bool, Form()] = False,
     stopwords: Annotated[bool, Form()] = False,
@@ -732,24 +726,24 @@ def wordcloud(
             app,
             lambda: run_wordcloud(
                 inputFilename,
-                inputDir = inputDirectory, 
-                outputDir = outputDirectory, 
-                visualization_tools = wordcloudservice, 
-                prefer_horizontal = horizontal, 
+                inputDir = inputDirectory,
+                outputDir = outputDirectory,
+                visualization_tools = wordcloudservice,
+                prefer_horizontal = horizontal,
                 font = font_name,
-                max_words = maxNumberOfWords, 
-                lemmatize = lemmas, 
+                max_words = maxNumberOfWords,
+                lemmatize = lemmas,
                 exclude_stopwords = stopwords,
-                exclude_punctuation = punctuation, 
-                lowercase = lowercase_checkbox, 
-                collocation = collocation, 
+                exclude_punctuation = punctuation,
+                lowercase = lowercase_checkbox,
+                collocation = collocation,
                 differentPOS_differentColor = differentColorsByPOS,
                 prepare_image_var =prepareImage,
-                selectedImage = selectedImage, 
+                selectedImage = selectedImage,
                 use_contour_only = imageContour,
-                differentColumns_differentColors = useColorsForCsvColumns, 
-                csvField_color_list = csvField, 
-                openOutputFiles = openOuputfiles , 
+                differentColumns_differentColors = useColorsForCsvColumns,
+                csvField_color_list = csvField,
+                openOutputFiles = openOuputfiles ,
                 doNotCreateIntermediateFiles = intermediateWordcloudFiles
             ),
         )
@@ -762,13 +756,13 @@ def wordcloud(
 def NGrams_CoOccurrences(
         inputDirectory: Annotated[str, Form()],
         outputDirectory: Annotated[str, Form()],
-        
+
         dataTransformation: Annotated[str, Form()] = "No transformation",
         ngrams_options_list: Annotated[str, Form()] = "[]",
         Ngrams_compute_var: Annotated[bool, Form()] = False,
         ngrams_menu_var: Annotated[str, Form()] = "",
         ngrams_size: Annotated[int, Form()] =2,
-        search_words: Annotated[str, Form()] ="", 
+        search_words: Annotated[str, Form()] ="",
         minus_K_words_var: Annotated[int, Form()] = 0,
         plus_K_words_var: Annotated[int, Form()] = 0,
         Ngrams_search_var: Annotated[str, Form()] = "",
@@ -778,7 +772,7 @@ def NGrams_CoOccurrences(
         date_options: Annotated[bool, Form()] = False,
         temporal_aggregation_var: Annotated[str, Form()] = "",
         viewer_options_list: Annotated[str, Form()] ="",
-        
+
 ):
     inputFilename = ""
     language_list = ["English"]
@@ -787,7 +781,7 @@ def NGrams_CoOccurrences(
     chartPackage = "Excel"
     ngrams_options_menu_var = "" #Empty in function?
     number_of_years = 0 #Set for now
-    
+
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
 
@@ -795,7 +789,7 @@ def NGrams_CoOccurrences(
         csv_file_var = inputDirectory
     else:
         csv_file_var = ''
-        
+
     thread = Thread(
         target=lambda: run(
             app,
@@ -837,7 +831,7 @@ def NGrams_CoOccurrences(
 def filesearchword(
         inputDirectory: Annotated[str, Form()],
         outputDirectory: Annotated[str, Form()],
-        
+
         dataTransformation: Annotated[str, Form()] = "No transformation",
         search_options: Annotated[str, Form()] ="",
         minus_K_words_sentences_var: Annotated[int, Form()] = 0,
@@ -861,28 +855,28 @@ def filesearchword(
     language_list = ["English"]
     language = "English"
 
-    
+
     if(extract_sentences_var):
         extract_sentences_var = 1
     else:
         extract_sentences_var = 0
-        
+
     if(coOccurring_keywords_var):
         coOccurring_keywords_var = 1
     else:
         coOccurring_keywords_var = 0
-    
+
     thread = Thread(
         target=lambda: run(
             app,
             lambda: run_search_byWord(
                 inputFilename = inputFilename,
-                inputDir = inputDirectory, 
+                inputDir = inputDirectory,
                 outputDir = outputDirectory,
                 openOutputFiles = openOutputFiles,
                 chartPackage = chartPackage,
                 dataTransformation = dataTransformation,
-                
+
                 search_options = search_options,
                 search_by_dictionary = search_by_dictionary,
                 selectedCsvFile = selectedCsvFile,
@@ -907,17 +901,17 @@ def filesearchword(
 def document_statistics(
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
-    
+
     dataTransformation: Annotated[str, Form()] = "No transformation",
     corpus_statistics_var: Annotated[bool, Form()] = False,
     corpus_text_options_menu_var:  Annotated[str, Form()] = "*",
     corpus_statistics_options_menu_var: Annotated[str, Form()] = "*",
     corpus_statistics_byPOS_var: Annotated[bool, Form()] = False
-      
+
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    
+
     inputFilename = ""
     chartPackage = "Excel"
     openOutputFiles = False
@@ -945,24 +939,24 @@ def document_statistics(
 def sentence_analysis(
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
-    
+
     dataTransformation: Annotated[str, Form()] = "No transformation",
     compute_sentence_length_var: Annotated[bool, Form()] = False,
     sentence_complexity_var: Annotated[bool, Form()] = False,
     text_readability_var: Annotated[bool, Form()] = False,
     visualize_sentence_structure_var: Annotated[bool, Form()] = False,
     num_sentences: Annotated[int, Form()] = 1
-      
+
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    
+
     #These variables aren't in the gui?
     visualize_bySentenceIndex_var = False
     visualize_bySentenceIndex_options_var = ''
     IO_values = ''
     script_to_run = ''
-    
+
     inputFilename = ""
     chartPackage = "Excel"
     openOutputFiles = False
@@ -995,19 +989,19 @@ def sentence_analysis(
 def gis(
     inputDirectory: Annotated[str, Form()],
     outputDirectory: Annotated[str, Form()],
-    
+
     dataTransformation: Annotated[str, Form()] = "No transformation",
     NER_extractor: Annotated[bool, Form()] = False,
-    geocoder: Annotated[str, Form()] = "Nominatim", 
-    country_bias_var: Annotated[str, Form()] = "", 
-    area_var: Annotated[str, Form()] = "e.g.,", 
+    geocoder: Annotated[str, Form()] = "Nominatim",
+    country_bias_var: Annotated[str, Form()] = "",
+    area_var: Annotated[str, Form()] = "e.g.,",
     restrict_var: Annotated[bool, Form()] = False,
-    GIS_package_var: Annotated[str, Form()] = '', 
-    
+    GIS_package_var: Annotated[str, Form()] = '',
+
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    
+
     inputFilename = ""
     chartPackage = "Excel"
     csv_file = ""
@@ -1017,8 +1011,8 @@ def gis(
     map_locations = ""
     location_menu = ""
     #Geocode, map locations, gis_package var_2
-    
-    
+
+
     thread = Thread(
         target=lambda: run(
             app,
@@ -1027,7 +1021,7 @@ def gis(
                 inputDirectory,
                 outputDirectory,
                 openOutputFiles,
-                
+
                 chartPackage,
                 dataTransformation,
                 csv_file,
@@ -1046,7 +1040,7 @@ def gis(
     )
     thread.start()
     return PlainTextResponse("", status_code=200)
-    
+
 
 
 @app.post("/ner")
@@ -1321,4 +1315,3 @@ def save_settings(
 if __name__ == "__main__":
     uvicorn.run(app, port=3000, host="0.0.0.0")
 
-    

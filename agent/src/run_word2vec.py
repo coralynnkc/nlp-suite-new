@@ -1,8 +1,8 @@
-import unittest
 import os
-from word2vec import run_word2vec 
-import WSI_util
- 
+import unittest
+
+from word2vec import run_word2vec
+
 
 class TestWord2Vec(unittest.TestCase):
 
@@ -14,7 +14,7 @@ class TestWord2Vec(unittest.TestCase):
 
         # TODO: need inputFilename?
         self.inputFilename = "" #"Conrad_Lord Jim_01.txt"
-        
+
     def test_run_word2vec_basic(self):
         # Test with minimal settings
         filesToOpen = run_word2vec(
@@ -43,7 +43,7 @@ class TestWord2Vec(unittest.TestCase):
             range20 = 5,
             ngramsDropDown="1-gram"
         )
-        
+
         # self.assertTrue(len(filesToOpen) > 0, "No output files were generated.")
         # for file in filesToOpen:
         #     self.assertTrue(os.path.exists(file), f"Output file {file} does not exist.")

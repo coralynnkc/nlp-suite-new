@@ -1,38 +1,36 @@
-from tabnanny import verbose
-import IO_libraries_util
-
-
+import collections
+import csv
+import math
 import os
 import re
-import pandas
-import pandas as pd
-from pycorenlp import StanfordCoreNLP # python wrapper for Stanford CoreNLP
-import collections
-from autocorrect import Speller
-from spellchecker import SpellChecker
-from textblob import Word
-from pandas import DataFrame
-import math
-from langdetect import DetectorFactory, detect, detect_langs
-import spacy
-from spacy_langdetect import LanguageDetector
-from spacy.language import Language
-from langid.langid import LanguageIdentifier, model
-import csv
 import subprocess
 import time
-from fuzzywuzzy import fuzz, process
-import stanza
 
-import file_cleaner_util
 import charts_util
+import constants_util
+import file_cleaner_util
 import IO_csv_util
 import IO_files_util
+import IO_libraries_util
 import IO_user_interface_util
-from IO_files_util import make_directory
-import reminders_util
-import constants_util
 import nltk
+import pandas
+import pandas as pd
+import reminders_util
+import spacy
+import stanza
+from autocorrect import Speller
+from fuzzywuzzy import fuzz, process
+from IO_files_util import make_directory
+from langdetect import detect_langs
+from langid.langid import LanguageIdentifier, model
+from pandas import DataFrame
+from pycorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
+from spacy.language import Language
+from spacy_langdetect import LanguageDetector
+from spellchecker import SpellChecker
+from textblob import Word
+
 
 def lemmatizing(word):#edited by Claude Hu 08/2020
     #https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
@@ -43,7 +41,7 @@ def lemmatizing(word):#edited by Claude Hu 08/2020
         # that lemmatization is returned as result
         #lemmatizer = WordNetLemmatizer()
         #lemma = lemmatizer.lemmatize(word, p)
-        from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_word
+        from Stanza_functions_util import lemmatize_stanza_word, stanzaPipeLine
         lemma = lemmatize_stanza_word(stanzaPipeLine(word))
         if lemma != word:
             result = lemma
@@ -56,8 +54,8 @@ def nltk_unusual_words(inputFilename,inputDir,outputDir, configFileName, chartPa
     import nltk
     nltk.download('words')
 
-    from Stanza_functions_util import stanzaPipeLine, lemmatize_stanza_doc, lemmatize_stanza_word
-                                                        
+    from Stanza_functions_util import lemmatize_stanza_doc, lemmatize_stanza_word, stanzaPipeLine
+
     filesToOpen=[]
     unusual=[]
     container=[]
@@ -109,7 +107,7 @@ def nltk_unusual_words(inputFilename,inputDir,outputDir, configFileName, chartPa
         NLTK_english_vocab_lemmatized.insert(0, 'NLTK corpus lemmatized words')
         if IO_csv_util.list_to_csv(NLTK_english_vocab_lemmatized, outputFilename_NLTK_corpus): return
     else:
-        NLTK_english_vocab = open(NLTK_corpus_lemmatized, "r", encoding="utf-8", errors="ignore").read()
+        NLTK_english_vocab = open(NLTK_corpus_lemmatized, encoding="utf-8", errors="ignore").read()
         NLTK_english_vocab_lemmatized = NLTK_english_vocab.split('\n') # '\n'.english_vocab()
     NLTK_english_vocab_lemmatized.pop(0)
     # NLTK_english_vocab_lemmatized are distinct values
@@ -123,7 +121,7 @@ def nltk_unusual_words(inputFilename,inputDir,outputDir, configFileName, chartPa
         documentID=documentID+1
         head, tail = os.path.split(file)
         print("Processing file " + str(documentID) + "/" + str(nFile) + ' ' + tail)
-        text = (open(file, "r", encoding="utf-8", errors="ignore").read())
+        text = (open(file, encoding="utf-8", errors="ignore").read())
         # text = text.lower()
         # text_list = text.split(" ")
         # the NLTK vocab is lowercase, lemmatized; must lemmatize your input
@@ -184,19 +182,19 @@ def nltk_unusual_words(inputFilename,inputDir,outputDir, configFileName, chartPa
     if chartPackage!='No charts':
         if nFile>10:
             pass
-            #TODO: implement some front end? 
+            #TODO: implement some front end?
             # def excel_chart_warning(request):
-            #     nFile = 
+            #     nFile =
             #     messages.warning(request, f"You have {nFile} files for which to compute Excel charts. THIS WILL TAKE A LONG TIME. Are you sure you want to proceed?")
             #     return render(request, 'warning_template.html', {'nFile': nFile})
 
             # def start_excel_task(request):
             #     if request.method == "POST":
-            #         # Run the Excel chart computation 
+            #         # Run the Excel chart computation
             #         return HttpResponse("Excel chart started.")
             #     else:
             #         return redirect('excel_chart_warning')
-            
+
             #  result = mb.askyesno("Excel charts","You have " + str(nFile) + " files for which to compute Excel charts.\n\nTHIS WILL TAKE A LONG TIME.\n\nAre you sure you want to do that?")
             #  if result==False:
             #      pass
@@ -525,12 +523,12 @@ def check_for_typo(inputDir, outputDir, inputCsvDictionaryFile, openOutputFiles,
                 continue
             print("  Processing file "+str(fileID)+"/"+str(len(files)) + ": " + filename)
             dir_path = os.path.join(folder, filename)
-            with open(dir_path, 'r', encoding='utf-8', errors='ignore') as src:
+            with open(dir_path, encoding='utf-8', errors='ignore') as src:
                 text = src.read().replace("\n", " ")
                 text = text.replace("%","percent")
                 NLP = StanfordCoreNLP("http://172.16.0.12:9000")
             # sentences = tokenize.sent_tokenize(text)
-            from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text
+            from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
             sentences = sentence_split_stanza_text(stanzaPipeLine(text))
             documents.append([sentences, filename, dir_path])
     # IO_util.timed_alert(5000, 'Word similarity', 'Finished preparing data...\n\nProcessed '+str(folderID)+' subfolders and '+str(fileID)+' files.\n\nNow running Stanford CoreNLP to get NER values on every file processed... PLEASE, be patient. This may take a while...')
@@ -1030,7 +1028,7 @@ def spellcheck(inputFilename,inputDir, checker_value_var, check_withinDir):
         fileID = fileID + 1
         # inputFilenames_path = os.path.join(folder, filename)
         # with open(inputFilenames_path, 'r', encoding='utf-8', errors='ignore') as opened_file:
-        with open(filename, 'r', encoding='utf-8', errors='ignore') as opened_file:
+        with open(filename, encoding='utf-8', errors='ignore') as opened_file:
             print("  Processing file:", filename)
             originalText = opened_file.read()
             path_to_file = os.path.join(inputDir, filename)
@@ -1128,7 +1126,7 @@ def language_detection(inputFilename, inputDir, outputDir, configFileName, openO
             fileID = fileID + 1
             head, tail = os.path.split(filename)
             print("Processing file " + str(fileID) + "/" + str(len(files)) + ' ' + tail)
-            text = open(filename, 'r', encoding='utf-8', errors='ignore').read()
+            text = open(filename, encoding='utf-8', errors='ignore').read()
             if len(text)==0:
                 print("  The file is empty. It will be discarded from processing.")
                 docErrors_empty=docErrors_empty+1
@@ -1243,7 +1241,7 @@ def language_detection(inputFilename, inputDir, outputDir, configFileName, openO
             else:
                 msg = str(fileID) + ' documents processed for language detection.\n  ' + \
                       str(docErrors_unknown) + ' document(s) read with unknown errors.'
-        
+
         print("File read errors," + "msg+ '\n\nFaulty files are listed in command line/terminal. Please, search for \'File read error\' and inspect each file carefully.")
 
     filesToOpen.append(outputFilenameCSV)

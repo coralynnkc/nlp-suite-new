@@ -1,5 +1,6 @@
 # test_topic_modeling.py
 import os
+
 from word2vec import run_word2vec
 
 # Replace with your input and output directories
@@ -31,7 +32,7 @@ keywords_var = False
 keywordInput = "harry, magic"
 range4 = 4
 range6 = 6
-range20 = 10 
+range20 = 10
 ngramsDropDown = "3-grams (trigrams)"
 #Vairbalke names for training architecute for gensim: Skip-Gram , CBOW
 # Run the topic modeling function

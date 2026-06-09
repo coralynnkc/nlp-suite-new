@@ -1,11 +1,11 @@
 #!/usr/bin/env Python
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jul 29 00:00:31 2020
 
 @author: claude
 """
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -14,6 +14,7 @@ if IO_libraries_util.install_all_Python_packages(GUI_util.window,"file_splitter_
 
 import os
 
+
 #This function split a txt file by recognizing number sequence in lines, and naming subfiles by the number recognized
 def run(inputFilename, outputPath, post_number_string = ''):
     #post_number_string is the string behind each number
@@ -21,7 +22,7 @@ def run(inputFilename, outputPath, post_number_string = ''):
     docname = os.path.split(inputFilename)[1]
     title = docname.partition('.')[0]
     lines = []#list of each line in the txt files
-    with open(inputFilename, 'r', encoding='utf-8',errors='ignore') as iptf: #read each line
+    with open(inputFilename, encoding='utf-8',errors='ignore') as iptf: #read each line
         line = iptf.readline()
         while line:
             lines.append(line)

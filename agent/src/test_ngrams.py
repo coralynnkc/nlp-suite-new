@@ -1,8 +1,8 @@
 
 
 import os
+
 from NGrams_CoOccurrences import run_ngrams
-import GUI_IO_util
 
 inputDir = '/Users/aidenamaya/nlp-suite/input'
 outputDir = '/Users/aidenamaya/nlp-suite/output'
@@ -11,7 +11,7 @@ outputDir = '/Users/aidenamaya/nlp-suite/output'
 os.makedirs(inputDir, exist_ok=True)
 os.makedirs(outputDir, exist_ok=True)
 
-inputFilename = '' 
+inputFilename = ''
 openOutputFiles = False
 chartPackage = 'Excel'
 dataTransformation = 'No transformation'

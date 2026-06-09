@@ -1,16 +1,18 @@
-from sklearn.metrics import silhouette_score
 import os
+
+from sklearn.metrics import silhouette_score
+
 tcache_path = f'{os.getcwd()}/cache'
 if not os.path.exists(tcache_path):
     os.makedirs(tcache_path)
 os.environ['TRANSFORMERS_CACHE'] = tcache_path
+from collections import defaultdict
+
+import numpy as np
+import torch
 from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import cosine_similarity
-from collections import defaultdict
 from tqdm import tqdm
-import torch
-import numpy as np
-
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -20,7 +22,7 @@ dropout_rate = 0.25
 bert_dim = 768
 
 
-class Clusterer():
+class Clusterer:
 
     def __init__(self, tokenizer, model_name):
 
@@ -31,7 +33,7 @@ class Clusterer():
 
 
     def get_batches(self, sentences, max_batch):
-    
+
         # each item in these lists is a sentence
         all_data = [] # indexed tokens, or word IDs
         all_words = [] # tokenized_text, or original words
@@ -48,7 +50,7 @@ class Clusterer():
                 all_words.append(tokenized_text)
                 all_masks.append(list(np.ones(len(indexed_tokens))))
                 all_users.append('<sep>'.join([str(sentence[0]), sentence[-1]]))
-    
+
         lengths = np.array([len(l) for l in all_data])
         ordering = np.argsort(lengths)
         # each item in these lists is a sentence
@@ -73,7 +75,7 @@ class Clusterer():
             batch_words = ordered_words[i:i+current_batch]
             batch_mask = ordered_masks[i:i+current_batch]
             batch_users = ordered_users[i:i+current_batch]
-    
+
             max_len = max([len(sent) for sent in batch_data])
             for j in range(len(batch_data)):
                 blen = len(batch_data[j])
@@ -91,10 +93,10 @@ class Clusterer():
                 current_batch = 6
 
         return batched_data, batched_words, batched_masks, batched_users
-    
-    
+
+
     def get_embeddings(self, batched_data, batched_words, batched_masks, batched_users, word):
-    
+
         word = word.lower()
         ret = []
         do_wordpiece = True
@@ -126,10 +128,10 @@ class Clusterer():
                     rep = torch.cat((hidden_layers[0], hidden_layers[1],
                                 hidden_layers[2], hidden_layers[3]), 0)
                     ret.append((w, rep.cpu().numpy().reshape(1, -1)[0]))
-    
+
         return (ret, do_wordpiece)
-    
-    
+
+
     def group_wordpiece(self, embeddings, word, do_wordpiece):
         '''
         - puts together wordpiece vectors
@@ -162,13 +164,13 @@ class Clusterer():
         if ''.join(ongoing_word) == word:
             data.append(np.mean(ongoing_rep, axis=0).flatten())
         np.random.shuffle(data)
-    
+
     #        return np.array(data)[:500]
         return np.array(data)
-    
-    
+
+
     def cluster_embeddings(self, data, k_range, w, ID=None, dim_reduct=None, rs=SEED, lamb=10000, finetuned=False, a_s=None):
-            
+
         if a_s is None:
             ks = range(k_range[0], k_range[1])
         else:
@@ -190,12 +192,12 @@ class Clusterer():
                             'Also consider the possibility that your dataset is too small to use word sense induction on.')
                     raise
         best_k = np.argmax(scores)
-    
+
         return centroids[ks[best_k]]
-    
+
 ####
 
-class Matcher():
+class Matcher:
 
     def __init__(self, tokenizer, model_name):
 
@@ -206,7 +208,7 @@ class Matcher():
 
 
     def get_batches(self, sentences, max_batch, test=False):
-    
+
         # each item in these lists is a sentence
         all_data = [] # indexed tokens, or word IDs
         all_words = [] # tokenized_text, or original words
@@ -223,7 +225,7 @@ class Matcher():
                 all_words.append(tokenized_text)
                 all_masks.append(list(np.ones(len(indexed_tokens))))
                 all_users.append('<sep>'.join([str(sentence[0]), sentence[-1]]))
-    
+
         lengths = np.array([len(l) for l in all_data])
         ordering = np.argsort(lengths)
         # each item in these lists is a sentence
@@ -248,7 +250,7 @@ class Matcher():
             batch_words = ordered_words[i:i+current_batch]
             batch_mask = ordered_masks[i:i+current_batch]
             batch_users = ordered_users[i:i+current_batch]
-    
+
             max_len = max([len(sent) for sent in batch_data])
             for j in range(len(batch_data)):
                 blen = len(batch_data[j])
@@ -264,12 +266,12 @@ class Matcher():
                 current_batch = 12
             if max_len > 200:
                 current_batch = 6
-    
+
         return batched_data, batched_words, batched_masks, batched_users
-    
-    
+
+
     def load_centroids(self, vocab, path, added_centroids=None, rs=SEED):
-    
+
         if added_centroids is None:
             centroids_folder = f'{path}/centroids'
         else:
@@ -279,14 +281,14 @@ class Matcher():
             if f'{w}.npy' not in os.listdir(centroids_folder): continue
             centroids = np.load(f'{centroids_folder}/{w}.npy', allow_pickle=True)
             centroids_d[w] = centroids
-    
+
         return centroids_d
-    
-    
+
+
     def batch_match(self, outfile, centroids_d, data_dict):
-    
+
         for tok in data_dict:
-            rep_list = data_dict[tok]        
+            rep_list = data_dict[tok]
             IDs = []
             reps = []
             for tup in rep_list:
@@ -299,10 +301,10 @@ class Matcher():
             labels = np.argmax(sims, axis=1)
             for i, _ in enumerate(IDs):
                 outfile.write(str(IDs[i]) + '\t' + tok + '\t' + str(labels[i]) + '\n')
-    
-    
+
+
     def get_embeddings_and_match(self, batched_data, batched_words, batched_masks, batched_users, centroids_d, o_path, added_centroids=None):
-    
+
         if added_centroids is None:
             outfile = open(f'{o_path}/senses', 'w')
         else:
@@ -381,4 +383,3 @@ class Matcher():
                 data_dict[tok].append((prev_w[1], rep))
         self.batch_match(outfile, centroids_d, data_dict)
         outfile.close()
-    

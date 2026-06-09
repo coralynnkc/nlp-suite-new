@@ -1,15 +1,7 @@
-import sys
-import IO_libraries_util
-
-import re
-import pandas as pd
-import os
-import csv
 
 import CoNLL_util
 import IO_csv_util
-import GUI_IO_util
-import IO_user_interface_util
+import pandas as pd
 
 # multi_word_location_prefix = "Republic of, People's, Kingdom of, south, South, north, North, west, east, los, new, san, las, la, hong, Soviet"
 # split_locations_suffix = "city, island, province"

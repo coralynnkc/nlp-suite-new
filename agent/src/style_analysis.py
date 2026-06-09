@@ -1,12 +1,10 @@
-import IO_libraries_util
-
-
-import IO_files_util
+import config_util
 import file_spell_checker_util
+import IO_files_util
+import IO_libraries_util
+import Stanza_util
 import statistics_txt_util
 import style_analysis_abstract_concreteness_analysis_util
-import Stanza_util
-import config_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -18,9 +16,9 @@ def run_style_analysis(inputFilename, inputDir, outputDir, chartPackage,dataTran
     vocabulary_analysis_menu_var,
     gender_guesser_var,
     min_rating,
-    max_rating_sd):   
+    max_rating_sd):
 
-    
+
     openOutputFiles = True
     config_filename = "NLP_default_IO_config.csv"
 
@@ -37,7 +35,7 @@ def run_style_analysis(inputFilename, inputDir, outputDir, chartPackage,dataTran
     # extract_date_from_text_var = 0
 
     if package_display_area_value == '':
-        print(f"No setup for NLP package and language, The default NLP package and language has not been setup. \nPlease, click on the Setup NLP button and try again.")
+        print("No setup for NLP package and language, The default NLP package and language has not been setup. \nPlease, click on the Setup NLP button and try again.")
         return
 
     openOutputFilesSV=openOutputFiles
@@ -115,7 +113,7 @@ def run_style_analysis(inputFilename, inputDir, outputDir, chartPackage,dataTran
             annotator_available=True
             if annotator_available:
                 outputFiles = statistics_txt_util.process_words(config_filename, inputFilename, inputDir, outputDir_style,
-                                                            openOutputFiles, 
+                                                            openOutputFiles,
                                                             chartPackage,dataTransformation,'Objectivity/subjectivity (via spaCy)', language)
                 if outputFiles!=None:
                     if isinstance(outputFiles, str):
@@ -129,7 +127,7 @@ def run_style_analysis(inputFilename, inputDir, outputDir, chartPackage,dataTran
             else:
                 process = 'Repetition: Words in first K and last K sentences'
             outputFiles = statistics_txt_util.process_words(config_filename, inputFilename, inputDir, outputDir_style,
-                                                       openOutputFiles, 
+                                                       openOutputFiles,
                                                        chartPackage,dataTransformation,process,language)
             if outputFiles!=None:
                 if isinstance(outputFiles, str):
@@ -144,7 +142,7 @@ def run_style_analysis(inputFilename, inputDir, outputDir, chartPackage,dataTran
             else:
                 process = 'Repetition: Last K words of a sentence/First K words of next sentence'
             outputFiles = statistics_txt_util.process_words(config_filename, inputFilename, inputDir, outputDir_style,
-                                                       openOutputFiles, 
+                                                       openOutputFiles,
                                                        chartPackage, dataTransformation,process, language)
             if outputFiles!=None:
                 if isinstance(outputFiles, str):
@@ -274,8 +272,8 @@ def main():
     inputFilename = ""
     inputDir = "/Users/aidenamaya/nlp-suite/input"
     outputDir = "/Users/aidenamaya/nlp-suite/output"
-    chartPackage = "Excel"  
-    dataTransformation = "No transformation" 
+    chartPackage = "Excel"
+    dataTransformation = "No transformation"
     extra_GUIs_var = False
     complexity_readability_analysis_var = True
     complexity_readability_analysis_menu_var = "*"

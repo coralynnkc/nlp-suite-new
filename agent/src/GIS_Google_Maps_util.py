@@ -7,11 +7,12 @@ Gathers the points of the location in lat, long format then puts them into the t
 Saves that template file with the addition to user-specified file name/location\
 Template file should be located in the lib folder
 """
-import GUI_IO_util
-import GIS_geocode_util
 import os
-import reminders_util
+
+import GIS_geocode_util
 import GIS_pipeline_util
+import GUI_IO_util
+import reminders_util
 
 
 # gathers the template html/js file to build a heat map,
@@ -30,7 +31,7 @@ def create_google_heatmap(outputFilename, gmaps_list):
         return
 
     js_template_loc = GUI_IO_util.Google_heatmaps_libPath + os.sep + "heatmap_template.html"
-    open_js = open(js_template_loc, 'r')
+    open_js = open(js_template_loc)
     js_contents = open_js.readlines()
     js_template = "".join(js_contents)
     open_js.close()

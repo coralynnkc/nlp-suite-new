@@ -16,19 +16,14 @@
 #   The default is the WGS-84 ellipsoid, which is the most globally accurate.
 #   geopy includes a few other models in the distance.ELLIPSOIDS dictionary.
 
-import sys
-import IO_libraries_util
-
-import os
 
 
-import IO_files_util
-import GUI_IO_util
-import GIS_file_check_util
+
 import GIS_distance_util
-import IO_csv_util
+import GIS_file_check_util
 import GIS_geocode_util
 import GIS_pipeline_util
+import IO_csv_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 

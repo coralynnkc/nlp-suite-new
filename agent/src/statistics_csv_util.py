@@ -1,23 +1,19 @@
 #written by Roberto Franzosi October 2019
 
+import csv
 import os
 from collections import Counter
-import csv
-import pandas as pd
-import numpy as np
-from scipy import stats
 
-import IO_files_util
-import IO_csv_util
 import charts_util
+import IO_csv_util
+import IO_files_util
 import IO_user_interface_util
-
-
-import pandas as pd
-import os
 import numpy as np
+import pandas as pd
 from pandas.api.types import is_numeric_dtype
+from scipy import stats
 from scipy.stats import zscore
+
 
 def get_file_size(file_path, file_size_dict):
     if file_path in file_size_dict:
@@ -555,7 +551,7 @@ def compute_csv_column_frequencies(inputFilename, inputDataFrame, outputDir,
         # you can pass Document ID and Document (e.g., in NLTK unusual words), Document (e.g., annotator POS)
         # aggregating by document
         if group_cols[0] == 'Document ID' or group_cols[0] == 'Document':
-            if not 'by Document' in chart_title:
+            if 'by Document' not in chart_title:
                 chart_title = chart_title + ' by Document'
             # the data_final ALWAYS has the following column layout:
             #   Document ID, Document, Frequency Document ID,

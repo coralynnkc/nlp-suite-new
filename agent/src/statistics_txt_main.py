@@ -1,13 +1,8 @@
 # written by Roberto Franzosi (Spring/summer 2020)
 
-import sys
-import IO_libraries_util
 
 
-import os
-from subprocess import call
 
-import GUI_IO_util
 
 
 
@@ -44,7 +39,7 @@ def run_statistics(inputFilename, inputDir, outputDir,
 
             import statistics_txt_util
             outputFiles, outputDir = statistics_txt_util.compute_corpus_statistics(inputFilename, inputDir, outputDir,
-                                                                        config_filename, False, 
+                                                                        config_filename, False,
                                                                         chartPackage, dataTransformation,stopwords_var, lemmatize_var)
             if outputFiles != None:
                 if isinstance(outputFiles, str):
@@ -73,8 +68,8 @@ def run_statistics(inputFilename, inputDir, outputDir,
                     filesToOpen.extend(outputFiles)
 
     if corpus_statistics_byPOS_var:
-        import Stanza_util
         import config_util
+        import Stanza_util
         # get the NLP package and language options
         error, package, parsers, package_basics, language, package_display_area_value, encoding_var, export_json_var, memory_var, document_length_var, limit_sentence_length_var = \
             config_util.read_NLP_package_language_config()
@@ -106,5 +101,5 @@ def run_statistics(inputFilename, inputDir, outputDir,
             filesToOpen.append(outputFiles)
         else:
             filesToOpen.extend(outputFiles)
-        
+
     return filesToOpen

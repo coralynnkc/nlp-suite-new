@@ -3,23 +3,21 @@
 # Edited by Roberto Franzosi, Tony May 2022
 # Edited by Samir Kaddoura, March 2023
 
+import io
 import os
 import re
 from collections import Counter
-
-import numpy as np
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 import charts_Excel_util
 import charts_Plotly_util
 import IO_csv_util
 import IO_user_interface_util
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import statistics_csv_util
-import io
-
+from plotly.subplots import make_subplots
 
 # Prepare the data (data_to_be_plotted) to be used in charts_Excel_util.create_excel_chart with the format:
 #   one series: [[['Name1','Frequency'], ['A', 7]]]
@@ -46,7 +44,7 @@ def prepare_data_to_be_plotted_inExcel(
             print("Input data read error", str(err))
             return None
         headers = list(data.columns)
-        withHeader_var = True  
+        withHeader_var = True
     else:
         withHeader_var = IO_csv_util.csvFile_has_header(
             inputFilename, inputFileData=inputFileData
@@ -72,7 +70,7 @@ def prepare_data_to_be_plotted_inExcel(
         )
     else:
         try:
-            if not inputFileData:  
+            if not inputFileData:
                 data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
         except:
             try:
@@ -827,7 +825,7 @@ def run_all(
 ):
     from io import StringIO
     # get the chart type from the GUI user selection
-    # TODO: 
+    # TODO:
 
     use_Plotly = "plotly" in chartPackage.lower()
     # added by Tony, May 2022 for complete sentence index
@@ -1313,7 +1311,7 @@ def add_missing_IDs(input, outputFilename):
             end_sentence = Row_list[index][sentenceID_pos]
             inputFilename = Row_list[index][docName_pos]
             inputFilename = IO_csv_util.undressFilenameForCSVHyperlink(inputFilename)
-            text = open(inputFilename, "r", encoding="utf-8", errors="ignore").read()
+            text = open(inputFilename, encoding="utf-8", errors="ignore").read()
             sentences = sent_tokenize_stanza(stanzaPipeLine(text))
             number_sentences.append([inputFilename, len(sentences)])
 
@@ -1428,7 +1426,7 @@ def add_missing_IDs(input, outputFilename):
 
 def complete_sentence_index(file_path):
     data = pd.read_csv(file_path, encoding="utf-8", on_bad_lines="skip")
-    if not "Sentence ID" in data:
+    if "Sentence ID" not in data:
         head, tail = os.path.split(file_path)
         IO_user_interface_util.timed_alert(
             2000,
@@ -1541,7 +1539,7 @@ def multiple_barchart(datalist, outputFilename, var, ntopchoices):
     tempdatalist = [
         pd.read_csv(i, encoding="utf-8", on_bad_lines="skip") for i in datalist
     ]
-    
+
     # Process each DataFrame to count the top 'ntopchoices' values of the column 'var'
     newDatalist = [
         df[var]
@@ -1601,7 +1599,7 @@ def boxplot(
     elif type(data) == str:
         data = pd.read_csv(inputFileData, encoding='utf-8', on_bad_lines='skip')
 
-    if not "int" in str(type(data[var][0])) and not "float" in str(type(data[var][0])):
+    if "int" not in str(type(data[var][0])) and "float" not in str(type(data[var][0])):
         print(
             "Warning",
             'The "Boxplots" option requires a numeric field.\n\nPlease, use the dropdown menu to select a numeric csv file field for visualization and try again.',
@@ -1609,7 +1607,7 @@ def boxplot(
         return
 
     if bycategory != 0 and bycategory != None and category != None:
-        if not "str" in str(type(data[category][0])):
+        if "str" not in str(type(data[category][0])):
             print(
                 "Warning",
                 'The "Split data by category" Boxplots option requires a CATEGORICAL "csv file field"".\n\nPlease, use the "csv file field" dropdown menu to select a CATEGORICAL field and try again.',
@@ -1617,7 +1615,7 @@ def boxplot(
             return
 
     if color != None:
-        if not "str" in str(type(data[color][0])):
+        if "str" not in str(type(data[color][0])):
             print(
                 "Warning",
                 'The Boxplots with "Split data by category" and color options requires a secodn CATEGORICAL "csv file field" for the color option".\n\nPlease, use the second "csv file field" dropdown menu to select a CATEGORICAL field and try again.',
@@ -1667,7 +1665,7 @@ def Sankey(data, outputFilename, var1, lengthvar1, var2, lengthvar2, three_way_S
             if len(finalframe) == 0:
                 print("Warning The dataframe computed by the Sankey flowchart is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2")
                 return
-            
+
             finalframe = data[data[var1].isin(list(set(tempframe.index)))]
         tempframe2 = pd.DataFrame(finalframe[var2]).value_counts().head(lengthvar2).reset_index()
         tempframe3 = pd.DataFrame(finalframe[var3]).value_counts().head(lengthvar3).reset_index()
@@ -2290,7 +2288,6 @@ def special_sql_commands(s, dataFrame):
     return WHERE, GROUPBY
 
 
-import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
 
@@ -2404,7 +2401,7 @@ def rate_prop(df, rt, base):
 # THIS IS AN ABBREVIATED VERSION FOR The sunburst / treemap
 
 def Sunburst_Treemap(
-    inputFileName, # Change inputFileName to use string contents of csv 
+    inputFileName, # Change inputFileName to use string contents of csv
     outputFilename,
     outputDir,
     csv_file_categorical_field_list,
@@ -2451,9 +2448,9 @@ def Sunburst_Treemap(
 
 def visualize_colormap_data(data, top_n=60, figsize=(15, 10), y_label='Lemma', x_label='Document', normalize='log',
                    color='YlOrBr', outputname='output_figure'):
-    import seaborn as sns
     import matplotlib.pyplot as plt
     import numpy as np
+    import seaborn as sns
 
     numeric_data = data.select_dtypes(include=[np.number])
     sorted_columns = numeric_data.columns.sort_values()
@@ -2562,31 +2559,31 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
 
     if date_format_var == 'yyyy':  # creates year variable based on yyyy format
         for i in range(0, len(data['Document'])):
-            year.append(re.search('\d{4}', data[date_field][i])[0])
+            year.append(re.search(r'\d{4}', data[date_field][i])[0])
             data['year'] = year
     elif date_format_var == 'mm-yyyy':  # creates year and month variable in yyyy-mm format
         for i in range(0, len(data['Document'])):
-            date.append(re.search('\d.*\d', data[date_field][i])[0])
+            date.append(re.search(r'\d.*\d', data[date_field][i])[0])
         for i in range(0, len(data['Document'])):
-            year.append(re.search('\d{4}', date[i])[0])
+            year.append(re.search(r'\d{4}', date[i])[0])
         for i in range(0, len(data['Document'])):
             month.append(year[i] + '-' + date[i][0:2])
         data['year'] = year
         data['month'] = month
     elif date_format_var == 'yyyy-mm':  # creates year and month variable in yyyy-mm format
         for i in range(0, len(data[date_field])):
-            date.append(re.search('\d.*\d', data[date_field][i])[0])
+            date.append(re.search(r'\d.*\d', data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
-            year.append(re.search('\d{4}', date[i])[0])
+            year.append(re.search(r'\d{4}', date[i])[0])
         for i in range(0, len(data[date_field])):
             month.append(year[i] + '-' + date[i][-2:])
         data['year'] = year
         data['month'] = month
     elif date_format_var == 'dd-mm-yyyy':  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
-            date.append(re.search('\d.*\d', data[date_field][i])[0])
+            date.append(re.search(r'\d.*\d', data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
-            year.append(re.search('\d{4}', date[i])[0])
+            year.append(re.search(r'\d{4}', date[i])[0])
         for i in range(0, en(data[date_field])):
             month.append(year[i] + '-' + date[i][3:5])
         for i in range(0, len(data[date_field])):
@@ -2597,12 +2594,12 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
     elif date_format_var == 'mm-dd-yyyy':  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
             try:
-                date.append(re.search('\d.*\d', data[date_field][i])[0])
+                date.append(re.search(r'\d.*\d', data[date_field][i])[0])
             except:
                 continue
         for i in range(0, len(data[date_field])):
             try:
-                year.append(re.search('\d{4}', date[i])[0])
+                year.append(re.search(r'\d{4}', date[i])[0])
             except:
                 continue
         for i in range(0, len(data[date_field])):
@@ -2620,9 +2617,9 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
         data['day'] = day
     elif date_format_var == 'yyyy-mm-dd':  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
-            date.append(re.search('\d.*\d', data[date_field][i])[0])
+            date.append(re.search(r'\d.*\d', data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
-            year.append(re.search('\d{4}', date[i])[0])
+            year.append(re.search(r'\d{4}', date[i])[0])
         for i in range(0, len(data[date_field])):
             month.append(year[i] + '-' + date[i][5:7])
         data['year'] = year
@@ -2630,9 +2627,9 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
         data['day'] = date
     elif date_format_var == 'yyyy-dd-mm':  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
-            date.append(re.search('\d.*\d', data[date_field][i])[0])
+            date.append(re.search(r'\d.*\d', data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
-            year.append(re.search('\d{4}', date[i])[0])
+            year.append(re.search(r'\d{4}', date[i])[0])
         for i in range(0, len(data[date_field])):
             month.append(year[i] + '-' + date[i][-2:])
         for i in range(0, len(data[date_field])):

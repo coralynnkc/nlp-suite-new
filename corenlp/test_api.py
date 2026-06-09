@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Author: Arne Neumann <nlpbox.programming@arne.cl>
 
 """This is a simple black-box test for the CoreNLP REST API."""
 
-from __future__ import print_function
 import pexpect
 import pytest
 import requests

@@ -2,7 +2,9 @@
 # author: Brett Landau
 
 import os
+
 import IO_files_util
+
 
 # given a merged file with filenames embedded in beginning and ending strings (e.g., <@# and #@>) the function splits the filename from file content
 def extract_fileContent_and_fileName(outputDir, fileContent, separator_begin, separator_end):
@@ -28,7 +30,7 @@ def run(inputFilename, separator_begin, separator_end, outputDir):
     nFiles=0
     head, tail = os.path.split(inputFilename)
     tail=tail[:-4]
-    file = open(inputFilename, "r", encoding="utf-8", errors='ignore')
+    file = open(inputFilename, encoding="utf-8", errors='ignore')
     fileContent = file.read()
     count_begin = fileContent.count(separator_begin)
     if count_begin == 0: # not a merged file with separators; return silently the inputfile

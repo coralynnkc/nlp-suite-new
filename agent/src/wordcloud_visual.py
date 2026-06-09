@@ -1,18 +1,10 @@
 #written by Roberto Franzosi November 2019
 
-import sys
-import IO_libraries_util
-
 import os
-from subprocess import call
 
-
-import IO_internet_util
-import IO_files_util
-import GUI_IO_util
-import IO_csv_util
-import reminders_util
 import config_util
+import IO_internet_util
+import IO_libraries_util
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'#for mac users to solve one error: https://stackoverflow.com/questions/53014306/error-15-initializing-libiomp5-dylib-but-found-libiomp5-dylib-already-initial
 # RUN section ______________________________________________________________________________________________________________________________________________________
@@ -48,7 +40,7 @@ def run_wordcloud(inputFilename, inputDir, outputDir, visualization_tools, prefe
         print("Warning, You have selected the option of using different colors for different columns of a single csv file. But... you have not selected in input the csv file field.\n\nPlease, select an appropriate csv file field and try again. ")
         return
 
-    if differentColumns_differentColors==True and not "|" in str(csvField_color_list):
+    if differentColumns_differentColors==True and "|" not in str(csvField_color_list):
         print("Warning, you have selected the option of using different colors for different columns of a csv file. But... you have not selected the colors to be used.\n\nPlease, select a color by ticking the Color checkbox, select your preferred color and try again.")
         return
 

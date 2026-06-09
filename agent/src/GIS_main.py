@@ -3,23 +3,15 @@
 # Written by Roberto Franzosi May, September 2020
 # Written by Roberto Franzosi September 2021
 
-import sys
-import IO_libraries_util
 
-import os
-from subprocess import call
 import pandas as pd
+
 # Ignore error coming from df['Date'][index] = saved_date
 pd.options.mode.chained_assignment = None
 
 
-import GUI_IO_util
-import config_util # used for Google API
-import reminders_util
-import constants_util
-import IO_csv_util
+import config_util  # used for Google API
 import GIS_pipeline_util
-import GIS_file_check_util
 import IO_files_util
 import Stanford_CoreNLP_util
 
@@ -30,7 +22,7 @@ def run_GIS(inputFilename,
         inputDir,
         outputDir,
         openOutputFiles,
-        
+
         chartPackage,
         dataTransformation,
         csv_file,
@@ -68,14 +60,14 @@ def run_GIS(inputFilename,
     country_bias = country_bias_var[-2:]
 
     box_tuple=''
-    if not 'e.g.,' in area_var:
+    if 'e.g.,' not in area_var:
         if (area_var.count('(') + area_var.count(')') != 4) or (area_var.count(',') != 3):
             print("Warning, The area variable is not set correctly. The expected value should be something like this: (34.98527, -85.59790), (30.770444, -81.521974)\n\nThe two sets of values refer to the upper left-hand and lower right-hand corner latitude and longitude coordinates of the area to wich you wish to restrict geocoding.\n\nPlease, enter the correct value and try again.")
             area_var.set('(34.98527, -85.59790), (30.770444, -81.521974)')
             return
         box_tuple=area_var
 
-    geocode_locations_var = True 
+    geocode_locations_var = True
     if NER_extractor==False and geocode_locations_var==False and GIS_package_var=='':
         print("Warning, no options have been selected.\n\nPlease, select an option to run and try again.")
         return

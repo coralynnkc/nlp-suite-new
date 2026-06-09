@@ -2,16 +2,16 @@
 # Contact: chentony2011@hotmail.com
 # https://plotly.com/python/
 
-import os
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objs as go
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import math
 import io
+import math
+import os
 
 import IO_csv_util
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 
 ## NOTE:
 ## some graphing functions has a column placed at the end
@@ -34,7 +34,7 @@ def create_Plotly_chart(inputFilename,outputDir,chart_title,chart_type_list,cols
                         column_yAxis_label='',
                         remove_hyperlinks=True,
                         static_flag=False,
-                        csv_field_Y_axis_list = [], X_axis_var = [], 
+                        csv_field_Y_axis_list = [], X_axis_var = [],
                         inputFileData = ""):
     # if we need to remove the hyperlinks, we need to make a temporary data for plotting
     if inputFileData:
@@ -472,12 +472,13 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
 
 
 def bubble_chart(inputFilename, outputFilename, x, y, color, show_labels=True, inputFileData=""):
-    import mpld3
-    from mpld3 import plugins
-    import numpy as np
-    from collections import Counter
     import random
-    
+    from collections import Counter
+
+    import mpld3
+    import numpy as np
+    from mpld3 import plugins
+
 
     print(f"\nCHART PARAMETERS: {x} (X-axis) vs. {y} (Y-axis)")
     if inputFileData:

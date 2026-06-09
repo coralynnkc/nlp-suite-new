@@ -1,12 +1,9 @@
-import sys
-import IO_libraries_util
-
 import os
-import simplekml
-import pandas as pd
+import sys
 
 import IO_csv_util
-import IO_user_interface_util
+import pandas as pd
+import simplekml
 
 # icon_type are the different types of icon, like pushpin, paddle teardrop, paddle square....
 # 	Expected input will be a string, for example: icon_type == "pushpin"
@@ -604,7 +601,7 @@ def pin_customizer(inputFilename, pnt, geo_index, index_list, locationColumnName
 				print("No group labels specified for Group No. " + str(j + 1) + "There is no group label specified for Group No." + str(
 								   j + 1) + '.\n\nThe program will automatically set a group label for this group as "Group ' + str(
 								   j + 1) + "." )
-    
+
 				new_label = "Group " + str(j + 1)
 				group_labels[j] = new_label
 

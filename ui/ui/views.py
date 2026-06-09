@@ -5,12 +5,10 @@ from django.contrib import messages
 from django.http import (
     HttpRequest,
     HttpResponse,
-    HttpResponseBadRequest,
     HttpResponseRedirect,
 )
 from django.shortcuts import render
 from django.template import loader
-from django.http import FileResponse, Http404
 
 AGENT_SERVER_URL = os.getenv("AGENT_SERVER_URL", "http://172.16.0.11:3000")
 
@@ -161,7 +159,7 @@ def word2vec(request: HttpRequest):
             messages.add_message(request, messages.ERROR, response.content.decode())
     return render(request, "word2vec.html")
 
-def wordnet(_: HttpRequest): 
+def wordnet(_: HttpRequest):
     template = loader.get_template("../templates/wordnet.html")
     return HttpResponse(template.render())
 
@@ -200,7 +198,7 @@ def gis(request: HttpRequest):
             messages.add_message(request, messages.ERROR, response.content.decode())
     return render(request, "gis.html")
 
-def genderanalysis(_: HttpRequest): 
+def genderanalysis(_: HttpRequest):
     template = loader.get_template("../templates/gender_analysis.html")
     return HttpResponse(template.render())
 
@@ -243,10 +241,10 @@ def sankey_flowchart(request: HttpRequest):
 #         try:
 #             # Get the uploaded file from request.FILES
 #             csv_file = request.FILES['csv_file']
-            
+
 #             # Prepare multipart form data for forwarding
 #             files = {'csv_file': (csv_file.name, csv_file, 'text/csv')}
-            
+
 #             # Forward request with proper file handling
 #             response = requests.post(
 #                 f"{AGENT_SERVER_URL}/sankey_flowchart",
@@ -264,12 +262,12 @@ def sankey_flowchart(request: HttpRequest):
 #                 return HttpResponseRedirect("/status")
 #             else:
 #                 messages.error(request, f"Agent Error: {response.text}")
-                
+
 #         except KeyError:
 #             messages.error(request, "No CSV file uploaded")
 #         except requests.exceptions.RequestException as e:
 #             messages.error(request, f"Connection Error: {str(e)}")
-            
+
 #     return render(request, "sankey_flowchart.html")
 
 def boxplot(_: HttpRequest):
@@ -328,15 +326,15 @@ def sentence_analysis(request: HttpRequest):
             data = request.body,
             headers=request.headers
         )
-        
+
         if response.ok:
             return HttpResponseRedirect("/status")
         else:
             messages.add_message(request, messages.ERROR, response.content.decode())
 
-            
+
     return render(request, "sentence_analysis.html")
-            
+
 
 def file_manager(request: HttpRequest):
     if request.method == "POST":

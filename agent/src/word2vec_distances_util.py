@@ -1,16 +1,16 @@
-import pandas as pd
+# for calculating the distance
+import itertools
 import math
 import time
+
+import charts_util
+import IO_files_util
+import numpy as np
+import pandas as pd
+from numpy.linalg import norm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-import IO_files_util
-import charts_util
-
-# for calculating the distance
-import itertools
-import numpy as np
-from numpy.linalg import norm
 
 def compute_word2vec_distances(inputFilename, inputDir, outputDir, chartPackage, dataTransformation,
                         word_vectors,
@@ -63,7 +63,7 @@ def compute_word2vec_distances(inputFilename, inputDir, outputDir, chartPackage,
                     i+=1
 
                 # write output file
-                keyword_sim_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', f'Word2Vec_'+str(len(keywords_list))+'_Keywords_Cos_Similarity')
+                keyword_sim_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Word2Vec_'+str(len(keywords_list))+'_Keywords_Cos_Similarity')
                 keyword_df.to_csv(keyword_sim_outputFilename, encoding='utf-8', index=False)
                 filesToOpen.append(keyword_sim_outputFilename)
             else:
@@ -186,7 +186,7 @@ def compute_word2vec_distances(inputFilename, inputDir, outputDir, chartPackage,
                         continue
                     i+=1
                 keyword_sim_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv',
-                                                                                    f'Word2Vec_' + str(
+                                                                                    'Word2Vec_' + str(
                                                                                         len(keywords_list)) + '_Keywords_Cos_Similarity')
                 keyword_df.to_csv(keyword_sim_outputFilename, encoding='utf-8', index=False)
                 filesToOpen.append(keyword_sim_outputFilename)
@@ -273,7 +273,7 @@ def compute_word2vec_distances(inputFilename, inputDir, outputDir, chartPackage,
                         continue
                     i+=1
                 keyword_sim_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv',
-                                                                                    f'Word2Vec_' + str(
+                                                                                    'Word2Vec_' + str(
                                                                                         len(keywords_list)) + '_Keywords_Cos_Similarity')
                 keyword_df.to_csv(keyword_sim_outputFilename, encoding='utf-8', index=False)
                 filesToOpen.append(keyword_sim_outputFilename)

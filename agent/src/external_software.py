@@ -1,4 +1,4 @@
-import requests  
+import requests
 
 # Start Google Earth Pro
 response = requests.post("http://software-container:5000/start-google-earth")

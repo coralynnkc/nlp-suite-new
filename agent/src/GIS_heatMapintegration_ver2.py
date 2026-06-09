@@ -3,19 +3,13 @@
 
 #Import modules
 
-import pandas as pd
-import geopandas
-import gmaps
-import shapely
-import folium
-from shapely.geometry import Point
-import geocoder
 import sys
+
+import gmaps
+import pandas as pd
+
 'geopandas' in sys.modules
 import googlemaps
-from googlemaps import Client
-
-
 
 #insert google maps key
 ##need to insert googlemaps api key " "
@@ -29,7 +23,7 @@ lynchLocation
 # ex. [lynchLocation['Latitude', 'Longitude']] doesn't work
 
 lynchLocation.rename(columns={'Latitude':'lat',
-                          'Longitude':'lng'}, 
+                          'Longitude':'lng'},
                  inplace=True)
 
 lynchLocation
@@ -48,6 +42,7 @@ coordinatsList
 
 
 import gmaps.datasets
+
 gmaps.configure(api_key='') #<- insert distinct API Key. My key is: AIzaSyApsnv-diA8hrDMrfEEp6Ci6tfUYN7POzg
 
 fig = gmaps.figure()

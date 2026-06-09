@@ -5,22 +5,17 @@ modified by Jack Hester and Roberto Franzosi, February, June 2019, November 2021
 modified by Tony Apr 2022
 """
 
-import sys
-import IO_libraries_util
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL Table Analyzer",
 #                                           ['csv', 'os', 'collections']) == False:
 #     sys.exit(0)
 
 from collections import Counter
-import pandas as pd
 
-import IO_files_util
-import IO_csv_util
-import IO_user_interface_util
-import CoNLL_util
 import charts_util
-import statistics_csv_util
+import IO_csv_util
+import IO_files_util
+import pandas as pd
 import Stanford_CoreNLP_tags_util
 
 dict_POSTAG, dict_DEPREL = Stanford_CoreNLP_tags_util.dict_POSTAG, Stanford_CoreNLP_tags_util.dict_DEPREL
@@ -120,7 +115,7 @@ def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
             strings+= "['"+item+"',ner_counter['"+item+"']],"
         else:
             strings += "['" + item + "',ner_counter['" + item + "']]]"
-    
+
     print("DEBUG STRING:", strings)
     noun_ner_stats = eval(strings)
     print(noun_ner_stats[1],noun_ner_stats[1][1], "THIS IS THE O COUNTER!!!!!!!!")

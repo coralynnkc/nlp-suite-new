@@ -1,8 +1,8 @@
 
 
 import os
+
 from file_search_byWord_main import run_search_byWord
-import GUI_IO_util
 
 inputDir = '/Users/aidenamaya/nlp-suite/input'
 outputDir = '/Users/aidenamaya/nlp-suite/output'
@@ -11,15 +11,15 @@ outputDir = '/Users/aidenamaya/nlp-suite/output'
 os.makedirs(inputDir, exist_ok=True)
 os.makedirs(outputDir, exist_ok=True)
 
-inputFilename = '' 
+inputFilename = ''
 openOutputFiles = False
 chartPackage = 'Excel'
 dataTransformation = 'No transformation'
 
 search_options = "Case sensitive (default)"
-search_by_dictionary= False 
-selectedCsvFile = "" 
-search_by_keyword = True 
+search_by_dictionary= False
+selectedCsvFile = ""
+search_by_keyword = True
 search_keyword_values = ""
 minus_K_words_sentences_var = 0
 plus_K_words_sentences_var = 0
@@ -32,7 +32,7 @@ language_list = ["English"]
 language = "English"
 
 run_search_byWord(inputFilename = inputFilename,
-                  inputDir = inputDir, 
+                  inputDir = inputDir,
                   outputDir = outputDir,
     openOutputFiles = openOutputFiles,
     chartPackage = chartPackage,

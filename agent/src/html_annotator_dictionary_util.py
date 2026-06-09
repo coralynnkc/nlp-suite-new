@@ -6,11 +6,12 @@
 
 import os
 import re
+from csv import reader
 
+import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
-from csv import reader
-import IO_csv_util
+
 
 # the function associates specific values of a csv file to a specific color
 # append the function to allow multiple wordColNum and catColNum (cat for categories)
@@ -30,7 +31,7 @@ def readCsv(wordColNum, catColNum, dictFile, csvValue_color_list):
         dictionary.append([])
     for i in num_colors:
         color_list.append(csvValue_color_list[i])
-    with open(dictFile, 'r', encoding='utf-8', errors='ignore') as read_obj:
+    with open(dictFile, encoding='utf-8', errors='ignore') as read_obj:
         csv_reader = reader(read_obj)
         for row in csv_reader:
             if len(categories)>0:
@@ -101,7 +102,7 @@ def dictionary_annotate(inputFile, inputDir, outputDir, configFileName, dict_fil
         head, tail = os.path.split(file)
         i += 1
         print("Processing file " + str(i) + "/" + str(nFile) + " " + tail)
-        text=open(file, 'r', encoding='utf-8',errors='ignore').read()
+        text=open(file, encoding='utf-8',errors='ignore').read()
         # put filename in bold
         tail='<b>' + tail + '</b>'
         writeout.append('<@#' + tail +'#@>' +'<br />\n')  # add the embedded filename (embedded  in <@# so that the merged file can be split) and a hard return

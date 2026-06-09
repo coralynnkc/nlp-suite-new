@@ -143,7 +143,6 @@ def getFileList_SubDir(inputFilename, inputDir, fileType=".*", silent=False):
 
 import functools
 import os
-from datetime import datetime
 
 # the below is to convert from self-defined date format to the correct datetime format
 rule_to_format = {
@@ -198,7 +197,7 @@ def complete_order(bb, c):
 
 def do_compare(input_list, file_end, sort_order, compare_split, date_format, date_loc):
     def compare(filename1, filename2):
-        if not compare_split in filename1:
+        if compare_split not in filename1:
             print(
                 "Non fatal filename error in filename separator. Error ignored.\nThe filename separator '"
                 + compare_split
@@ -207,7 +206,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                 + "\nYou should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration at the top of the GUI.\n\n"
             )
             return -1
-        if not compare_split in filename2:
+        if compare_split not in filename2:
             #  The information may have been entered incorrectly when setting up INPUT/OUTPUT (I/O) configuration. Please, check and edit the information. The information may have been entered incorrectly when setting up INPUT/OUTPUT (I/O) configuration. Please, check and edit the information.
             print(
                 "Non fatal filename error in filename separator. Error ignored.\nThe filename separator '"
@@ -737,7 +736,7 @@ def openCSVFile(inputfile, open_type, encoding_type="utf-8"):
             inputfile, open_type, newline="", encoding=encoding_type, errors="ignore"
         )
         return csvfile
-    except IOError:
+    except OSError:
         print(
             "File error",
             "Could not open the file "

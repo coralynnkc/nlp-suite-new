@@ -5,7 +5,6 @@ try:
     import spacy
 
     # this import is neccessary to establish the spacytextblob
-    from spacytextblob.spacytextblob import SpacyTextBlob
 except Exception as e:
     # print(err)
     print(
@@ -19,12 +18,11 @@ import os
 import subprocess
 import warnings
 
-import pandas as pd
-
 import constants_util
 import IO_csv_util
 import IO_files_util
 import IO_user_interface_util
+import pandas as pd
 import parsers_annotators_visualization_util
 import reminders_util
 
@@ -239,7 +237,7 @@ def spaCy_annotate(
 
         # open file and extract text
         text = (
-            open(doc, "r", encoding=language_encoding, errors="ignore")
+            open(doc, encoding=language_encoding, errors="ignore")
             .read()
             .replace("\n", " ")
         )

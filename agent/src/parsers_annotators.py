@@ -1,17 +1,15 @@
 import logging
 
 import config_util
-import CoNLL_table_analyzer_main 
-import Stanford_CoreNLP_util
-import Stanford_CoreNLP_coreference_util
+import CoNLL_table_analyzer_main
 import spaCy_util
-
-import os
+import Stanford_CoreNLP_coreference_util
+import Stanford_CoreNLP_util
 from pycorenlp import StanfordCoreNLP
 
 
 def run_parsers_annotators(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation,
-        manual_Coref, 
+        manual_Coref,
         parser_var,
         parser_menu_var,
         single_quote,
@@ -202,7 +200,7 @@ def run_parsers_annotators(inputFilename, inputDir, outputDir, openOutputFiles, 
                     annotator = 'SVO'
                 else:
                     raise ValueError(f'The selected option "{annotators_menu_var}" is not available in Stanza. Please select another annotator and try again.')
-            from Stanza_util import Stanza_annotate 
+            from Stanza_util import Stanza_annotate
 
             # Run Stanza annotate
             outputFiles = Stanza_annotate(

@@ -1,16 +1,16 @@
-from sys import platform
+import csv
 import os
 import subprocess
-from subprocess import call
-from psutil import virtual_memory
-import requests
 import webbrowser
-import csv
+from subprocess import call
+from sys import platform
 
 import GUI_IO_util
-import reminders_util
 import IO_internet_util
 import IO_user_interface_util
+import reminders_util
+import requests
+from psutil import virtual_memory
 
 # import pip not used
 # def install(software_name):
@@ -246,7 +246,7 @@ def check_inputExternalProgramFile(calling_script, software_dir, programName, re
 
     message=''
     fileList = []
-    if not 'Java' in programName: #!='Java (JDK)' Java (JDK)'
+    if 'Java' not in programName: #!='Java (JDK)' Java (JDK)'
         unarchive_msg = ''
         head, tail = os.path.split(software_dir)
         # 9/1
@@ -315,7 +315,7 @@ def check_inputExternalProgramFile(calling_script, software_dir, programName, re
         if platform == 'win32':
             if 'client' in fileList:
                 return True
-            directory_content = wrong_dir_msg + '\n\nThe ' + programName.upper() + ' directory should contain the subdirectory \'client\n\nMOST LIKELY THE EXECUTABLE FILE WILL AUTOMATICALLY INSTALL GOOGLE EARTH PRO UNDER A directory GOOGLE IN C:\Program Files.'
+            directory_content = wrong_dir_msg + '\n\nThe ' + programName.upper() + ' directory should contain the subdirectory \'client\n\nMOST LIKELY THE EXECUTABLE FILE WILL AUTOMATICALLY INSTALL GOOGLE EARTH PRO UNDER A directory GOOGLE IN C:\\Program Files.'
             message = directory_content + unarchive_msg + select_directory_msg
 
         if platform == 'darwin':
@@ -351,7 +351,7 @@ def check_inputExternalProgramFile(calling_script, software_dir, programName, re
     # MALLET
     if programName == 'MALLET':
         # check that MALLET has no spaces in path
-        if ('bin' in fileList and 'class' in fileList) and not ' ' in software_dir:
+        if ('bin' in fileList and 'class' in fileList) and ' ' not in software_dir:
             return True
         # check that MALLET has no spaces in path
         if ' ' in software_dir:
@@ -425,7 +425,7 @@ def get_existing_software_config(external_software_config_file=''):
     software_config = GUI_IO_util.configPath + os.sep + external_software_config_file
     # FIXED: must insert the new software_name into software-config.csv when the software_name is missing in the user csv file
     try:
-        csv_file = open(software_config, 'r', newline='')
+        csv_file = open(software_config, newline='')
         existing_software_config = list(csv.reader(csv_file, delimiter=','))
     except:
         existing_software_config = list()
@@ -738,7 +738,7 @@ def display_download_installation_messages(download_install, software_name, soft
                                 'you will only have to do this once (the selected installation directory will be saved in NLP_setup_external_software_config.csv).'
     else:
         # NL_menu__main
-        if (software_dir=='' or  software_dir==None) and (not 'NLP_menu' in calling_script and not 'NLP_setup_external_software' in calling_script):
+        if (software_dir=='' or  software_dir==None) and ('NLP_menu' not in calling_script and 'NLP_setup_external_software' not in calling_script):
                 opening_message = 'The script ' + calling_script.upper() + ' requires the external software ' + software_name.upper() + ' to run. The software needs to downloaded/installed.' \
                     '\n\nFor your convenience, the download function can automatically open the NLP_setup_external_software_main.py GUI ' \
                     'where you can download and install this and any other required external software.' \
@@ -1064,7 +1064,7 @@ def external_software_install(calling_script, software_name, existing_software_c
             software_name = 'MALLET'
         elif 'wordnet' in software_name.lower():
             software_name = 'WordNet'
-        if not 'Java' in software_name:
+        if 'Java' not in software_name:
             # check that the selected directory for the external program is correct; if so save
             if not check_inputExternalProgramFile(calling_script, software_dir, software_name, False):
                 software_dir = None

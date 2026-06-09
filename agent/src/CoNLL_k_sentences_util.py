@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Sat Jan 22 23:05:52 2022
 
 @author: claude
 edited by Naman Sahni 9/23.2022
 """
-from pydoc import Doc
-import pandas as pd
 import string
-# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text, sentence_split_stanza_text
 
-import IO_files_util
 import charts_util
+
+# from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text, sentence_split_stanza_text
+import IO_files_util
+import pandas as pd
 import statistics_txt_util
+
 
 def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_sent_var, End_K_sent_var):
     filesToOpen=[]
@@ -58,7 +58,7 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
 
         #txt.replace("  ", " ")
         #print(txt)
-        from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text
+        from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine, tokenize_stanza_text
         sent = sentences = sentence_split_stanza_text(stanzaPipeLine(txt))
         sentenceID = 0
 

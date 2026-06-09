@@ -1,9 +1,10 @@
+import itertools
 import os
 import pickle
-import itertools
+import re
+
 import pandas as pd
 import spacy
-import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
@@ -23,8 +24,8 @@ def extract_topn_from_vector(feature_names, sorted_items, topn):
 
 
 #https://github.com/matejMartinc/scalable_semantic_shift/blob/a105c8409db0996c99f0df11d40c35017eb3337c/interpretation.py#L85
-def sense_keywords(d, o_path, re_pattern='[^a-zA-Z\'\-’ ]', mf_prop=1, topn=10, ngram_range=(1, 2), add_stopwords=None):
-    
+def sense_keywords(d, o_path, re_pattern='[^a-zA-Z\'\\-’ ]', mf_prop=1, topn=10, ngram_range=(1, 2), add_stopwords=None):
+
     regex = re.compile(re_pattern)
     sp = spacy.load('en_core_web_sm')
     stopwords = list(sp.Defaults.stop_words)
@@ -74,12 +75,12 @@ def sense_keywords(d, o_path, re_pattern='[^a-zA-Z\'\-’ ]', mf_prop=1, topn=10
         os.makedirs(o_path)
     k_path = f'{o_path}/keywords_ngram_range={ngram_range[0]}_{ngram_range[1]}.csv'
     kw_df.to_csv(k_path, index_label=['Word', 'Sense'])
-    
+
     return kw_df, k_path
 
 
 def get_keyterms(Word2Vec_Dir, ngram_range=(1, 2), topn=10):
-   
+
     k_paths = []
     with open(f'{Word2Vec_Dir}/output/d.pickle', 'rb') as f:
         d = pickle.load(f)

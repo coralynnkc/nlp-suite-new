@@ -1,6 +1,7 @@
 # written by Roberto Franzosi October 2019, edited Spring 2020
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -12,13 +13,11 @@ import tkinter as tk
 import tkinter.messagebox as mb
 from subprocess import call
 
+import config_util
 import GUI_IO_util
 import IO_files_util
 import IO_user_interface_util
-import file_checker_util
-import file_cleaner_util
 import reminders_util
-import config_util
 
 # import several splitter util scripts under various if statements under Run
 
@@ -26,7 +25,7 @@ import config_util
 
 def run(inputFilename,inputDir, outputDir,
     openOutputFiles,
-    
+
     chartPackage,
     dataTransformation,
     split_mergedFile,
@@ -365,7 +364,7 @@ def getDocLength():
     if GUI_util.inputFilename.get() == '' or GUI_util.inputFilename.get()[-4:] != '.txt':
         current_docLength_var.set('')
         return
-    with open(GUI_util.inputFilename.get(), 'r', encoding='utf-8', errors='ignore') as F:
+    with open(GUI_util.inputFilename.get(), encoding='utf-8', errors='ignore') as F:
         text = F.read()
         length = len(text.split())
     F.close()

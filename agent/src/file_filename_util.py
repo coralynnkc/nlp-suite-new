@@ -1,16 +1,19 @@
 # Written by Roberto Franzosi December 2019
 #	edited July 2020
 
-import sys
-import os
-import os.path, time, datetime
-from datetime import datetime, date
 import csv
-import shutil
+import datetime
+import os
+import os.path
 import platform
+import shutil
+import sys
+import time
+from datetime import datetime
 
 import IO_csv_util
 import IO_files_util
+
 
 def backup_files (inputFilename,inputDir,scripName, fileType='.txt',configFileName=''):
     if inputFilename != "":
@@ -63,7 +66,7 @@ def dateGreater(d1, d2):
 def purge_duplicate_rows_byFilename(window, inputFilename, outputDir, openOutputFiles, filenameCol):
     bestFiles = {}
     filenameColNum = 2
-    with open(inputFilename, 'r', encoding="utf-8", errors='ignore') as read_obj:
+    with open(inputFilename, encoding="utf-8", errors='ignore') as read_obj:
         csv_reader = csv.reader(read_obj)
         header = next(csv_reader)
         filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(header, filenameCol, inputFilename)
@@ -83,7 +86,7 @@ def purge_duplicate_rows_byFilename(window, inputFilename, outputDir, openOutput
                     bestFiles[fName] = row
 
     deleteList = []
-    with open(inputFilename, 'r', encoding="utf-8", errors='ignore') as read_obj:
+    with open(inputFilename, encoding="utf-8", errors='ignore') as read_obj:
         csv_reader = csv.reader(read_obj)
         header = next(csv_reader)
         if header is not None:
@@ -130,7 +133,7 @@ def purge_partial_matches(window, inputFilename, outputDir, openOutputFiles, nam
     docxdict = {}
     nameColNum = 0
     filenameColNum = 2
-    with open(inputFilename, 'r', encoding="utf-8", errors='ignore') as read_obj:
+    with open(inputFilename, encoding="utf-8", errors='ignore') as read_obj:
         csv_reader = csv.reader(read_obj)
         header = next(csv_reader)
         nameColNum = IO_csv_util.get_columnNumber_from_headerValue(header, nameCol, inputFilename)
@@ -146,7 +149,7 @@ def purge_partial_matches(window, inputFilename, outputDir, openOutputFiles, nam
                     print("Unrecognized file:", row[filenameColNum])
 
     deleteList = []
-    with open(inputFilename, 'r', encoding="utf-8", errors='ignore') as read_obj:
+    with open(inputFilename, encoding="utf-8", errors='ignore') as read_obj:
         csv_reader = csv.reader(read_obj)
         header = next(csv_reader)
         if header is not None:
@@ -476,7 +479,9 @@ def get_count(path, outputPath, outputFilename):
 # https://stackoverflow.com/questions/7021141/how-to-retrieve-author-of-a-office-file-in-python
 # get_author works for docx files only
 def get_author(path_to_file):
-    import zipfile, lxml.etree
+    import zipfile
+
+    import lxml.etree
     # open zipfile
     try:
         zf = zipfile.ZipFile(path_to_file)

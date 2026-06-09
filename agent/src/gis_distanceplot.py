@@ -5,9 +5,10 @@
 
 #import libraries
 import os
-import pandas as pd
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 #set up working dir and set up filenames
 os.chdir('C:\\Program Files (x86)\\PC-ACE\\NLP')
@@ -118,7 +119,7 @@ outFilename=os.path.join(output_dir,chart_title4+'.png')
 plt.savefig(outFilename,dpi=100)
 plt.show()
 
-#plot data with seaborn 
+#plot data with seaborn
 #sns.set()
 #sns.countplot(df['GeoKmRange'],color='blue')  #distr on x
-#sns.countplot(y=df['GeoKmRange'],color='blue') #distr on y 
+#sns.countplot(y=df['GeoKmRange'],color='blue') #distr on y

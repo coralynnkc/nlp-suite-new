@@ -7,21 +7,21 @@ The script takes an input txt file that contains section headings (e.g., chapter
 """
 
 import sys
+
 import GUI_util
 import IO_libraries_util
 
 if IO_libraries_util.install_all_Python_packages(GUI_util.window,"File_splitter_ByTOC",['os','io','re','ntpath','tkinter','shutil'])==False:
     sys.exit(0)
 
-import io
+import ntpath
 import os
 import re
 import tkinter.messagebox as mb
-import ntpath
-import shutil
 
 import IO_csv_util
 import IO_files_util
+
 
 def splitDocument_byTOC(window,inputDocumentTobeSplit,inputTOCfile,outputDir,openOutputFiles):
 
@@ -55,14 +55,14 @@ def splitDocument_byTOC(window,inputDocumentTobeSplit,inputTOCfile,outputDir,ope
     headingsNotFoundInBook=[]
 
     # Read TOC file and fill headings list
-    with io.open(inputTOCfile, "r", encoding="utf-8", errors='ignore') as file:
+    with open(inputTOCfile, encoding="utf-8", errors='ignore') as file:
         # loop through each line of the TOC file, expecting one TOC entry per line
         for heading in file:
             # Remove spaces at the beginning and at the end of the string
             headings.append(heading.strip())
 
     # Read text file
-    fileContent = io.open(inputDocumentTobeSplit, "r", encoding="utf-8", errors='ignore').read()
+    fileContent = open(inputDocumentTobeSplit, encoding="utf-8", errors='ignore').read()
 
     # Extract text content for each heading
     for i in range(len(headings)):
@@ -73,7 +73,7 @@ def splitDocument_byTOC(window,inputDocumentTobeSplit,inputTOCfile,outputDir,ope
         if sectionContent:
             #split file saved in the document_section folder with filename = document name + section name
             sectionFileName=os.path.join(newoutputDir, inputDocNoPathNoExtension + "_" + headings[i] + '.txt')
-            newFile = io.open(sectionFileName, "w+", encoding='utf-8', errors='ignore')
+            newFile = open(sectionFileName, "w+", encoding='utf-8', errors='ignore')
             newFile.write(sectionContent.strip())
         else:
             print('   Heading not found in main document')

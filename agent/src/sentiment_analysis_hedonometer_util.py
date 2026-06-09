@@ -36,7 +36,7 @@ import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 
-fin = open("../lib/wordLists/stopwords.txt", "r")
+fin = open("../lib/wordLists/stopwords.txt")
 stops = set(fin.read().splitlines())
 database = GUI_IO_util.sentiment_libPath + os.sep + "hedonometer.json"
 if not os.path.isfile(database):
@@ -62,7 +62,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
     # the output filename is reset in the specific script; must be passed as a parameter
     # cannot use time in the filename or when re-generated n the main sentimen_concreteness_analysis.py it will have a different time stamp and the file will not be found
     # read file into string
-    with open(inputFilename, "r", encoding="utf-8", errors="ignore") as myfile:
+    with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
         fulltext = myfile.read()
     # end method if file is empty
     if len(fulltext) < 1:

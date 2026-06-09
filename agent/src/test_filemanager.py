@@ -1,6 +1,6 @@
 import os
-from file_manager_main import run_file_manager
 
+from file_manager_main import run_file_manager
 
 inputDir = r'C:\Users\chang\nlp-suite\input'
 outputDir = r'C:\Users\chang\nlp-suite\output'

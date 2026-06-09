@@ -2,24 +2,29 @@
 # re-written by Roberto Franzosi October 2021
 # completed by Austin Cai October 2021
 
+import csv
 import os
 import tkinter.messagebox as mb
-import pandas as pd
-import csv
-import numpy as np
-import pprint
 
-import IO_files_util
-import IO_csv_util
-import IO_user_interface_util
 import constants_util
+import IO_csv_util
+import IO_files_util
+import numpy as np
+import pandas as pd
 
 """
 NGramsCoOccurrences implements the ability to generate NGram and CoOccurrences data
 """
 # import hashfile
 
-from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, lemmatize_stanza_doc, lemmatize_stanza_word
+from Stanza_functions_util import (
+    lemmatize_stanza_doc,
+    lemmatize_stanza_word,
+    sentence_split_stanza_text,
+    stanzaPipeLine,
+)
+
+
 # both A and B are lists []
 def keywords_co_occurr(A, B):
     A = ','.join(A).split(',')
@@ -44,7 +49,7 @@ def one_text_res(sentences, search_keywords_list, doc_index, doc_name, lemmatize
                                           'Document ID', 'Document'])
 
 def readfile(doc):
-    with open(doc, "r", encoding="utf-8", errors="ignore") as f:
+    with open(doc, encoding="utf-8", errors="ignore") as f:
         fullText = f.read()
         fullText = fullText.replace('\n', ' ')
     return fullText
@@ -58,13 +63,12 @@ def search_within_sentence_coOccurences(inputFilename, inputDir, search_keywords
                                                              'Co-occurrence_within_sentence')
     files = IO_files_util.getFileList(inputFilename, inputDir,
                                       '.txt', silent=False, configFileName=configFileName)
-    
+
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'Within-sentence Co-Occurrences VIEWER start',
     #                                                'Started running within-sentence Co-Occurrences VIEWER at',
     #                                                True, '', True, '', False)
     results = []
     sentIndex = 0
-    import re
 
     hashOutputDir = os.path.dirname(outputDir+"_sentence")
     # SIMON cache
@@ -518,7 +522,7 @@ def search_ngrams_csv_file(csv_file_var, inputDir, outputDir, configFileName, se
             combined_saneky_df.to_csv(NgramsSearchFileName_Sankey, index=False)
             combined_saneky_df[combined_saneky_df.columns[0]].to_csv(NgramsSearchFileName_txt, index=False)
 
-            with open(NgramsSearchFileName_txt, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(NgramsSearchFileName_txt, encoding='utf-8', errors='ignore') as f:
                 q = f.read()
             for word in search_keywords_list:
                 q = q.replace(word, '')
@@ -622,7 +626,7 @@ def NGrams_coOccurrences_VIEWER(inputDir="relative_path_here",
         datePos=2,
         viewer_options_list=[],ngrams_size=1,Ngrams_search_var=False,csv_file_var=None, within_sentence_co_occurrence_search_var=True):
 
-    from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text
+    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
     if search_keywords_list is None:
         search_keywords_list = []
@@ -818,7 +822,7 @@ def NGrams_coOccurrences_VIEWER(inputDir="relative_path_here",
         # if hashfile.calculate_checksum(file) in hashmap:
         #     tokens_ = hashmap[hashfile.calculate_checksum(file)]
         # else:
-        f = open(file, "r", encoding='utf-8', errors='ignore')
+        f = open(file, encoding='utf-8', errors='ignore')
         docText = f.read()
         f.close()
 
@@ -1148,7 +1152,6 @@ def save_co_occurrences(coOccFileName, coOcc_results, aggregateBy, temporal_aggr
                     line = ["Search Word(s)_lemmatized", "Co-Occurrence in Document"]
                 else:
                     line = ["Search Word(s)", "Co-Occurrence in Document"]
-            import re
             search_words_list = next(iter(coOcc_results.items()))[1]['Search Word(s)']
             line.extend([element + '_Frequency' for element in search_words_list])
             if within_sentence_co_occurrence_search_var:

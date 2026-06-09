@@ -1,37 +1,25 @@
 # Written by Roberto Franzosi
 # Modified by Cynthia Dong (November 2019-April 2020)
 
-import sys
-import IO_libraries_util
-
 # if IO_libraries_util.install_all_Python_packages("shape_of_stories_main.py", ['subprocess', 'os', 'tkinter', 'matplotlib','csv','numpy','sklearn','tqdm','codecs']) == False:
 #     sys.exit(0)
-
 # tqdm, sklearn, and codecs must be installed
 # tqdm provides a progress bar (used in clustering_util)
-
 import os
 
+import config_util
+import IO_csv_util
+import IO_files_util
+import IO_libraries_util
 import IO_user_interface_util
-import statistics_txt_util
+import reminders_util
 import shape_of_stories_clustering_util as cl
 import shape_of_stories_vectorizer_util as vec
 import shape_of_stories_visualization_util as viz
-
-import config_util
-import GUI_IO_util
-import IO_files_util
-import IO_csv_util
-import reminders_util
-
-import Stanford_CoreNLP_util
 import spaCy_util
+import Stanford_CoreNLP_util
 import Stanza_util
-
-import sentiment_analysis_ANEW_util as ANEW
-import sentiment_analysis_VADER_util as VADER
-import sentiment_analysis_hedonometer_util as hedonometer
-import sentiment_analysis_SentiWordNet_util as SentiWordNet
+import statistics_txt_util
 
 defaultConfigFilename = 'NLP_default_IO_config.csv'
 
@@ -192,7 +180,7 @@ def run(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataT
             if IO_libraries_util.check_inputPythonJavaProgramFile('Stanford_CoreNLP_util.py') == False:
                 return
             tempOutputFiles = Stanford_CoreNLP_util.CoreNLP_annotate(config_filename, inputFilename, inputDir,
-                                                                    outputDir, openOutputFiles, 
+                                                                    outputDir, openOutputFiles,
                                                                     chartPackage, dataTransformation, 'sentiment', False,
                                                                     language_var, export_json_var,
                                                                     memory_var)

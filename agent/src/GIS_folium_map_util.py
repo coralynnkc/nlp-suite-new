@@ -1,13 +1,10 @@
 # written by Roberto Franzosi
 # November 2023
 
-import sys
-import IO_libraries_util
 
 
-import pandas as pd
 import folium
-from folium import plugins
+import pandas as pd
 from folium.plugins import HeatMap
 
 # pin map

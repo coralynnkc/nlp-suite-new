@@ -1,10 +1,9 @@
 # written by Roberto April 2023
 
-from subprocess import call
 
-import IO_csv_util
-import IO_files_util
 import charts_util
+import IO_files_util
+
 
 def run(inputFilename, outputDir,
         csv_field_visualization_var,
@@ -30,7 +29,7 @@ def run(inputFilename, outputDir,
     # if csv_field_visualization_var=='':
     #     print("Warning, No Y-axis variable has been selected.\n\nPlease, use the dropdown menu to select the csv file column to be used as Y-axis and try again.")
     #     return
-    
+
     # boxplots --------------------------------------------------------------------------------
 
     if points_var == '':

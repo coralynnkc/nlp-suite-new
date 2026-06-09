@@ -1,9 +1,11 @@
 import os
+
 import config_util
-import IO_files_util
 import GUI_IO_util
+import IO_files_util
 import IO_libraries_util
 import lib_util
+
 
 def run_sentiment_analysis(inputDir,outputDir, openOutputFiles, chartPackage, dataTransformation, mean_var, median_var, SA_algorithm_var):
     print(inputDir,outputDir, openOutputFiles, chartPackage, dataTransformation, mean_var, median_var, SA_algorithm_var)
@@ -165,7 +167,7 @@ def run_sentiment_analysis(inputDir,outputDir, openOutputFiles, chartPackage, da
             if IO_libraries_util.check_inputPythonJavaProgramFile('sentiment_analysis_ANEW_util.py') == False:
                 return
 
-            sentiment_analysis_ANEW_util.main("", inputDir, outputDir, mode, 
+            sentiment_analysis_ANEW_util.main("", inputDir, outputDir, mode,
                                                             chartPackage, dataTransformation)
             print('Analysis end', 'Finished running ANEW Sentiment Analysis at')
         else:

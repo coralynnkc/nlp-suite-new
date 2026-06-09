@@ -6,32 +6,26 @@
 
 # https://stackoverflow.com/questions/61121239/how-to-extract-subject-verb-object-using-nlp-java-for-every-sentence
 
-import sys
 # import GUI_util
-import IO_libraries_util
-
 import os
-from subprocess import call
 
 # to install stanfordnlp, first install
 #   pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
 #   pip3 install stanfordnlp
 # import stanfordnlp
-
 import config_util
-import GUI_IO_util
-import IO_files_util
 import GIS_pipeline_util
-import wordclouds_util
+import GUI_IO_util
 import IO_csv_util
-import SVO_util
-import Stanza_util
-import Stanford_CoreNLP_coreference_util
-import Stanford_CoreNLP_util
+import IO_files_util
+import IO_libraries_util
+
 # import SENNA_util
 import spaCy_util
-import reminders_util
-import knowledge_graphs_WordNet_util
+import Stanford_CoreNLP_coreference_util
+import Stanford_CoreNLP_util
+import Stanza_util
+import SVO_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
@@ -58,8 +52,8 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
     #Already hard coded below
     # subjects_dict_path_var = "lib/wordLists/social-actor-list.csv"
     # verbs_dict_path_var = "lib/wordLists/social-action-list.csv"
-    
-    
+
+
     config_filename = "NLP_default_IO_config.csv"
     # get the NLP package and language options
     error, package, parsers, package_basics, language, package_display_area_value, encoding_var, export_json_var, memory_var, document_length_var, limit_sentence_length_var = config_util.read_NLP_package_language_config()
@@ -84,7 +78,7 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
     # error, package, parsers, package_basics, language, package_display_area_value, encoding_var, export_json_var, memory_var, document_length_var, limit_sentence_length_var = config_util.read_NLP_package_language_config()
     # language_var = language
     # language_list = [language]
-    
+
     # # get the date options from filename
     # filename_embeds_date_var, date_format_var, items_separator_var, date_position_var, config_file_exists = config_util.get_date_options(
     #     config_filename, config_input_output_numeric_options)
@@ -103,7 +97,7 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
         return
 
     if inputFilename[-4:] == '.csv':
-        if not 'SVO_' in inputFilename:
+        if 'SVO_' not in inputFilename:
             print("Input file error, the selected input is a csv file, but... not an _svo.csv file.\n\nPlease, select an _svo.csv file (or txt file(s)) and try again.")
 
             return
@@ -201,7 +195,7 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
     # create an SVO_filtered subdirectory of the main output directory
     outputSVOFilterDir=''
     if (filter_subjects and not lemmatize_subjects) or (filter_verbs and not lemmatize_verbs) or (filter_objects and not lemmatize_objects):
-        
+
         print("Warning, Filtering for either S or V or O requires lemmatizing the respective object, S or V or O. \n\nFiltering is based on WordNet and all WWordNet entries are lemmatized. ")
         return
 
@@ -453,7 +447,7 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
                 WordNetDir=''
                 # output = knowledge_graphs_WordNet_util.aggregate_GoingUP(WordNetDir, outputFilename, outputWNDir,
                 #                                                          config_filename, 'NOUN',
-                #                                                          openOutputFiles, 
+                #                                                          openOutputFiles,
                 #                                                          chartPackage, dataTransformation, language_var)
                 output = None
                 os.remove(outputFilename)
@@ -464,7 +458,7 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
                     output = None
                     # output = knowledge_graphs_WordNet_util.aggregate_GoingUP(WordNetDir, outputFilename, outputWNDir,
                     #                                                          config_filename, 'VERB',
-                    #                                                          openOutputFiles, 
+                    #                                                          openOutputFiles,
                     #                                                          chartPackage, dataTransformation, language_var)
                     os.remove(outputFilename)
                     if output != None and output != '':
@@ -489,8 +483,8 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
             tempOutputDir = head
             # Gephi network graphs _________________________________________________
             if gephi_var:
-                import Gephi_util
                 import charts_util
+                import Gephi_util
                 # i = 0
                 # previous svo csv files can be entered in input to display networks, wordclouds or GIS maps
                 if inputFilename[-4:] == ".csv":
@@ -517,11 +511,11 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
                     output_label = 'sankey'
                     outputFilename_sankey = IO_files_util.generate_output_file_name(inputFilename, inputDir, tempOutputDir,
                                                                                     '.html', output_label)
-                    
+
                     outputFiles = charts_util.Sankey(inputFilename, outputFilename_sankey,
                                                      'Subject (S)', Sankey_limit1_var, 'Verb (V)', Sankey_limit2_var,
                                                      three_way_Sankey, 'Object (O)', Sankey_limit3_var)
-    
+
                     if outputFiles != None:
                         if isinstance(outputFiles, str):
                             filesToOpen.append(outputFiles)
@@ -570,14 +564,14 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
                             outputFiles = charts_util.Sankey(f, outputFilename_sankey,
                                                              'Subject (S)', Sankey_limit1_var, 'Verb (V)', Sankey_limit2_var,
                                                              three_way_Sankey, 'Object (O)', Sankey_limit3_var)
-                                                        
+
                             if outputFiles != None:
                                 if isinstance(outputFiles, str):
                                     filesToOpen.append(outputFiles)
                                 else:
                                     filesToOpen.extend(outputFiles)
 
-    
+
     # # wordcloud  _________________________________________________
 
             if wordcloud_var:
@@ -685,5 +679,5 @@ def run_svo(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
                 filesToOpenSubset.append(filesToOpen[1])
             else:
                 filesToOpenSubset = [filesToOpen[0]]
-                
+
     return filesToOpen

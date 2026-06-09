@@ -1,7 +1,9 @@
+import os
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-import os
+
 
 def MALLET_heatmap(composition_file, topics_file, outputDir, fig_set={"figure.figsize": (8, 6), "figure.dpi": 300},
                    show_topics=True):

@@ -1,12 +1,12 @@
-import numpy as np
-import pandas as pd
 # from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
 import os
 
-import IO_files_util
-import IO_user_interface_util
 import charts_util
 import IO_csv_util
+import IO_files_util
+import IO_user_interface_util
+import numpy as np
+import pandas as pd
 
 # notSure = set()
 # added = set()
@@ -120,9 +120,9 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
     # S, V, O are in loc 0, 1, 2
 
     # Adding each row of SVO into the corresponding sets
-    
-        
-        
+
+
+
     for i in range(len(CoreNLP_df)):
         # if pd.notnull(CoreNLP_df.iloc[i, 4]):
         #     if not pd.isnull(CoreNLP_df.iloc[i, 5]) and not pd.isnull(CoreNLP_df.iloc[i, 3]):
@@ -140,7 +140,7 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
             #     open_ie_sv.add(generate_key(S='', V=CoreNLP_df.iloc[i, 4], O=CoreNLP_df.iloc[i, 5]))
             # else:
             #     open_ie_sv.add(generate_key(S='', V=CoreNLP_df.iloc[i, 4], O=''))
-    
+
     for i in range(len(senna_df)):
         # if pd.notnull(senna_df.iloc[i, 4]):
         #     if not pd.isnull(senna_df.iloc[i, 3]) and not pd.isnull(senna_df.iloc[i, 5]):  # Has S, V, O
@@ -303,7 +303,10 @@ def visualize_SVOs(fileName, outputDir, chartPackage, dataTransformation, filesT
 def lemmatize_filter_svo(svo_file_name, filter_s, filter_v, filter_o, filter_s_fileName, filter_v_fileName, filter_o_fileName,
                lemmatize_s, lemmatize_v, lemmatize_o, outputSVODir,  chartPackage='Excel', dataTransformation='No transformation'):
     filesToOpen = []
-    from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text, lemmatize_stanza_word
+    from Stanza_functions_util import (
+        lemmatize_stanza_word,
+        stanzaPipeLine,
+    )
 
     startTime = IO_user_interface_util.timed_alert(2000, 'Analysis start',
                                                    'Started running the lemma/filter algorithm for Subject-Verb-Object (SVO) at',
@@ -380,7 +383,7 @@ def lemmatize_filter_svo(svo_file_name, filter_s, filter_v, filter_o, filter_s_f
                 row['Subject (S)'] = lemmatize_stanza_word(stanzaPipeLine(row['Subject (S)']))
             else:
                 if filter_s:
-                    if not '@#' in row['Subject (S)']:
+                    if '@#' not in row['Subject (S)']:
                         # WordNet multi-word expressions are all _ separated (e.g., Christopher_Columbus)
                         # convert string to list
                         temp_list = row['Subject (S)'].split(' ')
@@ -519,7 +522,7 @@ def lemmatize_filter_svo(svo_file_name, filter_s, filter_v, filter_o, filter_s_f
             ['Subject (S)', 'Verb (V)', 'Object (O)']]
 
         # reset the row, replacing the _ back to " "
-        if not "inferred_subject_passive" in row['Subject (S)']:
+        if "inferred_subject_passive" not in row['Subject (S)']:
             df.loc[idx, ['Subject (S)']] = row['Subject (S)'].replace('_', ' ')
         df.loc[idx, ['Verb (V)']] = row['Verb (V)'].replace('_', ' ')
         df.loc[idx, ['Object (O)']] = row['Object (O)'].replace('_', ' ')

@@ -1,16 +1,9 @@
 # Roberto Franzosi September 2020
 
-import sys
-import IO_libraries_util
 
 # IBM https://ibm.github.io/zshot/ "pip install zshot"
 
-import os
-from subprocess import call
 
-import GUI_IO_util
-import IO_files_util
-import reminders_util
 import config_util
 import spaCy_util
 import Stanford_CoreNLP_util
@@ -20,7 +13,7 @@ import Stanza_util
 
 def run_NER(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, config_filename,
         NER_package, NER_list):
-    
+
     config_input_output_numeric_options = [0, 1, 0, 1]
 
     config_filename = 'NLP_default_IO_config.csv'
@@ -48,7 +41,7 @@ def run_NER(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, d
 
     if '*' in NER_package or 'BERT' in NER_package:
         if language!='English':
-            print("Warning, NER in BERT is only available for the English language. Your currently selected language is ' + language + '.' " + 
+            print("Warning, NER in BERT is only available for the English language. Your currently selected language is ' + language + '.' " +
             "\n\nYou can change the selected language using the Setup dropdown menu at the bottom of this GUI, select the 'Setup NLP package and corpus language' to open the GUI where you can change the language option.")
             return
         import BERT_util

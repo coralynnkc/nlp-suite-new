@@ -1,4 +1,5 @@
 import sys
+
 import GUI_util
 import IO_libraries_util
 
@@ -9,8 +10,9 @@ import os
 from pathlib import Path
 from tkinter import messagebox as mb
 
-import IO_files_util
 import IO_csv_util
+import IO_files_util
+
 
 def get_group_name(stem, separator, number_of_items):
     split_items = stem.split(separator)

@@ -2,6 +2,7 @@
 
 import tree as tr
 
+
 class Node:
     def __init__(self, tree, isLeaf=False):
         self.Ysc = 0
@@ -33,7 +34,7 @@ class Node:
             self.kids = []
             self.children = []
 
-    
+
     # ********* Yngve *********
     def calY(self):
         for i in range(0,len(self.children)):
@@ -47,7 +48,7 @@ class Node:
 
     def setY(self, yngve):
         self.Ysc = yngve
-    
+
     def getY(self):
         return self.Ysc
 
@@ -76,7 +77,7 @@ class Node:
 
     def setF(self, frazier):
         self.Fsc = frazier
-    
+
     def getF(self):
         return self.Fsc
 
@@ -95,6 +96,6 @@ class Node:
 
     def isRoot(self):
         return self.root
-    
+
     def setParent(self, p):
         self.parent = p

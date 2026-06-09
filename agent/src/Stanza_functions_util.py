@@ -17,6 +17,7 @@ Examples of Usage:
 '''
 
 import stanza
+
 try:
     stanza.download('en')
 except:
@@ -55,7 +56,7 @@ def lemmatize_stanza(doc):
     except:
         # if doc=[]
         return ''
-    
+
 
 # returns a single lemmatized word. input should be a single word.
 # https://stanfordnlp.github.io/stanza/lemma.html
@@ -78,7 +79,7 @@ def lemmatize_stanza_word(text_to_process, return_empty_string=True):
             return ''
         else:
             return text_to_process.sentences[0].words[0].text
-        
+
 # in INPUT the function takes a document text or sentence or even word as strings
 #   e.g., 'Robert went to Italy for vacation'
 #   BUT MANIPULATED BY THE stanzaPipeLine function

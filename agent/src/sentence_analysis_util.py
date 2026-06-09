@@ -1,11 +1,10 @@
-import sys
-import IO_libraries_util
 
 import collections
 import os
-import pandas as pd
+
 import IO_csv_util
 import IO_files_util
+import pandas as pd
 
 
 def Extract(lst):
@@ -14,7 +13,7 @@ def Extract(lst):
 def dictionary_items_bySentenceID(window, inputFilename, inputDir, outputDir, configFileName,
 								  chartPackage, dataTransformation, openOutputFiles=True,
 								  input_dictionary_file='', chart_title=''):
-	from Stanza_functions_util import stanzaPipeLine, sentence_split_stanza_text, tokenize_stanza_text
+	from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine, tokenize_stanza_text
 
 	filesToOpen = []
 	DictionaryList = []
@@ -26,10 +25,10 @@ def dictionary_items_bySentenceID(window, inputFilename, inputDir, outputDir, co
 	#   we would not be able to pass a dictionary file to the function
 	if input_dictionary_file == '':
 		initialFolder = os.path.dirname(os.path.abspath(__file__))
-  
+
         #TODO: HIS HERE MIGHT BE AN ERROR, CHECK LATER
-        
-        
+
+
 		# input_dictionary_file = tk.filedialog.askopenfilename(title="Select dictionary csv file",
 		# 													  initialdir=initialFolder,
 		# 													  filetypes=[("csv files", "*.csv")])
@@ -51,7 +50,7 @@ def dictionary_items_bySentenceID(window, inputFilename, inputDir, outputDir, co
 			documentID += 1
 			head, tail = os.path.split(file)
 			print("Processing file ", str(documentID), "\\", str(nFile), tail)
-			text = (open(file, "r", encoding="utf-8", errors='ignore').read())
+			text = (open(file, encoding="utf-8", errors='ignore').read())
 			# Process each word in txt
 			Sentence_ID = 0
 			# sentences = tokenize.sent_tokenize(text)
@@ -90,7 +89,7 @@ def dictionary_items_bySentenceID(window, inputFilename, inputDir, outputDir, co
 			documentID += 1
 			head, tail = os.path.split(file)
 			print("Processing file ", str(documentID), "\\", str(nFile), tail)
-			text = (open(file, "r", encoding="utf-8", errors='ignore').read())
+			text = (open(file, encoding="utf-8", errors='ignore').read())
 			# Process each word in txt
 			Sentence_ID = 0
 			# sentences = tokenize.sent_tokenize(text)

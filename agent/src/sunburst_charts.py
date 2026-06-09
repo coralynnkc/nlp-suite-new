@@ -1,17 +1,18 @@
-import IO_files_util
-import charts_util
-import os
 import json
+
+import charts_util
+import IO_files_util
 from get_first_csv import first_csv
+
 
 def run_sun_burst(inputFilename, inputDir, outputDir,
         file_data,
         filter_options_var,
         selected_pairs_data,
-        piechart_var, 
-        treemap_var 
+        piechart_var,
+        treemap_var
         ):
-    
+
         csv_path = first_csv(inputDir)
         # try:
         #     saved_pairs = json.loads(selected_pairs_data)
@@ -21,19 +22,19 @@ def run_sun_burst(inputFilename, inputDir, outputDir,
         #     return
 
         csv_file_categorical_field_list = json.loads(selected_pairs_data)
-        
+
         # csv_file_categorical_field_list = [
         #     [f"{pair['searchField']}|{', '.join(word.strip() for word in pair['csvFieldList'].split(',') if word.strip())}"]
         #     for pair in saved_pairs
         # ]
         print("IMPORTANT LIST ", csv_file_categorical_field_list)
         filesToOpen = []
-        
-        # NOTE: set to default values, can allow user input flexibility later 
+
+        # NOTE: set to default values, can allow user input flexibility later
         fixed_param_var = 50
         rate_param_var = 3
         base_param_var = 40
-        
+
         if filter_options_var=='No filtering':
             fixed_param_var=None
             rate_param_var=None
@@ -46,24 +47,24 @@ def run_sun_burst(inputFilename, inputDir, outputDir,
 
         # TODO: join with input file dir
         inputFilePath = csv_path
-        if piechart_var:    
+        if piechart_var:
             piechart_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.html', "Sunburst")
             pie_output = charts_util.Sunburst_Treemap(inputFilePath, piechart_outputFilename, outputDir, csv_file_categorical_field_list, 1, fixed_param_var, rate_param_var, base_param_var, filter_options_var, file_data = file_data)
-            if pie_output: 
+            if pie_output:
                 if isinstance(pie_output, str):
                     filesToOpen.append(pie_output)
                 else:
                     filesToOpen.extend(pie_output)
         if treemap_var:
             treemap_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.html', "Treemap")
-            tree_map_output = charts_util.Sunburst_Treemap(inputFilePath, treemap_outputFilename, outputDir, csv_file_categorical_field_list, 0, fixed_param_var, rate_param_var, base_param_var, filter_options_var, file_data = file_data)    
-            if tree_map_output:  
+            tree_map_output = charts_util.Sunburst_Treemap(inputFilePath, treemap_outputFilename, outputDir, csv_file_categorical_field_list, 0, fixed_param_var, rate_param_var, base_param_var, filter_options_var, file_data = file_data)
+            if tree_map_output:
                 if isinstance(tree_map_output, str):
                     filesToOpen.append(tree_map_output)
                 else:
                     filesToOpen.extend(tree_map_output)
         return filesToOpen
-    
+
 
 def main():
     inputFilename = "dogs.csv"
@@ -85,7 +86,7 @@ def main():
     #     {"searchField": "Size", "csvFieldList": "Small, Medium, Large"}
     # ])
     selected_pairs_data = [["Name|Max, Isla"], ["Color|"]]
-    piechart_var = True 
+    piechart_var = True
     treemap_var = True
 
     run_sun_burst(

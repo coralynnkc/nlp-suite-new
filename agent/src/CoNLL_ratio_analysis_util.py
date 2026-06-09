@@ -1,5 +1,6 @@
-import pandas as pd
 from collections import Counter
+
+import pandas as pd
 
 
 def compute_word_class_frequencies(inputFilename, outputDir, data, all_CoNLL_records, openOutputFiles, chartPackage,

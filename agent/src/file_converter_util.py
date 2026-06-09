@@ -6,19 +6,13 @@
 #   tsv --> csv
 #   csv --> txt
 
-import sys
-
-import IO_files_util
-
-
-
-import os
-import io
 
 import csv
-import tkinter as tk
+
 #import tkinter.messagebox as mb
 import errno
+import os
+
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
 # from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 # from pdfminer.pdfpage import PDFPage
@@ -26,6 +20,8 @@ import errno
 # from pdfminer.layout import LAParams
 # from docx import Document #pip install python-docx
 from os.path import splitext
+
+import IO_files_util
 from striprtf.striprtf import rtf_to_text
 
 # https://pdfminersix.readthedocs.io/en/latest/
@@ -218,7 +214,7 @@ def rtf_converter(window,inputFilename,inputDir,outputDir,config_filename, openO
         #fileExtension = os.path.splitext(doc)[1]
         if fileExtension =="rtf":
             lines = []#list of each line in the txt files
-            fullText = open(doc, 'r', encoding='utf-8',errors='ignore').read()
+            fullText = open(doc, encoding='utf-8',errors='ignore').read()
             # https://stackoverflow.com/questions/60897366/how-to-read-rtf-file-and-convert-into-python3-strings-and-can-be-stored-in-pyth
             # https://stackoverflow.com/questions/44580580/how-to-convert-rtf-string-to-plain-text-in-python-using-any-library
             # https://stackoverflow.com/questions/188545/regular-expression-for-extracting-text-from-an-rtf-string/188877#188877
@@ -243,7 +239,7 @@ def rtf_converter(window,inputFilename,inputDir,outputDir,config_filename, openO
 # File Converter (tsv --> csv)
 def tsv_converter(window,inputFilename,outputDir, header):
     # read a tab-separated file
-    with open(inputFilename,'r',encoding="utf-8",errors='ignore') as fin:
+    with open(inputFilename,encoding="utf-8",errors='ignore') as fin:
         cr = csv.reader(fin, delimiter='\t')
         filecontents = [line for line in cr]
 
@@ -263,8 +259,6 @@ def tsv_converter(window,inputFilename,outputDir, header):
 # import pytesseract
 # from pdf2image import convert_from_path
 # from pytesseract import image_to_string
-import time
-import os
 
 # this tesseract path will differ for every machine..
 # for Windows:
