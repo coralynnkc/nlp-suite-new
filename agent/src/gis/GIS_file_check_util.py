@@ -41,7 +41,7 @@ def geocoded_checker(
             check2 = False
             break
         elif y > 180 or y < -180:
-            check1 = False
+            check2 = False
             break
 
     if not check1 or not check2:

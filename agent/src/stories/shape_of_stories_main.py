@@ -500,6 +500,7 @@ def run(
         filesToOpen.append(os.path.join(outputNMFDir, "NMF_Documents.csv"))
 
     # best topic estimate
+    startTime1 = ""
     if best_topic_estimation:
         startTime1 = IO_user_interface_util.timed_alert(
             2000,

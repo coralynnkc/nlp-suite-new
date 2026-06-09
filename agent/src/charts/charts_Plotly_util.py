@@ -124,16 +124,12 @@ def create_Plotly_chart(
                                 """
 
             def process_multiple(
-                x_cols, y_cols, lst, df2, ops, types, data, _html_template=html_template
+                x_cols, y_cols, lst, df2_fn, fig_fn, types, data, _html_template=html_template
             ):
                 chart_htmls = []
-                for _ in lst:
-                    print(df2)
-                    try:
-                        df2 = eval(df2)
-                    except Exception:
-                        pass
-                    fig = eval(ops)
+                for chart_name in lst:
+                    df2 = df2_fn(chart_name) if df2_fn else None
+                    fig = fig_fn(df2, chart_name)
                     chart_html = fig.to_html(full_html=False, include_Plotlyjs="cdn")
                     chart_htmls.append(f'<div class="chart">{chart_html}</div>')
                 final_html = _html_template.format(charts="".join(chart_htmls))
@@ -143,13 +139,12 @@ def create_Plotly_chart(
                     file.write(final_html)
 
             if i.lower() == "bar":
-                print(data)
                 process_multiple(
                     x_cols,
                     y_cols,
                     y_cols,
-                    "None",
-                    "px.bar(data, x=x_cols, color=chart_name)",
+                    None,
+                    lambda df2, chart_name: px.bar(data, x=x_cols, color=chart_name),
                     "bar",
                     data,
                 )
@@ -172,10 +167,16 @@ def create_Plotly_chart(
                         )
                     )
                 else:
-                    df2 = "data[data[x_cols] == chart_name][y_cols[0]].value_counts()"
-                    ops = "px.pie(df2, values=df2.values, names=df2.index, title=chart_name)"
-                    lst = eval("list(data[x_cols].value_counts().keys())")
-                    process_multiple(x_cols, y_cols, lst, df2, ops, "Pie", data)
+                    lst = list(data[x_cols].value_counts().keys())
+                    process_multiple(
+                        x_cols,
+                        y_cols,
+                        lst,
+                        lambda chart_name: data[data[x_cols] == chart_name][y_cols[0]].value_counts(),
+                        lambda df2, chart_name: px.pie(df2, values=df2.values, names=df2.index, title=chart_name),
+                        "Pie",
+                        data,
+                    )
                     file_list.append(
                         outputDir + os.sep + "pie" + "chart of the " + x_cols + ".html"
                     )
@@ -184,23 +185,21 @@ def create_Plotly_chart(
                     x_cols,
                     y_cols,
                     y_cols,
-                    "None",
-                    "px.scatter(data, x=x_cols, color=chart_name)",
+                    None,
+                    lambda df2, chart_name: px.scatter(data, x=x_cols, color=chart_name),
                     "scatter",
                     data,
                 )
                 file_list.append(
                     outputDir + os.sep + "scatter" + "chart of the " + x_cols + ".html"
                 )
-                # file_list.append(
-                #    save_chart(fig, outputDir, 'Frequency Distribution of ' + x_cols, static_flag, x_cols))
             elif i.lower() == "radar":
                 process_multiple(
                     x_cols,
                     y_cols,
                     y_cols,
-                    "None",
-                    "px.line_polar(data, r=x_cols, theta=chart_name)",
+                    None,
+                    lambda df2, chart_name: px.line_polar(data, r=x_cols, theta=chart_name),
                     "Radar",
                     data,
                 )
@@ -212,8 +211,8 @@ def create_Plotly_chart(
                     x_cols,
                     y_cols,
                     y_cols,
-                    "None",
-                    "px.line(data, x=x_cols, color=chart_name)",
+                    None,
+                    lambda df2, chart_name: px.line(data, x=x_cols, color=chart_name),
                     "line",
                     data,
                 )
