@@ -21,14 +21,13 @@ import os
 import sys
 import time
 
-from nltk import pos_tag, word_tokenize
-from nltk.corpus import sentiwordnet as swn
-from nltk.corpus import wordnet as wn
-
 import charts_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
+from nltk import pos_tag, word_tokenize
+from nltk.corpus import sentiwordnet as swn
+from nltk.corpus import wordnet as wn
 
 # if SentiWordNet fails, run: "python -m nltk.downloader all"
 

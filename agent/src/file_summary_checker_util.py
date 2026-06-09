@@ -7,15 +7,14 @@ import sys
 import tkinter.messagebox as mb
 from glob import glob
 
-from nltk.stem.wordnet import WordNetLemmatizer
-from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
-
 import charts_util
 import GUI_IO_util
 import GUI_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
+from nltk.stem.wordnet import WordNetLemmatizer
+from stanfordcorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 
 if not IO_libraries_util.install_all_Python_packages(
     GUI_util.window,

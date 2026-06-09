@@ -33,13 +33,12 @@ import os
 import sys
 import time
 
-import numpy as np  # np
-import pandas as pd
-
 import charts_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
+import numpy as np  # np
+import pandas as pd
 
 fin = open("../lib/wordLists/stopwords.txt")
 stops = set(fin.read().splitlines())

@@ -37,13 +37,12 @@ import os
 import sys
 import time
 
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
 import charts_util
 import GUI_IO_util
 import IO_csv_util
 import IO_files_util
 import IO_libraries_util
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 IO_libraries_util.import_nltk_resource("vader_lexicon", "vader_lexicon")
 
