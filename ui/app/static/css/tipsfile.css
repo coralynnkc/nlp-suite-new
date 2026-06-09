@@ -1,63 +1,64 @@
-.tipsfile-button{ 
-    border: 3px solid #3c67cb;
-    position: relative;
-    padding: 10px 100px;
-    border-radius: 14px;
-    color: #416cd3;
-    font-weight: bold;
-    background-color: white;
-    font-size: 18px;
-
-    transition: all 0.3s ease;
-
+.tipsfile-button {
+  position: relative;
+  height: 40px;
+  padding: 0 28px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(37, 99, 235, 0.45);
+  color: rgba(37, 99, 235, 0.90);
+  font-weight: 700;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .tipsfile-button:hover {
-    transform: scale(1.1); 
-    box-shadow: 0 2px 2px #4d6aad
+  border-color: rgba(37, 99, 235, 0.70);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+  transform: translateY(-1px);
 }
 
-.tipsfile-button:hover .tipsfile-glow {  
+.tipsfile-button:hover .tipsfile-glow {
   opacity: 1;
   animation: rotateShine 3s linear infinite;
 }
 
 .tipsfile-mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 12px;
-    width: 100%;
-    height: 100%;
-    padding: 1.1px; 
-
-    mask: linear-gradient(#4d6aad 0 0) content-box, linear-gradient(#4d6aad 0 0) border-box;
-    mask-composite: exclude;
-    
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 999px;
+  width: 100%;
+  height: 100%;
+  padding: 1.5px;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) border-box;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .tipsfile-glow {
-    background: conic-gradient(from 0deg, 
+  background: conic-gradient(from 0deg,
     transparent 0%,
-    #4d6aad 10%,
-    #2a4584 15%,
+    rgba(37, 99, 235, 0.8) 10%,
+    rgba(29, 78, 216, 0.9) 15%,
     transparent 20%
-    );
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 500px; 
-    height: 500px;
-    transform: translate(-50%, -50%);
-    transform-origin: 0 0;
-    opacity: 0;
+  );
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  transform-origin: 0 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes rotateShine {
-    0% {
-        transform: rotate(0deg) translate(-50%, -50%); 
-    } 
-    100% {
-        transform: rotate(360deg) translate(-50%, -50%); 
-    } 
+  0%   { transform: rotate(0deg)   translate(-50%, -50%); }
+  100% { transform: rotate(360deg) translate(-50%, -50%); }
 }
