@@ -1,6 +1,9 @@
 import string
+from pathlib import Path
 
 import IO_csv_util
+
+_WORD_LISTS_DIR = Path(__file__).parent.parent.parent / "lib" / "wordLists"
 
 punctuation = string.punctuation
 import stanza
@@ -29,7 +32,7 @@ import re
 
 
 def removeart(original_sentence):
-    fin = open("../lib/wordLists/articles.txt")
+    fin = open(_WORD_LISTS_DIR / "articles.txt")
     articles = list(set(fin.read().splitlines()))
     # from Stanford CoreNLP calculation
     # Create a regex pattern for the determiners, case-insensitive
@@ -57,7 +60,7 @@ def removeart(original_sentence):
 
 # determiners typically include numbers such as one, two, three,... but we cannot list them all and should use a function
 def removedt(original_sentence):
-    fin = open("../lib/wordLists/determiners.txt")
+    fin = open(_WORD_LISTS_DIR / "determiners.txt")
     determiners = list(set(fin.read().splitlines()))
 
     # from Stanford CoreNLP calculation
@@ -73,7 +76,7 @@ def removedt(original_sentence):
 
 
 def removestop(original_sentence):
-    fin = open("../lib/wordLists/stopwords.txt")
+    fin = open(_WORD_LISTS_DIR / "stopwords.txt")
     stops = list(set(fin.read().splitlines()))
     dets_pattern = r"\b(?:" + "|".join(map(re.escape, stops)) + r")\b\s*"
     filtered_sentence = re.sub(dets_pattern, "", original_sentence, flags=re.IGNORECASE)

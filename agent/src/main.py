@@ -39,6 +39,7 @@ from word2vec import run_word2vec
 from wordcloud_visual import run_wordcloud
 
 _ENV_PATH = os.path.join(os.path.expanduser("~"), "nlp-suite", ".env")
+OUTPUT_DIR = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
 
 
 def _load_env_file():
@@ -177,7 +178,7 @@ def file_manager(
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
 
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     os.makedirs(outputDirectory, exist_ok=True)
 
     thread = Thread(
@@ -239,7 +240,7 @@ def sentiment_analysis(
     calculateMedian: Annotated[bool, Form()] = False,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     thread = Thread(
         target=lambda: run(
             app,
@@ -275,7 +276,7 @@ def topic_modeling(
     Gensim_MALLET_var: Annotated[bool, Form()] = False,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     chartPackage = "Excel"
 
     thread = Thread(
@@ -317,7 +318,7 @@ def parsers_annotators(
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     openOutputFiles = False
     chartPackage = "Excel"
     # Start the processing in a separate thread
@@ -373,7 +374,7 @@ def word2vec(
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     chartPackage = "Excel"
 
     thread = Thread(
@@ -432,7 +433,7 @@ def CoNLL_table_analyzer(
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     chartPackage = "Excel"
     openOutputFiles = False
@@ -484,7 +485,7 @@ def style_analysis(
     extra_GUIs_var = False
     gender_guesser = False
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     chartPackage = "Excel"
 
     thread = Thread(
@@ -522,7 +523,7 @@ def sunburst_charts(
     treemap_var: Annotated[bool, Form()] = False,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     thread = Thread(
         target=lambda: run(
@@ -553,7 +554,7 @@ def colormap_chart(
     normalize: Annotated[str, Form()] = False,
     file_data: Annotated[str, Form()] = "",
 ):
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     thread = Thread(
         target=lambda: run(
             app,
@@ -582,7 +583,7 @@ def sankey_flowchart(
     selected_pairs_data: Annotated[str, Form()] = "[]",
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     thread = Thread(
         target=lambda: run(
@@ -621,7 +622,7 @@ def SVO(
     inputFilename = ""
     chartPackage = "Excel"
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     thread = Thread(
         target=lambda: run(
             app,
@@ -677,7 +678,7 @@ def wordcloud(
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     selectedImage = ""
     openOuputfiles = False
     thread = Thread(
@@ -739,7 +740,7 @@ def NGrams_CoOccurrences(
     number_of_years = 0  # Set for now
 
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     if csv_file_var:
         csv_file_var = inputDirectory
@@ -797,7 +798,7 @@ def filesearchword(
 ):
     inputFilename = ""
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     chartPackage = "Excel"
     openOutputFiles = False
     search_options_list = []
@@ -857,7 +858,7 @@ def document_statistics(
     corpus_statistics_byPOS_var: Annotated[bool, Form()] = False,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     inputFilename = ""
     chartPackage = "Excel"
@@ -894,7 +895,7 @@ def sentence_analysis(
     num_sentences: Annotated[int, Form()] = 1,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     # These variables aren't in the gui?
     visualize_bySentenceIndex_var = False
@@ -942,7 +943,7 @@ def gis(
     GIS_package_var: Annotated[str, Form()] = "",
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
 
     inputFilename = ""
     chartPackage = "Excel"
@@ -994,7 +995,7 @@ def ner(
     NER_list: Annotated[str, Form()] = "",
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     ner_list = [t.strip() for t in NER_list.split(",") if t.strip()]
     thread = Thread(
         target=lambda: run(
@@ -1040,7 +1041,7 @@ def wordnet(
     noun_verb_menu_var: Annotated[str, Form()] = "",
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     keyword_list = [k.strip() for k in wordNet_keyword_list.split(",") if k.strip()]
     thread = Thread(
         target=lambda: run(
@@ -1091,7 +1092,7 @@ def shape_of_stories(
     best_topic_estimation: Annotated[bool, Form()] = False,
 ):
     inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     thread = Thread(
         target=lambda: run(
             app,
@@ -1128,7 +1129,7 @@ def excel_plotly_charts(
     data_transformation: Annotated[str, Form()] = "No transformation",
     inputFileData: Annotated[str, Form()] = "",
 ):
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     thread = Thread(
         target=lambda: run(
             app,
@@ -1159,7 +1160,7 @@ def boxplot(
     csv_field_boxplot_color_var: Annotated[str, Form()] = "",
     inputFileData: Annotated[str, Form()] = "",
 ):
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
+    outputDirectory = OUTPUT_DIR
     thread = Thread(
         target=lambda: run(
             app,

@@ -185,10 +185,7 @@ def GIS_pipeline(
         False,
     )
 
-    print("HEREEE ", __file__)
-    head, scriptName = os.path.split(os.path.basename(__file__))
-    print("Head ", head)
-    print("Scriptname ", scriptName)
+    _, scriptName = os.path.split(os.path.basename(__file__))
     reminders_util.checkReminder(
         scriptName,
         reminders_util.title_options_GIS_timing,

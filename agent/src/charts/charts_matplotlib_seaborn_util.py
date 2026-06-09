@@ -46,7 +46,7 @@ def MALLET_heatmap(
     sns.set_theme(style="whitegrid", rc=fig_set)
 
     sns.heatmap(
-        composition.iloc[:, 1:].applymap(float),
+        composition.iloc[:, 1:].map(float),
         vmin=0,
         vmax=1,
         annot=True,

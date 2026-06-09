@@ -60,8 +60,10 @@ def get_csv_data(inputFilename, withHeader, inputFileData=""):
         # Check for null bytes in the file
         with open(inputFilename, "rb") as fi:
             file_data = fi.read()
-        with open(inputFilename, "wb") as fo:
-            fo.write(file_data.replace(b"\x00", b""))  # Remove null bytes
+        if b"\x00" in file_data:
+            print(f"Warning: null bytes found in {inputFilename} — removing them and overwriting the file in place.")
+            with open(inputFilename, "wb") as fo:
+                fo.write(file_data.replace(b"\x00", b""))
 
         # Read the file content
         with open(inputFilename, encoding="utf-8-sig", errors="ignore") as f:
