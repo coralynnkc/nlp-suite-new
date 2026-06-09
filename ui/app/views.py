@@ -23,9 +23,8 @@ def contact(_: HttpRequest):
     return HttpResponse(template.render())
 
 
-def status(_: HttpRequest):
-    template = loader.get_template("../templates/status.html")
-    return HttpResponse(template.render())
+def status(request: HttpRequest):
+    return render(request, "status.html", {"agent_url": AGENT_SERVER_URL})
 
 
 def sentiment_analysis(request: HttpRequest):
@@ -43,7 +42,7 @@ def sentiment_analysis(request: HttpRequest):
 def SVO(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/SVO",
+            f"{AGENT_SERVER_URL}/svo",
             data=request.body,
             headers=request.headers,
         )
@@ -90,7 +89,7 @@ def topic_modeling(request: HttpRequest):
 def NGrams_CoOccurrences(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/NGrams_CoOccurrences",
+            f"{AGENT_SERVER_URL}/ngrams",
             data=request.body,
             headers=request.headers,
         )
@@ -104,7 +103,7 @@ def NGrams_CoOccurrences(request: HttpRequest):
 def parsers_annotators(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/parsers_annotators",
+            f"{AGENT_SERVER_URL}/parse",
             data=request.body,
             headers=request.headers,
         )
@@ -118,7 +117,7 @@ def parsers_annotators(request: HttpRequest):
 def wordclouds(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/wordclouds",
+            f"{AGENT_SERVER_URL}/wordcloud",
             data=request.body,
             headers=request.headers,
         )
@@ -151,7 +150,7 @@ def wordnet(_: HttpRequest):
 def filesearchword(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/filesearchword",
+            f"{AGENT_SERVER_URL}/file_search",
             data=request.body,
             headers=request.headers,
         )
@@ -189,7 +188,7 @@ def NER(_: HttpRequest):
 def sunburst_charts(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/sunburst_charts",
+            f"{AGENT_SERVER_URL}/sunburst",
             data=request.body,
             headers=request.headers,
         )
@@ -203,7 +202,7 @@ def sunburst_charts(request: HttpRequest):
 def sankey_flowchart(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/sankey_flowchart",
+            f"{AGENT_SERVER_URL}/sankey",
             data=request.body,
             headers=request.headers,
         )
@@ -222,7 +221,7 @@ def boxplot(_: HttpRequest):
 def colormap_chart(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/colormap_chart",
+            f"{AGENT_SERVER_URL}/colormap",
             data=request.body,
             headers=request.headers,
         )
@@ -241,7 +240,7 @@ def excel_plotly_chars(_: HttpRequest):
 def conll_table_analyzer_main(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/CoNLL_table_analyzer_main",
+            f"{AGENT_SERVER_URL}/conll_table",
             data=request.body,
             headers=request.headers,
         )
@@ -255,7 +254,7 @@ def conll_table_analyzer_main(request: HttpRequest):
 def document_statistics(request: HttpRequest):
     if request.method == "POST":
         response = requests.post(
-            f"{AGENT_SERVER_URL}/document_statistics",
+            f"{AGENT_SERVER_URL}/statistics",
             data=request.body,
             headers=request.headers,
         )

@@ -5,7 +5,11 @@ import sys
 import pytest
 
 # Make agent/src importable when running pytest from agent/
-sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
+_src = pathlib.Path(__file__).parent.parent / "src"
+sys.path.insert(0, str(_src))
+for _d in _src.iterdir():
+    if _d.is_dir() and not _d.name.startswith("."):
+        sys.path.insert(0, str(_d))
 
 _FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 

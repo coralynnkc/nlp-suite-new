@@ -4,7 +4,7 @@
 {%load static %}
 <div class="sentiment-analysis-container">
     <h1>SVO  (Subject-Verb-Object) extractor & visualization</h1>
-    <form method="post" class ="sentiment-analysis-form" action = "{% url 'SVO' %}">
+    <form method="post" class ="sentiment-analysis-form" action = "{% url 'svo' %}">
     {% csrf_token %}
 
     <div class="form-row">
