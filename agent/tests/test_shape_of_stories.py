@@ -1,5 +1,9 @@
 import pytest
-from shape_of_stories_main import run as run_shape_of_stories
+
+try:
+    from shape_of_stories_main import run as run_shape_of_stories
+except (ImportError, SystemExit):
+    pytest.skip("shape_of_stories_main dependencies not available", allow_module_level=True)
 
 
 def test_shape_of_stories_bert(fixture_txt, tmp_output):

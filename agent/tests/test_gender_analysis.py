@@ -1,9 +1,11 @@
 import pytest
 
-# html_annotator_gender_main imports GUI_util (tkinter) at module level;
-# skip the whole module if it can't be imported.
-html_annotator_gender_main = pytest.importorskip("html_annotator_gender_main")
-run_gender_analysis = html_annotator_gender_main.run
+# html_annotator_gender_main imports GUI_util (tkinter) at module level and
+# some deps call sys.exit(0) on missing packages; skip if import fails.
+try:
+    from html_annotator_gender_main import run as run_gender_analysis
+except (ImportError, SystemExit):
+    pytest.skip("html_annotator_gender_main dependencies not available", allow_module_level=True)
 
 
 @pytest.mark.integration

@@ -1,5 +1,10 @@
-import pandas as pd
-from boxplot_chart import run as run_boxplot
+import pytest
+
+try:
+    import pandas as pd
+    from boxplot_chart import run as run_boxplot
+except (ImportError, SystemExit):
+    pytest.skip("boxplot_chart dependencies not available", allow_module_level=True)
 
 
 def test_boxplot_valence(fixture_csv, tmp_output):

@@ -1,5 +1,10 @@
-import pandas as pd
-from excel_plotly_charts import run_excel_plotly_charts
+import pytest
+
+try:
+    import pandas as pd
+    from excel_plotly_charts import run_excel_plotly_charts
+except (ImportError, SystemExit):
+    pytest.skip("excel_plotly_charts dependencies not available", allow_module_level=True)
 
 
 def test_excel_plotly_charts_bar(fixture_csv, tmp_output):
