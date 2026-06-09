@@ -1,0 +1,93 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+
+<div class="sentiment-analysis-container">
+    <h1>Boxplot</h1>
+    <form method="post" class="sentiment-analysis-form" action="{% url 'boxplot' %}">
+        {% csrf_token %}
+
+        <!-- Input and Output Directories -->
+        <div class="form-row">
+            <label for="inputDirectory">Input Directory:</label>
+            <select name="inputDirectory" id="inputDirectory">
+                <option value="~/nlp-suite/input">~/nlp-suite/input</option>
+                <option value="~/nlp-suite/csvInput" seletced>~/nlp-suite/csvInput</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="outputDirectory">Output Directory:</label>
+            <input type="text" name="outputDirectory" value="~/nlp-suite/output" />
+        </div>
+
+        <!-- CSV file field -->
+        <div class="form-row">
+            <label for="boxplot_input_yaxis">CSV File Field</label>
+            <input type="file" id="boxplot_input_yaxis" name="boxplot_input_yaxis" accept=".csv" required>
+    
+            <label for="search_field">Select a field for visualization (y-axis)</label>
+            <select id="search_field" name="search_field" required>
+                <option value="" disabled selected>Select an option</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label for="data">Data</label>
+            <select id="data_field" name="data_field">
+                <option value = "all">All</option>
+                <option value = "none">None</option>
+                <option value = "outliers">Outliers</option>
+            </select>
+        </div>
+
+        <div class = "form-row">
+            <label>
+            <input type="checkbox" name="split_data">
+            Split data by categories
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label for="boxplot_csv_split">CSV field to split the data</label>
+            <select id="search_field" name="search_field" required>
+                <option value="" disabled selected>Select an option</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label for="boxplot_csv_color">CSV field for coloring split categories</label>
+            <select id="search_field" name="search_field" required>
+                <option value="" disabled selected>Select an option</option>
+            </select>
+        </div>
+
+
+        <!-- Hidden input to store file data -->
+        <input type="hidden" name="file_data" id="file_data">
+       
+
+        <!-- Form Buttons -->
+        <div class="buttons-section">
+            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+
+            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Boxplots.pdf" target ="_blank" rel="noopener noreferrer"
+            class = "tipsfile-button">
+                <div class = "tipsfile-mask">
+                    <div class = "tipsfile-glow"></div>
+                </div>
+                Tips File
+            </a>
+            
+            <button type="submit" class="run-button">Run</button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript for Dynamic Functionality -->
+<script src="{% static 'js/boxplot.js' %}"></script>
+<script src="{% static 'js/onlyone.js' %}"></script>
+
+{% endblock %}

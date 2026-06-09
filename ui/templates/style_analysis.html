@@ -1,0 +1,206 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="sentiment-analysis-container">
+    <h1>Style analysis (ALL options GUI)</h1>
+    <form method ="post" class='style-analysis-form'>
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <label for="inputDirectory">Input Directory:</label>
+            <div class="io-hover"><!--- using div to preserve format issues.-->
+                <select name="inputDirectory" id="inputDirectory">
+                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
+                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+                </select>
+                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
+                    more specifics on how to access these folders.
+                </span>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <label for="outputDirectory">Output Directory:</label>
+            <input type="text" name="outputDirectory" value="~/nlp-suite/output"/>
+        </div>
+        
+        {% comment %} <div class="form-row">
+            <button onclick="openPDFPopup()">Tips File</button>
+            <script src="{% static 'css/tips_files.js' %}"></script>
+            <script>
+                function openPDFPopup() {
+                    const base64PDF = style_analysis_tips();
+                    const pdfWindow = window.open('', 'pdfPopup', 'width=800,height=600');
+                    pdfWindow.document.write(`
+                        <html>
+                        <head><title>PDF Viewer</title></head>
+                        <body style="margin: 0; overflow: hidden;">
+                            <embed src="${base64PDF}" type="application/pdf" width="100%" height="100%">
+                        </body>
+                        </html>
+                    `);
+                }
+            </script>
+        </div> {% endcomment %}
+
+        {% comment %} <div class="form-row">
+            <label>
+                <input type="checkbox" id="style-analysis" name="style-analysis">
+                GUIs available for style analysis
+            </label>
+            <select id="tools" name="tools" disabled>
+                <option value="*">*</option>
+                <option value="spell-check">Spelling/grammar checker</option>
+                <option value="corpus-stats">Corpus statistics</option>
+                <option value="ngrams">N-grams & Co-Occurrences</option>
+                <option value="nominalization">Nominalization</option>
+                <option value="conll">CoNLL table analyzer</option>
+                <option value="wordnet">WordNet</option>
+            </select>
+        </div> {% endcomment %}
+    
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="complexity_analysis" name="complexity_analysis">
+                Complexity/readability analysis
+            </label>
+            <select id="analysis_dropdown" name="analysis_dropdown">
+                <option value="*">*</option>
+                <option value="Sentence">Sentence complexity</option>
+                <option value="Text">Text readability</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>    
+                <input type="checkbox" id="vocabulary_analysis" name="vocabulary_analysis">
+                Vocabulary analysis
+            </label>
+            <select id="voc_options" name="voc_options">
+                <option value="*">*</option>
+                <option value="Iconic">Iconicity Analysis</option>
+                <option value="Vocabulary (via unigrams)">Vocabulary (via unigrams) - List of all words/tokens in input document(s)</option>
+                <option value="Hapax legomena">Vocabulary (via Hapax legomena, once-occurring words)</option>
+                <option value="hapax-legomena-unigrams">Vocabulary (via Hapax legomena, once-occurring unigrams)</option>
+                <option value="Stanza">Vocabulary (via Stanza multilanguage lemmatizer) - List of all words/tokens in input document(s)</option>
+                <option value="NLTK">Vocabulary (via NLTK unusual words)</option>
+                <option value="Yule">Vocabulary richness (word type/token ratio or Yule’s K)</option>
+                <option value="Abstract">Abstract/concrete vocabulary</option>
+                <option value="Objectivity/subjectivity (via spaCy)">Objectivity/subjectivity (via spaCy)</option>
+                <option value="pathos">Punctuation as figures of pathos(?!)</option>
+                <option value="Word length">Word length</option>
+                <option value="Vowel">Vowel words</option>
+                <option value="capital">Words with capital initial (proper nouns)</option>
+                <option value="detection">Language detection</option>
+                <option value="Repetition: Words">Repetition: Words in first K and last K sentences</option>
+                <option value="Repetition: Last">Repetition: Last K words of a sentence/First K words of next sentence</option>
+                <option value="repetition-accross-sentences">Repetition across sentences (special ngrams)</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <div style="margin-right: 40px;">
+                <label for="min_rating">Min Rating:</label>
+                <input type="range" id="min_rating" name="min_rating" min="1" max="7" value="5">
+                <span id="minRatingValue">5</span>
+                <span class="tooltip">
+                    <span class="tooltiptext">
+                        Please, select the minimum value of the iconicity rating. The suggested value is 5, range: 1 to 7.
+                    </span>
+                </span>
+            </div>
+            <div style="margin-right: 20px;">
+                <label for="max_rating_sd">Max Rating SD:</label>
+                <input type="range" id="max_rating_sd" name="max_rating_sd" min="0" max="3" value="2">
+                <span id="maxRatingSDValue">2</span>
+                <span class="tooltip">
+                    <span class="tooltiptext">
+                        Please, select the maximum value of the iconicity rating standard deviation. The suggested value is 2, range: 0 to 3.
+                    </span>
+                </span>
+            </div>       
+        </div> 
+
+        <div class="form-row">
+            <label>
+                <input type="checkbox" id="gender_guesser" name="gender_guesser" onclick="showGenderGuesserWarning()">
+                Who wrote the text - Gender guesser
+            </label>
+            <script>
+                var checkbox = document.getElementById("gender_guesser").addEventListener("click", function() {
+                    if (this.checked) {
+                        window.open("https://www.hackerfactor.com/GenderGuesser.php#About");
+                        if(window.open) {
+                            let checkbox = document.getElementById("gender_guesser");
+                        }
+                    }
+                });
+            </script>
+        </div>
+
+        <div class="form-row">
+            <label for="dataTransformation">Transformation:</label>
+            <select id="dataTransformation" name="dataTransformation">
+                <option value="No transformation">No transformation</option>
+                <option value="Ln">Ln</option>
+                <option value="Log">Log</option>
+                <option value="Square">Square root</option>
+                <option value="Z score">Z score</option>
+            </select>
+        </div>
+
+
+        <div class="buttons-section">
+            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+
+            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+
+            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Style%20analysis.pdf" target ="_blank" rel="noopener noreferrer"
+            class = "tipsfile-button">
+                <div class = "tipsfile-mask">
+                    <div class = "tipsfile-glow"></div>
+                </div>
+                Tips File
+            </a>
+            
+            <button type="submit" class="run-button">Run</button>
+        </div>
+    </form>
+</div>
+
+<script src="{% static 'js/style_analysis.js' %}"></script>
+
+<style>
+    /* Tooltip styling */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 300px;
+        background-color: #555;
+        color: #fff;
+        text-align: left;
+        border-radius: 5px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -150px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+<script src="{% static 'js/onlyone.js' %}"></script>
+{% endblock %}
