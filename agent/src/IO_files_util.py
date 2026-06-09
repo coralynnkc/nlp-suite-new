@@ -242,7 +242,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                 "Non fatal filename error: date error. Error ignored.\nThe date format "
                 + date_format
                 + " and/or date location "
-                + str(date_location)
+                + str(date_loc)
                 + " stored for the filenames in your corpus are not valid for the filename\n   "
                 + filename2
                 + "\nYou should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration at the top of the GUI.\n\n"
@@ -776,7 +776,7 @@ def run_jar_script(
     if not IO_libraries_util.check_inputPythonJavaProgramFile(scriptName):
         return
 
-    if visualization_tools == "Sentence visualization: Dynamic sentence network viewer (Gephi graphs)":
+    if visualization_tools == "Sentence visualization: Dynamic sentence network viewer (Gephi graphs)":  # noqa: F821
         # TODO the script does not work even in command line using the arguments in the ReadMe file; it seems to want two more parameters
         """
         Error in input parameters

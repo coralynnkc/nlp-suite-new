@@ -321,7 +321,7 @@ class Attributes(dict):
             self[attClass][id] = {"id": id, "type": type, "defaultValue": defaultValue, "mode": mode, "title": title}
             return id
         else:
-            raise Exception("wrong attClass : " + str(attClass) + " Should be in " + str(type_choices))
+            raise Exception("wrong attClass : " + str(attClass) + " Should be in " + str(self.type_choices))
 
     def makeAttributeInstance(
         self, attClass, id=None, value=None, start=None, end=None, startopen=False, endopen=False
@@ -621,10 +621,10 @@ class Node:
                     if attr == "end":
                         start = node_xml.attrib[attr]
                     if attr == "startopen":
-                        start = attvalue_xml.attrib[attr]
+                        start = node_xml.attrib[attr]
                         startopen = True
                     if attr == "endopen":
-                        end = attvalue_xml.attrib[attr]
+                        end = node_xml.attrib[attr]
                         endopen = True
                     if attr == "pid":
                         pid = node_xml.attrib[attr]

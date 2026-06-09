@@ -296,20 +296,20 @@ def visualize_chart_bySent(
                 #   frequencies or scores on X-axis
                 # NO [[Document, Column 1 to be plotted, Column 2 to be plotted, Sentence ID]]
                 #   only one series plotted with Docs on X-axis
-                columns_to_be_plotted_bySent.append([docCol + 1, columns_to_be_plotted_numeric[i][0]])
+                columns_to_be_plotted_bySent.append([docCol + 1, columns_to_be_plotted_numeric[i][0]])  # noqa: F821
         else:
             # Sentence ID, Frequency
-            columns_to_be_plotted_bySent.append([sentCol, columns_to_be_plotted_numeric[i][0]])
+            columns_to_be_plotted_bySent.append([sentCol, columns_to_be_plotted_numeric[i][0]])  # noqa: F821
 
     if n_documents > 1:
-        chart_title = chart_title + " by Document & Sentence Index"
+        chart_title = chart_title + " by Document & Sentence Index"  # noqa: F821
         xAxis_label = ""
     else:
-        chart_title = chart_title + " by Sentence Index"
+        chart_title = chart_title + " by Sentence Index"  # noqa: F821
         xAxis_label = "Sentence index"
 
-    if outputFileNameType != "":
-        outputFileLabel = "bySent_" + outputFileNameType
+    if outputFileNameType != "":  # noqa: F821
+        outputFileLabel = "bySent_" + outputFileNameType  # noqa: F821
     else:
         outputFileLabel = "bySent"
 
@@ -323,8 +323,8 @@ def visualize_chart_bySent(
         chart_type_list=["line"],
         chart_title=chart_title,
         column_xAxis_label_var=xAxis_label,
-        column_yAxis_label_var=column_yAxis_label,
-        hover_info_column_list=hover_label,
+        column_yAxis_label_var=column_yAxis_label,  # noqa: F821
+        hover_info_column_list=hover_label,  # noqa: F821
         count_var=0,  # always 0 when plotting by sentence index
         complete_sid=True,
         remove_hyperlinks=True,
@@ -2278,7 +2278,7 @@ def timechart(data, outputFilename, var, date_format_var, cumulative, monthly=No
             date.append(re.search(r"\d.*\d", data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
             year.append(re.search(r"\d{4}", date[i])[0])
-        for i in range(0, en(data[date_field])):
+        for i in range(0, len(data[date_field])):
             month.append(year[i] + "-" + date[i][3:5])
         for i in range(0, len(data[date_field])):
             day.append(month[i] + "-" + date[i][0:2])

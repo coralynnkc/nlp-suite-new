@@ -239,10 +239,7 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
     try:
         kml.save(kmloutputFilename)
     except Exception:
-        mb.showwarning(
-            title="kml file save failure",
-            message="Saving the kml file failed. A typical cause of failure is is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).\n\nThe GIS KML script will now try to automattically clean the kml file, save it in safe mode, and open the kml file in Google Earth Pro.\n\nIf the file cleaning was successful, the map will display correctly. If not, Google Earth Pro will open exactly on the bad character position. Remove the character and save the file. But, you should really clean the original input txt/csv file.",
-        )
+        print("kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).")
         # Save kml regardless of validity. Let the user find any bad characters.
         kml.save(kmloutputFilename, False)
         # Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
@@ -667,10 +664,7 @@ def geocode(
     try:
         kml.save(kmloutputFilename)
     except Exception:
-        mb.showwarning(
-            title="kml file save failure",
-            message="Saving the kml file failed. A typical cause of failure is is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).\n\nThe GIS KML script will now try to automattically clean the kml file, save it in safe mode, and open the kml file in Google Earth Pro.\n\nIf the file cleaning was successful, the map will display correctly. If not, Google Earth Pro will open exactly on the bad character position. Remove the character and save the file. But, you should really clean the original input txt/csv file.",
-        )
+        print("kml file save failure: Saving the kml file failed. A typical cause of failure is bad characters in the input text/csv file(s) (e.g, 'LINE TABULATION' or 'INFORMATION SEPARATOR ONE' characters).")
         # Save kml regardless of validity. Let the user find any bad characters.
         kml.save(kmloutputFilename, False)
         # Clean out any "LINE TABULATION" and "INFORMATION SEPARATOR ONE" characters from the input (causes error with KML).
@@ -766,25 +760,11 @@ def convertToGEP(date):
         try:
             currentDateFormat = dateutil.parser.parse(date)
         except Exception:
-            mb.showerror(
-                title="Date error",
-                message="There was an error in processing the date '"
-                + date
-                + "'.\n\nThe date format '"
-                + fmt
-                + "' was automatically applied to process the date, where format values are as follows:\n%B or %b   alphabetic month name in full or first 3 characters;\n%m   2-digit month (1 to 12);\n%d   2-digit day of the month (1 to 31);\n%Y   4-digit and %y 2-digit year (1918, 18).\n\nBut... either\n1.   the format automatically applied is incorrect for the date;\n2.   the date is in unrecognized format (e.g., it contains time besides date);\n3.   the date is prior to 1900. The library 'strftime' used here to deal with dates cannot process dates prior to 1900 in Windows.",
-            )
+            print(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
         # years before 1900 cannot be used
         # pre 1900 dates may give a problem in Windows: ValueError: format %y requires year >= 1900 on Windows
         try:
             GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
         except Exception:
-            mb.showerror(
-                title="Date error",
-                message="There was an error in processing the date '"
-                + date
-                + "'.\n\nThe date format '"
-                + fmt
-                + "' was automatically applied to process the date, where format values are as follows:\n%B or %b   alphabetic month name in full or first 3 characters;\n%m   2-digit month (1 to 12);\n%d   2-digit day of the month (1 to 31);\n%Y   4-digit and %y 2-digit year (1918, 18).\n\nBut... either\n1.   the format automatically applied is incorrect for the date;\n2.   the date is in unrecognized format (e.g., it contains time besides date);\n3.   the date is prior to 1900. The library 'strftime' used here to deal with dates cannot process dates prior to 1900 in Windows.",
-            )
+            print(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
         return GEPdateFormat

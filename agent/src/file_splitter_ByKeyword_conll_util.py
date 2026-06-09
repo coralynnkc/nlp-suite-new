@@ -128,7 +128,7 @@ def run(inputCoNLL, outputPath, keyword, first_occurrence):
                                 ]
                             )
                         else:
-                            k = l
+                            k = k + 1
                     else:
                         k = k + 1
             i = k

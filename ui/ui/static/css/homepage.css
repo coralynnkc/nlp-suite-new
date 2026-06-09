@@ -253,3 +253,256 @@
     align-items: flex-start;
   }
 }
+
+/* ── Tab bar ─────────────────────────────────────────────────── */
+.tabBar {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid rgba(15,23,42,0.10);
+  margin: 28px 0 22px;
+}
+
+.tabBtn {
+  height: 40px;
+  padding: 0 22px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(15,23,42,0.45);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .18s ease, border-color .18s ease;
+}
+
+.tabBtn.active {
+  color: rgba(37,99,235,0.95);
+  border-bottom-color: rgba(37,99,235,0.90);
+}
+
+.tabBtn:hover:not(.active) {
+  color: rgba(15,23,42,0.75);
+}
+
+.tabPanel { display: none; }
+.tabPanel.active { display: block; }
+
+/* ── Filter bar ──────────────────────────────────────────────── */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.filterSearch {
+  flex: 1 1 240px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid rgba(15,23,42,0.15);
+  border-radius: 999px;
+  font-size: 13px;
+  color: rgba(15,23,42,0.85);
+  background: #fff;
+  outline: none;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.filterSearch:focus {
+  border-color: rgba(37,99,235,0.50);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+}
+
+.filterSearch::placeholder { color: rgba(15,23,42,0.32); }
+
+/* ── Tag chips ───────────────────────────────────────────────── */
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity .15s ease, transform .1s ease;
+  opacity: .72;
+}
+
+.chip:hover { opacity: 1; transform: translateY(-1px); }
+.chip.active { opacity: 1; }
+
+.chip[data-tag="all"]          { background: rgba(15,23,42,0.07);  border-color: rgba(15,23,42,0.14); color: rgba(15,23,42,0.75); }
+.chip[data-tag="all"].active   { background: rgba(15,23,42,0.12);  border-color: rgba(15,23,42,0.28); color: rgba(15,23,42,0.90); }
+.chip[data-tag="corpus"]        { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+.chip[data-tag="text-analysis"] { background: #e0f2fe; border-color: #7dd3fc; color: #0369a1; }
+.chip[data-tag="visualization"] { background: #f3e8ff; border-color: #c4b5fd; color: #6d28d9; }
+.chip[data-tag="parsing"]       { background: #dcfce7; border-color: #86efac; color: #15803d; }
+.chip[data-tag="annotation"]    { background: #fef9c3; border-color: #fde047; color: #a16207; }
+.chip[data-tag="vocabulary"]    { background: #ffedd5; border-color: #fdba74; color: #c2410c; }
+.chip[data-tag="embeddings"]    { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+.chip[data-tag="gis"]           { background: #ccfbf1; border-color: #5eead4; color: #0f766e; }
+.chip[data-tag="sentiment"]     { background: #fce7f3; border-color: #f9a8d4; color: #be185d; }
+.chip[data-tag="statistics"]    { background: #e0e7ff; border-color: #a5b4fc; color: #3730a3; }
+.chip[data-tag="files"]         { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+.chip[data-tag="search"]        { background: #f0fdf4; border-color: #a7f3d0; color: #065f46; }
+.chip[data-tag="stylistics"]    { background: #fdf4ff; border-color: #e879f9; color: #86198f; }
+.chip[data-tag="social"]        { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+.chip[data-tag="syntax"]        { background: #f0fdf4; border-color: #86efac; color: #166534; }
+.chip[data-tag="entities"]      { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+.chip[data-tag="overview"]      { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+.chip[data-tag="install"]       { background: #f0fdf4; border-color: #86efac; color: #166534; }
+.chip[data-tag="setup"]         { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+.chip[data-tag="analysis"]      { background: #fdf4ff; border-color: #d8b4fe; color: #6b21a8; }
+
+/* ── Card tag badges ─────────────────────────────────────────── */
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.cardTag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.cardTag.t-corpus        { background: #dbeafe; color: #1d4ed8; }
+.cardTag.t-text-analysis { background: #e0f2fe; color: #0369a1; }
+.cardTag.t-visualization { background: #f3e8ff; color: #6d28d9; }
+.cardTag.t-parsing       { background: #dcfce7; color: #15803d; }
+.cardTag.t-annotation    { background: #fef9c3; color: #a16207; }
+.cardTag.t-vocabulary    { background: #ffedd5; color: #c2410c; }
+.cardTag.t-embeddings    { background: #fee2e2; color: #b91c1c; }
+.cardTag.t-gis           { background: #ccfbf1; color: #0f766e; }
+.cardTag.t-sentiment     { background: #fce7f3; color: #be185d; }
+.cardTag.t-statistics    { background: #e0e7ff; color: #3730a3; }
+.cardTag.t-files         { background: #f1f5f9; color: #475569; }
+.cardTag.t-search        { background: #f0fdf4; color: #065f46; }
+.cardTag.t-stylistics    { background: #fdf4ff; color: #86198f; }
+.cardTag.t-social        { background: #fff7ed; color: #9a3412; }
+.cardTag.t-syntax        { background: #f0fdf4; color: #166534; }
+.cardTag.t-entities      { background: #fffbeb; color: #92400e; }
+.cardTag.t-overview      { background: #eff6ff; color: #1e40af; }
+.cardTag.t-install       { background: #f0fdf4; color: #166534; }
+.cardTag.t-setup         { background: #fff7ed; color: #9a3412; }
+.cardTag.t-analysis      { background: #fdf4ff; color: #6b21a8; }
+
+/* override inherited toolCard grid span for the new auto-fill grid */
+.tabPanel .toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.tabPanel .toolCard {
+  grid-column: unset;
+  min-height: 138px;
+}
+
+/* readings accent */
+.toolCard.reading .toolDot { background: rgba(109,40,217,0.75); }
+.toolCard.reading .toolCta { color: rgba(109,40,217,0.85); }
+.toolCard.reading:hover { border-color: rgba(109,40,217,0.18); }
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 0;
+  color: rgba(15,23,42,0.35);
+  font-size: 14px;
+  font-weight: 600;
+  display: none;
+}
+.emptyState.visible { display: block; }
+
+/* ── PDF modal ───────────────────────────────────────────────── */
+.pdfOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.42);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.pdfOverlay.open { display: flex; }
+
+.pdfModal {
+  width: min(900px, 96vw);
+  height: min(86vh, 820px);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(2,6,23,0.22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pdfModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(15,23,42,0.09);
+  flex-shrink: 0;
+}
+
+.pdfModalTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(15,23,42,0.85);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100% - 50px);
+}
+
+.pdfModalClose {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15,23,42,0.07);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(15,23,42,0.60);
+  flex-shrink: 0;
+}
+.pdfModalClose:hover { background: rgba(15,23,42,0.13); }
+
+.pdfModalFrame { flex: 1; width: 100%; border: none; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  .pdfModal { height: 80vh; }
+  .tabPanel .toolsGrid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .tabBtn { padding: 0 14px; font-size: 13px; }
+  .filterBar { flex-direction: column; align-items: stretch; }
+  .filterSearch { flex: none; width: 100%; }
+}

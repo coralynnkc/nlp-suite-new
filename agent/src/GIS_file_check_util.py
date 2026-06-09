@@ -1,5 +1,6 @@
 import CoNLL_util
 import IO_csv_util
+import numpy as np
 import pandas as pd
 
 
@@ -109,6 +110,7 @@ def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locat
                 return False
 
     # set default values --------------------------------------------------------------------------------------------------
+    numColumns = len(headers)
     inputIsGeocoded = True
     if inputIsGeocoded:
         if numColumns >= minColumns:

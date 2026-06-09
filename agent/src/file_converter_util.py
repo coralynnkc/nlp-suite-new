@@ -238,10 +238,12 @@ def tsv_converter(window, inputFilename, outputDir, header):
 # necessary functions to convert pdf to img to txt
 ################################################
 def convert_pdf_to_img(pdf_file):
+    from pdf2image import convert_from_path
     return convert_from_path(pdf_file)
 
 
 def convert_image_to_text(file):
+    from pytesseract import image_to_string
     text = image_to_string(file)
     return text
 

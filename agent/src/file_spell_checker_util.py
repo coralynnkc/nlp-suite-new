@@ -746,6 +746,7 @@ def check_for_typo(
         word_index = headers1.index("Words")
         sentence_index = headers1.index("Sentence")
         document_index = headers1.index("Document")
+        speller = SpellChecker()
         for header_row in header_row_list_to_check:
             header_rowID += 1
             word = header_row[word_index]

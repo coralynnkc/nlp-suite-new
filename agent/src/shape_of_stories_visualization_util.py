@@ -117,7 +117,7 @@ def test():
 
     clustering = cl.Clustering(3.5)
     outfilename, grouped_vectors, vectors_cluster_ids = clustering.cluster(sentiment_vectors)
-    print("%d clusters" % len(grouped_vectors))
+    print(f"{len(grouped_vectors):d} clusters")
 
     vis = Visualizer("./output")
     vis.visualize_clusters(grouped_vectors)

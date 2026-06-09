@@ -28,38 +28,25 @@ def run(
 ):
 
     config_filename = "NLP_default_IO_config.csv"
+    scriptName = "file_checker_converter_cleaner_main"
     filesToOpen = []
 
     if (check_tools == "") and (convert_tools == "") and (clean_tools == ""):
-        mb.showwarning(
-            title="No options selected",
-            message="No options have been selected.\n\nPlease, select one of the available options and try again.",
-        )
+        print("No options selected: No options have been selected. Please, select one of the available options and try again.")
         return
 
     if menu_option == "Document converter (rtf --> txt)":
-        mb.showwarning(
-            title="rtf --> txt converter (Mac OS)",
-            message="In a Mac OS, there is a simple way to batch convert a set of rtf files to txt. THIS ONLY APPLIES TO MAC OS!\n\nOpen the command prompt and change directory to where the rtf files are stored, then type:\n\nfind . -name \\*.rtf -print0 | xargs -0 textutil -convert txt\n\nHit return. All txt converted files will be found in the same input directory as the original rtf files.\n\nFor more information, see the post by Alexander Refsum Jensenius at:\nhttps://www.arj.no/2013/01/08/batch-convert-rtf-files-to-txt/.",
-        )
+        print("rtf --> txt converter (Mac OS): In a Mac OS, use: find . -name \\*.rtf -print0 | xargs -0 textutil -convert txt")
 
     if ((check_tools != "") and (clean_tools != "")) and (
         (inputDir == "") and (inputFilename == "")
     ):
-        mb.showwarning(
-            title="Input error",
-            message="The selected option - "
-            + menu_option
-            + " - requires either a txt file or a directory in input.\n\nPlease, select a txt file or directory and try again.",
-        )
+        print("Input error: The selected option - " + menu_option + " - requires either a txt file or a directory in input.")
         return
 
     if check_tools != "" or convert_tools != "" or clean_tools != "":
         if "check_for_typo" in function_to_run:
-            mb.showwarning(
-                title="Option not available",
-                message="The Levenshtein's distance option is not available from this GUI.\n\nPlease, run the script from the spell_checker_main.",
-            )
+            print("Option not available: The Levenshtein's distance option is not available from this GUI. Please, run the script from the spell_checker_main.")
             return
 
         pythonFile = importlib.import_module(script_to_run)
@@ -85,7 +72,7 @@ def run(
             or "empty_file" in function_to_run
             or "find_replace" in function_to_run
         ):
-            func(GUI_util.window, inputFilename, inputDir, outputDir, config_filename)
+            func(None, inputFilename, inputDir, outputDir, config_filename)
         elif "sentence_length" in function_to_run:
             outputFile = func(
                 inputFilename,
@@ -97,7 +84,7 @@ def run(
             )
         else:
             func(
-                GUI_util.window,
+                None,
                 inputFilename,
                 inputDir,
                 outputDir,
@@ -112,5 +99,5 @@ def run(
 
     if openOutputFiles:
         IO_files_util.OpenOutputFiles(
-            GUI_util.window, openOutputFiles, filesToOpen, outputDir, scriptName
+            None, openOutputFiles, filesToOpen, outputDir, scriptName
         )

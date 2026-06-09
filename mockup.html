@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NLP Suite — Mockup</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: #fcfcfe;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ───────────────────────────────────────────── */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.94);
+      border-bottom: 1px solid rgba(15,23,42,0.09);
+      backdrop-filter: saturate(1.2);
+      padding: 0 32px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 15px; white-space: nowrap;
+    }
+    .logo img { height: 32px; border-radius: 6px; }
+    .nav { display: flex; align-items: center; gap: 2px; }
+    .nav-link {
+      height: 36px; padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex; align-items: center;
+      font-weight: 600; font-size: 13px;
+      color: rgba(15,23,42,0.65);
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .nav-link:hover { background: rgba(15,23,42,0.05); color: rgba(15,23,42,0.90); }
+    .nav-link.settings {
+      background: rgba(15,23,42,0.06);
+      font-weight: 700;
+      color: rgba(15,23,42,0.80);
+    }
+    .nav-link.settings:hover { background: rgba(15,23,42,0.10); }
+
+    /* ── Main container ────────────────────────────────────── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── Tab bar ─────────────────────────────────────────────── */
+    .tabBar {
+      display: flex; gap: 4px;
+      border-bottom: 1px solid rgba(15,23,42,0.10);
+      margin: 28px 0 22px;
+    }
+    .tabBtn {
+      height: 40px; padding: 0 22px;
+      border: none; background: transparent;
+      font-size: 14px; font-weight: 700;
+      color: rgba(15,23,42,0.45); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color .18s, border-color .18s;
+    }
+    .tabBtn.active { color: rgba(37,99,235,0.95); border-bottom-color: rgba(37,99,235,0.90); }
+    .tabBtn:hover:not(.active) { color: rgba(15,23,42,0.75); }
+
+    .tabPanel { display: none; }
+    .tabPanel.active { display: block; }
+
+    /* ── Filter bar ──────────────────────────────────────────── */
+    .filterBar {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: flex-start; margin-bottom: 18px;
+    }
+    .filterSearch {
+      flex: 1 1 240px; height: 38px; padding: 0 16px;
+      border: 1px solid rgba(15,23,42,0.15); border-radius: 999px;
+      font-size: 13px; color: rgba(15,23,42,0.85); background: #fff;
+      outline: none; transition: border-color .18s, box-shadow .18s;
+    }
+    .filterSearch:focus {
+      border-color: rgba(37,99,235,0.50);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+    }
+    .filterSearch::placeholder { color: rgba(15,23,42,0.32); }
+
+    .chipGroup { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+    /* Base chip */
+    .chip {
+      display: inline-flex; align-items: center;
+      height: 28px; padding: 0 11px;
+      border-radius: 999px; border: 1.5px solid transparent;
+      font-size: 11.5px; font-weight: 700;
+      cursor: pointer; user-select: none;
+      transition: opacity .15s, transform .1s;
+      opacity: .72;
+    }
+    .chip:hover { opacity: 1; transform: translateY(-1px); }
+    .chip.active { opacity: 1; }
+
+    /* "All" chip */
+    .chip[data-tag="all"] {
+      background: rgba(15,23,42,0.07);
+      border-color: rgba(15,23,42,0.14);
+      color: rgba(15,23,42,0.75);
+    }
+    .chip[data-tag="all"].active {
+      background: rgba(15,23,42,0.12);
+      border-color: rgba(15,23,42,0.28);
+      color: rgba(15,23,42,0.90);
+    }
+
+    /* Per-tag palette */
+    .chip[data-tag="corpus"]         { background:#dbeafe; border-color:#93c5fd; color:#1d4ed8; }
+    .chip[data-tag="text-analysis"]  { background:#e0f2fe; border-color:#7dd3fc; color:#0369a1; }
+    .chip[data-tag="visualization"]  { background:#f3e8ff; border-color:#c4b5fd; color:#6d28d9; }
+    .chip[data-tag="parsing"]        { background:#dcfce7; border-color:#86efac; color:#15803d; }
+    .chip[data-tag="annotation"]     { background:#fef9c3; border-color:#fde047; color:#a16207; }
+    .chip[data-tag="vocabulary"]     { background:#ffedd5; border-color:#fdba74; color:#c2410c; }
+    .chip[data-tag="embeddings"]     { background:#fee2e2; border-color:#fca5a5; color:#b91c1c; }
+    .chip[data-tag="gis"]            { background:#ccfbf1; border-color:#5eead4; color:#0f766e; }
+    .chip[data-tag="sentiment"]      { background:#fce7f3; border-color:#f9a8d4; color:#be185d; }
+    .chip[data-tag="statistics"]     { background:#e0e7ff; border-color:#a5b4fc; color:#3730a3; }
+    .chip[data-tag="files"]          { background:#f1f5f9; border-color:#cbd5e1; color:#475569; }
+    .chip[data-tag="search"]         { background:#f0fdf4; border-color:#a7f3d0; color:#065f46; }
+    .chip[data-tag="stylistics"]     { background:#fdf4ff; border-color:#e879f9; color:#86198f; }
+    .chip[data-tag="social"]         { background:#fff7ed; border-color:#fed7aa; color:#9a3412; }
+    .chip[data-tag="syntax"]         { background:#f0fdf4; border-color:#86efac; color:#166534; }
+    .chip[data-tag="entities"]       { background:#fffbeb; border-color:#fcd34d; color:#92400e; }
+
+    /* Readings chips */
+    .chip[data-tag="overview"]       { background:#eff6ff; border-color:#93c5fd; color:#1e40af; }
+    .chip[data-tag="install"]        { background:#f0fdf4; border-color:#86efac; color:#166534; }
+    .chip[data-tag="setup"]          { background:#fff7ed; border-color:#fdba74; color:#9a3412; }
+    .chip[data-tag="analysis"]       { background:#fdf4ff; border-color:#d8b4fe; color:#6b21a8; }
+
+    /* ── Card grid ────────────────────────────────────────────── */
+    .toolsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    .toolCard {
+      background: #fff;
+      border: 1px solid rgba(15,23,42,0.09);
+      border-radius: 16px; padding: 18px;
+      box-shadow: 0 2px 10px rgba(2,6,23,0.04);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      min-height: 138px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer;
+    }
+    .toolCard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(2,6,23,0.08);
+      border-color: rgba(37,99,235,0.20);
+    }
+    .toolTop { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
+    .toolDot {
+      width: 8px; height: 8px; border-radius: 999px;
+      background: rgba(37,99,235,0.80); flex-shrink: 0;
+    }
+    .toolName { font-weight: 700; font-size: 13.5px; color: rgba(15,23,42,0.88); letter-spacing: -0.01em; line-height: 1.3; }
+    .toolDescription { color: rgba(15,23,42,0.52); line-height: 1.5; font-size: 12px; margin-bottom: 10px; }
+    .cardTags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+    /* Card tag badges — same palette, smaller/no border */
+    .cardTag {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+    }
+    .cardTag.t-corpus         { background:#dbeafe; color:#1d4ed8; }
+    .cardTag.t-text-analysis  { background:#e0f2fe; color:#0369a1; }
+    .cardTag.t-visualization  { background:#f3e8ff; color:#6d28d9; }
+    .cardTag.t-parsing        { background:#dcfce7; color:#15803d; }
+    .cardTag.t-annotation     { background:#fef9c3; color:#a16207; }
+    .cardTag.t-vocabulary     { background:#ffedd5; color:#c2410c; }
+    .cardTag.t-embeddings     { background:#fee2e2; color:#b91c1c; }
+    .cardTag.t-gis            { background:#ccfbf1; color:#0f766e; }
+    .cardTag.t-sentiment      { background:#fce7f3; color:#be185d; }
+    .cardTag.t-statistics     { background:#e0e7ff; color:#3730a3; }
+    .cardTag.t-files          { background:#f1f5f9; color:#475569; }
+    .cardTag.t-search         { background:#f0fdf4; color:#065f46; }
+    .cardTag.t-stylistics     { background:#fdf4ff; color:#86198f; }
+    .cardTag.t-social         { background:#fff7ed; color:#9a3412; }
+    .cardTag.t-syntax         { background:#f0fdf4; color:#166534; }
+    .cardTag.t-entities       { background:#fffbeb; color:#92400e; }
+    .cardTag.t-overview       { background:#eff6ff; color:#1e40af; }
+    .cardTag.t-install        { background:#f0fdf4; color:#166534; }
+    .cardTag.t-setup          { background:#fff7ed; color:#9a3412; }
+    .cardTag.t-analysis       { background:#fdf4ff; color:#6b21a8; }
+    .cardTag.t-statistics     { background:#e0e7ff; color:#3730a3; }
+
+    .toolCta { margin-top: 10px; font-weight: 800; font-size: 12.5px; color: rgba(37,99,235,0.85); }
+
+    /* readings accent */
+    .toolCard.reading .toolDot { background: rgba(109,40,217,0.75); }
+    .toolCard.reading .toolCta { color: rgba(109,40,217,0.85); }
+    .toolCard.reading:hover { border-color: rgba(109,40,217,0.18); }
+
+    /* ── Empty state ──────────────────────────────────────────── */
+    .emptyState {
+      grid-column: 1 / -1; text-align: center;
+      padding: 48px 0; color: rgba(15,23,42,0.35);
+      font-size: 14px; font-weight: 600; display: none;
+    }
+    .emptyState.visible { display: block; }
+
+    /* ── PDF Modal ────────────────────────────────────────────── */
+    .pdfOverlay {
+      position: fixed; inset: 0;
+      background: rgba(2,6,23,0.42);
+      z-index: 200;
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .pdfOverlay.open { display: flex; }
+    .pdfModal {
+      width: min(900px, 96vw); height: min(86vh, 820px);
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(2,6,23,0.22);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .pdfModalHeader {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(15,23,42,0.09);
+      flex-shrink: 0;
+    }
+    .pdfModalTitle { font-size: 14px; font-weight: 700; color: rgba(15,23,42,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: calc(100% - 50px); }
+    .pdfModalClose {
+      width: 30px; height: 30px; border-radius: 999px;
+      border: none; background: rgba(15,23,42,0.07);
+      font-size: 18px; cursor: pointer; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(15,23,42,0.60); flex-shrink: 0;
+    }
+    .pdfModalClose:hover { background: rgba(15,23,42,0.13); }
+    .pdfModalFrame { flex: 1; width: 100%; border: none; }
+
+    /* ── Form spacing demo ────────────────────────────────────── */
+    .formDemo { max-width: 760px; margin: 0 auto; padding: 36px 28px; }
+    .formDemo h2 { font-size: 22px; font-weight: 700; margin-bottom: 32px; letter-spacing: -0.02em; }
+    .form-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 30px;
+    }
+    .form-row label { font-size: 13.5px; font-weight: 600; min-width: 168px; color: rgba(15,23,42,0.72); }
+    .form-row select, .form-row input[type="text"] {
+      flex: 1; height: 38px; padding: 0 12px;
+      border: 1px solid rgba(15,23,42,0.15); border-radius: 8px;
+      font-size: 13px; background: #fff; outline: none;
+    }
+    .form-row button {
+      height: 36px; padding: 0 14px; border-radius: 8px;
+      border: 1px solid rgba(15,23,42,0.15); font-size: 13px; cursor: pointer; background: #fff;
+    }
+    .buttons-section { display: flex; justify-content: space-between; margin-top: 8px; }
+    .run-button {
+      height: 40px; padding: 0 26px; border-radius: 999px;
+      background: rgba(37,99,235,0.92); color: #fff;
+      border: none; font-size: 13.5px; font-weight: 700; cursor: pointer;
+    }
+    .reset-button {
+      height: 40px; padding: 0 20px; border-radius: 999px;
+      background: #fff; border: 1px solid rgba(15,23,42,0.14);
+      font-size: 13.5px; font-weight: 600; cursor: pointer;
+    }
+
+    /* ── Mockup page switcher ─────────────────────────────────── */
+    .pageSwitcher {
+      position: fixed; bottom: 20px; right: 20px; z-index: 300;
+      display: flex; gap: 8px; flex-direction: column; align-items: flex-end;
+    }
+    .pageBtn {
+      height: 36px; padding: 0 15px; border-radius: 999px;
+      background: rgba(15,23,42,0.84); color: #fff;
+      border: none; font-size: 12px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2,6,23,0.18);
+    }
+    .pageBtn.active { background: rgba(37,99,235,0.92); }
+    .pageLabel { font-size: 10px; font-weight: 700; color: rgba(15,23,42,0.38); text-align: right; letter-spacing: .06em; text-transform: uppercase; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    @media (max-width: 780px) {
+      .toolsGrid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar: logo + external links + settings ──────────────────────── -->
+<header class="site-header">
+  <a class="logo">
+    <img src="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/lib/images/logo.jpg?raw=True" alt="logo">
+    <span>NLP Suite</span>
+  </a>
+  <nav class="nav">
+    <a class="nav-link" href="#" target="_blank">Wiki</a>
+    <a class="nav-link" href="#" target="_blank">YouTube</a>
+    <a class="nav-link" href="#">Contact</a>
+    <a class="nav-link settings" href="#">Settings</a>
+  </nav>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 1 — Homepage                                                  -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div id="pageHome" class="page active">
+<div class="container">
+
+  <!-- Tab bar -->
+  <div class="tabBar">
+    <button class="tabBtn active" id="btnTools" onclick="switchTab('tools')">Tools</button>
+    <button class="tabBtn" id="btnReadings" onclick="switchTab('readings')">Readings</button>
+  </div>
+
+  <!-- ── Tools panel ─────────────────────────────────────── -->
+  <div id="tabTools" class="tabPanel active">
+    <div class="filterBar">
+      <input class="filterSearch" id="toolSearch" placeholder="Search tools…" oninput="filterTools()">
+      <div class="chipGroup" id="toolChips">
+        <button class="chip active" data-tag="all" onclick="setToolTag(this)">All</button>
+        <button class="chip" data-tag="corpus" onclick="setToolTag(this)">Corpus</button>
+        <button class="chip" data-tag="visualization" onclick="setToolTag(this)">Visualization</button>
+        <button class="chip" data-tag="parsing" onclick="setToolTag(this)">Parsing</button>
+        <button class="chip" data-tag="annotation" onclick="setToolTag(this)">Annotation</button>
+        <button class="chip" data-tag="vocabulary" onclick="setToolTag(this)">Vocabulary</button>
+        <button class="chip" data-tag="embeddings" onclick="setToolTag(this)">Embeddings</button>
+        <button class="chip" data-tag="gis" onclick="setToolTag(this)">GIS</button>
+        <button class="chip" data-tag="sentiment" onclick="setToolTag(this)">Sentiment</button>
+        <button class="chip" data-tag="statistics" onclick="setToolTag(this)">Statistics</button>
+        <button class="chip" data-tag="files" onclick="setToolTag(this)">Files</button>
+      </div>
+    </div>
+    <div class="toolsGrid" id="toolsGrid"></div>
+    <div class="emptyState" id="toolsEmpty">No tools match your search.</div>
+  </div>
+
+  <!-- ── Readings panel ──────────────────────────────────── -->
+  <div id="tabReadings" class="tabPanel">
+    <div class="filterBar">
+      <input class="filterSearch" id="readingSearch" placeholder="Search readings…" oninput="filterReadings()">
+      <div class="chipGroup" id="readingChips">
+        <button class="chip active" data-tag="all" onclick="setReadingTag(this)">All</button>
+        <button class="chip" data-tag="overview" onclick="setReadingTag(this)">Overview</button>
+        <button class="chip" data-tag="install" onclick="setReadingTag(this)">Install</button>
+        <button class="chip" data-tag="setup" onclick="setReadingTag(this)">Setup</button>
+        <button class="chip" data-tag="statistics" onclick="setReadingTag(this)">Statistics</button>
+        <button class="chip" data-tag="analysis" onclick="setReadingTag(this)">Analysis</button>
+      </div>
+    </div>
+    <div class="toolsGrid" id="readingsGrid"></div>
+    <div class="emptyState" id="readingsEmpty">No readings match your search.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 2 — Tool form page (spacing demo)                             -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div id="pageForm" class="page">
+<div class="formDemo">
+  <h2>NER (Named Entity Recognition)</h2>
+  <form>
+    <div class="form-row">
+      <label>Input Directory</label>
+      <select><option>~/nlp-suite/input</option><option>~/nlp-suite/csvInput</option></select>
+    </div>
+    <div class="form-row">
+      <label>Output Directory</label>
+      <input type="text" value="~/nlp-suite/output">
+    </div>
+    <div class="form-row">
+      <label>NER Package</label>
+      <select><option>BERT (English model)</option><option>IBM</option><option>spaCy</option><option>Stanford CoreNLP</option><option>Stanza</option></select>
+    </div>
+    <div class="form-row">
+      <label>NER Tags</label>
+      <select><option>All NER tags</option><option>PERSON</option><option>ORGANIZATION</option><option>LOCATION</option><option>DATE</option></select>
+      <button type="button">+</button>
+      <button type="button">Reset</button>
+    </div>
+    <div class="form-row">
+      <label>Transformation</label>
+      <select><option>No transformation</option><option>Ln</option><option>Log</option><option>Square root</option><option>Z score</option></select>
+    </div>
+    <div class="buttons-section">
+      <button type="button" class="reset-button">Reset</button>
+      <button type="button" class="run-button">Run</button>
+    </div>
+  </form>
+</div>
+</div>
+
+<!-- ── PDF Modal ──────────────────────────────────────────────────── -->
+<div class="pdfOverlay" id="pdfOverlay" onclick="handleOverlayClick(event)">
+  <div class="pdfModal">
+    <div class="pdfModalHeader">
+      <h2 class="pdfModalTitle" id="pdfModalTitle"></h2>
+      <button class="pdfModalClose" onclick="closePdf()">×</button>
+    </div>
+    <iframe class="pdfModalFrame" id="pdfModalFrame" src="" title="PDF viewer"></iframe>
+  </div>
+</div>
+
+<!-- ── Mockup page switcher ─────────────────────────────────────── -->
+<div class="pageSwitcher">
+  <div class="pageLabel">mockup</div>
+  <button class="pageBtn active" onclick="showPage('Home', this)">Homepage</button>
+  <button class="pageBtn" onclick="showPage('Form', this)">Tool Form</button>
+</div>
+
+<script>
+const TOOLS = [
+  { name: "N-Grams & Co-Occurrences",       desc: "Frequency and co-occurrence patterns in a corpus",  tags: ["corpus","text-analysis"] },
+  { name: "Topic Modeling",                  desc: "Discover latent topics using MALLET LDA",            tags: ["corpus"] },
+  { name: "Shape of Stories",                desc: "Visualize the emotional arc of narratives",          tags: ["corpus","visualization"] },
+  { name: "Document Statistics",             desc: "Word counts, sentence lengths, and readability",     tags: ["corpus","statistics"] },
+  { name: "File Search: Words",              desc: "Search your corpus for words or phrases",            tags: ["corpus","search"] },
+  { name: "Wordnet",                         desc: "Explore synonyms, antonyms, and semantic relations", tags: ["vocabulary"] },
+  { name: "Word2Vec & Embeddings / WSI",     desc: "Vector space models and word sense induction",      tags: ["embeddings","vocabulary"] },
+  { name: "Style Analysis",                  desc: "Comprehensive stylometric analysis",                 tags: ["corpus","stylistics"] },
+  { name: "Gender Analysis",                 desc: "Examine gendered language patterns",                 tags: ["corpus","social"] },
+  { name: "Sentence Analysis",               desc: "Parse and analyze sentence-level features",          tags: ["parsing"] },
+  { name: "Parsers & Annotators",            desc: "BERT, CoreNLP, spaCy, and Stanza pipelines",        tags: ["parsing","annotation"] },
+  { name: "CoNLL Table Analyzer",            desc: "Analyze CoNLL-format parsed output files",           tags: ["parsing","annotation"] },
+  { name: "SVO",                             desc: "Extract subject–verb–object triples",                tags: ["parsing","syntax"] },
+  { name: "NER",                             desc: "Named entity recognition across 23 entity types",   tags: ["annotation","entities"] },
+  { name: "GIS",                             desc: "Geocode locations and generate interactive maps",    tags: ["gis","visualization"] },
+  { name: "Sentiment Analysis",              desc: "Sentence and document-level sentiment scoring",      tags: ["sentiment"] },
+  { name: "File Manager",                    desc: "Organize input and output corpus files",             tags: ["files"] },
+  { name: "Wordclouds",                      desc: "Generate frequency-based word cloud images",         tags: ["visualization"] },
+  { name: "Sunburst Charts",                 desc: "Hierarchical category visualizations",               tags: ["visualization"] },
+  { name: "Boxplot",                         desc: "Distribution plots for numerical data",              tags: ["visualization","statistics"] },
+  { name: "Color & Heat Map",                desc: "Color-coded matrix and heatmap charts",              tags: ["visualization"] },
+  { name: "Sankey Flowchart",                desc: "Flow diagrams for relational data",                  tags: ["visualization"] },
+  { name: "Excel / Plotly Charts",           desc: "Export-ready charts for Excel and Plotly",           tags: ["visualization"] },
+];
+
+const READINGS = [
+  { name: "NLP Suite: Package description",                    tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_NLP%20Suite%20Package%20description.pdf" },
+  { name: "pip install & Anaconda environments",               tags: ["install"],     url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Anaconda%20NLP%20environment%20pip.pdf" },
+  { name: "Text encoding (utf-8)",                             tags: ["install"],     url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Text%20encoding%20(utf-8).pdf" },
+  { name: "Excel – Enabling Macros",                           tags: ["install"],     url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Excel%20Enabling%20macros.pdf" },
+  { name: "csv files – Problems & solutions",                  tags: ["install"],     url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_csv%20files%20-%20Problems%20%26%20solutions.pdf" },
+  { name: "Statistical measures",                              tags: ["statistics"],  url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Statistical%20measures.pdf" },
+  { name: "Setup Input/Output configuration",                  tags: ["setup"],       url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Setup%20INPUT-OUTPUT%20options.pdf" },
+  { name: "Setup external software (MALLET)",                  tags: ["setup"],       url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Setup%20external%20software.pdf" },
+  { name: "Things to do with words: NLP approach",             tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20NLP%20approach.pdf" },
+  { name: "English Language Benchmarks",                       tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_English%20Language%20Benchmarks.pdf" },
+  { name: "NLP Suite: General tools",                          tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_NLP%20Suite%20General%20tools.pdf" },
+  { name: "NLP Suite: Tools of linguistic analysis",           tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_NLP%20Suite%20Tools%20of%20linguistic%20analysis.pdf" },
+  { name: "NLP basic language",                                tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_NLP%20Basic%20language.pdf" },
+  { name: "Things to do with words: Overall view",             tags: ["overview"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20Overall%20view.pdf" },
+  { name: "Things to do with words: Content analysis",         tags: ["analysis"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20Content%20analysis.pdf" },
+  { name: "Things to do with words: Frame analysis",           tags: ["analysis"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20Frame%20analysis.pdf" },
+  { name: "Things to do with words: Narrative analysis",       tags: ["analysis"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20Narrative%20analysis.pdf" },
+  { name: "Things to do with words: Rhetoric (Arguments)",     tags: ["analysis"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20Rhetorical%20analysis%20Arguments.pdf" },
+  { name: "Things to do with words: Rhetoric (Tropes & Fig.)", tags: ["analysis"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Things%20to%20do%20with%20words%20Rhetorical%20analysis%20Tropes%20and%20Figures.pdf" },
+  { name: "Style analysis",                                    tags: ["analysis"],    url: "https://raw.githubusercontent.com/NLP-Suite/NLP-Suite/current-stable/TIPS/TIPS_NLP_Style%20analysis.pdf" },
+];
+
+function tagHtml(tag) {
+  return `<span class="cardTag t-${tag}">${tag}</span>`;
+}
+
+function renderTools() {
+  document.getElementById('toolsGrid').innerHTML = TOOLS.map(t => `
+    <a class="toolCard" data-name="${t.name.toLowerCase()}" data-tags="${t.tags.join(' ')}">
+      <div>
+        <div class="toolTop"><div class="toolDot"></div><div class="toolName">${t.name}</div></div>
+        <p class="toolDescription">${t.desc}</p>
+        <div class="cardTags">${t.tags.map(tagHtml).join('')}</div>
+      </div>
+      <div class="toolCta">Open →</div>
+    </a>`).join('');
+}
+
+function renderReadings() {
+  document.getElementById('readingsGrid').innerHTML = READINGS.map(r => `
+    <div class="toolCard reading" data-name="${r.name.toLowerCase()}" data-tags="${r.tags.join(' ')}" data-url="${r.url}" data-title="${r.name}" onclick="openPdf(this)">
+      <div>
+        <div class="toolTop"><div class="toolDot"></div><div class="toolName">${r.name}</div></div>
+        <div class="cardTags">${r.tags.map(tagHtml).join('')}</div>
+      </div>
+      <div class="toolCta">Read →</div>
+    </div>`).join('');
+}
+
+function switchTab(tab) {
+  ['tools','readings'].forEach(t => {
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+    document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+  });
+}
+
+let activeToolTag = 'all';
+let activeReadingTag = 'all';
+
+function setToolTag(chip) {
+  document.querySelectorAll('#toolChips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeToolTag = chip.dataset.tag;
+  filterTools();
+}
+
+function setReadingTag(chip) {
+  document.querySelectorAll('#readingChips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeReadingTag = chip.dataset.tag;
+  filterReadings();
+}
+
+function filterTools() {
+  const q = document.getElementById('toolSearch').value.trim().toLowerCase();
+  const cards = document.querySelectorAll('#toolsGrid .toolCard');
+  let n = 0;
+  cards.forEach(card => {
+    const show = (!q || card.dataset.name.includes(q)) &&
+                 (activeToolTag === 'all' || card.dataset.tags.split(' ').includes(activeToolTag));
+    card.style.display = show ? '' : 'none';
+    if (show) n++;
+  });
+  document.getElementById('toolsEmpty').classList.toggle('visible', n === 0);
+}
+
+function filterReadings() {
+  const q = document.getElementById('readingSearch').value.trim().toLowerCase();
+  const cards = document.querySelectorAll('#readingsGrid .toolCard');
+  let n = 0;
+  cards.forEach(card => {
+    const show = (!q || card.dataset.name.includes(q)) &&
+                 (activeReadingTag === 'all' || card.dataset.tags.split(' ').includes(activeReadingTag));
+    card.style.display = show ? '' : 'none';
+    if (show) n++;
+  });
+  document.getElementById('readingsEmpty').classList.toggle('visible', n === 0);
+}
+
+function openPdf(card) {
+  const viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent(card.dataset.url) + '&embedded=true';
+  document.getElementById('pdfModalTitle').textContent = card.dataset.title;
+  document.getElementById('pdfModalFrame').src = viewerUrl;
+  document.getElementById('pdfOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePdf() {
+  document.getElementById('pdfOverlay').classList.remove('open');
+  document.getElementById('pdfModalFrame').src = '';
+  document.body.style.overflow = '';
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('pdfOverlay')) closePdf();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('pdfOverlay').classList.contains('open')) closePdf();
+});
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pageBtn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+renderTools();
+renderReadings();
+</script>
+</body>
+</html>

@@ -102,7 +102,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
                         "Concreteness (Mean score)": conc_mean,
                         "Concreteness (Median score)": conc_median,
                         "Standard Deviation": conc_sd,
-                        "# Words Found": "%d out of %d" % (len(found_words), len(all_words)),
+                        "# Words Found": f"{len(found_words):d} out of {len(all_words):d}",
                         "Percentage": str(100 * (round(float(len(found_words)) / float(len(all_words)), 2))) + "%",
                         "Found Words": ", ".join(found_words),
                         "All Words": ", ".join(all_words),

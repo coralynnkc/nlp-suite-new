@@ -614,7 +614,7 @@ def align_dataframes(df_list):
             new_df = df
         new_list.append(new_df)
 
-    df_list = [add_missing_IDs(data) for data in new_list if not data.empty]
+    df_list = [data for data in new_list if not data.empty]
     return df_list
 
 

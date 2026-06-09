@@ -41,6 +41,10 @@ def run(
 ):
 
     filesToOpen = []
+    scriptName = "file_classifier_main"
+    startTime = IO_user_interface_util.timed_alert(
+        2000, "Analysis start", "Started running the File Classifier at", True, "", True, "", True
+    )
 
     if by_date_var == 0 and by_NER_var == 0:
         mb.showwarning(

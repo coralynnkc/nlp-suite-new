@@ -32,6 +32,7 @@ import IO_csv_util
 import IO_files_util
 import IO_libraries_util
 import IO_user_interface_util
+import nltk
 
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
 import pandas as pd
@@ -1085,7 +1086,7 @@ def CoreNLP_annotate(
                 else:
                     # @@@
                     outputFilename = IO_files_util.generate_output_file_name(
-                        str(doc),
+                        inputFilename,
                         inputDir,
                         outputDir_chosen,
                         ".csv",

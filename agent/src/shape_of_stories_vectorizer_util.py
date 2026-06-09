@@ -39,6 +39,7 @@ class Vectorizer:
         doclengths = []
         filesToDelete = []
         addedFiles = []
+        doNotRepeat = False
 
         for _narrativeNum, narrativeFile in enumerate(self.narrative_file_paths):
             with codecs.open(narrativeFile, mode="r", encoding="utf-8", errors="ignore") as csv_file:
@@ -258,7 +259,7 @@ def test():
     rec_n_clusters = vectz.compute_suggested_n_clusters(
         sentiment_vectors,
     )
-    print("The recommended number of clusters is: %d" % rec_n_clusters)
+    print(f"The recommended number of clusters is: {rec_n_clusters:d}")
     print("ok")
 
 

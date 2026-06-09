@@ -435,7 +435,7 @@ def main(
         sys.exit()
 
     if len(compilations_path) == 0:
-        tk.messagebox.showerror(
+        mb.showerror(
             title="Summary directory not found",
             message="The summary checker script requires a secondary input directory for the summary files.\n\nNo secondary directory entered. Please, select the secondary input directory and try again.",
         )

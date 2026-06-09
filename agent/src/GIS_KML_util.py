@@ -209,14 +209,7 @@ def generate_kml(
                     try:
                         GGPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
                     except Exception:
-                        mb.showerror(
-                            title="Date error",
-                            message="There was an error in processing the date '"
-                            + date
-                            + "'.\n\nThe date format '"
-                            + fmt
-                            + "' was automatically applied to process the date, where format values are as follows:\n%B or %b   alphabetic month name in full or first 3 characters;\n%m   2-digit month (1 to 12);\n%d   2-digit day of the month (1 to 31);\n%Y   4-digit and %y 2-digit year (1918, 18).\n\nBut... either\n1.   the format automatically applied is incorrect for the date;\n2.   the date is in unrecognized format (e.g., it contains time besides date);\n3.   the date is prior to 1900. The library 'strftime' used here to deal with dates cannot process dates prior to 1900 in Windows.",
-                        )
+                        print(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
                         return ""
 
             # Mapping with one group
@@ -269,7 +262,7 @@ def generate_kml(
             withHeader_var = IO_csv_util.csvFile_has_header(inputFilename)  # check if the file has header
             data, headers = IO_csv_util.get_csv_data(inputFilename, withHeader_var)  # get the data and header
             # get the column name and its column num that we are splitting groups based on
-            icon_csv_field_var_name = icon_csv_field_var
+            icon_csv_field_var_name = icon_csv_field_var  # noqa: F821
 
             for m in range(len(headers)):
                 if icon_csv_field_var_name == headers[m]:
@@ -283,7 +276,7 @@ def generate_kml(
 
                 for k in range(len(group_values_entry_var_list)):
                     if len(group_values_entry_var_list[k]) != 0:
-                        specified_values_raw.append(GUI_util.group_values_entry_var_list[k])
+                        specified_values_raw.append(group_values_entry_var_list[k])
                         specified_values_temp = specified_values_raw[0].split(",")
 
                         for u in range(len(specified_values_temp)):

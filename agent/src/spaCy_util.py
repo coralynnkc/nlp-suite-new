@@ -672,15 +672,9 @@ def visualize_GIS_maps_spaCy(svo_df):
 
 # modified from StanfordCoreNLP_util
 def create_output_directory(inputFilename, inputDir, outputDir, annotator):
-    outputDirSV = GUI_util.output_dir_path.get()
-    if outputDirSV != outputDir:
-        # create output subdirectory
-        outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label=annotator, silent=True)
-    else:
-        outputDir = IO_files_util.make_output_subdirectory(
-            inputFilename, inputDir, outputDir, label=annotator + "_spaCy", silent=True
-        )
-
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label=annotator + "_spaCy", silent=True
+    )
     return outputDir
 
 

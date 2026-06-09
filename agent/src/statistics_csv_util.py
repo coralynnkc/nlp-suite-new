@@ -632,7 +632,7 @@ def compute_csv_column_frequencies(
                 data.columns = hdr
                 temp_str = "%s" + "\n%s" * (len(hover_col) - 1)
                 data["Hover_over: " + hover_header] = data.apply(
-                    lambda x, _hcol=hover_col: temp_str % tuple(x[h] for h in _hcol), axis=1
+                    lambda x, _hcol=hover_col, _ts=temp_str: _ts % tuple(x[h] for h in _hcol), axis=1
                 )
                 data.drop(hover_col, axis=1, inplace=True)
             else:

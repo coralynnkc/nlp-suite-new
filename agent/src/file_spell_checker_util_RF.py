@@ -80,7 +80,7 @@ def lemmatizing(word):  # edited by Claude Hu 08/2020
 
 
 # https://www.nltk.org/book/ch02.html
-def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFiles, silent=False):
+def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFiles, chartPackage="No charts", silent=False):
     filesToOpen = []
     unusual = []
     container = []
@@ -181,7 +181,7 @@ def generate_simple_csv(Dataframe):
 
 
 def createChart(inputFilename, outputDir, columns_to_be_plotted, hover_label):
-    charts_util.run_all(
+    return charts_util.run_all(
         columns_to_be_plotted,
         inputFilename,
         outputDir,
@@ -192,7 +192,6 @@ def createChart(inputFilename, outputDir, columns_to_be_plotted, hover_label):
         hover_info_column_list=hover_label,
         count_var=1,
     )
-    return chart_outputFilename
 
 
 # check within subdirectory
@@ -212,12 +211,7 @@ def check_for_typo_sub_dir(
         return
     subdir = [f.path for f in os.scandir(inputDir) if f.is_dir()]
     if subdir == []:
-        mb.showwarning(
-            title="Check Subdir option",
-            message="There are no sub directories under the selected input directory\n\n"
-            + inputDir
-            + "\n\nPlease, uncheck your subdir option if you want to process this directory and try again.",
-        )
+        print("Check Subdir option: There are no sub directories under the selected input directory " + inputDir)
     df_list = []
     for _dir in subdir:
         dfs = check_for_typo(
@@ -236,6 +230,8 @@ def check_for_typo_sub_dir(
         df_simple_list = [df[1] for df in df_list]
         df_complete = pd.concat(df_complete_list, ignore_index=True)
         df_simple = pd.concat(df_simple_list, ignore_index=True)
+        outputFileName_simple = os.path.join(outputDir, "spell_check_simple.csv")
+        outputFileName_complete = os.path.join(outputDir, "spell_check_complete.csv")
         df_simple.to_csv(outputFileName_simple, index=False)
         df_complete.to_csv(outputFileName_complete, index=False)
 
@@ -243,12 +239,12 @@ def check_for_typo_sub_dir(
         filesToOpen.append(outputFileName_complete)
 
         if chartPackage != "No charts":
-            createChart(outputFileName_simple, outputDir, [[10, 10]], "")
+            chart_outputFilename = createChart(outputFileName_simple, outputDir, [[10, 10]], "")
             if chart_outputFilename != "":
                 filesToOpen.append(chart_outputFilename)
 
         if openOutputFiles:
-            IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen)
+            IO_files_util.OpenOutputFiles(None, openOutputFiles, filesToOpen)
             filesToOpen = []  # empty the list to avoid opening files twice
 
     return filesToOpen
@@ -861,6 +857,7 @@ def language_detection(window, inputFilename, inputDir, outputDir, openOutputFil
 
     fileID = 0
     filesToOpen = []
+    scriptName = "file_spell_checker_util_RF"
 
     outputFilenameCSV = IO_files_util.generate_output_file_name(
         inputFilename, inputDir, outputDir, ".csv", "lang_detect"
@@ -1005,7 +1002,7 @@ def language_detection(window, inputFilename, inputDir, outputDir, openOutputFil
         chart_title = "Frequency of Languages Detected by 3 Algorithms"
         hover_label = ["LANGDETECT", "SPACY", "LANGID"]
         inputFilename = outputFilenameCSV
-        charts_util.run_all(
+        chart_outputFilename = charts_util.run_all(
             columns_to_be_plotted_yAxis,
             inputFilename,
             outputDir,
@@ -1020,4 +1017,4 @@ def language_detection(window, inputFilename, inputDir, outputDir, openOutputFil
             filesToOpen.append(chart_outputFilename)
 
     if openOutputFiles:
-        IO_files_util.OpenOutputFiles(GUI_util.window, openOutputFiles, filesToOpen)
+        IO_files_util.OpenOutputFiles(None, openOutputFiles, filesToOpen)

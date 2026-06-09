@@ -201,7 +201,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Doc
                         "Sentiment score (Median)": sentiment_median,
                         "Sentiment label (Median)": label_median,
                         "Found Words": (
-                            "%d out of %d" % (len(found_words), total_words)
+                            f"{len(found_words):d} out of {total_words:d}"
                         ),
                         "Word List": ", ".join(found_words),
                         "Sentence ID": i,
