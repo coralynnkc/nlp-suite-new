@@ -48,7 +48,7 @@ urlpatterns = [
     path('excel_plotly_charts', views.excel_plotly_chars, name="excel_plotly_charts"),
     path("document_statistics", views.document_statistics, name="document_statistics"),
     path('sentence_analysis', views.sentence_analysis, name="sentence_analysis"),
-    path('file_manager', views.file_manager, name="file_manager")
-
+    path('file_manager', views.file_manager, name="file_manager"),
+    path('settings', views.settings, name='settings'),
 ]
 

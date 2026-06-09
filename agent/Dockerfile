@@ -3,7 +3,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /nlp-suite
 
-RUN apt-get update && apt-get install -y python3.9 python3.9-dev python3-pip python3-tk 
+RUN apt-get update && apt-get install -y python3.9 python3.9-dev python3-pip python3-tk curl
 
 RUN python3.9 -m pip install --upgrade pip
 RUN python3.9 -m pip install setuptools --break-system-packages

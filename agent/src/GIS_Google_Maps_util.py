@@ -19,9 +19,8 @@ import GIS_pipeline_util
 # gmaps_list is a list of lat/long values to be written in the java script html output file
 # then saves a new file that contains the html/js to display the heatmap
 def create_google_heatmap(outputFilename, gmaps_list):
-    api_key = GIS_pipeline_util.getGoogleAPIkey('Google-Maps-API_config.csv')
-    # 10 is a random number because the APY key is a long set of characters
-    if len(api_key)< 5 or api_key == None :
+    api_key = os.environ.get("GOOGLE_MAPS_API_KEY") or GIS_pipeline_util.getGoogleAPIkey('Google-Maps-API_config.csv')
+    if not api_key or len(api_key) < 5:
         import tkinter.messagebox as mb
         mb.showwarning(title='Google Maps API key error',
                        message="The expected API key required by Google Maps is missing in the config file Google-Maps-API_config.csv.\n\nPlease, make sure to obtain the key, enter it, and save it correctly in the Google-Maps-API_config.csv file and try again.\n\nNo Google Maps heatmap can be produced.")

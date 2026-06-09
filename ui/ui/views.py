@@ -350,3 +350,25 @@ def file_manager(request: HttpRequest):
         else:
             messages.add_message(request, messages.ERROR, response.content.decode())
     return render(request, "file_manager.html")
+
+
+def settings(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/settings",
+            data=request.POST,
+            timeout=10,
+        )
+        if response.ok:
+            messages.add_message(request, messages.SUCCESS, "Settings saved.")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+        return HttpResponseRedirect("/settings")
+    current = {}
+    try:
+        resp = requests.get(f"{AGENT_SERVER_URL}/settings", timeout=5)
+        if resp.ok:
+            current = resp.json()
+    except requests.RequestException:
+        pass
+    return render(request, "settings.html", {"current": current})

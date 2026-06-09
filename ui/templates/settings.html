@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="sentiment-analysis-container">
+    <h1>Settings</h1>
+    <form method="post" class="sentiment-analysis-form">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <label for="google_maps_api_key">Google Maps API Key:</label>
+            <input type="password"
+                   name="google_maps_api_key"
+                   id="google_maps_api_key"
+                   placeholder="{% if current.google_maps_api_key %}{{ current.google_maps_api_key }}{% else %}Enter key{% endif %}"
+                   autocomplete="off" />
+            <span class="dropdowntext">Used by the GIS tool for Google Maps heatmaps. If left blank, Nominatim is used instead.</span>
+        </div>
+
+        <div class="form-row">
+            <label for="nyt_api_key">NYT API Key:</label>
+            <input type="password"
+                   name="nyt_api_key"
+                   id="nyt_api_key"
+                   placeholder="{% if current.nyt_api_key %}{{ current.nyt_api_key }}{% else %}Enter key{% endif %}"
+                   autocomplete="off" />
+            <span class="dropdowntext">Placeholder — not yet wired to a tool.</span>
+        </div>
+
+        <div class="form-row">
+            <button type="submit" class="run-button">Save</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
