@@ -1,11 +1,12 @@
 import os
 
+import pandas as pd
+import requests
+
 import charts_matplotlib_seaborn_util
 import charts_util
 import file_converter_util
 import IO_files_util
-import pandas as pd
-import requests
 
 AGENT_MOUNT_PATH = "/root/nlp-suite"
 
@@ -40,7 +41,9 @@ def call_mallet_api(command, args):
         raise RuntimeError(f"Failed to call MALLET API ({command}): {e}") from e
 
 
-def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeInterval, numTopics):
+def run_MALLET(
+    inputDir, outputDir, chartPackage, dataTransformation, OptimizeInterval, numTopics
+):
     filesToOpen = []
 
     # Validate text files in inputDir
@@ -92,7 +95,9 @@ def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeIn
 
     # Map expected local file paths
     Keys_FileName = mallet_to_agent_path("/app/output/TM-MALLET_input/topic_keys.txt")
-    Composition_FileName = mallet_to_agent_path("/app/output/TM-MALLET_input/doc_topics.txt")
+    Composition_FileName = mallet_to_agent_path(
+        "/app/output/TM-MALLET_input/doc_topics.txt"
+    )
 
     print(Keys_FileName)
     print(Composition_FileName)
@@ -103,10 +108,16 @@ def run_MALLET(inputDir, outputDir, chartPackage, dataTransformation, OptimizeIn
 
     # Convert TSV files (same as your old code)
     header_keys = ["Topic #", "Weight", "Keywords"]
-    Keys_FileName = file_converter_util.tsv_converter(None, Keys_FileName, outputDir, header_keys)
+    Keys_FileName = file_converter_util.tsv_converter(
+        None, Keys_FileName, outputDir, header_keys
+    )
 
-    header_comp = ["Document ID", "Document"] + [f"Topic #{i} Weight in Document" for i in range(numTopics)]
-    Composition_FileName = file_converter_util.tsv_converter(None, Composition_FileName, outputDir, header_comp)
+    header_comp = ["Document ID", "Document"] + [
+        f"Topic #{i} Weight in Document" for i in range(numTopics)
+    ]
+    Composition_FileName = file_converter_util.tsv_converter(
+        None, Composition_FileName, outputDir, header_comp
+    )
 
     pd.read_csv(Composition_FileName, encoding="utf-8", on_bad_lines="skip")
 

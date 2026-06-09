@@ -20,14 +20,17 @@ try:
 except:
     import IO_internet_util
 
-    IO_internet_util.check_internet_availability_warning("wordclouds_util.py (stanza.download(en))")
+    IO_internet_util.check_internet_availability_warning(
+        "wordclouds_util.py (stanza.download(en))"
+    )
 import csv
 import ntpath  # to split the path from filename
 
-import IO_files_util
-import IO_user_interface_util
 import matplotlib.pyplot as plt  # pip install matplotlib
 from wordcloud import STOPWORDS, WordCloud
+
+import IO_files_util
+import IO_user_interface_util
 
 
 # written by Tony Chen Gu Feb 22, 2022
@@ -59,7 +62,10 @@ def get_font_list():
     font_list = [
         font[:-4]
         for font in font_list
-        if font.endswith(".ttf") or font.endswith(".otf") or font.endswith(".TTF") or font.endswith(".OTF")
+        if font.endswith(".ttf")
+        or font.endswith(".otf")
+        or font.endswith(".TTF")
+        or font.endswith(".OTF")
     ]
     font_list.insert(0, "Default")
     return font_list
@@ -148,7 +154,8 @@ class GroupedColorFunc:
 
     def __init__(self, color_to_words, default_color):
         self.color_func_to_words = [
-            (self.get_single_color(color), set(words)) for (color, words) in color_to_words.items()
+            (self.get_single_color(color), set(words))
+            for (color, words) in color_to_words.items()
         ]
 
         self.default_color_func = self.get_single_color(default_color)
@@ -161,7 +168,11 @@ class GroupedColorFunc:
     def get_color_func(self, word):
         """Returns a single_color_func associated with the word"""
         try:
-            color_func = next(color_func for (color_func, words) in self.color_func_to_words if word in words)
+            color_func = next(
+                color_func
+                for (color_func, words) in self.color_func_to_words
+                if word in words
+            )
         except StopIteration:
             color_func = self.default_color_func
 
@@ -183,7 +194,14 @@ def get_wordcloud_title(inputFilename, inputDir, wordcloud_title):
 
 # CYNTHIA: wordcloud function particularly designed for SVO
 # collocations set to False to avoid repetition of words
-def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, wordcloud_title, prefer_horizontal):
+def SVOWordCloud(
+    svoFile,
+    inputFilename,
+    outputDir,
+    transformed_image_mask,
+    wordcloud_title,
+    prefer_horizontal,
+):
 
     wordcloud_title = get_wordcloud_title(inputFilename, "", wordcloud_title)
 
@@ -201,24 +219,66 @@ def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, word
         if row["Subject (S)"] != "":
             # check if the strings contains special character
             words_list.append(
-                " ".join(["".join(filter(str.isalnum, s)) for s in row["Subject (S)"].lower().split(" ")])
+                " ".join(
+                    [
+                        "".join(filter(str.isalnum, s))
+                        for s in row["Subject (S)"].lower().split(" ")
+                    ]
+                )
             )
             color_list[red_code].append(
-                " ".join(["".join(filter(str.isalnum, s)) for s in row["Subject (S)"].lower().split(" ")])
+                " ".join(
+                    [
+                        "".join(filter(str.isalnum, s))
+                        for s in row["Subject (S)"].lower().split(" ")
+                    ]
+                )
             )
         if row["Verb (V)"] != "":
             words_list.append(
-                " " + (" ".join(["".join(filter(str.isalnum, s)) for s in row["Verb (V)"].lower().split(" ")]))
+                " "
+                + (
+                    " ".join(
+                        [
+                            "".join(filter(str.isalnum, s))
+                            for s in row["Verb (V)"].lower().split(" ")
+                        ]
+                    )
+                )
             )
             color_list[blue_code].append(
-                " " + (" ".join(["".join(filter(str.isalnum, s)) for s in row["Verb (V)"].lower().split(" ")]))
+                " "
+                + (
+                    " ".join(
+                        [
+                            "".join(filter(str.isalnum, s))
+                            for s in row["Verb (V)"].lower().split(" ")
+                        ]
+                    )
+                )
             )
         if row["Object (O)"] != "":
             words_list.append(
-                (" ".join(["".join(filter(str.isalnum, s)) for s in row["Object (O)"].lower().split(" ")])) + " "
+                (
+                    " ".join(
+                        [
+                            "".join(filter(str.isalnum, s))
+                            for s in row["Object (O)"].lower().split(" ")
+                        ]
+                    )
+                )
+                + " "
             )
             color_list[green_code].append(
-                (" ".join(["".join(filter(str.isalnum, s)) for s in row["Object (O)"].lower().split(" ")])) + " "
+                (
+                    " ".join(
+                        [
+                            "".join(filter(str.isalnum, s))
+                            for s in row["Object (O)"].lower().split(" ")
+                        ]
+                    )
+                )
+                + " "
             )
     words_count_dict = Counter(words_list)
     max_words = 1000  # TODO MINO: make max_words bigger to include generally lower frequency "Object (O)" words
@@ -250,7 +310,9 @@ def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, word
     plt.imshow(wc, interpolation="bilinear")
     plt.title(wordcloud_title, fontsize=14, fontweight="bold", pad=20)
     plt.axis("off")
-    output_file_name = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".png", "WC", "img")
+    output_file_name = IO_files_util.generate_output_file_name(
+        inputFilename, "", outputDir, ".png", "WC", "img"
+    )
     wc.to_file(output_file_name)
     return output_file_name
 
@@ -273,9 +335,13 @@ def processColorList(currenttext, color_to_words, csvField_color_list, myfile):
         for k, v in row.items():  # go over each column name and value
             if k in column_color:
                 if " " in v:
-                    color_to_words[column_color[k]] += ["".join(filter(str.isalnum, s)) for s in v.lower().split(" ")]
+                    color_to_words[column_color[k]] += [
+                        "".join(filter(str.isalnum, s)) for s in v.lower().split(" ")
+                    ]
                 else:
-                    color_to_words[column_color[k]].append("".join(filter(str.isalnum, v.lower())))
+                    color_to_words[column_color[k]].append(
+                        "".join(filter(str.isalnum, v.lower()))
+                    )
                 currenttext += v.lower() + " "
     return currenttext, color_to_words
 
@@ -328,7 +394,9 @@ def display_wordCloud_sep_color(
     grouped_color_func = GroupedColorFunc(color_to_words, default_color)
     wc.recolor(color_func=grouped_color_func)
     plt.figure(figsize=(8, 8), facecolor=None)
-    output_file_name = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".png", "WC", "img")
+    output_file_name = IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".png", "WC", "img"
+    )
     if bg_image_flag and bg_image is not None:
         img = changeWhiteToTransparent(wc.to_image())
         img = img.resize(bg_image.size)
@@ -341,7 +409,9 @@ def display_wordCloud_sep_color(
         plt.figure()
         plt.axis("off")
         plt.imshow(img, interpolation="nearest")
-        plt.savefig(output_file_name, bbox_inches="tight", pad_inches=0, format="png", dpi=300)
+        plt.savefig(
+            output_file_name, bbox_inches="tight", pad_inches=0, format="png", dpi=300
+        )
     else:
         plt.imshow(wc, interpolation="bilinear")
         plt.axis("off")
@@ -430,7 +500,9 @@ def display_wordCloud(
         plt.figure()
         plt.axis("off")
         plt.imshow(img, interpolation="nearest")
-        plt.savefig(output_file_name, bbox_inches="tight", pad_inches=0, format="png", dpi=300)
+        plt.savefig(
+            output_file_name, bbox_inches="tight", pad_inches=0, format="png", dpi=300
+        )
     else:
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
@@ -446,13 +518,23 @@ def check_file_empty(currenttext, inputFilename, nDocs, NumEmptyDocs):
     if len(currenttext) == 0:
         NumEmptyDocs = NumEmptyDocs + 1
         if nDocs == 1:
-            print("The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+            print(
+                "The file "
+                + inputFilename
+                + " is empty.\n\nPlease, use another file and try again."
+            )
             raise (
-                FileNotFoundError("The file " + inputFilename + " is empty.\n\nPlease, use another file and try again.")
+                FileNotFoundError(
+                    "The file "
+                    + inputFilename
+                    + " is empty.\n\nPlease, use another file and try again."
+                )
             )
             return True, True, NumEmptyDocs  # must exit script
         else:
-            IO_user_interface_util.timed_alert(3000, "Empty file", "The file " + inputFilename + " is empty.")
+            IO_user_interface_util.timed_alert(
+                3000, "Empty file", "The file " + inputFilename + " is empty."
+            )
         return False, True, NumEmptyDocs
     else:
         return False, False, NumEmptyDocs
@@ -477,7 +559,9 @@ def processCsvColumns(
     with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
         if len(csvField_color_list) != 0:
             # process csvField_color_list
-            currenttext, color_to_words = processColorList(currenttext, color_to_words, csvField_color_list, myfile)
+            currenttext, color_to_words = processColorList(
+                currenttext, color_to_words, csvField_color_list, myfile
+            )
             tempOutputfile = ""
             if currenttext != "":
                 tempOutputfile = display_wordCloud_sep_color(
@@ -593,10 +677,13 @@ def python_wordCloud(
         if numberImages == 1:
             transformed_image_mask = np.ndarray((image_mask.shape[0]), np.int32)
         elif numberImages == 2:
-            transformed_image_mask = np.ndarray((image_mask.shape[0], image_mask.shape[1]), np.int32)
+            transformed_image_mask = np.ndarray(
+                (image_mask.shape[0], image_mask.shape[1]), np.int32
+            )
         elif numberImages == 3:
             transformed_image_mask = np.ndarray(
-                (image_mask.shape[0], image_mask.shape[1], image_mask.shape[2]), np.int32
+                (image_mask.shape[0], image_mask.shape[1], image_mask.shape[2]),
+                np.int32,
             )
         else:
             return
@@ -607,7 +694,9 @@ def python_wordCloud(
             """
         # Check the expected result of your mask
         # if i==1: #only print once
-        print("transformed_image_mask (SHOULD ALL BE 255 VALUES)", transformed_image_mask)
+        print(
+            "transformed_image_mask (SHOULD ALL BE 255 VALUES)", transformed_image_mask
+        )
 
     # can only process a single conll table or a csv file (e.g., SVO reasults where the user selects the columns to be used for color display
     if len(inputDir) > 0:
@@ -667,7 +756,9 @@ def python_wordCloud(
     if not exclude_stopwords and not differentPOS_differentColors:
         print("\nLIST OF WORDCLOUDS STOPWORDS\n", STOPWORDS, "\n")
     else:
-        stopwords = set(STOPWORDS)  # STOPWORDS are all lowercase, so any exclusion will have to be converted
+        stopwords = set(
+            STOPWORDS
+        )  # STOPWORDS are all lowercase, so any exclusion will have to be converted
 
     for doc in inputDocs:
         i = i + 1
@@ -711,9 +802,13 @@ def python_wordCloud(
                     for j in range(len(words_)):
                         # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
                         #   YELLOW for anything else; no longer used
-                        if len(postags_[j]) >= 2 and "VB" in postags_[j][0:2]:  # == "VB":
+                        if (
+                            len(postags_[j]) >= 2 and "VB" in postags_[j][0:2]
+                        ):  # == "VB":
                             color_to_words[blue_code].append(words_[j])
-                        elif len(postags_[j]) >= 2 and "NN" in postags_[j][0:2]:  # == "NN":
+                        elif (
+                            len(postags_[j]) >= 2 and "NN" in postags_[j][0:2]
+                        ):  # == "NN":
                             color_to_words[red_code].append(words_[j])
                         elif len(postags_[j]) >= 2 and postags_[j][0:2] == "JJ":
                             color_to_words[green_code].append(words_[j])
@@ -744,7 +839,9 @@ def python_wordCloud(
                 textToProcess = ""
                 currenttext = myfile.read()
                 # check for empty file
-                error, error2, NumEmptyDocs = check_file_empty(currenttext, doc, nDocs, NumEmptyDocs)
+                error, error2, NumEmptyDocs = check_file_empty(
+                    currenttext, doc, nDocs, NumEmptyDocs
+                )
                 if error:
                     return
                 if error2:
@@ -758,7 +855,11 @@ def python_wordCloud(
                         # for word in annotated.sentences[sent_id].tokens:
                         for word in annotated.sentences[sent_id].words:
                             # pos & upos have the same tag value
-                            if word.text.lower() == "'s" or word.text.lower() == "’s" or word.text.lower() == "s":
+                            if (
+                                word.text.lower() == "'s"
+                                or word.text.lower() == "’s"
+                                or word.text.lower() == "s"
+                            ):
                                 continue  # do not process the s of a saxon genitive
                             # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
                             #   YELLOW for anything else; no longer used
@@ -845,7 +946,12 @@ def python_wordCloud(
                 filesToOpen.append(tempOutputfile)
                 # write an output txt file that can be used for internet wordclouds services
                 if lemmatize or exclude_stopwords:
-                    with open(tempOutputfile[:-8] + ".txt", "w", encoding="utf-8", errors="ignore") as f:
+                    with open(
+                        tempOutputfile[:-8] + ".txt",
+                        "w",
+                        encoding="utf-8",
+                        errors="ignore",
+                    ) as f:
                         f.write(textToProcess)
             combinedtext = combinedtext + textToProcess
 
@@ -886,7 +992,9 @@ def python_wordCloud(
         filesToOpen.append(tempOutputfile)
         # write an output txt file that can be used for internet wordclouds services
         if lemmatize or exclude_stopwords:
-            with open(tempOutputfile[:-8] + ".txt", "w", encoding="utf-8", errors="ignore") as f:
+            with open(
+                tempOutputfile[:-8] + ".txt", "w", encoding="utf-8", errors="ignore"
+            ) as f:
                 f.write(combinedtext)
             nDocsRewritten = 1
             if not doNotListIndividualFiles:

@@ -43,7 +43,9 @@ class Clusterer:
             for i in range(0, len(tokenized_text_all), 510):
                 tokenized_text = tokenized_text_all[i : i + 510]
                 indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
-                indexed_tokens = self.tokenizer.build_inputs_with_special_tokens(indexed_tokens)
+                indexed_tokens = self.tokenizer.build_inputs_with_special_tokens(
+                    indexed_tokens
+                )
                 all_data.append(indexed_tokens)
                 all_words.append(tokenized_text)
                 all_masks.append(list(np.ones(len(indexed_tokens))))
@@ -92,7 +94,9 @@ class Clusterer:
 
         return batched_data, batched_words, batched_masks, batched_users
 
-    def get_embeddings(self, batched_data, batched_words, batched_masks, batched_users, word):
+    def get_embeddings(
+        self, batched_data, batched_words, batched_masks, batched_users, word
+    ):
 
         word = word.lower()
         ret = []
@@ -104,7 +108,9 @@ class Clusterer:
             words = batched_words[b]
             batched_users[b]
             with torch.no_grad():
-                o = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
+                o = self.model(
+                    tokens_tensor, attention_mask=atten_tensor, token_type_ids=None
+                )
                 encoded_layers = o["hidden_states"]
             for sent_i in range(len(words)):
                 for token_i in range(len(words[sent_i])):
@@ -123,7 +129,15 @@ class Clusterer:
                         vec = encoded_layers[-layer_i][sent_i][token_i]
                         hidden_layers.append(vec)
                     # concatenate last four layers
-                    rep = torch.cat((hidden_layers[0], hidden_layers[1], hidden_layers[2], hidden_layers[3]), 0)
+                    rep = torch.cat(
+                        (
+                            hidden_layers[0],
+                            hidden_layers[1],
+                            hidden_layers[2],
+                            hidden_layers[3],
+                        ),
+                        0,
+                    )
                     ret.append((w, rep.cpu().numpy().reshape(1, -1)[0]))
 
         return (ret, do_wordpiece)
@@ -164,7 +178,16 @@ class Clusterer:
         return np.array(data)
 
     def cluster_embeddings(
-        self, data, k_range, w, ID=None, dim_reduct=None, rs=SEED, lamb=10000, finetuned=False, a_s=None
+        self,
+        data,
+        k_range,
+        w,
+        ID=None,
+        dim_reduct=None,
+        rs=SEED,
+        lamb=10000,
+        finetuned=False,
+        a_s=None,
     ):
 
         if a_s is None:
@@ -218,7 +241,9 @@ class Matcher:
             for i in range(0, len(tokenized_text_all), 510):
                 tokenized_text = tokenized_text_all[i : i + 510]
                 indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
-                indexed_tokens = self.tokenizer.build_inputs_with_special_tokens(indexed_tokens)
+                indexed_tokens = self.tokenizer.build_inputs_with_special_tokens(
+                    indexed_tokens
+                )
                 all_data.append(indexed_tokens)
                 all_words.append(tokenized_text)
                 all_masks.append(list(np.ones(len(indexed_tokens))))
@@ -272,7 +297,9 @@ class Matcher:
         if added_centroids is None:
             centroids_folder = f"{path}/centroids"
         else:
-            centroids_folder = f"{path}/added_centroids_{added_centroids[0]}_{added_centroids[1]}"
+            centroids_folder = (
+                f"{path}/added_centroids_{added_centroids[0]}_{added_centroids[1]}"
+            )
         centroids_d = {}
         for w in sorted(vocab):
             if f"{w}.npy" not in os.listdir(centroids_folder):
@@ -300,13 +327,22 @@ class Matcher:
                 outfile.write(str(IDs[i]) + "\t" + tok + "\t" + str(labels[i]) + "\n")
 
     def get_embeddings_and_match(
-        self, batched_data, batched_words, batched_masks, batched_users, centroids_d, o_path, added_centroids=None
+        self,
+        batched_data,
+        batched_words,
+        batched_masks,
+        batched_users,
+        centroids_d,
+        o_path,
+        added_centroids=None,
     ):
 
         if added_centroids is None:
             outfile = open(f"{o_path}/senses", "w")
         else:
-            outfile = open(f"{o_path}/added_senses_{added_centroids[0]}_{added_centroids[1]}", "w")
+            outfile = open(
+                f"{o_path}/added_senses_{added_centroids[0]}_{added_centroids[1]}", "w"
+            )
         vocab = set(centroids_d.keys())
         # variables for grouping wordpiece vectors
         prev_w = (None, None, None)
@@ -320,7 +356,9 @@ class Matcher:
             words = batched_words[b]
             users = batched_users[b]
             with torch.no_grad():
-                o = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
+                o = self.model(
+                    tokens_tensor, attention_mask=atten_tensor, token_type_ids=None
+                )
                 encoded_layers = o["hidden_states"]
             for sent_i in range(len(words)):
                 for token_i in range(len(words[sent_i])):
@@ -338,7 +376,15 @@ class Matcher:
                         vec = encoded_layers[-layer_i][sent_i][token_i]
                         hidden_layers.append(vec)
                     # concatenate last four layers
-                    vector = torch.cat((hidden_layers[0], hidden_layers[1], hidden_layers[2], hidden_layers[3]), 0)
+                    vector = torch.cat(
+                        (
+                            hidden_layers[0],
+                            hidden_layers[1],
+                            hidden_layers[2],
+                            hidden_layers[3],
+                        ),
+                        0,
+                    )
                     vector = vector.cpu().numpy().reshape(1, -1)[0]
                     # piece together wordpiece vectors if necessary
                     if not w.startswith("##"):

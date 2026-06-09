@@ -1,19 +1,30 @@
 import time
 
-import IO_files_util
 import pandas as pd
 
 # Visualization
 import plotly.express as px
 from sklearn.manifold import TSNE
 
+import IO_files_util
 
-def run_word2vec_plot(inputFilename, inputDir, outputDir, word_vector_list, filtered_words, vis_menu_var, dim_menu_var):
+
+def run_word2vec_plot(
+    inputFilename,
+    inputDir,
+    outputDir,
+    word_vector_list,
+    filtered_words,
+    vis_menu_var,
+    dim_menu_var,
+):
 
     filesToOpen = []
 
     ## visualization
-    print(f"\nStarted preparing charts via t-SNE for # distinct words at {time.asctime(time.localtime(time.time()))}")
+    print(
+        f"\nStarted preparing charts via t-SNE for # distinct words at {time.asctime(time.localtime(time.time()))}"
+    )
 
     if vis_menu_var == "Plot word vectors":
         if dim_menu_var == "2D":
@@ -71,12 +82,28 @@ def plot_interactive_3D_graph_words(tsne_df):
 
 
 def plot_similar_graph(tsne_df):
-    fig = px.scatter(tsne_df, x="x", y="y", text="Word", color="label", size="similarity", hover_name="Word")
+    fig = px.scatter(
+        tsne_df,
+        x="x",
+        y="y",
+        text="Word",
+        color="label",
+        size="similarity",
+        hover_name="Word",
+    )
     return fig
 
 
 def plot_similar_3D_graph(tsne_df):
-    fig = px.scatter_3d(tsne_df, x="x", y="y", z="z", color="label", size="similarity", hover_name="Word")
+    fig = px.scatter_3d(
+        tsne_df,
+        x="x",
+        y="y",
+        z="z",
+        color="label",
+        size="similarity",
+        hover_name="Word",
+    )
     return fig
 
 

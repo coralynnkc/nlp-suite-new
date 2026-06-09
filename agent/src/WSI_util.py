@@ -6,6 +6,7 @@ from collections import Counter
 
 import numpy as np
 from tqdm import tqdm
+
 from WSI_classes import Clusterer, Matcher
 
 tcache_path = f"{os.getcwd()}/cache"
@@ -13,9 +14,10 @@ if not os.path.exists(tcache_path):
     os.makedirs(tcache_path)
 os.environ["TRANSFORMERS_CACHE"] = tcache_path
 
-import IO_files_util
 import spacy
 from transformers import BertModel, BertTokenizer
+
+import IO_files_util
 
 SEED = 0
 batch_size = 32
@@ -41,7 +43,11 @@ def get_vocab(sentences, u_vocab="", top_n=0.01, min_count=50, add_stopwords=Non
         stopwords = list(en.Defaults.stop_words) + add_stopwords
         text = [w.strip() for w in text if w.strip() not in stopwords]
         u_vocab = Counter(text)
-        u_vocab = [w for w, i in u_vocab.most_common(round(top_n * len(u_vocab))) if u_vocab[w] >= min_count]
+        u_vocab = [
+            w
+            for w, i in u_vocab.most_common(round(top_n * len(u_vocab)))
+            if u_vocab[w] >= min_count
+        ]
     else:
         u_vocab = [w.strip() for w in u_vocab.split(",")]
 
@@ -66,7 +72,11 @@ def split_into_sentences(text, docID):
         text = text.replace("Ph.D.", "Ph<prd>D<prd>")
     text = re.sub(r"\s" + alphabets + "[.] ", " \\1<prd> ", text)
     text = re.sub(acronyms + " " + starters, "\\1<stop> \\2", text)
-    text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
+    text = re.sub(
+        alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]",
+        "\\1<prd>\\2<prd>\\3<prd>",
+        text,
+    )
     text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
     text = re.sub(" " + suffixes + "[.] " + starters, " \\1<stop> \\2", text)
     text = re.sub(" " + suffixes + "[.]", " \\1<prd>", text)
@@ -85,7 +95,10 @@ def split_into_sentences(text, docID):
     text = text.replace("<prd>", " ")
     sentences = text.split("<stop>")
     sentences = sentences[:-1]
-    sentences = [(i, re.sub("[^A-Za-z ]+", "", s.strip()), docID) for i, s in enumerate(sentences)]
+    sentences = [
+        (i, re.sub("[^A-Za-z ]+", "", s.strip()), docID)
+        for i, s in enumerate(sentences)
+    ]
 
     return sentences
 
@@ -103,14 +116,25 @@ def get_sent(doc, o_path):
     return sentences, fullText
 
 
-def get_data(inputFilename, inputDir, Word2Vec_Dir, u_vocab=None, fileType=".txt", configFileName=""):
+def get_data(
+    inputFilename,
+    inputDir,
+    Word2Vec_Dir,
+    u_vocab=None,
+    fileType=".txt",
+    configFileName="",
+):
 
     if u_vocab is None:
         u_vocab = []
     docs = {}
     o_paths = {}
     inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType=fileType, silent=False, configFileName=configFileName
+        inputFilename,
+        inputDir,
+        fileType=fileType,
+        silent=False,
+        configFileName=configFileName,
     )
     all_sent = []
     all_vocab = []
@@ -135,17 +159,23 @@ def get_centroids(all_sent, all_vocab, Word2Vec_Dir, k_range, sample=None):
     # load model
     print("\nStarted word sense induction...\n")
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased", do_lower_case=True)
-    model_name = BertModel.from_pretrained("bert-base-uncased", output_hidden_states=True)
+    model_name = BertModel.from_pretrained(
+        "bert-base-uncased", output_hidden_states=True
+    )
     model = Clusterer(tokenizer, model_name)
     c_path = f"{Word2Vec_Dir}/output/centroids"
     if not os.path.exists(c_path):
         os.makedirs(c_path)
     # get centroids
-    for w in tqdm(all_vocab, total=len(all_vocab), desc="Generating sense centroids..."):
+    for w in tqdm(
+        all_vocab, total=len(all_vocab), desc="Generating sense centroids..."
+    ):
         if sample is None:
             seq = [tpl for tpl in all_sent if w in tpl[1].split()]
         else:
-            seq = random.sample([tpl for tpl in all_sent if w in tpl[1].split()], sample)
+            seq = random.sample(
+                [tpl for tpl in all_sent if w in tpl[1].split()], sample
+            )
 
         if len(seq) == 0:
             print(
@@ -155,8 +185,12 @@ def get_centroids(all_sent, all_vocab, Word2Vec_Dir, k_range, sample=None):
                 f':-( There are no occurrences of "{w}" in the dataset. Check for misspellings and/or input other forms of the word, e.g., plural/singular forms, different tenses, etc.'
             )
 
-        batched_data, batched_words, batched_masks, batched_users = model.get_batches(seq, batch_size)
-        embeddings, do_wordpiece = model.get_embeddings(batched_data, batched_words, batched_masks, batched_users, w)
+        batched_data, batched_words, batched_masks, batched_users = model.get_batches(
+            seq, batch_size
+        )
+        embeddings, do_wordpiece = model.get_embeddings(
+            batched_data, batched_words, batched_masks, batched_users, w
+        )
         data = model.group_wordpiece(embeddings, w, do_wordpiece)
         centroids = model.cluster_embeddings(data, k_range, w, lamb=10000)
         np.save(f"{c_path}/{w}.npy", centroids)
@@ -166,7 +200,9 @@ def match_embeddings(all_sent, all_vocab, Word2Vec_Dir):
 
     # load model
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased", do_lower_case=True)
-    model_name = BertModel.from_pretrained("bert-base-uncased", output_hidden_states=True)
+    model_name = BertModel.from_pretrained(
+        "bert-base-uncased", output_hidden_states=True
+    )
     model = Matcher(tokenizer, model_name)
     # load centroids
     centroids_d = model.load_centroids(all_vocab, f"{Word2Vec_Dir}/output")
@@ -174,8 +210,12 @@ def match_embeddings(all_sent, all_vocab, Word2Vec_Dir):
     o_path = f"{Word2Vec_Dir}/output"
     if not os.path.exists(o_path):
         os.makedirs(o_path)
-    batched_data, batched_words, batched_masks, batched_users = model.get_batches(seq, batch_size)
-    model.get_embeddings_and_match(batched_data, batched_words, batched_masks, batched_users, centroids_d, o_path)
+    batched_data, batched_words, batched_masks, batched_users = model.get_batches(
+        seq, batch_size
+    )
+    model.get_embeddings_and_match(
+        batched_data, batched_words, batched_masks, batched_users, centroids_d, o_path
+    )
     print("\nWord sense induction finished. Producing output files...\n")
 
 
@@ -205,7 +245,9 @@ def get_cluster_sentences(Word2Vec_Dir):
                 f_name = tok[0].split("<sep>")[1]
                 head, tail = os.path.split(f_name)
                 f_name_no_ext = os.path.splitext(tail)[0]
-                pickle_path = os.path.join(Word2Vec_Dir, "output", f_name_no_ext, "sentences.pickle")
+                pickle_path = os.path.join(
+                    Word2Vec_Dir, "output", f_name_no_ext, "sentences.pickle"
+                )
 
                 with open(pickle_path, "rb") as f:  # TODO: remove redundant path
                     sentences = pickle.load(f)

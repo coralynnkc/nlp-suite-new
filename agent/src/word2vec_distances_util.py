@@ -3,13 +3,14 @@ import itertools
 import math
 import time
 
-import charts_util
-import IO_files_util
 import numpy as np
 import pandas as pd
 from numpy.linalg import norm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+import charts_util
+import IO_files_util
 
 
 def compute_word2vec_distances(
@@ -30,7 +31,9 @@ def compute_word2vec_distances(
 
     # two_dim_Euclidean distances are always computed when plots are computed 2D 3D in word2vec_tsne_plot_util
 
-    n_dim_Euclidean = compute_distances_var  # always computed when distances are computed
+    n_dim_Euclidean = (
+        compute_distances_var  # always computed when distances are computed
+    )
     compute_cosine_similarity = True  # always computed
 
     # compute only distances if inputFile is csv
@@ -78,7 +81,9 @@ def compute_word2vec_distances(
                     ".csv",
                     "Word2Vec_" + str(len(keywords_list)) + "_Keywords_Cos_Similarity",
                 )
-                keyword_df.to_csv(keyword_sim_outputFilename, encoding="utf-8", index=False)
+                keyword_df.to_csv(
+                    keyword_sim_outputFilename, encoding="utf-8", index=False
+                )
                 filesToOpen.append(keyword_sim_outputFilename)
             else:
                 print(
@@ -114,16 +119,22 @@ def compute_word2vec_distances(
             while i < j:
                 dist_df.at[dist_idx, "Word_1"] = row["Word"]
                 dist_df.at[dist_idx, "Word_2"] = tmp_result_df.at[j, "Word"]
-                dist_df.at[dist_idx, "Word_1_2"] = row["Word"] + "_" + tmp_result_df.at[j, "Word"]
-                dist_df.at[dist_idx, "n-dimensional Euclidean distance"] = euclidean_dist(
-                    row["Vector"], tmp_result_df.at[j, "Vector"]
+                dist_df.at[dist_idx, "Word_1_2"] = (
+                    row["Word"] + "_" + tmp_result_df.at[j, "Word"]
+                )
+                dist_df.at[dist_idx, "n-dimensional Euclidean distance"] = (
+                    euclidean_dist(row["Vector"], tmp_result_df.at[j, "Vector"])
                 )
                 dist_idx += 1
                 j -= 1
 
         # create outputFilenames and save them
         dist_outputFilename = IO_files_util.generate_output_file_name(
-            inputFilename, inputDir, outputDir, ".csv", "Word2Vec_top_" + str(top_words_var) + "_Euclidean_dist"
+            inputFilename,
+            inputDir,
+            outputDir,
+            ".csv",
+            "Word2Vec_top_" + str(top_words_var) + "_Euclidean_dist",
         )
 
         dist_df.to_csv(dist_outputFilename, encoding="utf-8", index=False)
@@ -166,10 +177,14 @@ def compute_word2vec_distances(
                 j = len(tmp_result_df) - 1
                 while i < j:
                     try:
-                        sim_score = word_vectors.similarity(str(row["Word"]), str(tmp_result_df.at[j, "Word"]))
+                        sim_score = word_vectors.similarity(
+                            str(row["Word"]), str(tmp_result_df.at[j, "Word"])
+                        )
                         cos_sim_df.at[cos_idx, "Word_1"] = row["Word"]
                         cos_sim_df.at[cos_idx, "Word_2"] = tmp_result_df.at[j, "Word"]
-                        cos_sim_df.at[cos_idx, "Word_1_2"] = row["Word"] + "_" + tmp_result_df.at[j, "Word"]
+                        cos_sim_df.at[cos_idx, "Word_1_2"] = (
+                            row["Word"] + "_" + tmp_result_df.at[j, "Word"]
+                        )
                         cos_sim_df.at[cos_idx, "Cosine similarity"] = sim_score
                     except KeyError:
                         cos_idx += 1
@@ -179,7 +194,11 @@ def compute_word2vec_distances(
                     j -= 1
 
             cos_sim_outputFilename = IO_files_util.generate_output_file_name(
-                inputFilename, inputDir, outputDir, ".csv", "Word2Vec_top_" + str(top_words_var) + "_Cos_Similarity"
+                inputFilename,
+                inputDir,
+                outputDir,
+                ".csv",
+                "Word2Vec_top_" + str(top_words_var) + "_Cos_Similarity",
             )
             cos_sim_df.to_csv(cos_sim_outputFilename, encoding="utf-8", index=False)
             filesToOpen.append(cos_sim_outputFilename)
@@ -233,7 +252,9 @@ def compute_word2vec_distances(
                     ".csv",
                     "Word2Vec_" + str(len(keywords_list)) + "_Keywords_Cos_Similarity",
                 )
-                keyword_df.to_csv(keyword_sim_outputFilename, encoding="utf-8", index=False)
+                keyword_df.to_csv(
+                    keyword_sim_outputFilename, encoding="utf-8", index=False
+                )
                 filesToOpen.append(keyword_sim_outputFilename)
 
                 outputFiles = charts_util.visualize_chart(
@@ -275,10 +296,14 @@ def compute_word2vec_distances(
                         sparse_matrix = tfidf_vectorizer.fit_transform(
                             [str(row["Word"])] + [str(tmp_result_df.at[j, "Word"])]
                         )
-                        sim_score = cosine_similarity(sparse_matrix[0], sparse_matrix[1])
+                        sim_score = cosine_similarity(
+                            sparse_matrix[0], sparse_matrix[1]
+                        )
                         cos_sim_df.at[cos_idx, "Word_1"] = row["Word"]
                         cos_sim_df.at[cos_idx, "Word_2"] = tmp_result_df.at[j, "Word"]
-                        cos_sim_df.at[cos_idx, "Word_1_2"] = row["Word"] + "_" + tmp_result_df.at[j, "Word"]
+                        cos_sim_df.at[cos_idx, "Word_1_2"] = (
+                            row["Word"] + "_" + tmp_result_df.at[j, "Word"]
+                        )
                         cos_sim_df.at[cos_idx, "Cosine similarity"] = sim_score
                     except KeyError:
                         cos_idx += 1
@@ -288,7 +313,11 @@ def compute_word2vec_distances(
                     j -= 1
 
             cos_sim_outputFilename = IO_files_util.generate_output_file_name(
-                inputFilename, inputDir, outputDir, ".csv", "Word2Vec_top_" + str(top_words_var) + "_Cos_Similarity"
+                inputFilename,
+                inputDir,
+                outputDir,
+                ".csv",
+                "Word2Vec_top_" + str(top_words_var) + "_Cos_Similarity",
             )
             cos_sim_df.to_csv(cos_sim_outputFilename, encoding="utf-8", index=False)
             filesToOpen.append(cos_sim_outputFilename)
@@ -328,7 +357,9 @@ def compute_word2vec_distances(
                     try:
                         tfidf_vectorizer = TfidfVectorizer(analyzer="char")
                         sparse_matrix = tfidf_vectorizer.fit_transform([a] + [b])
-                        sim_score = cosine_similarity(sparse_matrix[0], sparse_matrix[1])
+                        sim_score = cosine_similarity(
+                            sparse_matrix[0], sparse_matrix[1]
+                        )
                         keyword_df.at[i, "Word_1"] = a
                         keyword_df.at[i, "Word_2"] = b
                         keyword_df.at[i, "Word_1_2"] = a + "_" + b
@@ -344,7 +375,9 @@ def compute_word2vec_distances(
                     ".csv",
                     "Word2Vec_" + str(len(keywords_list)) + "_Keywords_Cos_Similarity",
                 )
-                keyword_df.to_csv(keyword_sim_outputFilename, encoding="utf-8", index=False)
+                keyword_df.to_csv(
+                    keyword_sim_outputFilename, encoding="utf-8", index=False
+                )
                 filesToOpen.append(keyword_sim_outputFilename)
 
                 outputFiles = charts_util.visualize_chart(

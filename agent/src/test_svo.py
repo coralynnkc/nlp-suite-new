@@ -23,7 +23,9 @@ normalized_NER_date_extractor_var = False
 package_var = "Stanford CoreNLP"
 gender_var = False
 quote_var = False
-subjects_dict_path_var = GUI_IO_util.wordLists_libPath + os.sep + "social-actor-list.csv"
+subjects_dict_path_var = (
+    GUI_IO_util.wordLists_libPath + os.sep + "social-actor-list.csv"
+)
 verbs_dict_path_var = GUI_IO_util.wordLists_libPath + os.sep + "social-actor-list.csv"
 objects_dict_path_var = GUI_IO_util.wordLists_libPath + os.sep + "social-actor-list.csv"
 filter_subjects = False

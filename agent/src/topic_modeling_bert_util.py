@@ -22,7 +22,11 @@ def get_docs(inputDir, split_docs_var):
                 sentences = [sentence.strip() for sentence in para.split(". ")]
                 chunks.extend(sentences)
             for chunk in chunks:
-                doc_info = {"f_name": f_name, "year": f_name.split("_")[0], "text": chunk}
+                doc_info = {
+                    "f_name": f_name,
+                    "year": f_name.split("_")[0],
+                    "text": chunk,
+                }
                 docs.append(doc_info)
     return docs
 
@@ -61,7 +65,12 @@ def run_BERTopic(inputDir, outputDir, split_docs_var=False):  # split_docs_var=T
     os.makedirs(model_path, exist_ok=True)
     embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
     model_file = os.path.join(model_path, "model.pt")
-    topic_model.save(model_file, serialization="pytorch", save_ctfidf=True, save_embedding_model=embedding_model)
+    topic_model.save(
+        model_file,
+        serialization="pytorch",
+        save_ctfidf=True,
+        save_embedding_model=embedding_model,
+    )
 
     # Generate topic information and hierarchy
     df = topic_model.get_topic_info()

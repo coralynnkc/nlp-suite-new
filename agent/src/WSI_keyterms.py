@@ -24,7 +24,15 @@ def extract_topn_from_vector(feature_names, sorted_items, topn):
 
 
 # https://github.com/matejMartinc/scalable_semantic_shift/blob/a105c8409db0996c99f0df11d40c35017eb3337c/interpretation.py#L85
-def sense_keywords(d, o_path, re_pattern="[^a-zA-Z'\\-’ ]", mf_prop=1, topn=10, ngram_range=(1, 2), add_stopwords=None):
+def sense_keywords(
+    d,
+    o_path,
+    re_pattern="[^a-zA-Z'\\-’ ]",
+    mf_prop=1,
+    topn=10,
+    ngram_range=(1, 2),
+    add_stopwords=None,
+):
 
     regex = re.compile(re_pattern)
     sp = spacy.load("en_core_web_sm")
@@ -54,7 +62,9 @@ def sense_keywords(d, o_path, re_pattern="[^a-zA-Z'\\-’ ]", mf_prop=1, topn=10
         kw_d[w] = {}
         for i, cluster in enumerate(clusters):
             tf_idf_vector = tfidf_transformer.transform([cluster])
-            tuples = zip(tf_idf_vector.tocoo().col, tf_idf_vector.tocoo().data, strict=False)
+            tuples = zip(
+                tf_idf_vector.tocoo().col, tf_idf_vector.tocoo().data, strict=False
+            )
             sorted_items = sorted(tuples, key=lambda x: (x[1], x[0]), reverse=True)
             keywords = extract_topn_from_vector(feature_names, sorted_items, topn * 5)
             keywords = sorted(keywords.items(), key=lambda x: x[1], reverse=True)
@@ -90,7 +100,9 @@ def get_keyterms(Word2Vec_Dir, ngram_range=(1, 2), topn=10):
     k_paths = []
     with open(f"{Word2Vec_Dir}/output/d.pickle", "rb") as f:
         d = pickle.load(f)
-    _, k_path = sense_keywords(d, f"{Word2Vec_Dir}/results", topn=topn, ngram_range=ngram_range)
+    _, k_path = sense_keywords(
+        d, f"{Word2Vec_Dir}/results", topn=topn, ngram_range=ngram_range
+    )
     k_paths.append(k_path)
     print("\nDone.\n")
 

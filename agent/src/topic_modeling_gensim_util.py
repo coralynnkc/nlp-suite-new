@@ -10,7 +10,6 @@ from sys import platform
 # Gensim
 import gensim
 import gensim.corpora as corpora
-import IO_libraries_util
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -22,6 +21,8 @@ import pyLDAvis.gensim
 import spacy
 from gensim.models import CoherenceModel
 from gensim.utils import simple_preprocess
+
+import IO_libraries_util
 
 logging.basicConfig(
     format="%(asctime)s : %(levelname)s : %(message)s", level=logging.ERROR

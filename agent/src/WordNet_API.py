@@ -18,7 +18,9 @@ def call_wordnet_api(cmd, call_list, args):
         return response.json()
 
     except Exception as e:
-        raise RuntimeError(f"Failed to call WordNet API w/ command {cmd} and call list {call_list}") from e
+        raise RuntimeError(
+            f"Failed to call WordNet API w/ command {cmd} and call list {call_list}"
+        ) from e
 
 
 def wordnet_to_agent_path(path):

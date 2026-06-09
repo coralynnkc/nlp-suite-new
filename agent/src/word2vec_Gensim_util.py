@@ -6,9 +6,6 @@ import string
 
 # Gensim
 import gensim
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 
 # for calculating the distance
 import numpy as np
@@ -16,6 +13,10 @@ import pandas as pd
 
 # Stanza for tokenization and lemmatization
 import stanza
+
+import IO_csv_util
+import IO_files_util
+import IO_user_interface_util
 import word2vec_distances_util
 
 fin = open("../lib/wordLists/stopwords.txt")
@@ -52,11 +53,15 @@ def run_Gensim_word2vec(
     filesToOpen = []
     sentences_out = []
 
-    startTime = IO_user_interface_util.timed_alert(2000, "Analysis start", "Started running Gensim Word2Vec at", True)
+    startTime = IO_user_interface_util.timed_alert(
+        2000, "Analysis start", "Started running Gensim Word2Vec at", True
+    )
 
     import IO_internet_util
 
-    if not IO_internet_util.check_internet_availability_warning("Word2Vec_Gensim_util.py"):
+    if not IO_internet_util.check_internet_availability_warning(
+        "Word2Vec_Gensim_util.py"
+    ):
         return
 
     # compute only distances if inputFile is csv
@@ -87,7 +92,11 @@ def run_Gensim_word2vec(
                 dId += 1
                 text = file.read()
                 print("Importing single file " + tail)
-                document.append(IO_csv_util.dressFilenameForCSVHyperlink(os.path.join(inputDir, doc)))
+                document.append(
+                    IO_csv_util.dressFilenameForCSVHyperlink(
+                        os.path.join(inputDir, doc)
+                    )
+                )
                 all_input_docs[dId] = text
                 tail_list[dId] = tail
     else:
@@ -95,7 +104,11 @@ def run_Gensim_word2vec(
         #     mb.showerror(title='Number of files error',
         #                 message='The selected input directory does NOT contain any file of txt type.\n\nPlease, select a different directory and try again.')
         inputDocs = IO_files_util.getFileList(
-            inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+            inputFilename,
+            inputDir,
+            fileType=".txt",
+            silent=False,
+            configFileName=configFileName,
         )
         nFile = len(inputDocs)
         if nFile == 0:
@@ -104,7 +117,9 @@ def run_Gensim_word2vec(
         for doc in inputDocs:  # list(os.listdir(inputDir)):
             head, tail = os.path.split(doc)
             if doc.endswith(".txt"):
-                with open(os.path.join(inputDir, doc), encoding="utf-8", errors="ignore") as file:
+                with open(
+                    os.path.join(inputDir, doc), encoding="utf-8", errors="ignore"
+                ) as file:
                     dId += 1
                     text = file.read()
                     print("Importing file " + str(dId) + "/" + str(nFile) + " " + tail)
@@ -123,7 +138,14 @@ def run_Gensim_word2vec(
     # process input file(s)
     out_df = pd.DataFrame()
     for doc_idx, txt in enumerate(all_input_docs.items()):
-        print("Processing file " + str(doc_idx + 1) + "/" + str(nFile) + " " + tail_list[doc_idx + 1])
+        print(
+            "Processing file "
+            + str(doc_idx + 1)
+            + "/"
+            + str(nFile)
+            + " "
+            + tail_list[doc_idx + 1]
+        )
         temp_out_df = pd.DataFrame()
         stanza_doc = stanzaPipeLine(txt[1])
 
@@ -134,15 +156,23 @@ def run_Gensim_word2vec(
             temp_out_df = pd.concat([temp_out_df, temp_df], ignore_index=True)
 
         # drop and rename columns + reset indices
-        temp_out_df = temp_out_df.drop(["start_char", "end_char"], axis=1, errors="ignore")
+        temp_out_df = temp_out_df.drop(
+            ["start_char", "end_char"], axis=1, errors="ignore"
+        )
         temp_out_df = temp_out_df.reset_index(drop=True)
-        temp_out_df = temp_out_df.rename(columns={"id": "ID", "text": "Word", "lemma": "Lemma", "head": "Head"})
+        temp_out_df = temp_out_df.rename(
+            columns={"id": "ID", "text": "Word", "lemma": "Lemma", "head": "Head"}
+        )
         sentences = [sent.text for sent in stanza_doc.sentences]
 
         # remove rows that include stop words from the dataframe
         if remove_stopwords_var:
             for idx, row in temp_out_df.iterrows():
-                if row["Word"].lower() in stop_words or row["Word"] in punctuations or len(row["Word"]) == 1:
+                if (
+                    row["Word"].lower() in stop_words
+                    or row["Word"] in punctuations
+                    or len(row["Word"]) == 1
+                ):
                     temp_out_df.drop(idx, inplace=True)
 
         # get sentenece, sentenceID for result_df
@@ -161,7 +191,9 @@ def run_Gensim_word2vec(
             else:
                 temp_sentences_out.append(temp_out_df.at[i, "Word"])
         temp_out_df["Document ID"] = doc_idx + 1
-        temp_out_df["Document"] = IO_csv_util.dressFilenameForCSVHyperlink(document[doc_idx])
+        temp_out_df["Document"] = IO_csv_util.dressFilenameForCSVHyperlink(
+            document[doc_idx]
+        )
 
         # concat to output df
         out_df = pd.concat([out_df, temp_out_df], ignore_index=True)
@@ -176,7 +208,11 @@ def run_Gensim_word2vec(
     ## train model
     print("Training Word2Vec model...")
     model = gensim.models.Word2Vec(
-        sentences=sentences_out, sg=sg_var, vector_size=vector_size_var, window=window_var, min_count=min_count_var
+        sentences=sentences_out,
+        sg=sg_var,
+        vector_size=vector_size_var,
+        window=window_var,
+        min_count=min_count_var,
     )
 
     word_vectors = model.wv
@@ -200,7 +236,13 @@ def run_Gensim_word2vec(
         import word2vec_tsne_plot_util
 
         outputFiles = word2vec_tsne_plot_util.run_word2vec_plot(
-            inputFilename, inputDir, outputDir, np.asarray(word_vector_list), filtered_words, vis_menu_var, dim_menu_var
+            inputFilename,
+            inputDir,
+            outputDir,
+            np.asarray(word_vector_list),
+            filtered_words,
+            vis_menu_var,
+            dim_menu_var,
         )
         filesToOpen.extend(outputFiles)
 
@@ -209,18 +251,31 @@ def run_Gensim_word2vec(
     for v in words:
         if isinstance(v, str):
             word_vector_df = pd.concat(
-                [word_vector_df, pd.Series([v, word_vectors[v]]).to_frame().T], ignore_index=True
+                [word_vector_df, pd.Series([v, word_vectors[v]]).to_frame().T],
+                ignore_index=True,
             )
 
     # merge out_df with word_vector coordinates values
     if lemmatize_var:
         word_vector_df.columns = ["Lemma", "Vector"]
         result_df = pd.merge(word_vector_df, out_df, on="Lemma", how="inner")
-        result_df = result_df[["Word", "Lemma", "Vector", "Sentence ID", "Sentence", "Document ID", "Document"]]
+        result_df = result_df[
+            [
+                "Word",
+                "Lemma",
+                "Vector",
+                "Sentence ID",
+                "Sentence",
+                "Document ID",
+                "Document",
+            ]
+        ]
     else:
         word_vector_df.columns = ["Word", "Vector"]
         result_df = pd.merge(word_vector_df, out_df, on="Word", how="inner")
-        result_df = result_df[["Word", "Vector", "Sentence ID", "Sentence", "Document ID", "Document"]]
+        result_df = result_df[
+            ["Word", "Vector", "Sentence ID", "Sentence", "Document ID", "Document"]
+        ]
 
     # write csv file
     outputFilename = IO_files_util.generate_output_file_name(
@@ -248,7 +303,13 @@ def run_Gensim_word2vec(
         filesToOpen.extend(outputFiles)
 
     IO_user_interface_util.timed_alert(
-        2000, "Analysis end", "Finished running Gensim Word2Vec at", True, "", True, startTime
+        2000,
+        "Analysis end",
+        "Finished running Gensim Word2Vec at",
+        True,
+        "",
+        True,
+        startTime,
     )
 
     return filesToOpen
