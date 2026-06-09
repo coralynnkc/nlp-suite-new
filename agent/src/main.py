@@ -469,6 +469,7 @@ def style_analysis(
 ):
     inputFilename = ""
     extra_GUIs_var = False
+    gender_guesser = False
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
     chartPackage = "Excel"
