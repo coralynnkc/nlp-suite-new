@@ -1,5 +1,5 @@
 import os
-from threading import Thread
+from threading import Lock, Thread
 from typing import Annotated
 
 import uvicorn
@@ -69,13 +69,7 @@ def _write_env_file(google_maps_api_key: str, nyt_api_key: str):
 
 
 app = FastAPI(debug=True)
-origins = [
-    "*",
-    "http://172.16.0.11:8000",
-    "http://0.0.0.0:8000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -83,34 +77,31 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+_worker_lock = Lock()
 app.worker = False
 
 
 def run(app, method):
     method()
     app.worker = False
+    _worker_lock.release()
 
 
 # def run(app, method):
-#     try:
-#         method()
 
-#     except Exception as e:
-#         app.worker_exception = e
 
-#     finally:
-#         app.worker = False
 
 
 @app.middleware("http")
 async def single_runner(request: Request, call_next):
-    if app.worker:
+    if not _worker_lock.acquire(blocking=False):
         return PlainTextResponse("The agent is currently busy running another job", status_code=503)
 
     app.worker = True
     response = await call_next(request)
     if response.status_code >= 400:
         app.worker = False
+        _worker_lock.release()
 
     return response
 
@@ -130,31 +121,18 @@ def status():
 # @app.get("/status")
 # def status():
 #     if hasattr(app, 'worker_exception') and app.worker_exception:
-#         e = app.worker_exception
-#         app.worker_exception = None
 
-#         raise HTTPException(status_code=500, detail=str(e))
 
-#     # thread = Thread(
-#     #     target=lambda: run(
 #     #         app,
-#     #         lambda: None,
-#     #     )
-#     # )
-#     # thread.start()
-#     # return PlainTextResponse("", status_code=200)
 
 
 @app.post("/file_manager")
 def file_manager(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     chartPackage: Annotated[str, Form()] = "",
     dataTransformation: Annotated[str, Form()] = "",
     selectedCsvFile_var: Annotated[str, Form()] = "",
     selectedCsvFile_colName: Annotated[str, Form()] = "",
-    # utf8_var : Annotated[bool, Form()] = False,
-    # ASCII_var : Annotated[bool, Form()] = False,
     list_var: Annotated[bool, Form()] = False,
     rename_var: Annotated[bool, Form()] = False,
     copy_var: Annotated[bool, Form()] = False,
@@ -202,8 +180,6 @@ def file_manager(
                 dataTransformation=dataTransformation,
                 selectedCsvFile_var=selectedCsvFile_var,
                 selectedCsvFile_colName=selectedCsvFile_colName,
-                # utf8_var=utf8_var,
-                # ASCII_var=ASCII_var,
                 utf8_var=False,
                 ASCII_var=False,
                 list_var=list_var,
@@ -247,7 +223,6 @@ def file_manager(
 @app.post("/sentiment_analysis")
 def sentiment_analysis(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     algorithm: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     calculateMean: Annotated[bool, Form()] = False,
@@ -277,7 +252,6 @@ def sentiment_analysis(
 @app.post("/topic_modeling")
 def topic_modeling(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     numberOfTopics: Annotated[int, Form()],
     optimizeTopicIntervals: Annotated[int, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
@@ -323,14 +297,10 @@ def topic_modeling(
 def parsers_annotators(
     inputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
-    # extra_GUIs_var: Annotated[bool, Form()] = False,
-    # extra_GUIs_menu_var: Annotated[str, Form()] = '',
     manual_Coref: Annotated[bool, Form()] = False,
-    # open_GUI: Annotated[bool, Form()] = False,
     parser_var: Annotated[bool, Form()] = False,
     parser_menu_var: Annotated[str, Form()] = "",
     single_quote: Annotated[bool, Form()] = False,
-    # CoNLL_table_analyzer_var: Annotated[bool, Form()] = False,
     annotators_var: Annotated[bool, Form()] = False,
     annotators_menu_var: Annotated[str, Form()] = "",
     package: Annotated[str, Form()] = "Stanford CoreNLP",
@@ -370,7 +340,6 @@ def parsers_annotators(
 def word2vec(
     # inputFilename: Annotated[str, Form()],
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     ngramsDropDown: Annotated[str, Form()] = "3-grams (unigrams)",
     remove_stopwords_var: Annotated[bool, Form()] = False,
@@ -435,7 +404,6 @@ def word2vec(
 @app.post("/CoNLL_table_analyzer_main")
 def CoNLL_table_analyzer(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     searchedCoNLLField: Annotated[str, Form()],
     postag_var: Annotated[str, Form()],
     deprel: Annotated[str, Form()],
@@ -494,7 +462,6 @@ def CoNLL_table_analyzer(
 @app.post("/style_analysis")
 def style_analysis(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     analysis_dropdown: Annotated[str, Form()],
     voc_options: Annotated[str, Form()],
     min_rating: Annotated[int, Form()],
@@ -502,13 +469,11 @@ def style_analysis(
     dataTransformation: Annotated[str, Form()] = "No transformation",
     complexity_analysis: Annotated[bool, Form()] = False,
     vocabulary_analysis: Annotated[bool, Form()] = False,
-    gender_guesser: Annotated[bool, Form()] = False,
 ):
     inputFilename = ""
     extra_GUIs_var = False
     inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    gender_guesser = False
     chartPackage = "Excel"
 
     thread = Thread(
@@ -539,7 +504,6 @@ def style_analysis(
 def sunburst_charts(
     sunburst_file_input: Annotated[str, Form()],  # Do we need this?
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     file_data: Annotated[str, Form()] = "",
     filter_options_var: Annotated[str, Form()] = "No filtering",
     savedPairsToSend: Annotated[str, Form()] = "[]",
@@ -571,7 +535,6 @@ def sunburst_charts(
 @app.post("/colormap_chart")
 def colormap_chart(
     colormap_file_input: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     max_number_of_rows: Annotated[int, Form()],
     less_freq_color_picker: Annotated[str, Form()],
     csv_file_categorical_field_list_front: Annotated[str, Form()] = "[]",
@@ -579,7 +542,6 @@ def colormap_chart(
     normalize: Annotated[str, Form()] = False,
     file_data: Annotated[str, Form()] = "",
 ):
-    # inputDirectory = os.path.expanduser(inputDirectory)
     outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
     thread = Thread(
         target=lambda: run(
@@ -603,7 +565,6 @@ def colormap_chart(
 @app.post("/sankey_flowchart")
 def sankey_flowchart(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     variable_1_max: Annotated[int, Form()],
     variable_2_max: Annotated[int, Form()],
     variable_3_max: Annotated[int, Form()],
@@ -632,7 +593,6 @@ def sankey_flowchart(
 @app.post("/SVO")
 def SVO(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     coreferenceResolution: Annotated[bool, Form()] = False,
     manualCoreference: Annotated[bool, Form()] = False,
@@ -690,7 +650,6 @@ def SVO(
 @app.post("/wordclouds")
 def wordcloud(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     wordcloudservice: Annotated[str, Form()],
     font_name: Annotated[str, Form()],
     maxNumberOfWords: Annotated[int, Form()],
@@ -746,7 +705,6 @@ def wordcloud(
 @app.post("/NGrams_CoOccurrences")
 def NGrams_CoOccurrences(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     ngrams_options_list: Annotated[str, Form()] = "[]",
     Ngrams_compute_var: Annotated[bool, Form()] = False,
@@ -801,7 +759,6 @@ def NGrams_CoOccurrences(
                 csv_file_var=csv_file_var,
                 ngrams_viewer_var=ngrams_viewer_var,
                 CoOcc_Viewer_var=CoOcc_Viewer_var,
-                # within_sentence_co_occurrence_search_var=within_sentence_co_occurrence_search_var,
                 date_options=date_options,
                 temporal_aggregation_var=temporal_aggregation_var,
                 viewer_options_list=viewer_options_list,
@@ -818,7 +775,6 @@ def NGrams_CoOccurrences(
 @app.post("/filesearchword")
 def filesearchword(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     search_options: Annotated[str, Form()] = "",
     minus_K_words_sentences_var: Annotated[int, Form()] = 0,
@@ -885,7 +841,6 @@ def filesearchword(
 @app.post("/document_statistics")
 def document_statistics(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     corpus_statistics_var: Annotated[bool, Form()] = False,
     corpus_text_options_menu_var: Annotated[str, Form()] = "*",
@@ -922,7 +877,6 @@ def document_statistics(
 @app.post("/sentence_analysis")
 def sentence_analysis(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     compute_sentence_length_var: Annotated[bool, Form()] = False,
     sentence_complexity_var: Annotated[bool, Form()] = False,
@@ -970,7 +924,6 @@ def sentence_analysis(
 @app.post("/gis")
 def gis(
     inputDirectory: Annotated[str, Form()],
-    outputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
     NER_extractor: Annotated[bool, Form()] = False,
     geocoder: Annotated[str, Form()] = "Nominatim",
