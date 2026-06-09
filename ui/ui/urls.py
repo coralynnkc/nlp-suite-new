@@ -21,8 +21,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("install", views.install, name="install"),
-    path("contact", views.contact, name="contact"),
+path("contact", views.contact, name="contact"),
     path("status", views.status, name="status"),
     path("sentiment_analysis", views.sentiment_analysis, name="sentiment_analysis"),
     path("SVO", views.SVO, name="SVO"),
