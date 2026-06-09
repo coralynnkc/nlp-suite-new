@@ -4,7 +4,6 @@
 
 import csv
 import os
-import tkinter.messagebox as mb
 
 import constants_util
 import IO_csv_util
@@ -454,10 +453,7 @@ def search_ngrams_csv_file(
         return
     data = pd.read_csv(csv_file_var)
     if "gram" not in data.columns[0]:
-        mb.showwarning(
-            title="Input file error",
-            message='The selected csv file is not the expected csv N-grams file.\n\nThis file should contain a header with the word "gram".\n\nPlease, select the expected csv file and try again.',
-        )
+        print('Input file error: The selected csv file is not the expected csv N-grams file. This file should contain a header with the word "gram".')
         return
 
     # Check the input parameters, i comment it out for now because we don't know the design
@@ -466,12 +462,7 @@ def search_ngrams_csv_file(
         or plus_K_words_var < 0
         or (minus_K_words_var + plus_K_words_var) > int(data.columns[0][0]) - 1
     ):
-        mb.showwarning(
-            title="Warning",
-            message="The sum of -K and +K values should be < than the n-grams value (so, a 4-ngrams can only have a combination of -K + K values less or equal to 3).\n\nThe n-grams value in your input csv file is "
-            + str(data.columns[0][0])
-            + ".",
-        )
+        print(f"Warning: The sum of -K and +K values should be < than the n-grams value. The n-grams value in your input csv file is {data.columns[0][0]}.")
         return
 
     words = search_keywords_list
@@ -481,7 +472,7 @@ def search_ngrams_csv_file(
         try:
             b, df2 = process_ngrams(data, word, minus_K_words_var, plus_K_words_var)
         except Exception:
-            mb.showwarning(title="Warning", message='The selected input file does not contain the word "' + word + '".')
+            print(f'Warning: The selected input file does not contain the word "{word}".')
             return
         expanded_rows = []
         for _, row in df2.iterrows():
@@ -512,9 +503,7 @@ def search_ngrams_csv_file(
 
     # Check if the combined DataFrame is empty
     if l_sankey[0].empty:
-        mb.showwarning(
-            title="Warning", message="There are no instances of your search word(s) in the selected input file"
-        )
+        print("Warning: There are no instances of your search word(s) in the selected input file")
         return
     combined_pivot_df.to_csv(NgramsSearchFileName, index=False)
 

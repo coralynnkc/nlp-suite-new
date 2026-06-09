@@ -1,7 +1,6 @@
 import codecs  # must be installed
 import csv
 import os
-from tkinter import messagebox
 
 import IO_csv_util  # Angel
 import numpy as np
@@ -47,13 +46,7 @@ class Vectorizer:
                 readerList = list(reader)
                 df = pd.read_csv(narrativeFile, encoding="utf-8", on_bad_lines="skip")  # ANGEL
                 if len(readerList) == 0 or "Sentiment score" not in df.columns:
-                    messagebox.showwarning(
-                        title="Sentiment Analysis Score Error",
-                        message="The file "
-                        + narrativeFile
-                        + " doesn't have any sentiment score.\n\n"
-                        + "The file will be dropped from the analyses.",
-                    )
+                    print(f"Sentiment Analysis Score Error: {narrativeFile} doesn't have any sentiment score. The file will be dropped from the analyses.")
                     filesToDelete.append(narrativeFile)
                     continue
                 # ============== Angel ================= added additional checks for merged file
@@ -66,34 +59,14 @@ class Vectorizer:
                     for index, sub_df in enumerate(splitted):
                         if len(sub_df) == 1:
                             if not self.doNotRepeat1:
-                                messagebox.showwarning(
-                                    title="Sentiment Analysis Score Error",
-                                    message="Document:"
-                                    + doc_ls[index]
-                                    + " only contains one sentiment score.\n\n"
-                                    + "This document will be dropped from the analyses.",
-                                )
-                                doNotRepeat1 = messagebox.askyesno(
-                                    "Python", "Please, show this message again for any similar subsequent warning"
-                                )
-                                self.doNotRepeat1 = not (doNotRepeat1)
+                                print(f"Sentiment Analysis Score Error: Document {doc_ls[index]} only contains one sentiment score. This document will be dropped from the analyses.")
                             splitted.pop(index)
                             continue  # won't add to doclengths list
                         elif len(sub_df) < 10:
+                            result = False
                             if not self.doNotRepeat2:
                                 # TODO should export csv file with culprit files
-                                result = messagebox.askyesno(
-                                    "Sentiment Analysis Score Error",
-                                    "Document "
-                                    + doc_ls[index]
-                                    + " contains less than 10 sentiment scores.\n\n"
-                                    + "The document is too short compared to others in the corpus. It might influence the analysis of shape of stories.\n\n"
-                                    + "Would you like to drop this document from the analyses?",
-                                )
-                                doNotRepeat2 = messagebox.askyesno(
-                                    "Python", "Please, show this message again for any similar subsequent warning"
-                                )
-                                self.doNotRepeat2 = not (doNotRepeat2)
+                                print(f"Sentiment Analysis Score Error: Document {doc_ls[index]} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
                             if result:
                                 splitted.pop(index)
                                 continue
@@ -106,36 +79,16 @@ class Vectorizer:
                 # ==============end of Angel ===============
                 else:  # not a merged file
                     if len(readerList) == 1:
-                        # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Sentiment Analysis Score Error',
-                        #                                            + "The file will be dropped from the analyses.")
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
-                            messagebox.showwarning(
-                                title="Sentiment Analysis Score Error",
-                                message="The file "
-                                + narrativeFile
-                                + " only contains one sentiment score.\n\n"
-                                + "The file will be dropped from the analyses.",
-                            )
-                            doNotRepeat = messagebox.askyesno(
-                                "Python", "Please, do NOT show this message again for any similar subsequent warning?"
-                            )
+                            print(f"Sentiment Analysis Score Error: {narrativeFile} only contains one sentiment score. The file will be dropped from the analyses.")
                         filesToDelete.append(narrativeFile)
                         continue
                     elif len(readerList) < 10:
+                        result = False
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
-                            result = messagebox.askyesno(
-                                "Sentiment Analysis Score Error",
-                                "The file "
-                                + narrativeFile
-                                + " contains less than 10 sentiment scores.\n\n"
-                                + "The file is too short compared to others in the corpus. It might influence the analysis of shape of stories.\n\n"
-                                + "Would you like to drop this file from the analyses?",
-                            )
-                            doNotRepeat = messagebox.askyesno(
-                                "Python", "Please, do NOT show this message again for any similar subsequent warning?"
-                            )
+                            print(f"Sentiment Analysis Score Error: {narrativeFile} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
                         if result:
                             filesToDelete.append(narrativeFile)
                             continue
@@ -235,10 +188,7 @@ class Vectorizer:
         n_features = len(sentiment_vectors[0])
         pca = PCA(n_components=n_features)
         if len(sentiment_vectors) < n_features:
-            messagebox.showwarning(
-                title="Corpus size error",
-                message="The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.\n\nPlease, select a different corpus directory and try again.",
-            )
+            print("Corpus size error: The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.")
             return None
         pca.fit(sentiment_vectors)
         expl_vars = -np.sort(-pca.explained_variance_ratio_)
