@@ -145,42 +145,5 @@ def run_wordcloud(
         ):
             return
     elif visualization_tools == "Python WordCloud":
-        import wordclouds_util
-
-        if not IO_internet_util.check_internet_availability_warning(
-            "wordclouds_main.py"
-        ):
-            return
-        if (
-            differentPOS_differentColor or differentColumns_differentColors
-        ):  # should not process stopwords when useing a csv file in input or POS values
-            exclude_stopwords = True
-        outputFiles = wordclouds_util.python_wordCloud(
-            inputFilename,
-            inputDir,
-            outputDir,
-            config_filename,
-            selectedImage,
-            use_contour_only,
-            prefer_horizontal,
-            font,
-            int(max_words),
-            lemmatize,
-            exclude_stopwords,
-            exclude_punctuation,
-            lowercase,
-            differentPOS_differentColor,
-            differentColumns_differentColors,
-            csvField_color_list,
-            doNotCreateIntermediateFiles,
-            openOutputFiles,
-            collocation,
-        )
-
-        if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
-
+        print("Warning: Python WordCloud is not available. The wordclouds_util module has been removed.")
         return filesToOpen

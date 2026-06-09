@@ -773,43 +773,6 @@ def search_CoNLL_table(
             else:
                 filesToOpen.extend(outputFiles)
 
-        # wordclouds graphs _________________________________________________
-
-        import wordclouds_util
-
-        # run with all default values;
-        prefer_horizontal = 0.9
-        doNotListIndividualFiles = True
-        collocation = False
-        transformed_image_mask = []
-        stopwords = ""
-        column_name = "Co-occurring Token/Word"
-        textToProcess = IO_csv_util.get_csv_field_values(
-            outputFilename, column_name, uniqueValues=False, returnList=False
-        )
-
-        outputFiles = wordclouds_util.display_wordCloud(
-            outputFilename,
-            "",
-            outputDir,
-            textToProcess,
-            doNotListIndividualFiles,
-            transformed_image_mask,
-            stopwords,
-            collocation,
-            prefer_horizontal,
-            bg_image=None,
-            bg_image_flag=True,
-            font=None,
-            max_words=100,
-        )
-
-        if outputFiles is not None:
-            if isinstance(outputFiles, str):
-                filesToOpen.append(outputFiles)
-            else:
-                filesToOpen.extend(outputFiles)
-
     return outputDir, filesToOpen
 
 

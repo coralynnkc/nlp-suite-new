@@ -603,7 +603,6 @@ def SVO(
     filter_objects: Annotated[bool, Form()] = False,
     so_gender: Annotated[bool, Form()] = False,
     so_quote: Annotated[bool, Form()] = False,
-    wordcloud_var: Annotated[bool, Form()] = False,
     google_earth_var: Annotated[bool, Form()] = False,
 ):
     inputFilename = ""
@@ -636,7 +635,6 @@ def SVO(
                 lemmatize_verbs=lemmatize_verbs,
                 lemmatize_objects=lemmatize_objects,
                 gephi_var=False,
-                wordcloud_var=wordcloud_var,
                 google_earth_var=google_earth_var,
             ),
         )

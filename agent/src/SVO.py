@@ -49,7 +49,6 @@ def run_svo(
     lemmatize_verbs,
     lemmatize_objects,
     gephi_var,
-    wordcloud_var,
     google_earth_var,
 ):
 
@@ -665,46 +664,6 @@ def run_svo(
                                 filesToOpen.append(outputFiles)
                             else:
                                 filesToOpen.extend(outputFiles)
-
-            # # wordcloud  _________________________________________________
-
-            if wordcloud_var:
-                import wordclouds_util
-
-                wordcloud_title = "Wordcloud of Subject (red), Verb (blue), Object (green)"
-
-                if inputFilename[-4:] == ".csv":
-                    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(inputFilename)
-                    if nRecords > 1:  # including headers; file is empty
-                        myfile = IO_files_util.openCSVFile(inputFilename, "r")
-                        outputFiles = wordclouds_util.SVOWordCloud(
-                            myfile, inputFilename, tempOutputDir, wordcloud_title, prefer_horizontal=0.9
-                        )
-                        myfile.close()
-                        print("WE GOT HERE")
-                        filesToOpen.append(outputFiles)
-                else:
-                    # for f in svo_result_list:
-                    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(f)
-                    if nRecords > 1:  # including headers; file is empty
-                        myfile = IO_files_util.openCSVFile(f, "r")
-                        # keep separate in case you want to export the 3 Gephi files
-                        #   (normal, lemma, filtered) to different folders
-                        #   now exported to the main SVO subdir
-                        # if 'SVO_lemma' in svo_result_list[i]:
-                        # def SVOWordCloud(svoFile, inputFilename, outputDir, transformed_image_mask, wordcloud_title, prefer_horizontal):
-
-                        outputFiles = wordclouds_util.SVOWordCloud(
-                            myfile,
-                            f,
-                            tempOutputDir,
-                            transformed_image_mask="",
-                            wordcloud_title=wordcloud_title,
-                            prefer_horizontal=0.9,
-                        )
-                        myfile.close()
-                        if "CoreNLP" in f or "OpenIE" in f or "SENNA_SVO" in f or "spaCy" in f or "Stanza" in f:
-                            filesToOpen.append(outputFiles)
 
             i += 1
 

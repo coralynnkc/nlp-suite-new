@@ -571,45 +571,6 @@ def search_ngrams_csv_file(
             with open(NgramsSearchFileName_txt, "w", encoding="utf-8") as f:
                 f.write(q)
 
-            use_contour_only = False
-            max_words = 100
-            font = "Default"
-            prefer_horizontal = 0.9
-            lemmatize = False
-            exclude_stopwords = True
-            exclude_punctuation = True
-            lowercase = False
-
-            differentPOS_differentColors = False
-            differentColumns_differentColors = False
-            csvField_color_list = []
-            doNotListIndividualFiles = True
-            collocation = False
-            import wordclouds_util
-
-            outputFiles2 = wordclouds_util.python_wordCloud(
-                NgramsSearchFileName_txt,
-                "",
-                outputDir,
-                configFileName,
-                selectedImage="",
-                use_contour_only=use_contour_only,
-                wordcloud_title="",
-                prefer_horizontal=prefer_horizontal,
-                font=font,
-                max_words=max_words,
-                lemmatize=lemmatize,
-                exclude_stopwords=exclude_stopwords,
-                exclude_punctuation=exclude_punctuation,
-                lowercase=lowercase,
-                differentPOS_differentColors=differentPOS_differentColors,
-                differentColumns_differentColors=differentColumns_differentColors,
-                csvField_color_list=csvField_color_list,
-                doNotListIndividualFiles=doNotListIndividualFiles,
-                openOutputFiles=False,
-                collocation=collocation,
-            )
-            filesToOpen.extend(outputFiles2)
             import charts_util
 
             headers = IO_csv_util.get_csvfile_headers(NgramsSearchFileName_Sankey)
