@@ -1,16 +1,24 @@
 import os
+import sys
 from threading import Lock, Thread
 from typing import Annotated
 
-import uvicorn
-from fastapi import FastAPI, Form, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, PlainTextResponse
+# Add all src subdirectories to sys.path so flat imports in util files work
+# regardless of which subdirectory the module lives in.
+_src_dir = os.path.dirname(os.path.abspath(__file__))
+for _d in os.listdir(_src_dir):
+    _dp = os.path.join(_src_dir, _d)
+    if os.path.isdir(_dp) and not _d.startswith("."):
+        sys.path.insert(0, _dp)
 
+import uvicorn
 from boxplot_chart import run as run_boxplot
 from colormap_chart import run_colormap
 from CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
 from excel_plotly_charts import run_excel_plotly_charts
+from fastapi import FastAPI, Form, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, PlainTextResponse
 from file_manager_main import run_file_manager
 from file_search_byWord_main import run_search_byWord
 from GIS_main import run_GIS
@@ -82,9 +90,11 @@ app.worker = False
 
 
 def run(app, method):
-    method()
-    app.worker = False
-    _worker_lock.release()
+    try:
+        method()
+    finally:
+        app.worker = False
+        _worker_lock.release()
 
 
 # def run(app, method):
@@ -293,7 +303,7 @@ def topic_modeling(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/parsers_annotators")
+@app.post("/parse")
 def parsers_annotators(
     inputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
@@ -401,7 +411,7 @@ def word2vec(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/CoNLL_table_analyzer_main")
+@app.post("/conll_table")
 def CoNLL_table_analyzer(
     inputDirectory: Annotated[str, Form()],
     searchedCoNLLField: Annotated[str, Form()],
@@ -501,7 +511,7 @@ def style_analysis(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/sunburst_charts")
+@app.post("/sunburst")
 def sunburst_charts(
     sunburst_file_input: Annotated[str, Form()],  # Do we need this?
     inputDirectory: Annotated[str, Form()],
@@ -533,7 +543,7 @@ def sunburst_charts(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/colormap_chart")
+@app.post("/colormap")
 def colormap_chart(
     colormap_file_input: Annotated[str, Form()],
     max_number_of_rows: Annotated[int, Form()],
@@ -563,7 +573,7 @@ def colormap_chart(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/sankey_flowchart")
+@app.post("/sankey")
 def sankey_flowchart(
     inputDirectory: Annotated[str, Form()],
     variable_1_max: Annotated[int, Form()],
@@ -591,7 +601,7 @@ def sankey_flowchart(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/SVO")
+@app.post("/svo")
 def SVO(
     inputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
@@ -646,7 +656,7 @@ def SVO(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/wordclouds")
+@app.post("/wordcloud")
 def wordcloud(
     inputDirectory: Annotated[str, Form()],
     wordcloudservice: Annotated[str, Form()],
@@ -701,7 +711,7 @@ def wordcloud(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/NGrams_CoOccurrences")
+@app.post("/ngrams")
 def NGrams_CoOccurrences(
     inputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
@@ -771,7 +781,7 @@ def NGrams_CoOccurrences(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/filesearchword")
+@app.post("/file_search")
 def filesearchword(
     inputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
@@ -837,7 +847,7 @@ def filesearchword(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/document_statistics")
+@app.post("/statistics")
 def document_statistics(
     inputDirectory: Annotated[str, Form()],
     dataTransformation: Annotated[str, Form()] = "No transformation",
@@ -1064,7 +1074,7 @@ def wordnet(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/shape_of_stories")
+@app.post("/stories")
 def shape_of_stories(
     inputDirectory: Annotated[str, Form()],
     inputFilename: Annotated[str, Form()] = "",
@@ -1107,7 +1117,7 @@ def shape_of_stories(
     return PlainTextResponse("", status_code=200)
 
 
-@app.post("/excel_plotly_charts")
+@app.post("/excel_charts")
 def excel_plotly_charts(
     inputFilename: Annotated[str, Form()],
     csv_field_visualization_var: Annotated[str, Form()] = "",

@@ -28,7 +28,7 @@
     </div>
 
     <div class="toolsGrid" id="toolsGrid">
-      <a href="{% url 'NGrams_CoOccurrences' %}" class="toolCard" data-name="n-grams and word co-occurrences" data-tags="corpus text-analysis">
+      <a href="{% url 'ngrams' %}" class="toolCard" data-name="n-grams and word co-occurrences" data-tags="corpus text-analysis">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">N-Grams &amp; Co-Occurrences</div></div>
         <p class="toolDescription">Frequency and co-occurrence patterns in a corpus</p>
         <div class="cardTags"><span class="cardTag t-corpus">corpus</span><span class="cardTag t-text-analysis">text-analysis</span></div></div>
@@ -42,21 +42,21 @@
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'shape_of_stories' %}" class="toolCard" data-name="shape of stories" data-tags="corpus visualization">
+      <a href="{% url 'stories' %}" class="toolCard" data-name="shape of stories" data-tags="corpus visualization">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Shape of Stories</div></div>
         <p class="toolDescription">Visualize the emotional arc of narratives</p>
         <div class="cardTags"><span class="cardTag t-corpus">corpus</span><span class="cardTag t-visualization">visualization</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'document_statistics' %}" class="toolCard" data-name="document statistics" data-tags="corpus statistics">
+      <a href="{% url 'statistics' %}" class="toolCard" data-name="document statistics" data-tags="corpus statistics">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Document Statistics</div></div>
         <p class="toolDescription">Word counts, sentence lengths, and readability</p>
         <div class="cardTags"><span class="cardTag t-corpus">corpus</span><span class="cardTag t-statistics">statistics</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'filesearchword' %}" class="toolCard" data-name="file search words" data-tags="corpus search">
+      <a href="{% url 'file_search' %}" class="toolCard" data-name="file search words" data-tags="corpus search">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">File Search: Words</div></div>
         <p class="toolDescription">Search your corpus for words or phrases</p>
         <div class="cardTags"><span class="cardTag t-corpus">corpus</span><span class="cardTag t-search">search</span></div></div>
@@ -98,21 +98,21 @@
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'parsers_annotators' %}" class="toolCard" data-name="parsers annotators bert corenlp spacy stanza" data-tags="parsing annotation">
+      <a href="{% url 'parse' %}" class="toolCard" data-name="parsers annotators bert corenlp spacy stanza" data-tags="parsing annotation">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Parsers &amp; Annotators</div></div>
         <p class="toolDescription">BERT, CoreNLP, spaCy, and Stanza pipelines</p>
         <div class="cardTags"><span class="cardTag t-parsing">parsing</span><span class="cardTag t-annotation">annotation</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'CoNLL_table_analyzer_main' %}" class="toolCard" data-name="conll table analyzer" data-tags="parsing annotation">
+      <a href="{% url 'conll_table' %}" class="toolCard" data-name="conll table analyzer" data-tags="parsing annotation">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">CoNLL Table Analyzer</div></div>
         <p class="toolDescription">Analyze CoNLL-format parsed output files</p>
         <div class="cardTags"><span class="cardTag t-parsing">parsing</span><span class="cardTag t-annotation">annotation</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'SVO' %}" class="toolCard" data-name="svo subject verb object" data-tags="parsing syntax">
+      <a href="{% url 'svo' %}" class="toolCard" data-name="svo subject verb object" data-tags="parsing syntax">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">SVO</div></div>
         <p class="toolDescription">Extract subject–verb–object triples</p>
         <div class="cardTags"><span class="cardTag t-parsing">parsing</span><span class="cardTag t-syntax">syntax</span></div></div>
@@ -147,14 +147,14 @@
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'wordclouds' %}" class="toolCard" data-name="wordclouds" data-tags="visualization">
+      <a href="{% url 'wordcloud' %}" class="toolCard" data-name="wordclouds" data-tags="visualization">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Word Clouds</div></div>
         <p class="toolDescription">Generate frequency-based word cloud images</p>
         <div class="cardTags"><span class="cardTag t-visualization">visualization</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'sunburst_charts' %}" class="toolCard" data-name="sunburst charts" data-tags="visualization">
+      <a href="{% url 'sunburst' %}" class="toolCard" data-name="sunburst charts" data-tags="visualization">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Sunburst Charts</div></div>
         <p class="toolDescription">Hierarchical category visualizations</p>
         <div class="cardTags"><span class="cardTag t-visualization">visualization</span></div></div>
@@ -168,21 +168,21 @@
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'colormap_chart' %}" class="toolCard" data-name="color heat map colormap" data-tags="visualization">
+      <a href="{% url 'colormap' %}" class="toolCard" data-name="color heat map colormap" data-tags="visualization">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Color &amp; Heat Map</div></div>
         <p class="toolDescription">Color-coded matrix and heatmap charts</p>
         <div class="cardTags"><span class="cardTag t-visualization">visualization</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'sankey_flowchart' %}" class="toolCard" data-name="sankey flowchart" data-tags="visualization">
+      <a href="{% url 'sankey' %}" class="toolCard" data-name="sankey flowchart" data-tags="visualization">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Sankey Flowchart</div></div>
         <p class="toolDescription">Flow diagrams for relational data</p>
         <div class="cardTags"><span class="cardTag t-visualization">visualization</span></div></div>
         <div class="toolCta">Open →</div>
       </a>
 
-      <a href="{% url 'excel_plotly_charts' %}" class="toolCard" data-name="excel plotly charts" data-tags="visualization">
+      <a href="{% url 'excel_charts' %}" class="toolCard" data-name="excel plotly charts" data-tags="visualization">
         <div><div class="toolTop"><div class="toolDot"></div><div class="toolName">Excel / Plotly Charts</div></div>
         <p class="toolDescription">Export-ready charts for Excel and Plotly</p>
         <div class="cardTags"><span class="cardTag t-visualization">visualization</span></div></div>
