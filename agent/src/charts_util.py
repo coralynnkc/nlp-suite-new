@@ -150,7 +150,6 @@ def visualize_chart_byGroup(
         else:
             filesToOpen.extend(outputFiles)
 
-
     # temp_outputFilename[0] is the frequency filename (with no hyperlinks)
 
     # 0 is the groupBy field with no-hyperlinks (e.g., NER)
@@ -162,9 +161,7 @@ def visualize_chart_byGroup(
     # @@@
     headers = IO_csv_util.get_csvfile_headers(inputFilename, ask_Question=False)
     IO_csv_util.get_columnNumber_from_headerValue(headers, "Document", inputFilename)
-    IO_csv_util.get_columnNumber_from_headerValue(
-        headers, columns_to_be_plotted_yAxis[0], inputFilename
-    )
+    IO_csv_util.get_columnNumber_from_headerValue(headers, columns_to_be_plotted_yAxis[0], inputFilename)
 
     # if chartPackage == "Excel":
     # chart is visualized in compute_csv_column_frequencies
@@ -1610,7 +1607,9 @@ def Sunburst(
             "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
         )
     # the last 3 arguments are optional. If first_sentences is specified and last_sentences is not or vice versa, we return a message stating they must both be specified or absent at the same time
-    if (first_sentences is None and last_sentences is not None) or (first_sentences is not None and last_sentences is None):
+    if (first_sentences is None and last_sentences is not None) or (
+        first_sentences is not None and last_sentences is None
+    ):
         return "both number of first sentences and number of last sentences have to be specified or absent at the same time"
     else:  # Otherwise, we run the Sunburst
         tempdata = separator(data, interest, "Sunburst")  # Create "interest" variable
@@ -1879,7 +1878,6 @@ def read_filename_color(inputFilename):
     try:
         dataFrame = pd.read_csv(inputFilename)
         # Displaying some basic statistics
-
 
         # Display the datatypes
 

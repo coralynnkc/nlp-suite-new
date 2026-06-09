@@ -198,7 +198,6 @@ def sort_output_list(label, _voice_sorted_):
     # the earlier new CoNLL routine always had the extra header date, whether there or not;
     #   so need to test not to break the code
 
-
     # NEW
     # sentence_ID position = 10
 

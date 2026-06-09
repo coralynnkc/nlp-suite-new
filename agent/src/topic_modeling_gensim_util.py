@@ -81,9 +81,7 @@ except:
 
 # find the optimal number of topics for LDA
 def compute_coherence_values(MalletDir, dictionary, corpus, texts, start, limit, step):
-    IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started computing the coherence value for each topic"
-    )
+    IO_user_interface_util.timed_alert(2000, "Analysis start", "Started computing the coherence value for each topic")
     coherence_values = []
     model_list = []
     for num_topics in range(start, limit, step):

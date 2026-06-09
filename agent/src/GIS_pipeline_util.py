@@ -155,7 +155,6 @@ def GIS_pipeline(
     else:
         print("unsure of os, defaulting to mac directory")
 
-
     # if GoogleEarthProDir == None or GoogleEarthProDir == '': #We dont need this potentially
 
     startTime = IO_user_interface_util.timed_alert(

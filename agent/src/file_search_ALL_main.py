@@ -32,8 +32,6 @@ def run():
 # #   output dir
 
 
-
-
 # #setup GUI widgets
 
 
@@ -86,7 +84,6 @@ def run():
 #                                    "Click on the button to open the GUI")
 
 
-
 # # add all the lines to the end to every special GUI
 # # change the last item (message displayed) of each line of the function y_multiplier_integer = help_buttons
 # # any special message (e.g., msg_anyFile stored in GUI_IO_util) will have to be prefixed by GUI_IO_util.
@@ -95,4 +92,3 @@ def run():
 #                               "Please, click on the button to open the GUI for exporting the content of csv field(s) to a text or csv file.\n\nYou can use this option, for instance, to export all the sentences extracted via any of the searches to a txt file for further analysis.")
 
 # # change the value of the readMe_message
-

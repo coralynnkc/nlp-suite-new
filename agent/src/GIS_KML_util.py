@@ -113,7 +113,6 @@ def generate_kml(
         2000, "GIS kml generator", "Started running KML algorithm at", True, "", True, "", silent=True
     )
 
-
     result = IO_files_util.openCSVFile(inputGeocodedCsvFile, "r", encodingValue)
     if result == "":
         return ""

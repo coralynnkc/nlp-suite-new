@@ -52,7 +52,6 @@ def run_ngrams(
         )
         return
 
-
     print("language_list", language_list)
 
     total_file_number = 0

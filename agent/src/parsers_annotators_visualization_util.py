@@ -683,9 +683,7 @@ def parsers_annotators_visualization(
 
 
 # the gender annotator displays results in an html file
-def visualize_html_file(
-    inputFilename, inputDir, outputDir, configFileName, dictFilename, genderCol=None, wordCol=None
-):
+def visualize_html_file(inputFilename, inputDir, outputDir, configFileName, dictFilename, genderCol=None, wordCol=None):
     import html_annotator_dictionary_util
 
     if wordCol is None:

@@ -146,9 +146,7 @@ def clause_stats(
 
     # output file names
     # clausal_analysis_file_name contains all the CoNLL table records that have a clausal tag
-    IO_files_util.generate_output_file_name(
-        inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "list"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "list")
     # clausal_analysis_stats_file_name will contain a data sheet with the frequency distribution of all available clausal tags and a chart sheet with the pie chart visualization of the data
 
     # if 0:
@@ -165,7 +163,6 @@ def clause_stats(
         else:
             filesToOpen.extend(outputFiles)
 
-
     clausal_stats, clausal_list = clause_data_preparation(data)
     if len(clausal_list) == 0:
         # mb.showwarning(title='Input file error',
@@ -179,9 +176,7 @@ def clause_stats(
     clausal_analysis_stats_file_name = IO_files_util.generate_output_file_name(
         inputFilename, inputDir, outputDir, ".csv", "CA", "Clause tags", "stats"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "CA", "Clause tags", "list"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "CA", "Clause tags", "list")
     # convert list to dataframe and save
     df = pd.DataFrame(clausal_list)
     df.columns = [

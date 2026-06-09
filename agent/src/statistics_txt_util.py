@@ -83,7 +83,6 @@ from nltk.corpus import wordnet
 # to compute bigrams, 3-grams, ...
 
 
-
 # https://stackoverflow.com/questions/24347029/python-nltk-bigrams-trigrams-fourgrams
 # def compute_word_ngrams(inputFilename,outputFilename):
 #     for grams in grams2 :
@@ -177,7 +176,6 @@ def compute_corpus_statistics(
     inputDocs = IO_files_util.getFileList(
         inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
     )
-
 
     Ndocs = str(len(inputDocs))
     fieldnames = [
@@ -1413,7 +1411,6 @@ def process_words(
                 # REPEATED WORDS END OF SENTENCE/BEGINNING NEXT SENTENCE  --------------------------------------------------------------------------
                 if "Repetition: Last" in processType:
                     for wrdID, wrd in enumerate(words_with_stop):
-
                         header = [
                             "First/Last Sentence",
                             "K Value",
@@ -1608,9 +1605,7 @@ def convert_txt_file(inputFilename, inputDir, outputDir, openOutputFiles, exclud
                     word_tokenize_stanza,
                 )
 
-                set(
-                    lemmatize_stanza(stanzaPipeLine(w.lower())) for w in fullText.split(" ") if w.isalpha()
-                )
+                set(lemmatize_stanza(stanzaPipeLine(w.lower())) for w in fullText.split(" ") if w.isalpha())
                 words = set(lemmatizing(w.lower()) for w in words if w.isalpha())  # fullText.split(" ") if w.isalpha())
 
 
@@ -1699,9 +1694,6 @@ def compute_sentence_text_readability(
             outputTxtFile.write(file + "\n\n")
 
             # This legenda is now available as a TIPS file
-
-
-
 
             outputTxtFile.write(
                 "RESULTS -----------------------------------------------------------------------------------------------------------------------------------------------\n\n"

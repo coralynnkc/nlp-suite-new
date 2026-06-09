@@ -5,10 +5,8 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(
-        GUI_util.window, "file_classifier_date_util.py", ["os", "tkinter", "shutil"]
-    )
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_classifier_date_util.py", ["os", "tkinter", "shutil"]
 ):
     sys.exit(0)
 

@@ -3,9 +3,7 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(GUI_util.window, "file_splitter_ByString", ["os", "io", "shutil"])
-):
+if not IO_libraries_util.install_all_Python_packages(GUI_util.window, "file_splitter_ByString", ["os", "io", "shutil"]):
     sys.exit(0)
 
 import os
@@ -31,7 +29,6 @@ def splitDocument_byStrings(inputFilename, outputPath, target, spot_one, spot_tw
         # remove/delete and recreate directory
         shutil.rmtree(newOutputPath)
         os.mkdir(newOutputPath)
-
 
     f = open(inputFilename, encoding="utf-8", errors="ignore")
     content = f.readlines()

@@ -6,10 +6,8 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(
-        GUI_util.window, "annotator_gender_main.py", ["os", "tkinter", "datetime"]
-    )
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "annotator_gender_main.py", ["os", "tkinter", "datetime"]
 ):
     sys.exit(0)
 
@@ -189,23 +187,24 @@ def run(
 # def run(inputFilename,input_main_dir_path,outputDir, dictionary_var, annotator_dictionary, DBpedia_var, annotator_extractor, openOutputFiles):
 def run_script_command():
     return run(
-    GUI_util.inputFilename.get(),
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    CoreNLP_gender_annotator_var.get(),
-    CoreNLP_download_gender_file_var.get(),
-    CoreNLP_upload_gender_file_var.get(),
-    annotator_dictionary_var.get(),
-    annotator_dictionary_file_var.get(),
-    personal_pronouns_var.get(),
-    plot_var.get(),
-    year_state_var.get(),
-    firstName_entry_var.get(),
-    new_SS_folders,
-)
+        GUI_util.inputFilename.get(),
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        CoreNLP_gender_annotator_var.get(),
+        CoreNLP_download_gender_file_var.get(),
+        CoreNLP_upload_gender_file_var.get(),
+        annotator_dictionary_var.get(),
+        annotator_dictionary_file_var.get(),
+        personal_pronouns_var.get(),
+        plot_var.get(),
+        year_state_var.get(),
+        firstName_entry_var.get(),
+        new_SS_folders,
+    )
+
 
 GUI_util.run_button.configure(command=run_script_command)
 
@@ -731,8 +730,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "The Python 3 scripts provide ways of annotating text files for the gender (female/male) of first names found in the text.\n\nTwo different types of gender annotation are applied.\n\n  1. Stanford CoreNLP gender annotator. This annotator requires Coref annotator which only has about 60% accuracy.\n\n  2. A second approach is based on a variety of first name lists (e.g., US Census name lists, Social Security lists, Carnegie Mellon lists). As a point of warning, it should be noted that many first names may be both male or female first names (e.g., Jamie in the US), sometimes depending upon the country (e.g., Andrea is a male name in Italy and a female name in the US)."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

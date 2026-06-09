@@ -7,10 +7,8 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(
-        GUI_util.window, "Summary CoreNLP Checker", ["nltk", "stanfordcorenlp", "os", "tkinter", "glob"]
-    )
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "Summary CoreNLP Checker", ["nltk", "stanfordcorenlp", "os", "tkinter", "glob"]
 ):
     sys.exit(0)
 

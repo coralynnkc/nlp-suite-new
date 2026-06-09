@@ -306,7 +306,6 @@ def CoreNLP_annotate(
     else:
         language_encoding = "utf-8-sig"
 
-
     # more annotators may be added to SVO later depending upon the annotators_params passed to SVO
     #   you do not want to add coref, quote, gender, unless required
     SVO_annotators = ["tokenize", "ssplit", "pos", "depparse", "natlog", "lemma", "ner"]
@@ -2619,7 +2618,6 @@ def process_json_all_postag(config_filename, documentID, document, sentenceID, r
                 temp.append(date_str)
             result.append(temp)
             # if dateInclude == 1 and dateStr!='DATE ERROR!!!':
-
 
         check_sentence_length(len(tokens), sentenceID, config_filename)
 

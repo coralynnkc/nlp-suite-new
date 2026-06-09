@@ -818,7 +818,6 @@ def display_download_installation_messages(
 
     # setup general variables -----------------------------------------------------------------------------
 
-
     # Mac setup general variables --------------------------------------------------------------------------------------
     if platform == "darwin":
         Mac_Applications_label = " directory (NOT Mac Applications!) "

@@ -169,9 +169,7 @@ def verb_voice_stats(
     verb_voice_list, voice_stats, voice_pass, voice_aux, voice_act = voice_output(data_prep, data_divided_sents)
     # output file names
     # NVA Noun Verb Analysis
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "NVA", "Verb Voice", "list"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Verb Voice", "list")
     verb_voice_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Verb Voice"
     )
@@ -341,9 +339,7 @@ def verb_modality_stats(
     )
     # output file names
     # NVA Noun Verb Analysis
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "NVA", "Verb Modality list"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Verb Modality list")
     verb_modality_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Verb Modality"
     )

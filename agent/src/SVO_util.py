@@ -97,7 +97,6 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
             elif not pd.isnull(CoreNLP_df.iloc[i, 0]):
                 open_ie_sv.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], O=""))
 
-
     for i in range(len(senna_df)):
         # if pd.notnull(senna_df.iloc[i, 4]):
         #     if not pd.isnull(senna_df.iloc[i, 3]) and not pd.isnull(senna_df.iloc[i, 5]):  # Has S, V, O
@@ -676,7 +675,6 @@ def lemmatize_filter_svo(
 #     """
 
 
-
 #     startTime = IO_user_interface_util.timed_alert(window, 2000, 'Analysis start',
 #                                                    True, '', True)
 
@@ -761,7 +759,6 @@ def lemmatize_filter_svo(
 #     if nRecords_lemma > 1 or nRecords_filter >1:
 #         if lemmatize_s or lemmatize_v or lemmatize_o:
 #         if filter_s or filter_v or filter_o:
-
 
 
 def normalize_date_svo(inputFilename, outputDir, chartPackage="Excel", dataTransformation="No transformation"):

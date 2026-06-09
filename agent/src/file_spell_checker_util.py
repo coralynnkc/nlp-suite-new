@@ -182,7 +182,6 @@ def nltk_unusual_words(
         if nFile == 1:
             return
 
-
     # NLTK unusual words
     chartPackage = "No charts"  # no point exporting charts
     if chartPackage != "No charts":

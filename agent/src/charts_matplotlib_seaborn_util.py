@@ -5,9 +5,7 @@ import pandas as pd
 import seaborn as sns
 
 
-def MALLET_heatmap(
-    composition_file, topics_file, outputDir, fig_set=None, show_topics=True
-):
+def MALLET_heatmap(composition_file, topics_file, outputDir, fig_set=None, show_topics=True):
     if fig_set is None:
         fig_set = {"figure.figsize": (8, 6), "figure.dpi": 300}
     try:

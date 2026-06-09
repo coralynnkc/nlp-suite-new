@@ -29,7 +29,6 @@ def run_excelCharts(
     hover_info_column_list,
 ):
 
-
     filesToOpen = []  # Store all files that are to be opened once finished
 
     if len(chart_type) == 0:
@@ -82,20 +81,18 @@ def run_excelCharts(
     for _i in range(len(selected_series)):
         series_label_list.append("")
     print("series_label_list", series_label_list)
-    if (
-        charts_Excel_util.create_excel_chart(
-            data_to_be_plotted,
-            output_file_name,
-            chart_title,
-            chart_type_list,
-            column_xAxis_label_var,
-            column_yAxis_label_var,
-            hover_info_column_list,
-            reverse_column_postion_for_series_label,
-            series_label_list,
-            second_y_var,
-            second_yAxis_label_var,
-        )
+    if charts_Excel_util.create_excel_chart(
+        data_to_be_plotted,
+        output_file_name,
+        chart_title,
+        chart_type_list,
+        column_xAxis_label_var,
+        column_yAxis_label_var,
+        hover_info_column_list,
+        reverse_column_postion_for_series_label,
+        series_label_list,
+        second_y_var,
+        second_yAxis_label_var,
     ):
         return
     filesToOpen.append(output_file_name)

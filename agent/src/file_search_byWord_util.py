@@ -147,7 +147,6 @@ def search_in_document(
 
     tokenize_stanza_text(stanzaPipeLine(docText))
 
-
     # @@@@@
     # if exact_word_match:
 
@@ -163,7 +162,6 @@ def search_in_document(
         if frequency_keyword == 0:
             # document search
             search_keywords_NOT_found.append([keyword, docIndex, IO_csv_util.dressFilenameForCSVHyperlink(file)])
-
 
         if create_subcorpus_var and frequency_keyword > 0:
             corpus_to_copy.add(file)

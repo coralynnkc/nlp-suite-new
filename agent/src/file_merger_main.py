@@ -65,19 +65,20 @@ def run(
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 def run_script_command():
     return run(
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    merge_subdir_var.get(),
-    merge_save_fileName_var.get(),
-    merge_embed_filenames_inStringSeparators_var.get(),
-    merge_separator_entry_begin_var.get(),
-    merge_separator_entry_end_var.get(),
-    merge_embed_subdir_name_var.get(),
-    merge_character_separator_var.get(),
-)
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        merge_subdir_var.get(),
+        merge_save_fileName_var.get(),
+        merge_embed_filenames_inStringSeparators_var.get(),
+        merge_separator_entry_begin_var.get(),
+        merge_separator_entry_end_var.get(),
+        merge_embed_subdir_name_var.get(),
+        merge_character_separator_var.get(),
+    )
+
 
 GUI_util.run_button.configure(command=run_script_command)
 
@@ -334,8 +335,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "This Python 3 script merges txt files into a single txt file with a number of processing options.\n\nYou can also create simple merged files in command prompt/terminal. Please, read the TIPS filke TIPS_NLP_File merger.pdf for instructions."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

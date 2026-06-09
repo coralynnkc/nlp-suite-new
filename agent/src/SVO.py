@@ -117,7 +117,6 @@ def run_svo(
             )
             return
 
-
     annotator = ["SVO"]
     svo_result_list = []
     location_filename = ""
@@ -163,7 +162,6 @@ def run_svo(
         outputSVOSVODir = outputSVODir + os.sep + "SVO"
 
     # CoRef _____________________________________________________
-
 
     if coref_var:
         # must be changed

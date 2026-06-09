@@ -73,7 +73,6 @@ if not os.path.isfile(vader):
 # ONLY -2.9 IS USED
 
 
-
 # performs sentiment analysis on inputFile using the NLTK, outputting results to a new CSV file in outputDir
 def analyzefile(inputFilename, outputDir, outputFilename, mode, Document_ID, Document):
     """

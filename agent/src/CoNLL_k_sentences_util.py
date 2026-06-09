@@ -57,7 +57,6 @@ def k_sent(inputFilename, outputDir, chartPackage, dataTransformation, Begin_K_s
     rep_words_first = []
     rep_words_last = []
 
-
     txt = ""
 
     for i in range(1, max(conll["Document ID"]) + 1):

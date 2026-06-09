@@ -136,12 +136,7 @@ def run(
                 title="Option under testing",
                 message="The dictionary option is not completed yet.\n\nPlease, use with caution.",
             )
-        if (
-            not by_all_words_var
-            and not byNER_value_var
-            and not spelling_checker_var
-            and not bydictionary_value_var
-        ):
+        if not by_all_words_var and not byNER_value_var and not spelling_checker_var and not bydictionary_value_var:
             mb.showwarning(
                 title="No selected options",
                 message="No options have been seleced.\n\nPlease, select one of the available options and try again.",
@@ -202,23 +197,24 @@ def run(
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 def run_similarity_command():
     return run(
-    GUI_util.inputFilename.get(),
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    by_all_words_var.get(),
-    bydictionary_value_var.get(),
-    selectedCsvFile_var.get(),
-    byNER_value_var.get(),
-    NER_list,
-    similarity_value_var.get(),
-    check_withinSubDir_var.get(),
-    spelling_checker_var.get(),
-    checker_value_var.get(),
-    check_withinDir_spell_checker_var.get(),
-)
+        GUI_util.inputFilename.get(),
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        by_all_words_var.get(),
+        bydictionary_value_var.get(),
+        selectedCsvFile_var.get(),
+        byNER_value_var.get(),
+        NER_list,
+        similarity_value_var.get(),
+        check_withinSubDir_var.get(),
+        spelling_checker_var.get(),
+        checker_value_var.get(),
+        check_withinDir_spell_checker_var.get(),
+    )
+
 
 GUI_util.run_button.configure(command=run_similarity_command)
 
@@ -617,7 +613,6 @@ def activate_all_options(*args):
         Levenshtein_distance_checkbox.configure(state="normal")
 
 
-
 activate_all_options()
 
 videos_lookup = {"No videos available": ""}
@@ -731,8 +726,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "This Python 3 script provides a way of checking for word similarieties (or dissimilarities) using the Levenshtein's distance (also popularly called the edit distance). The algorithm can also be used to check word spelling.\n\nIn INPUT the scripts expect a directory where the software Stanford CoreNLP has been downloaded and a main drectory where txt files to be analyzed are stored.\n\nIn OUTPUT, the scripts will save the csv files and Excel charts written by the various scripts. The csv output list contains words with a frequency greater than 1."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

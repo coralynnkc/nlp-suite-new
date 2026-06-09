@@ -151,7 +151,6 @@ def noun_POSTAG_NER_DEPREL_compute_lists_frequencies(data, data_divided_sents):
     return list_nouns_postag, list_nouns_deprel, list_nouns_ner, noun_postag_stats, noun_deprel_stats, noun_ner_stats
 
 
-
 def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFiles, chartPackage, dataTransformation):
 
     filesToOpen = []  # Store all files that are to be opened once finished
@@ -172,9 +171,7 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
     noun_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Noun-ALL", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "stats"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "stats")
 
     noun_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Noun", "POSTAG_list"
@@ -185,15 +182,9 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
     noun_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "NVA", "Noun", "DEPREL_list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "POSTAG_stats"
-    )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "NER_stats"
-    )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "NVA", "Noun", "DEPREL_stats"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "POSTAG_stats")
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "NER_stats")
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "NVA", "Noun", "DEPREL_stats")
 
     # save csv files -------------------------------------------------------------------------------------------------
     # ALL nouns
@@ -454,6 +445,5 @@ def noun_stats(inputFilename, outputDir, data, data_divided_sents, openOutputFil
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
-
 
     return filesToOpen

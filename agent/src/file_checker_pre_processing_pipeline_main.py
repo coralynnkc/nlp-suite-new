@@ -5,10 +5,8 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(
-        GUI_util.window, "file_checker_pre_processing_pipeline_main", ["os", "tkinter", "subprocess"]
-    )
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_checker_pre_processing_pipeline_main", ["os", "tkinter", "subprocess"]
 ):
     sys.exit(1)
 
@@ -28,17 +26,18 @@ import statistics_txt_util
 
 # RUN section ______________________________________________________________________________________________________________________________________________________
 
+
 def run_script_command():
     return run(
-    GUI_util.inputFilename.get(),
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    utf8_var.get(),
-    ASCII_var.get(),
-)
+        GUI_util.inputFilename.get(),
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        utf8_var.get(),
+        ASCII_var.get(),
+    )
 
 
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
@@ -617,8 +616,11 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "The GUI brings together various Python 3 scripts to buil a pipeline for data quality checking of a corpus, automatically extracting all relevant data from texts and visualizing the results.\n\nEach tool performs all required computations then saves results as csv files and visualizes them."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
 
 GUI_util.GUI_bottom(
     config_filename,

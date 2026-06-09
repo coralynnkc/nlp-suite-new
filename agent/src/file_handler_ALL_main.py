@@ -18,6 +18,7 @@ def run():
 def run_script_command():
     return run()
 
+
 GUI_util.run_button.configure(command=run_script_command)
 
 # GUI section ______________________________________________________________________________________________________________________________________________________
@@ -253,8 +254,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 readMe_message = (
     "The GUI allows you to access all the specialized functions available in the NLP Suite for handling files."
 )
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

@@ -246,36 +246,37 @@ def run(
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 def run_script_command():
     return run(
-    GUI_util.inputFilename.get(),
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    split_mergedFile_var.get(),
-    split_mergedFile_separator_entry_begin_var.get(),
-    split_mergedFile_separator_entry_end_var.get(),
-    extract_BME_K_sentences_var.get(),
-    Begin_K_sent_var.get(),
-    End_K_sent_var.get(),
-    TOC_var.get(),
-    TOC_filename_var.get(),
-    docLength_var.get(),
-    split_docLength_var.get(),
-    keyword_var.get(),
-    keyword_value_var.get(),
-    lemmatize_var.get(),
-    first_occurrence_var.get(),
-    extract_sentences_var.get(),
-    extract_sentences_search_words_var.get(),
-    string_var.get(),
-    string_value_var.get(),
-    blankLine_var.get(),
-    number_var.get(),
-    post_num_string_value_var.get(),
-    split_csv_by_documentID_var.get(),
-    menu_option,
-)
+        GUI_util.inputFilename.get(),
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        split_mergedFile_var.get(),
+        split_mergedFile_separator_entry_begin_var.get(),
+        split_mergedFile_separator_entry_end_var.get(),
+        extract_BME_K_sentences_var.get(),
+        Begin_K_sent_var.get(),
+        End_K_sent_var.get(),
+        TOC_var.get(),
+        TOC_filename_var.get(),
+        docLength_var.get(),
+        split_docLength_var.get(),
+        keyword_var.get(),
+        keyword_value_var.get(),
+        lemmatize_var.get(),
+        first_occurrence_var.get(),
+        extract_sentences_var.get(),
+        extract_sentences_search_words_var.get(),
+        string_var.get(),
+        string_value_var.get(),
+        blankLine_var.get(),
+        number_var.get(),
+        post_num_string_value_var.get(),
+        split_csv_by_documentID_var.get(),
+        menu_option,
+    )
+
 
 GUI_util.run_button.configure(command=run_script_command)
 
@@ -1060,8 +1061,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "These Python 3 scripts split txt files into separate txt files with a number of processing options."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

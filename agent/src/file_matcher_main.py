@@ -57,7 +57,6 @@ def run(
         number_of_items,
     )
 
-
     # For cases where matching files beginning with a dot (.); like files in the current directory or hidden files on Unix based system, use the os.walk
     # include_subdir_var
     # for filename in glob.iglob(inputPath + os.sep+ '*.'+by_file_type_var, recursive=True):
@@ -76,21 +75,22 @@ def run(
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 def run_script_command():
     return run(
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    selectedCsvFile_var.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    find_var.get(),
-    source_file_type_menu_var.get(),
-    target_file_type_menu_var.get(),
-    matching_var.get(),
-    copy_var.get(),
-    move_var.get(),
-    character_value_var.get(),
-    number_of_items_var.get(),
-)
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        selectedCsvFile_var.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        find_var.get(),
+        source_file_type_menu_var.get(),
+        target_file_type_menu_var.get(),
+        matching_var.get(),
+        copy_var.get(),
+        move_var.get(),
+        character_value_var.get(),
+        number_of_items_var.get(),
+    )
+
 
 GUI_util.run_button.configure(command=run_script_command)
 
@@ -491,8 +491,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "The Python 3 script allows you to find matches between any SOURCE file of a selected type (e.g., pdf) and TARGET files with the same filename but same/different type (e.g., docx).\n\nThe script is very useful, for instance, for identifying pdf files that have been manually transcribed (or automatically converted) to doc/docx or txt format. But it can be used more generally to identify files with the same filename and different extensions.\n\nIn INPUT the algorithm expects a directory containing a set of files. All files in that directory will be processed against all selected-type files in all subdirectories (thus, to search your entire computer drive, select your top directory).\n\nIn OUTPUT the algorithm will produce 3 csv files listing MATCHED and UNMATCHED files. It will also list all DUPLICATE files found.\n\nThe output files will be placed inside the top searched INPUT directory regardless of selected OUTPUT directory in the I/O configuration."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

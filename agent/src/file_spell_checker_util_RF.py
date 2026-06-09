@@ -134,7 +134,6 @@ def nltk_unusual_words(window, inputFilename, inputDir, outputDir, openOutputFil
         if nFile == 1:
             return
 
-
     # NLTK unusual words
     if chartPackage != "No charts":
         if nFile > 10:
@@ -362,7 +361,6 @@ def check_for_typo(
                 NLP = StanfordCoreNLP("http://localhost", port=9000)
             sentences = tokenize_stanza_text(stanzaPipeLine(text))
             documents.append([sentences, filename, dir_path])
-
 
     if by_all_tokens_var:
         # TODO header_rows ends up including filename as well; must only include the words in the documents

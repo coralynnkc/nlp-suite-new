@@ -128,11 +128,9 @@ def main(inputFilename, inputDir, outputDir, configFileName, chartPackage, dataT
     :return:
     """
 
-    if (
-        not lib_util.checklibFile(
-            GUI_IO_util.concreteness_libPath + os.sep + "Concreteness_ratings_Brysbaert_et_al_BRM.csv",
-            "style_analysis_style_analysis_abstract_concreteness_analysis_util.py",
-        )
+    if not lib_util.checklibFile(
+        GUI_IO_util.concreteness_libPath + os.sep + "Concreteness_ratings_Brysbaert_et_al_BRM.csv",
+        "style_analysis_style_analysis_abstract_concreteness_analysis_util.py",
     ):
         return
 

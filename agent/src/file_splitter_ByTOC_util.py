@@ -11,10 +11,8 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(
-        GUI_util.window, "File_splitter_ByTOC", ["os", "io", "re", "ntpath", "tkinter", "shutil"]
-    )
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "File_splitter_ByTOC", ["os", "io", "re", "ntpath", "tkinter", "shutil"]
 ):
     sys.exit(0)
 

@@ -5,7 +5,6 @@ AGENT_MOUNT_PATH = "/root/nlp-suite"
 
 def call_wordnet_api(cmd, call_list, args):
 
-
     api_url = f"http:localhost:7070/{cmd}"
 
     payload = {"cmd": cmd, "call_list": {call_list}}

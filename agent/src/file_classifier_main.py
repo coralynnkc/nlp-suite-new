@@ -5,10 +5,8 @@ import sys
 import GUI_util
 import IO_libraries_util
 
-if (
-    not IO_libraries_util.install_all_Python_packages(
-        GUI_util.window, "file_classifier_main.py", ["os", "tkinter", "subprocess"]
-    )
+if not IO_libraries_util.install_all_Python_packages(
+    GUI_util.window, "file_classifier_main.py", ["os", "tkinter", "subprocess"]
 ):
     sys.exit(0)
 
@@ -110,21 +108,22 @@ def run(
 # the values of the GUI widgets MUST be entered in the command otherwise they will not be updated
 def run_script_command():
     return run(
-    GUI_util.input_main_dir_path.get(),
-    GUI_util.input_secondary_dir_path.get(),
-    GUI_util.output_dir_path.get(),
-    GUI_util.open_csv_output_checkbox.get(),
-    GUI_util.charts_package_options_widget.get(),
-    GUI_util.data_transformation_options_widget.get(),
-    by_date_var.get(),
-    date_format.get(),
-    items_separator_var.get(),
-    date_position_var.get(),
-    date_distance_value_var.get(),
-    date_type_var.get(),
-    by_NER_var.get(),
-    similarityIndex_var.get(),
-)
+        GUI_util.input_main_dir_path.get(),
+        GUI_util.input_secondary_dir_path.get(),
+        GUI_util.output_dir_path.get(),
+        GUI_util.open_csv_output_checkbox.get(),
+        GUI_util.charts_package_options_widget.get(),
+        GUI_util.data_transformation_options_widget.get(),
+        by_date_var.get(),
+        date_format.get(),
+        items_separator_var.get(),
+        date_position_var.get(),
+        date_distance_value_var.get(),
+        date_type_var.get(),
+        by_NER_var.get(),
+        similarityIndex_var.get(),
+    )
+
 
 GUI_util.run_button.configure(command=run_script_command)
 
@@ -358,8 +357,12 @@ y_multiplier_integer = help_buttons(window, GUI_IO_util.help_button_x_coordinate
 
 # change the value of the readMe_message
 readMe_message = "The Python 3 script provides a way to classify unsorted files into the proper subdirectory using either a naive approach based on dates embedded in the filenames or a more sophisticated approach based on social actors and CoreNLP NER values of location, date, person, organization.\n\nThe NER classifier \n\nThe script will first build a dictionary of NER values for the documents in each subfolder, then process each unclassified document.\n\nIn INPUT the script takes two directories:\n  1. a main directory containing a list of SOURCE files with a date embedded in the filename;\n  2. a secondary directory containing a set of TARGET subdirectories, each with a set of files also with embedded dates.\n\nIn OUTPUT the sript produces a 2-columns csv file with: SOURCE filename; TARGET subdirectory.\n\nThe csv output file, after inspection, can be used to move the SOURCE files to the TARGET subdirectory.\n\nThe script processes each file in the SOURCE directory against each file in each sub-directory in the TARGET directory to compare embedded dates."
+
+
 def readMe_command():
     return GUI_IO_util.display_help_button_info("NLP Suite Help", readMe_message)
+
+
 GUI_util.GUI_bottom(
     config_filename,
     config_input_output_numeric_options,

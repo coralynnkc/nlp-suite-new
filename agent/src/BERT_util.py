@@ -263,7 +263,6 @@ def word_embeddings_BERT(
     # Creates the word embeddings per word and stores each embedding as an element in a list called embeddings
     word_vectors = model.encode(words_to_embed)
 
-
     # Creates key-value pairs of words and their corresponding vectors to be added to csv file output
     # showing words and their corresponding multidimensional vectors
     for w, e in zip(words_to_embed, word_vectors, strict=False):
@@ -515,7 +514,6 @@ def sentiment_main(
     dataTransformation="No Transformation",
     model_path="cardiffnlp/twitter-xlm-roberta-base-sentiment",
 ):
-
     """
     Runs analyzefile on the appropriate files, provided that the input paths are valid.
     :param inputFilename:
@@ -566,9 +564,7 @@ def sentiment_main(
                         inputFilename, outputDir, outputFilename, mode, 1, inputFilename, model_path
                     )
                 )
-                sentiment_analysis_BERT(
-                    inputFilename, outputDir, outputFilename, mode, 1, inputFilename, model_path
-                )
+                sentiment_analysis_BERT(inputFilename, outputDir, outputFilename, mode, 1, inputFilename, model_path)
             else:
                 print('Input file "' + inputFilename + '" is invalid.')
                 sys.exit(1)

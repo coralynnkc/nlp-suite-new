@@ -217,10 +217,8 @@ def run_sentiment_analysis(
 
     if anew_var == 1 and (mean_var or median_var):
         if language == "English":
-            if (
-                not lib_util.checklibFile(
-                    GUI_IO_util.sentiment_libPath + os.sep + "EnglishShortenedANEW.csv", "sentiment_analysis_ANEW"
-                )
+            if not lib_util.checklibFile(
+                GUI_IO_util.sentiment_libPath + os.sep + "EnglishShortenedANEW.csv", "sentiment_analysis_ANEW"
             ):
                 return
             if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_ANEW_util.py"):
@@ -240,10 +238,8 @@ def run_sentiment_analysis(
     import sentiment_analysis_hedonometer_util
 
     if SA_algorithm_var == "*" or hedonometer_var == 1 and (mean_var or median_var):
-        if (
-            not lib_util.checklibFile(
-                GUI_IO_util.sentiment_libPath + os.sep + "hedonometer.json", "sentiment_analysis_hedonometer_util.py"
-            )
+        if not lib_util.checklibFile(
+            GUI_IO_util.sentiment_libPath + os.sep + "hedonometer.json", "sentiment_analysis_hedonometer_util.py"
         ):
             return
         if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_hedonometer_util.py"):
@@ -285,10 +281,8 @@ def run_sentiment_analysis(
 
     if SA_algorithm_var == "*" or vader_var == 1 and (mean_var or median_var):
         if language == "English":
-            if (
-                not lib_util.checklibFile(
-                    GUI_IO_util.sentiment_libPath + os.sep + "vader_lexicon.txt", "sentiment_analysis_VADER_util.py"
-                )
+            if not lib_util.checklibFile(
+                GUI_IO_util.sentiment_libPath + os.sep + "vader_lexicon.txt", "sentiment_analysis_VADER_util.py"
             ):
                 return
             if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_VADER_util.py"):

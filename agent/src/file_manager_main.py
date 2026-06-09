@@ -190,12 +190,7 @@ def run_file_manager(
         # You can in fact have a blank entry
         # if rename_new_entry=='' and string_entry_var=='':
         # if rename_new_entry=='':
-        if (
-            not by_prefix_var
-            and not by_substring_var
-            and not by_foldername_var
-            and not by_embedded_items_var
-        ):
+        if not by_prefix_var and not by_substring_var and not by_foldername_var and not by_embedded_items_var:
             print(
                 "You have selected the option to Rename files but you have not selected any of the available options for renaming the files.\n\nPlease, make a selection and enter the appropriate values and try again."
             )
@@ -441,7 +436,6 @@ def run_file_manager(
     )
     if outputFiles:
         filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
-
 
     if i > 0:
         if rename_var == 1:

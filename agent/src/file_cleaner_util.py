@@ -805,7 +805,6 @@ def remove_blank_lines(
 # a shorter (user determined) sentence in number of words
 
 
-
 # Check whether a sentence is title
 # criteria for title are no puntuation and a shorter (user determined) sentence
 def isTitle(sentence, Title_length_limit):

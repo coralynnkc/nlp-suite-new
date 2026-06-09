@@ -178,11 +178,9 @@ def main(
     :return:
     """
 
-    if (
-        not lib_util.checklibFile(
-            GUI_IO_util.iconicity_libPath + os.sep + "iconicity_ratings.csv",
-            "style_analysis_iconicity_analysis_util.py",
-        )
+    if not lib_util.checklibFile(
+        GUI_IO_util.iconicity_libPath + os.sep + "iconicity_ratings.csv",
+        "style_analysis_iconicity_analysis_util.py",
     ):
         return
 

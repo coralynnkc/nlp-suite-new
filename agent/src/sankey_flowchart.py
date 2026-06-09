@@ -19,7 +19,6 @@ def run_sankey(
 
     file = first_csv(inputDir)
 
-
     # # @@@ nan values will break the code
 
     output_label = "Sankey"

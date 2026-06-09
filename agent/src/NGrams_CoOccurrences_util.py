@@ -41,9 +41,7 @@ def one_text_res(
         co_occurring = False
         sentIndex += 1
         for search_word in search_keywords_list:
-            get_search_word_from_text(
-                sentences, search_word, lemmatize, sentence, case_sensitive, exact_word_match
-            )
+            get_search_word_from_text(sentences, search_word, lemmatize, sentence, case_sensitive, exact_word_match)
 
             if keywords_co_occurr(search_keywords_list, sentence):
                 co_occurring = True
@@ -98,9 +96,7 @@ def search_within_sentence_coOccurences(
             co_occurring = False
             sentIndex += 1
             for search_word in search_keywords_list:
-                get_search_word_from_text(
-                    sentence, search_word, lemmatize, case_sensitive, exact_word_match
-                )
+                get_search_word_from_text(sentence, search_word, lemmatize, case_sensitive, exact_word_match)
                 if keywords_co_occurr(search_keywords_list, sentence):
                     co_occurring = True
             search_keywords_str = str(", ".join(search_keywords_list))
@@ -422,7 +418,8 @@ def process_ngrams(data, word, minus_K_words_var, plus_K_words_var):
         filtered_data["Co-Occurring word"] = word
     else:
         filtered_data["Words to the left"], filtered_data["Words to the right"] = zip(
-            *filtered_data[column_name].apply(lambda x: extract_context(x, word, minus_K_words_var, plus_K_words_var)), strict=False
+            *filtered_data[column_name].apply(lambda x: extract_context(x, word, minus_K_words_var, plus_K_words_var)),
+            strict=False,
         )
         filtered_data["Search word"] = word
     return initial_filter_data, filtered_data
@@ -769,7 +766,6 @@ def NGrams_coOccurrences_VIEWER(
         pass
     if "Lemmatize" in str(viewer_options_list):
         useLemma = True
-
 
     byNumberOfYears = 0
     byYear = False

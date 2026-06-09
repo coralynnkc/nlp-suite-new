@@ -126,9 +126,7 @@ def pronoun_stats(
     pronouns_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Pronouns", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "FW", "Pronouns"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Pronouns")
     # not necessary to open stats since these stats are included in the pie chart
 
     # obtain data
@@ -219,11 +217,8 @@ def preposition_stats(
     function_words_prepositions_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Prepositions", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "FW", "Prepositions"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Prepositions")
     # not necessary to open stats since these stats are included in the pie chart
-
 
     if not os.path.isdir(outputDir):
         raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
@@ -284,11 +279,8 @@ def article_stats(
     function_words_articles_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Articles", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "FW", "Articles"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Articles")
     # not necessary to open stats since these stats are included in the pie chart
-
 
     if not os.path.isdir(outputDir):
         raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
@@ -351,11 +343,8 @@ def conjunction_stats(
     function_words_conjunctions_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Conjunctions", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "FW", "Conjunctions"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Conjunctions")
     # not necessary to open stats since these stats are included in the pie chart
-
 
     if not os.path.isdir(outputDir):
         raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))
@@ -439,11 +428,8 @@ def auxiliary_stats(
     function_words_auxiliaries_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "FW", "Auxiliaries")
     # not necessary to open stats since these stats are included in the pie chart
-
 
     if not os.path.isdir(outputDir):
         raise (Exception("output file path error, Please check OUTPUT DIRECTORY PATH and try again"))

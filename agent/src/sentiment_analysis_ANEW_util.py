@@ -314,7 +314,6 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
     if outputDir == "":
         return
 
-
     if len(outputDir) < 0 or not os.path.exists(outputDir):
         print("No output directory specified, or path does not exist.")
         sys.exit(1)
@@ -453,7 +452,6 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
-
 
     return filesToOpen
 

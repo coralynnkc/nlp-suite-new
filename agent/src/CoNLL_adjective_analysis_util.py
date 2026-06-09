@@ -205,9 +205,7 @@ def adjective_stats(
     adjective_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adjective-ALL", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "stats"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "stats")
 
     adjective_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "POSTAG_list"
@@ -218,15 +216,9 @@ def adjective_stats(
     adjective_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "DEPREL_list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "POSTAG_stats"
-    )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "NER_stats"
-    )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "DEPREL_stats"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "POSTAG_stats")
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "NER_stats")
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adjective", "DEPREL_stats")
 
     df = pd.DataFrame(adjective_postag_list)
 

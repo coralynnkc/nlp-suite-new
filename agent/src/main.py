@@ -13,7 +13,6 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from file_manager_main import run_file_manager
 from file_search_byWord_main import run_search_byWord
 from GIS_main import run_GIS
-from html_annotator_gender_main import run as run_gender_analysis
 from knowledge_graphs_WordNet_main import run_kg_wordnet
 from NER_main import run_NER
 from NGrams_CoOccurrences import run_ngrams
@@ -88,8 +87,6 @@ def run(app, method):
 
 
 # def run(app, method):
-
-
 
 
 @app.middleware("http")
@@ -1058,54 +1055,6 @@ def wordnet(
                 hidden_noun_lemma_csv=hidden_noun_lemma_csv,
                 hidden_verb_lemma_csv=hidden_verb_lemma_csv,
                 noun_verb_menu_var=noun_verb_menu_var,
-            ),
-        )
-    )
-    thread.start()
-    return PlainTextResponse("", status_code=200)
-
-
-@app.post("/gender_analysis")
-def gender_analysis(
-    inputDirectory: Annotated[str, Form()],
-    inputFilename: Annotated[str, Form()] = "",
-    openOutputFiles: Annotated[bool, Form()] = False,
-    chartPackage: Annotated[str, Form()] = "Excel",
-    dataTransformation: Annotated[str, Form()] = "No transformation",
-    CoreNLP_gender_annotator_var: Annotated[bool, Form()] = False,
-    CoreNLP_download_gender_file_var: Annotated[bool, Form()] = False,
-    CoreNLP_upload_gender_file_var: Annotated[bool, Form()] = False,
-    annotator_dictionary_var: Annotated[bool, Form()] = False,
-    annotator_dictionary_file_var: Annotated[str, Form()] = "",
-    personal_pronouns_var: Annotated[bool, Form()] = False,
-    plot_var: Annotated[bool, Form()] = False,
-    year_state_var: Annotated[str, Form()] = "",
-    firstName_entry_var: Annotated[str, Form()] = "",
-    new_SS_folders: Annotated[str, Form()] = "",
-):
-    inputDirectory = os.path.expanduser(inputDirectory)
-    outputDirectory = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-    ss_folders = [f.strip() for f in new_SS_folders.split(",") if f.strip()]
-    thread = Thread(
-        target=lambda: run(
-            app,
-            lambda: run_gender_analysis(
-                inputFilename=inputFilename,
-                input_main_dir_path=inputDirectory,
-                outputDir=outputDirectory,
-                openOutputFiles=openOutputFiles,
-                chartPackage=chartPackage,
-                dataTransformation=dataTransformation,
-                CoreNLP_gender_annotator_var=CoreNLP_gender_annotator_var,
-                CoreNLP_download_gender_file_var=CoreNLP_download_gender_file_var,
-                CoreNLP_upload_gender_file_var=CoreNLP_upload_gender_file_var,
-                annotator_dictionary_var=annotator_dictionary_var,
-                annotator_dictionary_file_var=annotator_dictionary_file_var,
-                personal_pronouns_var=personal_pronouns_var,
-                plot_var=plot_var,
-                year_state_var=year_state_var,
-                firstName_entry_var=firstName_entry_var,
-                new_SS_folders=ss_folders,
             ),
         )
     )

@@ -91,7 +91,6 @@ def analyzefile(inputFilename, outputDir, output_file, mode, documentID, documen
     # SentiWordNet Interface http://www.nltk.org/howto/sentiwordnet.html
     # SentiSynsets
 
-
     # analyze each sentence s for sentiment
     sentenceID = 1
     for s in sentences:

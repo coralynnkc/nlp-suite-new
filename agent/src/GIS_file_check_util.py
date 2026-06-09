@@ -88,7 +88,6 @@ def location_column_checker(inputFilename, locationColumnValue, encodingValue):
 def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locationColumnValue):
     # Error messages -------------------------------------------------
 
-
     # Get minimum expected number of columns -------------------------------------------------
 
     minColumns = 3  # 3 columns for loc1, lat1, long1
@@ -124,9 +123,7 @@ def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locat
             print("Input file warning, message = two few colms for geocoded.")
             return False
         # Check if the inputfile is REALLY geocoded or not for the two sets of locations
-        if (
-            not geocoded_checker(numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue)
-        ):
+        if not geocoded_checker(numColumns, minColumns, headers, locationColumnValue, inputFilename, encodingValue):
             return False
     return True
 

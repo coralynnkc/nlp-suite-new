@@ -64,7 +64,6 @@ def run_word2vec(
 
     # Word Sense Induction
     if WSI_var:
-
         # def get_dictionary_file(window,title,fileType):
         #     if len(filePath)>0:
 

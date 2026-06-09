@@ -179,9 +179,7 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
     adverbs_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverbs-ALL", "list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "stats"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "stats")
 
     adverbs_postag_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_list"
@@ -189,12 +187,8 @@ def adverb_stats(inputFilename, outputDir, data, data_divided_sents, openOutputF
     adverbs_deprel_list_file_name = IO_files_util.generate_output_file_name(
         inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_list"
     )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_stats"
-    )
-    IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_stats"
-    )
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "POSTAG_stats")
+    IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "AVA", "Adverb", "DEPREL_stats")
 
     df = pd.DataFrame(adverbs_postag_list)
 

@@ -228,7 +228,6 @@ def run(
             #     flag="true" do NOT produce individual output files when processing a directory; only merged file produced
             #     flag="false" or flag="" ONLY produce individual output files when processing a directory; NO  merged file produced
 
-
             if not IO_libraries_util.check_inputPythonJavaProgramFile("Stanford_CoreNLP_util.py"):
                 return
             tempOutputFiles = Stanford_CoreNLP_util.CoreNLP_annotate(
@@ -592,7 +591,6 @@ def check_IO_requirements(
             Error = True
             return Error
 
-
         nSAscoreFiles = IO_csv_util.GetMaxValueInCSVField(inputFilename, "Shape of Stories", "Document ID")
         if nSAscoreFiles == 0:
             return
@@ -676,12 +674,7 @@ def check_IO_requirements(
         return Error
 
     # check data reduction and IO input values
-    if (
-        inputDir != ""
-        and not sentimentAnalysis
-        and not corpus_analysis
-        and (hierarchical_clustering or SVD or NMF)
-    ):
+    if inputDir != "" and not sentimentAnalysis and not corpus_analysis and (hierarchical_clustering or SVD or NMF):
         nSAscoreFiles = IO_files_util.GetNumberOfDocumentsInDirectory(inputDir, "csv")
         if nSAscoreFiles == 0:
             # mb.showwarning(title="Data warning: Data reduction algorithms",

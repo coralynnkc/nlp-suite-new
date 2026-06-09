@@ -659,7 +659,6 @@ def get_spec_num_files(filename, comparator, number_of_items_var, embedded_item_
     return result, itemCount
 
 
-
 def numEmbedded(filename, embedded_item_character_value, number_of_items_var, include_exclude_var):
     number_of_items_var = int(number_of_items_var)
     item_lst = filename.split(embedded_item_character_value)

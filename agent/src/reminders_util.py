@@ -440,9 +440,7 @@ def getReminders_list(scriptName, silent=False):
             )
             import IO_user_interface_util
 
-            IO_user_interface_util.timed_alert(
-                "", 2000, "Reminders error", message, False, "", True, "", False
-            )
+            IO_user_interface_util.timed_alert("", 2000, "Reminders error", message, False, "", True, "", False)
         return None
     # check among the * routine to make sure that the title is not there
     title_options = df[df["Routine"] == "*"]["Title"].tolist()
@@ -524,9 +522,7 @@ def checkReminder(scriptName, title_options=None, message="", triggered_by_GUI_e
             )
             import IO_user_interface_util
 
-            IO_user_interface_util.timed_alert(
-                "", 2000, "Reminders error", message, False, "", True, "", False
-            )
+            IO_user_interface_util.timed_alert("", 2000, "Reminders error", message, False, "", True, "", False)
             return None  # open_message
     # get the row number of the routine that we are looking at
     silent = False

@@ -144,7 +144,19 @@ class Graph:
         self.edges = self._edges
 
     def addNode(
-        self, id, label, start="", end="", startopen=False, endopen=False, pid="", r="", g="", b="", size="", spells=None
+        self,
+        id,
+        label,
+        start="",
+        end="",
+        startopen=False,
+        endopen=False,
+        pid="",
+        r="",
+        g="",
+        b="",
+        size="",
+        spells=None,
     ):
         if spells is None:
             spells = []
@@ -348,6 +360,7 @@ class Attributes(dict):
                 # group by mode
                 def key_mode(att):
                     return att["mode"]
+
                 atts_sorted_by_mode = sorted(list(atts.values()), key=key_mode, reverse=True)
                 for mode, atts in itertools.groupby(atts_sorted_by_mode, key_mode):
                     # generate on attributes by mode

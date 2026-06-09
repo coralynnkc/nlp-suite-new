@@ -96,8 +96,8 @@ def run_kg_wordnet(
             str(filesToOpen[0])
 
     if annotate_file_var:
-        if (
-            not IO_libraries_util.check_inputPythonJavaProgramFile("html_annotator_dictionary_util.py")
+        if not IO_libraries_util.check_inputPythonJavaProgramFile(
+            "html_annotator_dictionary_util.py"
         ):  # Check if the scrit is here
             return
         else:
