@@ -49,8 +49,7 @@ a {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 145px;
+  justify-content: space-between;
 }
 
 .logo {
@@ -93,4 +92,14 @@ a {
 .nav-link:hover {
   background: rgba(15, 23, 42, 0.05);
   color: rgba(15, 23, 42, 0.90);
+}
+
+.nav-link.settings {
+  background: rgba(15, 23, 42, 0.06);
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.80);
+}
+
+.nav-link.settings:hover {
+  background: rgba(15, 23, 42, 0.10);
 }
