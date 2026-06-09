@@ -1,0 +1,294 @@
+/* Base styles for consistency */
+
+/* NOTE: To make edits to the styles, use this file */
+
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  overflow: scroll;
+}
+
+.dropdown-group {
+  margin-bottom: 10px;
+}
+
+.sentiment-analysis-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.form-row {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-row label {
+  margin-right: 10px;
+}
+
+.form-row input[type="text"],
+.form-row select {
+  flex-grow: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.form-row label input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.color-picker-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.color-display {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #000;
+}
+.buttons-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.reset-button,
+.run-button {
+  padding: 10px 20px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.run-button {
+  background-color: #3c67cb;
+  color: white;
+}
+
+.run-button:hover,
+.reset-button:hover {
+  background-color: #cccccc;
+  color: black;
+}
+
+label {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Tooltip styling */
+.tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 0px;
+  padding-right: 5px;
+}
+
+.tooltip::before {
+  content: "?";
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  background-color: white;
+  color: #4d6aad;
+  border: 2px solid #4d6aad;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 21px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #555;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -150px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip .tooltiptext.forupper{
+  position: absolute; 
+  margin-left: -275px; 
+  bottom: auto; 
+  max-width: 250px;
+}
+
+.tooltip:hover .tooltiptext.forupper {
+  visibility: visible;
+  opacity: 1;
+}
+
+.form-row {
+  margin-bottom: 30px;
+}
+
+.buttons-section {
+  margin-top: 20px;
+}
+
+.reset-button, .run-button {
+  padding: 10px 20px;
+  margin-right: 10px;
+}
+
+/* Style for checkboxes */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  vertical-align: middle;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #4d6aad;
+  border-color: #4d6aad;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: white;
+  position: absolute;
+  left: 3px;
+  font-size: 10px;
+} 
+
+input[type="checkbox"]:disabled {
+  background-color: #c6c6c6;
+  border-color: #767676;
+}
+
+/* Adjustments for responsiveness */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-row input[type="text"],
+  .form-row select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .buttons-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .run-button,
+  .reset-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+.options {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+.options select {
+  flex-grow: 0.3;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.dropdown {
+  max-width: 420px; 
+  padding: 10px 10px 10px 0px;
+  position:relative;
+}
+
+.dropdown .dropdowntext {
+  visibility: hidden;
+  width: 500px;
+  background-color: #555;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.dropdown:hover .dropdowntext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.io-hover {
+  position: relative;
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.io-hover select {
+  flex-grow: 1;
+  width: 100%;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.io-hover .dropdowntext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #555;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.io-hover:hover .dropdowntext {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,0 +1,314 @@
+import os
+
+import requests
+from django.contrib import messages
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+)
+from django.shortcuts import render
+from django.template import loader
+
+AGENT_SERVER_URL = os.getenv("AGENT_SERVER_URL", "http://172.16.0.11:3000")
+
+
+def index(_: HttpRequest):
+    template = loader.get_template("../templates/index.html")
+    return HttpResponse(template.render())
+
+
+def contact(_: HttpRequest):
+    template = loader.get_template("../templates/contact.html")
+    return HttpResponse(template.render())
+
+
+def status(_: HttpRequest):
+    template = loader.get_template("../templates/status.html")
+    return HttpResponse(template.render())
+
+
+def sentiment_analysis(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/sentiment_analysis", data=request.body, headers=request.headers, timeout=30
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "sentiment_analysis.html")
+
+
+def SVO(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/SVO",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "SVO.html")
+
+
+def shape_of_stories(_: HttpRequest):
+    template = loader.get_template("../templates/shape_of_stories.html")
+    return HttpResponse(template.render())
+
+
+def style_analysis(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/style_analysis",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "style_analysis.html")
+
+
+def topic_modeling(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/topic_modeling",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "topic_modeling.html")
+
+
+def NGrams_CoOccurrences(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/NGrams_CoOccurrences",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "NGrams_CoOccurrences.html")
+
+
+def parsers_annotators(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/parsers_annotators",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "parsers_annotators.html")
+
+
+def wordclouds(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/wordclouds",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "wordclouds.html")
+
+
+def word2vec(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/word2vec",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "word2vec.html")
+
+
+def wordnet(_: HttpRequest):
+    template = loader.get_template("../templates/wordnet.html")
+    return HttpResponse(template.render())
+
+
+def filesearchword(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/filesearchword",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "filesearchword.html")
+
+
+def gis(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/gis",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "gis.html")
+
+
+def genderanalysis(_: HttpRequest):
+    template = loader.get_template("../templates/gender_analysis.html")
+    return HttpResponse(template.render())
+
+
+def NER(_: HttpRequest):
+    template = loader.get_template("../templates/NER.html")
+    return HttpResponse(template.render())
+
+
+def sunburst_charts(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/sunburst_charts",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "sunburst_charts.html")
+
+
+def sankey_flowchart(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/sankey_flowchart",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "sankey_flowchart.html")
+
+
+def boxplot(_: HttpRequest):
+    template = loader.get_template("../templates/boxplot.html")
+    return HttpResponse(template.render())
+
+
+def colormap_chart(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/colormap_chart",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "colormap_chart.html")
+
+
+def excel_plotly_chars(_: HttpRequest):
+    template = loader.get_template("../templates/excel_plotly_charts.html")
+    return HttpResponse(template.render())
+
+
+def conll_table_analyzer_main(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/CoNLL_table_analyzer_main",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "CoNLL_table_analyzer_main.html")
+
+
+def document_statistics(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/document_statistics",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "document_statistics.html")
+
+
+def sentence_analysis(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(f"{AGENT_SERVER_URL}/sentence_analysis", data=request.body, headers=request.headers)
+
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+
+    return render(request, "sentence_analysis.html")
+
+
+def file_manager(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/file_manager",
+            data=request.body,
+            headers=request.headers,
+        )
+        if response.ok:
+            return HttpResponseRedirect("/status")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+    return render(request, "file_manager.html")
+
+
+def settings(request: HttpRequest):
+    if request.method == "POST":
+        response = requests.post(
+            f"{AGENT_SERVER_URL}/settings",
+            data=request.POST,
+            timeout=10,
+        )
+        if response.ok:
+            messages.add_message(request, messages.SUCCESS, "Settings saved.")
+        else:
+            messages.add_message(request, messages.ERROR, response.content.decode())
+        return HttpResponseRedirect("/settings")
+    current = {}
+    try:
+        resp = requests.get(f"{AGENT_SERVER_URL}/settings", timeout=5)
+        if resp.ok:
+            current = resp.json()
+    except requests.RequestException:
+        pass
+    return render(request, "settings.html", {"current": current})
