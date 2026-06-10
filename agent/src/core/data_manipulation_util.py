@@ -1,5 +1,6 @@
 import logging
 import os.path
+from typing import Optional
 
 import IO_files_util
 import pandas as pd
@@ -25,7 +26,7 @@ def get_comparator(phrase: str) -> str:
     return _COMPARATORS.get(phrase, "")
 
 
-def select_csv(files: list, cols: list | None = None):
+def select_csv(files: list, cols: Optional[list] = None):
     for file in files:
         yield safe_read_csv(file, cols)
 
@@ -114,7 +115,7 @@ def concatenate(outputDir: str, operation_results_text_list: list) -> str:
 
 def export_csv_to_csv_txt(
     outputDir: str, operation_results_text_list: list,
-    export_type: str = ".csv", cols: list | None = None,
+    export_type: str = ".csv", cols: Optional[list] = None,
 ) -> str:
     files = []
     headers = []
