@@ -325,7 +325,10 @@ def display_wordCloud_sep_color(
     wc.layout_ = w
 
     plt.figure(figsize=(8, 8), facecolor=None)
-    output_file_name = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".png", "WC", "img")
+    # name per-document outputs after the document, not the directory, so they don't overwrite each other
+    output_file_name = IO_files_util.generate_output_file_name(
+        inputFilename, "" if inputFilename else inputDir, outputDir, ".png", "WC", "img"
+    )
     if bg_image_flag and bg_image is not None:
         img = changeWhiteToTransparent(wc.to_image())
         img = img.resize(bg_image.size)
@@ -398,7 +401,10 @@ def display_wordCloud(
             font_path=font,
         ).generate(textToProcess)
     wordcloud_title = get_wordcloud_title(inputFilename, inputDir, wordcloud_title)
-    output_file_name = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".png", "WC", "img")
+    # name per-document outputs after the document, not the directory, so they don't overwrite each other
+    output_file_name = IO_files_util.generate_output_file_name(
+        inputFilename, "" if inputFilename else inputDir, outputDir, ".png", "WC", "img"
+    )
     # plot the WordCloud image
     plt.figure(figsize=(8, 8), facecolor=None)
     if bg_image_flag and bg_image is not None:
