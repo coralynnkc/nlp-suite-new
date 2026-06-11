@@ -146,7 +146,7 @@ def create_Plotly_chart(
                     y_cols,
                     y_cols,
                     None,
-                    lambda df2, chart_name: px.bar(data, x=x_cols, color=chart_name),
+                    lambda df2, chart_name, x_cols=x_cols: px.bar(data, x=x_cols, color=chart_name),
                     "bar",
                     data,
                 )
@@ -174,7 +174,7 @@ def create_Plotly_chart(
                         x_cols,
                         y_cols,
                         lst,
-                        lambda chart_name: data[data[x_cols] == chart_name][y_cols[0]].value_counts(),
+                        lambda chart_name, x_cols=x_cols, y_cols=y_cols: data[data[x_cols] == chart_name][y_cols[0]].value_counts(),
                         lambda df2, chart_name: px.pie(df2, values=df2.values, names=df2.index, title=chart_name),
                         "Pie",
                         data,
@@ -188,7 +188,7 @@ def create_Plotly_chart(
                     y_cols,
                     y_cols,
                     None,
-                    lambda df2, chart_name: px.scatter(data, x=x_cols, color=chart_name),
+                    lambda df2, chart_name, x_cols=x_cols: px.scatter(data, x=x_cols, color=chart_name),
                     "scatter",
                     data,
                 )
@@ -201,7 +201,7 @@ def create_Plotly_chart(
                     y_cols,
                     y_cols,
                     None,
-                    lambda df2, chart_name: px.line_polar(data, r=x_cols, theta=chart_name),
+                    lambda df2, chart_name, x_cols=x_cols: px.line_polar(data, r=x_cols, theta=chart_name),
                     "Radar",
                     data,
                 )
@@ -214,7 +214,7 @@ def create_Plotly_chart(
                     y_cols,
                     y_cols,
                     None,
-                    lambda df2, chart_name: px.line(data, x=x_cols, color=chart_name),
+                    lambda df2, chart_name, x_cols=x_cols: px.line(data, x=x_cols, color=chart_name),
                     "line",
                     data,
                 )
