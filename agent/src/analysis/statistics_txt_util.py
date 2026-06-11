@@ -1091,6 +1091,12 @@ def process_words(
             return
         k = int(k_str)
 
+    # load the spaCy subjectivity pipeline once, not per sentence
+    subjectivity_nlp = None
+    if "Objectivity/subjectivity" in processType:
+        subjectivity_nlp = spacy.load("en_core_web_sm")
+        subjectivity_nlp.add_pipe("spacytextblob")
+
     for doc in inputDocs:
         head, tail = os.path.split(doc)
         documentID = documentID + 1
@@ -1129,17 +1135,13 @@ def process_words(
             # SUBJECTIVITY/OBJECTIVITY PER SENTENCE---------------------------------------------------------------------------------------------
 
             if "Objectivity/subjectivity" in processType:
-                # if not annotator_available:
-                nlp = spacy.load("en_core_web_sm")
-                nlp.add_pipe("spacytextblob")
-
                 header = ["Subjectivity Score", "Sentence ID", "Sentence", "Document ID", "Document"]
                 fileLabel = "Objectivity_subjectivity per sentence"
                 columns_to_be_plotted_yAxis = ["Subjectivity Score"]
                 chart_title_label = "Frequency of subjectivity scores"
                 column_xAxis_label = "Subjectivity scores"
 
-                d = nlp(s)
+                d = subjectivity_nlp(s)
                 subjectivity_score = d._.blob.subjectivity
 
                 word_list.append(
