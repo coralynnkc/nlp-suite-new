@@ -21,6 +21,7 @@ import pyLDAvis.gensim
 import spacy
 from gensim.models import CoherenceModel
 from gensim.utils import simple_preprocess
+from model_cache import get_spacy_model
 
 # Quiet gensim's very chatty INFO logging without capping the root logger
 # (logging is configured app-wide in main.py).
@@ -472,7 +473,7 @@ def run_Gensim(
 
     # Initialize spacy 'en_core_web_sm' model, keeping only tagger component (for efficiency)
     # Python -m spacy download en
-    nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+    nlp = get_spacy_model("en_core_web_sm", disable=("parser", "ner"))
 
     if lemmatize:
         if nounsOnly:

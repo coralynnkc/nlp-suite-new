@@ -3,7 +3,7 @@ import logging
 import os
 
 from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
+from model_cache import get_sentence_transformer
 from sklearn.feature_extraction.text import CountVectorizer
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ def run_BERTopic(inputDir, outputDir, split_docs_var=False):  # split_docs_var=T
         pass
 
     # Create embeddings using SentenceTransformer
-    sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
+    sentence_model = get_sentence_transformer("all-MiniLM-L6-v2")
     embeddings = sentence_model.encode(docs, show_progress_bar=True)
 
     # Initialize BERTopic model

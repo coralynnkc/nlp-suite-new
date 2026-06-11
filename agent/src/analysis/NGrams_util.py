@@ -7,9 +7,7 @@ import IO_csv_util
 _WORD_LISTS_DIR = Path(__file__).parent.parent.parent / "lib" / "wordLists"
 
 punctuation = string.punctuation
-import stanza
-
-called = 0
+from model_cache import get_stanza_pipeline
 
 #     if frequency==1: # hapax
 
@@ -85,9 +83,6 @@ def removestop(original_sentence):
 def readandsplit(
     filename, excludePunctuation, excludeArticles, excludeDeterminers, excludeStopWords, nFiles, lemmatize, index
 ):
-
-    global called
-    global nlp
     head, tail = os.path.split(filename)
     logger.info("   Processing file " + str(index + 1) + "/" + str(nFiles) + " " + tail)
     with open(filename, encoding="utf_8", errors="ignore") as f:
@@ -101,26 +96,16 @@ def readandsplit(
     if excludeStopWords:
         out = removestop(out)
 
+    # Stanza typically runs VERY fast as long as we don't repeatedly invoke a call
+    # on its pipeline; the model cache reuses one instance across files and jobs.
     if not lemmatize:
-        if not called:
-            nlp = stanza.Pipeline(lang="en", processors="tokenize")
-            called = 1
+        nlp = get_stanza_pipeline(lang="en", processors="tokenize")
         doc = nlp("".join(out))
-        if index + 1 == nFiles:
-            called = 0
         return [token.text for sentence in doc.sentences for token in sentence.tokens]
     else:
-        if not called:
-            nlp = stanza.Pipeline(lang="en", processors="tokenize,lemma")
-            called = 1
+        nlp = get_stanza_pipeline(lang="en", processors="tokenize,lemma")
         doc = nlp("".join(out))
-        if index + 1 == nFiles:
-            called = 0
         return [token.lemma for sentence in doc.sentences for token in sentence.words]
-
-
-# Stanza typically runs VERY fast as long as we don't repeatedly invoke a call on its pipeline.
-# It seems to be allocating some cache that speeds it up.
 import os
 from collections import Counter
 

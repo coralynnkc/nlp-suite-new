@@ -660,7 +660,7 @@ def python_wordCloud(
     stannlp = None
     if fileType == ".txt":
         # imported here so that the csv/CoNLL path works without stanza installed
-        import stanza
+        from model_cache import get_stanza_pipeline
 
         # always tokenize to convert each token to lowercase
         #   to avoid the same improper word to appear with lower and upper case at the beginning of a sentence
@@ -670,7 +670,7 @@ def python_wordCloud(
             processors = processors + ", lemma"
         if exclude_punctuation or differentPOS_differentColors:
             processors = processors + ", pos"
-        stannlp = stanza.Pipeline(lang="en", processors=processors)
+        stannlp = get_stanza_pipeline(lang="en", processors=processors)
 
     if runStanza:
         startTime = IO_user_interface_util.timed_alert(

@@ -3,7 +3,7 @@ import sys
 
 # import spacy will trigger tensorflow
 try:
-    import spacy
+    pass
 
     # this import is neccessary to establish the spacytextblob
 except Exception as e:
@@ -22,6 +22,7 @@ import IO_user_interface_util
 import pandas as pd
 import parsers_annotators_visualization_util
 import reminders_util
+from model_cache import get_spacy_model
 from util import collect
 
 logger = logging.getLogger(__name__)
@@ -179,8 +180,8 @@ def spaCy_annotate(
     model_default = "_core_web_sm"
     try:
         subprocess.check_call([sys.executable, "-m", "spacy", "download", lang + model_default])
-        nlp = spacy.load(lang + model_default)
-        if "sentiment" in annotator_params:
+        nlp = get_spacy_model(lang + model_default)
+        if "sentiment" in annotator_params and "spacytextblob" not in nlp.pipe_names:
             nlp.add_pipe("spacytextblob")
     except Exception as e:
         logger.info(

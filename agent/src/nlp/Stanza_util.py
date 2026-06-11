@@ -22,6 +22,7 @@ import IO_files_util
 import IO_user_interface_util
 import pandas as pd
 import parsers_annotators_visualization_util
+from model_cache import get_stanza_pipeline
 from stanza.pipeline.multilingual import MultilingualPipeline
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
@@ -185,7 +186,7 @@ def Stanza_annotate(
         # test if the selected language model is already downloaded, if not, download
         # IMPORTANT: no need to manually download language package after Stanza v1.4.0,
         #            if Stanza gives error for downloading, check the current version of Stanza
-        nlp = stanza.Pipeline(short_lang, processors="tokenize", verbose=False)
+        nlp = get_stanza_pipeline(lang=short_lang, processors="tokenize", verbose=False)
 
         if "Lemma" in annotator_params:
             annotator = "Lemma"
@@ -235,7 +236,7 @@ def Stanza_annotate(
             inputFilename, inputDir, outputDir, label=annotator + "_Stanza", silent=True
         )
 
-        nlp = stanza.Pipeline(lang=short_lang, processors=processors, verbose=False)
+        nlp = get_stanza_pipeline(lang=short_lang, processors=processors, verbose=False)
 
     # if only 'multilingual' is selected
     elif len(language) == 1 and language[0] == "multilingual":
