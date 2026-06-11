@@ -1,37 +1,25 @@
 {% extends 'index.html' %}
 
 {% block content %}
-{%load static %}
-<div class="sentiment-analysis-container">
+{% load static %}
+<div class="tool-container">
     <h1>Shape of Stories</h1>
     <form method="post" class="ngram-CoOcc-form">
         {% csrf_token %}
-        
-        <div class="form-row">
-            <label for="inputDirectory">Input Directory:</label>
-            <div class="io-hover"><!--- using div to preserve format issues.-->
-                <select name="inputDirectory" id="inputDirectory">
-                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
-                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
-                </select>
-                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
-                    more specifics on how to access these folders.
-                </span>
-            </div>
-        </div>
 
-        <div class="form-row">
-            <label for="outputDirectory">Output Directory:</label>
-            <input type="text" name="outputDirectory" value="~/nlp-suite/output"/>
-        </div>
-        
-        <div class="form-row">
-            <label>
-                <input type="checkbox" id="sentiment_analysis" name="sentiment_analysis" checked>
-                Sentiment Analysis
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label for="algorithm">Select sentiment analysis algorithm:</label>
+        {% include "partials/io_directories.html" %}
+
+        <fieldset class="form-section">
+            <legend>Sentiment analysis</legend>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="sentiment_analysis" name="sentiment_analysis" checked>
+                    Sentiment Analysis
+                </label>
+            </div>
+            <div class="field sub-option">
+                <label for="algorithm">Sentiment analysis algorithm</label>
                 <select id="algorithm" name="algorithm">
                     <optgroup label="Neural network approaches:">
                         <option value="bert_english">BERT (English model)</option>
@@ -47,69 +35,54 @@
                         <option value="vader">VADER</option>
                     </optgroup>
                 </select>
-        </div>
+            </div>
+        </fieldset>
 
-        <div class ="form-row">
-            <label>
-                <input type="checkbox" id="compute-visualize" name="compute-visualize">
-                Compute & visualize corpus statistics
-            </label>
-        </div>
+        <fieldset class="form-section">
+            <legend>Data reduction methods</legend>
 
-        <div class="form-row">
-            <label>
-                <input type="checkbox" id="hierarchical-clustering" name="hierarchical-clustering">
-                Hierarchical Clustering (HC)
-            </label>
-        </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="compute-visualize" name="compute-visualize">
+                    Compute &amp; visualize corpus statistics
+                </label>
+            </div>
 
-        <div class="form-row">
-            <label>
-                <input type="checkbox" id="singular-value-decomp" name="singular-value-decomp">
-                Singular Value Decomposition (SVD)
-            </label>
-        </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="hierarchical-clustering" name="hierarchical-clustering">
+                    Hierarchical Clustering (HC)
+                </label>
+            </div>
 
-        <div class="form-row">
-            <label>
-                <input type="checkbox" id="non-negative-matrix-fact" name="non-negative-matrix-fact">
-                Non-Negative Matrix Factorization (NMF)
-            </label>
-        </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="singular-value-decomp" name="singular-value-decomp">
+                    Singular Value Decomposition (SVD)
+                </label>
+            </div>
 
-        <div class="form-row">
-            <label>
-                <input type="checkbox" id="best-topic-est" name="best-topic-est">
-                Best topic estimation
-            </label>
-        </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="non-negative-matrix-fact" name="non-negative-matrix-fact">
+                    Non-Negative Matrix Factorization (NMF)
+                </label>
+            </div>
 
-        <div class="form-row">
-            <label for="dataTransformation">Transformation:</label>
-            <select id="dataTransformation" name="dataTransformation">
-                <option value="No transformation">No transformation</option>
-                <option value="Ln">Ln</option>
-                <option value="Log">Log</option>
-                <option value="Square">Square root</option>
-                <option value="Z score">Z score</option>
-            </select>
-        </div>
-        
-        <div class="buttons-section">
-            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="best-topic-est" name="best-topic-est">
+                    Best topic estimation
+                </label>
+            </div>
+        </fieldset>
 
-            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
+        <fieldset class="form-section">
+            <legend>Visualization</legend>
+            {% include "partials/data_transformation.html" %}
+        </fieldset>
 
-            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Shape%20of%20stories.pdf" target ="_blank" rel="noopener noreferrer"
-            class = "tipsfile-button">
-                <div class = "tipsfile-mask">
-                    <div class = "tipsfile-glow"></div>
-                </div>
-                Tips File
-            </a>
-
-            <button type="submit" class="run-button">Run</button>
-        </div>
+        {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Shape%20of%20stories.pdf" %}
     </form>
 </div>
 

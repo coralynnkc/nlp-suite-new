@@ -1,125 +1,83 @@
 {% extends 'index.html' %}
 
 {% block content %}
-{%load static%}
+{% load static %}
 
-<div class="sentiment-analysis-container">
+<div class="tool-container">
 
-<!-- <div style="max-width: 80%; margin: 20px auto; padding: 20px;"> -->
-    <h1 style="text-align: left; font-size: 30px; margin-bottom: 20px;">Parsers & Annotators (BERT, CoreNLP, spaCy, Stanza)</h1>
+    <h1>Parsers &amp; Annotators (BERT, CoreNLP, spaCy, Stanza)</h1>
     <form method="POST" class="sentiment-analysis-form" action="{% url 'parse' %}">
-        
+
         {% csrf_token %}
-        <div class="form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    In inputDirectory the script expects a single txt file or a directory containing a set of txt files.
-                </span>
-            </span>
-            <label for="inputDirectory">Input Directory:</label>
-            <div class="io-hover"><!--- using div to preserve format issues.-->
+
+        <fieldset class="form-section">
+            <legend>Input &amp; output</legend>
+
+            <div class="field">
+                <label for="inputDirectory">Input directory</label>
                 <select name="inputDirectory" id="inputDirectory">
                     <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
                     <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
                 </select>
-                
-                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
-                    more specifics on how to access these folders.
-                </span>
+                <p class="field-help">The script expects a single txt file or a directory containing a set of txt files.</p>
             </div>
-        </div>
-        
-        <div class="form-row" style="margin-bottom: 20px;">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    In outputDirectory the algorithms will produce different file types: txt-format copies of the same input txt files for co-reference, csv files (HTML for gender annotator), and different types of visuals, from Bar charts to utey flowcharts.
-                </span>
-            </span>
-            <label for="outputDirectory">Output Directory:</label>
-            <input type="text" name="outputDir" value="~/nlp-suite/output" style="width: 100%; max-width: 400px; padding: 10px;" />
-        </div>
 
-        {% comment %} <!-- Pre-processing options -->
-        <div class="form-row" style="margin-bottom: 20px;">
-            <label>
-                <input type="checkbox" id="pre-processing" name="openOutputFiles">
-                GUIs available for pre-processing
-            </label>
-            <select id="text_processing_tools" name="text_processing_tools" style="width: 100%; max-width: 420px; padding: 10px;">
-                <option value="file-checking-cleaning">File checking & cleaning</option>
-                <option value="coreference-resolution">Coreference resolution</option>
-            </select>
-        </div> {% endcomment %}
+            <div class="field">
+                <label for="outputDirectory">Output directory</label>
+                <input type="text" name="outputDir" id="outputDirectory" value="~/nlp-suite/output">
+                <p class="field-help">The algorithms produce different file types here: txt-format coreferenced copies of input files, csv files (HTML for gender annotator), and different types of visuals.</p>
+            </div>
+        </fieldset>
 
-        <!-- Parsers and annotators options -->
+        <fieldset class="form-section">
+            <legend>Parsers</legend>
 
+            <div class="field">
+                <label for="package">Package</label>
+                <select id="package" name="package">
+                    <option value="Stanford CoreNLP">Stanford CoreNLP</option>
+                    <option value="spaCy">spaCy</option>
+                    <option value="Stanza">Stanza</option>
+                </select>
+            </div>
 
-        <div class="form-row">
-            <label>
-                Package
-            </label>
-
-            <select id="package" name="package">
-                <option value="Stanford CoreNLP">Stanford CoreNLP</option>
-                <option value="spaCy">spaCy</option>
-                <option value="Stanza">Stanza</option>
-
-            </select>
-        </div>
-
-
-        <div class="form-row" style="margin-bottom: 20px;">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the checkbox if you wish to use Stanford CoreNLP parser. The parser will produce a CoNLL table (CoNLL U format).<br>
-                    The Stanford CoreNLP CoNLL table is the basis of many of the NLP analyses: noun & verb analysis, function words, clause analysis, query CoNLL.<br>
-                </span>
-            </span>
-            <label>
-                <input type="checkbox" id="parsers_var" name="parser_var">
-                Parsers for Standard CoreNLP
-            </label>
-
-            <span class="dropdown">
-                <select id="parser_menu_var" name="parser_menu_var" style="width: 100%; max-width: 420px; padding: 10px;">
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="parsers_var" name="parser_var">
+                    Parsers for Stanford CoreNLP
+                </label>
+                <p class="field-help">Produces a CoNLL table (CoNLL U format) — the basis of many NLP analyses: noun &amp; verb analysis, function words, clause analysis, query CoNLL.</p>
+            </div>
+            <div class="field sub-option">
+                <label for="parser_menu_var">Parser type</label>
+                <select id="parser_menu_var" name="parser_menu_var">
                     <option value="PCFG (Probabilistic Context Free Grammar)">PCFG (Probabilistic Context Free Grammar)</option>
                     <option value="Neural Network">Neural Network</option>
                 </select>
-                <span class="dropdowntext">
-                    For Stanford CoreNLP you have a choice between two types of parsers:<br>
-                    1. the recommended default Probabilistic Context Free Grammar (PCFG) parser;<br>
-                    2. a Neural-network dependency parser.<br>
-                    The neural network approach is more accurate but much slower.<br>
-                </span>
-            </span>
-        </div>
+                <p class="field-help">PCFG is the recommended default; the neural network parser is more accurate but much slower.</p>
+            </div>
 
-        <!-- CoNLL Table Analyzer -->
-        <div class="form-row" style="margin-bottom: 20px;">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the checkbox if you want to open the CoNLL table analyzer to analyze the Stanford CoreNLP parser results contained in the CoNLL table.
-                </span>
-            </span>
-            <label>
-                <input type="checkbox" id="conll-table-analyzer" name="CoNLL_table_analyzer_var">
-                CoNLL Table Analyzer
-            </label>
-        </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="conll-table-analyzer" name="CoNLL_table_analyzer_var">
+                    CoNLL Table Analyzer
+                </label>
+                <p class="field-help">Opens the CoNLL table analyzer to analyze the Stanford CoreNLP parser results contained in the CoNLL table.</p>
+            </div>
+        </fieldset>
 
-        <!-- Annotators section -->
-        <div class="form-row" style="margin-bottom: 20px;">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, using the dropdown menu, select one of the many annotators available. 
-                </span>
-            </span>
-            <label>
-                <input type="checkbox" id="annotators_var" name="annotators_var">
-                Annotators
-            </label>
-            <span class="dropdown">
-                <select id="annotators_menu_var" name="annotators_menu_var" style="width: 100%; max-width: 420px; padding: 10px;">
+        <fieldset class="form-section">
+            <legend>Annotators</legend>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="annotators_var" name="annotators_var">
+                    Annotators
+                </label>
+            </div>
+            <div class="field sub-option">
+                <label for="annotators_menu_var">Annotator</label>
+                <select id="annotators_menu_var" name="annotators_menu_var">
                     <optgroup label="Fundamental NLP tools">
                         <option value="Sentence splitter">Sentence splitter</option>
                         <option value="Lemma annotator">Lemma annotator</option>
@@ -138,81 +96,33 @@
                         <option value="Quote/dialogue annotator">Quote/dialouge annotator</option>
                     </optgroup>
                 </select>
-                <span class="dropdowntext">
-                    Click the Tips File for more information on the different annotators.
-                </span>
-            </span>
-        </div>
+                <p class="field-help">Click the Tips File for more information on the different annotators.</p>
+            </div>
 
-        
+            <div class="field field-check">
+                <label for="manual-coref">
+                    <input type="checkbox" id="manual_Coref" name="manual_Coref">
+                    Enable Manual Coreference Resolution
+                </label>
+                <p class="field-help">Resolve unresolved or wrongly resolved coreferences by hand. Manual editing requires a lot of memory since both original and co-referenced file are brought in memory.</p>
+            </div>
 
-        <!-- Manual coreference resolution option -->
-        <div class="form-row" style="margin-bottom: 20px;">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the checkbox if you wish to resolve manually cases of unresolved or wrongly resolved coreferences. Manual editing requires a lot of memory since both original and co-referenced file are brought in memory. Depending upon file sizes, you may not have enough memory for this step.
-                </span>
-            </span>
-            <label for="manual-coref">
-                <input type="checkbox" id="manual_Coref" name="manual_Coref">
-                Enable Manual Coreference Resolution
-            </label>
-        </div>
+            <div class="field field-check">
+                <label for="single-quote">
+                    <input type="checkbox" id="single-quote" name="single_quote">
+                    Single Quote Handling
+                </label>
+                <p class="field-help">The CoreNLP Quote annotator attributes quotes to speakers; double quotes is the default. Tick to process both double and single quotes.</p>
+            </div>
+        </fieldset>
 
-        <!-- Single Quote Handling -->
-        <div class="form-row" style="margin-bottom: 20px;">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    The CoreNLP Quote annotator extracts quotes from text and attributes the quote to the speaker. The default CoreNLP parameter is double quotes. If you want to process both double and single quotes, please tick the checkbox.
-                </span>
-            </span>
-            <label for="single-quote">
-                <input type="checkbox" id="single-quote" name="single_quote">
-                Single Quote Handling
-            </label>
-        </div>
+        <fieldset class="form-section">
+            <legend>Visualization</legend>
+            {% include "partials/data_transformation.html" %}
+        </fieldset>
 
-        <!-- Transformation options -->
-        <div class="form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Use the next dropdown menu widget to select the type of data transformation to be used for plotting ('No transformation' is the default option'). All charts involving multiple documents are automatically normalized by document size.
-                </span>
-            </span>
-            <label for="dataTransformation">Transformation:</label>
-            <span class="dropdown">
-            <select id="dataTransformation" name="dataTransformation">
-                <option value="No transformation">No transformation</option>
-                <option value="Ln">Ln</option>
-                <option value="Log">Log</option>
-                <option value="Square">Square root</option>
-                <option value="Z score">Z score</option>
-            </select>
-            <span class="dropdowntext">
-                Select the type of data transformation you wish to apply in plotting charts. All charts involving multiple documents are automatically normalized by document size.
-            </span>
-        </div>
-
-
-
-        <!-- Form submission buttons -->
-        <div class="buttons-section" style="margin-top: 20px; text-align: center;">
-            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
-
-            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
-
-            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Sentiment%20analysis.pdf" target ="_blank" rel="noopener noreferrer"
-            class = "tipsfile-button">
-                <div class = "tipsfile-mask">
-                    <div class = "tipsfile-glow"></div>
-                </div>
-                Tips File
-            </a>
-
-            <button type="submit" class="run-button">Run</button>
-        </div>
+        {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Sentiment%20analysis.pdf" %}
     </form>
-<!-- </div> -->
 </div>
 
 <script src="{% static 'js/parsers_annotators.js' %}"></script>

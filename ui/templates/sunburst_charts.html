@@ -2,118 +2,101 @@
 {% block content %}
 {% load static %}
 
-<div class="sentiment-analysis-container">
-    
+<div class="tool-container">
+
     <h1>Sunburst Charts</h1>
     <form method="post" class="sentiment-analysis-form" action="{% url 'sunburst' %}">
         {% csrf_token %}
 
-        <!-- Input and Output Directories -->
-        <div class="form-row">
-            <label for="inputDirectory">Input Directory:</label>
-            <select name="inputDirectory" id="inputDirectory">
-                <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
-            </select>
-        </div>
-        
-        <div class="form-row">
-            <label for="outputDirectory">Output Directory:</label>
-            <input type="text" name="outputDirectory" value="~/nlp-suite/output" />
-        </div>
+        <fieldset class="form-section">
+            <legend>Input &amp; output</legend>
 
-        <!-- CSV File Input and Search Field Selection -->
-        <div class="form-row">
-            <label for="search_field">Input CSV</label>
-            <input type="file" id="sunburst_file_input" name="sunburst_file_input" accept=".csv" required>
-            <select id="search_field" name="search_field">
-                <option value="" disabled selected hidden>Select a field</option>
-            </select>
-        </div>
-
-        <div class="form-row">
-            <label>
-                Visualize Full Field
-            <label>
-        
-            <button type="button" id="visualize_full_field" name="visualize_full_field">Add Full Field</button>
-        </div>
-
-        <!-- Search Values Input -->
-        <div class="form-row">
-            <label>
-                Search Values
-                <link rel="stylesheet" href="{% static "css/tooltip.css" %}">
-
-                <span class="tooltip">
-                    <span class="tooltiptext">
-                        Enter a comma-separated list of specific words or values for the selected Column/Search Field (minimum of 3). (e.g., the, three, little, pigs)
-                    </span>
-                </span>
-                
-                <input type="text" id="keywordInput" name="keywordInput" autocomplete="off" style="position: relative;">
-                <div id="suggestion_dropdown" class="suggestion-dropdown"></div>
-            </label>
-            <div class="form-row">
-                <button type="button" id="add_pair_button">Add Pair</button>
+            <div class="field">
+                <label for="inputDirectory">Input directory</label>
+                <select name="inputDirectory" id="inputDirectory">
+                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+                </select>
             </div>
 
-            &nbsp; &nbsp; &nbsp; &nbsp; 
-            <label> Search Value Options </label>
-            <select name="search_value_dropdown" id= "search_value_dropdown">                
-            </select>
-        </div>
+            <div class="field">
+                <label for="outputDirectory">Output directory</label>
+                <input type="text" name="outputDirectory" id="outputDirectory" value="~/nlp-suite/output">
+            </div>
+        </fieldset>
 
-    
-        
-        <div class="form-row">
-            <div class="form-row">
+        <fieldset class="form-section">
+            <legend>Chart data</legend>
+
+            <div class="field">
+                <label for="sunburst_file_input">Input CSV</label>
+                <div class="options">
+                    <input type="file" id="sunburst_file_input" name="sunburst_file_input" accept=".csv" required>
+                    <select id="search_field" name="search_field">
+                        <option value="" disabled selected hidden>Select a field</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Visualize Full Field</label>
+                <button type="button" id="visualize_full_field" name="visualize_full_field">Add Full Field</button>
+            </div>
+
+            <div class="field">
+                <label for="keywordInput">Search Values</label>
+                <input type="text" id="keywordInput" name="keywordInput" autocomplete="off">
+                <div id="suggestion_dropdown" class="suggestion-dropdown"></div>
+                <p class="field-help">Enter a comma-separated list of specific words or values for the selected Column/Search Field (minimum of 3), e.g.: the, three, little, pigs.</p>
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <button type="button" id="add_pair_button">Add Pair</button>
+                </div>
+                <div class="field">
+                    <label for="search_value_dropdown">Search Value Options</label>
+                    <select name="search_value_dropdown" id="search_value_dropdown">
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
                 <label for="saved_pairs">Saved Pairs:</label>
                 <div id="saved_pairs_container">
                 </div>
             </div>
-        </div>
 
+            <div class="field">
+                <label for="filter_options_var">Filter Options</label>
+                <select id="filter_options_var" name="filter_options_var">
+                    <option value="no_filtering">No filtering</option>
+                    <option value="fixed_parameter">Fixed parameter</option>
+                    <option value="propagating_parameter">Propagating Parameter</option>
+                </select>
+            </div>
+        </fieldset>
 
-         <!-- Filter Options Selection -->
-        <div class="form-row">
-            <label for="filter_options_var">Filter Options</label>
-            <select id="filter_options_var" name="filter_options_var">
-                <option value="no_filtering">No filtering</option>
-                <option value="fixed_parameter">Fixed parameter</option>
-                <option value="propagating_parameter">Propagating Parameter</option>
-            </select>
-        </div>
+        <fieldset class="form-section">
+            <legend>Chart types</legend>
 
-        <!-- Chart Options -->
-        <div class="form-row">
-            <label>
-                <input type="checkbox" name="piechart_var" checked>
-                Pie chart
-            </label>
-            <label style="margin-left: 20px;">
-                <input type="checkbox" name="treemap_var">
-                Tree map chart
-            </label>
-        </div>
-
-        <!-- Form Buttons -->
-        <div class="buttons-section">
-            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
-
-            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
-
-            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Sunburst%20pie%20chart.pdf" target ="_blank" rel="noopener noreferrer"
-            class = "tipsfile-button">
-                <div class = "tipsfile-mask">
-                    <div class = "tipsfile-glow"></div>
+            <div class="field-row">
+                <div class="field field-check">
+                    <label>
+                        <input type="checkbox" name="piechart_var" checked>
+                        Pie chart
+                    </label>
                 </div>
-                Tips File
-            </a>
+                <div class="field field-check">
+                    <label>
+                        <input type="checkbox" name="treemap_var">
+                        Tree map chart
+                    </label>
+                </div>
+            </div>
+        </fieldset>
 
-            <button type="submit" class="run-button">Run</button>
-        </div>
+        {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Sunburst%20pie%20chart.pdf" %}
 
-        <input type="hidden" id="savedPairsToSend" name="savedPairsToSend"></input>
+        <input type="hidden" id="savedPairsToSend" name="savedPairsToSend">
     </form>
 </div>
 

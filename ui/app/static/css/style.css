@@ -92,6 +92,7 @@ fieldset.form-section legend {
 /* ── Form controls ───────────────────────────────────────────── */
 
 .field input[type="text"],
+.field input[type="password"],
 .field input[type="number"],
 .field select {
   width: 100%;
@@ -127,7 +128,20 @@ fieldset.form-section legend {
   background-image: none;
 }
 
+.field input[type="file"] {
+  display: block;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+.field input[type="range"] {
+  accent-color: #2563eb;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
 .field input[type="text"]:focus,
+.field input[type="password"]:focus,
 .field input[type="number"]:focus,
 .field select:focus {
   border-color: rgba(37, 99, 235, 0.50);

@@ -11,5 +11,5 @@
     </a>
     {% endif %}
 
-    <button type="submit" class="run-button">Run</button>
+    <button type="submit" class="run-button"{% if run_onclick %} onclick="{{ run_onclick }}"{% endif %}>Run</button>
 </div>
