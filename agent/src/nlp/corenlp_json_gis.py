@@ -35,6 +35,8 @@ from util import collect
 
 logger = logging.getLogger(__name__)
 
+language_encoding = "utf-8"
+
 
 def similar_string_floor_filter(str1, str2):
     dist = nltk.edit_distance(str1, str2)

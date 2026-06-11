@@ -2,12 +2,15 @@
 # Written by Yuhang Feng November 2019-April 2020
 # Edited by Roberto Franzosi, Tony May 2022
 # Edited by Samir Kaddoura, March 2023
+import logging
 import os
 from collections import Counter
 
 import IO_csv_util
 import IO_user_interface_util
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 def build_timed_alert_message(chart_type, withHeader_var, count_var):

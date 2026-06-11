@@ -815,22 +815,11 @@ def run_jar_script(
     if not IO_libraries_util.check_inputPythonJavaProgramFile(scriptName):
         return
 
-    if (
-        visualization_tools
-        == "Sentence visualization: Dynamic sentence network viewer (Gephi graphs)"
-    ):  # noqa: F821
-        # TODO the script does not work even in command line using the arguments in the ReadMe file; it seems to want two more parameters
-        """
-        Error in input parameters
-        Usage Example:
-        args1 = "inputFilename"
-        args2 = "outputinputFilename.gexf"
-        args3 = true or false
-        args4 = $$$
-        # if checkIO_Filename_InputDir ("Sentence Visualization: Dynamic Sentence Network Viewer (Gephi graphs)",inputFilename, inputDir, outputDir):
-        #     subprocess.call(['java', '-jar', 'DynamicSentenceViewer.jar', inputFilename, outputDir])
-        """
-        return
+    # Jar-based visualization scripts (e.g., the Gephi dynamic sentence network
+    # viewer) were never functional even in the desktop app (the jar rejects the
+    # documented arguments) and are not supported in the web agent.
+    logger.warning("Jar script '%s' is not supported; skipping.", scriptName)
+    return
 
 
 # The NLP script and sentence_analysis script use pydict dictionaries to run the script selected in a menu

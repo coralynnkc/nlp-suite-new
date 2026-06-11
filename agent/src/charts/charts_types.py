@@ -3,6 +3,7 @@
 # Edited by Roberto Franzosi, Tony May 2022
 # Edited by Samir Kaddoura, March 2023
 import io
+import logging
 import re
 
 import numpy as np
@@ -10,6 +11,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+logger = logging.getLogger(__name__)
 
 
 def multiple_barchart(datalist, outputFilename, var, ntopchoices):

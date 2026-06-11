@@ -127,7 +127,7 @@ def format_topics_sentences(ldamodel, corpus, texts):
 
 
 def malletModelling(
-    MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data
+    MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data, filesToOpen
 ):
     startTime = IO_user_interface_util.timed_alert(
         2000, "Analysis start", "Started running Mallet LDA topic modeling at", True
@@ -621,6 +621,7 @@ def run_Gensim(
             data_lemmatized,
             lda_model,
             data,
+            filesToOpen,
         )
 
     # if openOutputFiles==True:
