@@ -13,7 +13,7 @@ function guiCheckBox() {
     var searchOptionsButtons = document.getElementsByName("search-options-+")[0];
     var searchOptionsResetButton = document.getElementsByName("search-options-reset")[0];
     var searchOptionsShowButton = document.getElementsByName("search-options-show")[0];
-    var searchNgramCsv = document.getElementById("csv_file_var");
+    // csv_file_var is permanently disabled (coming soon) and not toggled here
     var ngramViewerCheckbox = document.getElementById("ngrams_viewer_var");
     var coOccurCheckbox = document.getElementById("CoOcc_Viewer_var");
     var dateOptions = document.getElementById("date_options");
@@ -34,7 +34,6 @@ function guiCheckBox() {
         searchOptionsButtons.disabled = false;
         searchOptionsResetButton.disabled = false;
         searchOptionsShowButton.disabled = false;
-        searchNgramCsv.disabled = true;
         ngramViewerCheckbox.disabled = true;
         coOccurCheckbox.disabled = true;
         dateOptions.disabled = false;
@@ -55,7 +54,6 @@ function guiCheckBox() {
         searchOptionsButtons.disabled = true;
         searchOptionsResetButton.disabled = true;
         searchOptionsShowButton.disabled = true;
-        searchNgramCsv.disabled = false;
         ngramViewerCheckbox.disabled = false;
         coOccurCheckbox.disabled = false;
         dateOptions.disabled = true;
