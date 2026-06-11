@@ -6,6 +6,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("contact", views.contact, name="contact"),
     path("status", views.status, name="status"),
+    path("status/poll", views.status_poll, name="status_poll"),
     path("sentiment_analysis", views.sentiment_analysis, name="sentiment_analysis"),
     path("svo", views.SVO, name="svo"),
     path("stories", views.shape_of_stories, name="stories"),
