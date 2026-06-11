@@ -52,8 +52,8 @@
         <div class="field sub-option">
             <label for="selectedCsvFile">Dictionary file</label>
             <div class="options">
-                <button type="button" id="selectDictionaryFile" onclick="document.getElementById('csvFile').click();">Select dictionary file</button>
-                <input type="file" id="file" name="file" accept=".csv" style="display: none;" onchange="document.getElementById('fileName').value = this.value;">
+                <button type="button" id="selectDictionaryFile" onclick="document.getElementById('file').click();">Select dictionary file</button>
+                <input type="file" id="file" name="file" accept=".csv" style="display: none;" onchange="document.getElementById('selectedCsvFile').value = this.value;">
                 <input type="text" id="selectedCsvFile" name="selectedCsvFile" placeholder="No file selected" value="">
             </div>
         </div>
