@@ -46,6 +46,20 @@ enough context to pick each one up later.
   nothing guards hand-written code; tests run on the host's newer Python and
   won't catch it. Consider a newer base image when upgrading the ML stack.
 
+## Performance (flagged, not fixed)
+
+- **NLP models reload on every job.** Each request constructs its pipelines
+  from scratch: `stanza.Pipeline(...)` in `file_search_byWord_util.py:134` and
+  `statistics_txt_util.py` (sentence-complexity path),
+  `SentenceTransformer("all-MiniLM-L6-v2")` in `topic_modeling_bert_util.py:56`.
+  Model loads dominate small-corpus job time. A module-level cache keyed by
+  (model, processors) would fix it, but lifetime/memory interactions with the
+  single-job worker need thought (`NGrams_util` already has a homegrown
+  `called` flag cache showing the pattern).
+- **Pervasive `df.iterrows()`/row-append loops** (~31 sites) inherited from the
+  research code. Vectorizing is per-algorithm work; only worth it for the
+  endpoints that feel slow in practice.
+
 ## Security / deployment
 
 - **Django `SECRET_KEY` is hardcoded** in `ui/config/settings.py` (marked
