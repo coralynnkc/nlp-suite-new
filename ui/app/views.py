@@ -138,9 +138,8 @@ def colormap_chart(request: HttpRequest):
     return _proxy_post(request, "/colormap", "colormap_chart.html")
 
 
-def excel_plotly_charts(_: HttpRequest):
-    template = loader.get_template("../templates/excel_plotly_charts.html")
-    return HttpResponse(template.render())
+def excel_plotly_charts(request: HttpRequest):
+    return _proxy_post(request, "/excel_charts", "excel_plotly_charts.html")
 
 
 def conll_table_analyzer_main(request: HttpRequest):

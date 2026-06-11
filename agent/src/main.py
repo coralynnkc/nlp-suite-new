@@ -958,10 +958,12 @@ def excel_plotly_charts(
     X_axis_var: Annotated[str, Form()] = "",
     csv_file_field_Y_axis_list: Annotated[str, Form()] = "[]",
     charts_type_options: Annotated[str, Form()] = "bar",
-    chart_package: Annotated[str, Form()] = "Plotly",
-    data_transformation: Annotated[str, Form()] = "No transformation",
+    chartPackage: Annotated[str, Form()] = "Plotly",
+    dataTransformation: Annotated[str, Form()] = "No transformation",
     inputFileData: Annotated[str, Form()] = "",
 ) -> PlainTextResponse:
+    # the form sends the Y-axis fields as a JSON list, e.g. ["valence"]
+    y_axis_list = json.loads(csv_file_field_Y_axis_list or "[]")
     return dispatch(
         app,
         lambda: run_excel_plotly_charts(
@@ -969,10 +971,10 @@ def excel_plotly_charts(
             outputDir=OUTPUT_DIR,
             csv_field_visualization_var=csv_field_visualization_var,
             X_axis_var=X_axis_var,
-            csv_file_field_Y_axis_list=csv_file_field_Y_axis_list,
+            csv_file_field_Y_axis_list=y_axis_list,
             charts_type_options=charts_type_options,
-            chart_package=chart_package,
-            data_transformation=data_transformation,
+            chart_package=chartPackage,
+            data_transformation=dataTransformation,
             inputFileData=inputFileData,
         ),
     )
