@@ -43,6 +43,17 @@ CoreNLP_web = (
     "\n\nLanguage and annotator options for Stanford CoreNLP are listed at the Stanford CoreNLP website\n\n" + url
 )
 
+available_languages = [
+    "Arabic",
+    "Chinese",
+    "English",
+    "French",
+    "German",
+    "Hungarian",
+    "Italian",
+    "Spanish",
+]
+
 
 # when multiple annotators are selected (e.g., quote, gender, normalized-date)
 #   output must go to the appropriate subdirectory
@@ -1323,48 +1334,6 @@ def language_models(CoreNLPdir, language: str):
     result["pcfg"] = pcfg_model
     result["nn"] = nn_model
     return result
-
-
-def check_sentence_length(sentence_length, sentenceID, config_filename):
-    # WARNING for sentences with > 100 tokens
-    if sentence_length > 100:
-        order = "th"
-        if sentenceID % 10 == 1:
-            order = "st"
-        elif sentenceID % 10 == 2:
-            order = "nd"
-            if sentenceID == 12:
-                order = "th"
-        elif sentenceID % 10 == 3:
-            order = "rd"
-
-        logger.info(
-            "   Warning: The",
-            str(sentenceID) + order,
-            "sentence has "
-            + str(sentence_length)
-            + " words, more than the 100 max recommended by CoreNLP for best performance.",
-        )
-        head, scriptName = os.path.split(os.path.basename(__file__))
-        reminders_util.checkReminder(
-            scriptName,
-            reminders_util.title_options_CoreNLP_sentence_length,
-            reminders_util.message_CoreNLP_sentence_length,
-            True,
-        )
-
-
-def build_sentence_string(sentence):
-    complete_sent = ""
-    for token in sentence["tokens"]:
-        if token["originalText"] in string.punctuation:
-            complete_sent = complete_sent + token["originalText"]
-        else:
-            if token["index"] == 1:
-                complete_sent = complete_sent + token["originalText"]
-            else:
-                complete_sent = complete_sent + " " + token["originalText"]
-    return complete_sent
 
 
 date_in_filename = IO_files_util.date_in_filename
