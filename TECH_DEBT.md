@@ -24,12 +24,6 @@ enough context to pick each one up later.
   The other wordcloud "services" just open external websites, which a headless
   agent cannot do either. Restore `wordclouds_util` from the desktop NLP-Suite
   repo or remove the page.
-- **Job warnings are invisible.** `topic_modeling_gensim_util` calls
-  `logging.basicConfig(level=ERROR)` at import, capping the root logger for the
-  whole agent; the many `logger.info(...)` validation warnings (e.g. "no options
-  selected") never reach the Docker logs, so a job that bails out early looks
-  identical to a successful one. Configure logging once in `main.py` (INFO) and
-  drop the import-time basicConfig.
 - **Tips File feature removed, not replaced.** The web templates shipped broken
   "Tips File" buttons pointing at `tips_files.js` and `TIPS_*.pdf` assets that
   were never ported from the desktop app. The blocks were deleted (commit

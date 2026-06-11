@@ -27,7 +27,6 @@ def run_parsers_annotators(
     package,
 ):
     """Run the selected parser/annotators (CoreNLP, spaCy, or Stanza) over the corpus."""
-    logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     logger.info(
         "started: inputFilename=%s parser_var=%s parser_menu_var=%s", inputFilename, parser_var, parser_menu_var
