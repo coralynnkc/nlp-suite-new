@@ -29,82 +29,53 @@ function listofitems3() {
 listofitems3();
 
 
-var availableGUIs = document.getElementById("availableGUIs");
-    var searchCorpusByDictionary = document.getElementById("searchCorpusByDictionary");
-    var searchCorpusByWords = document.getElementById("searchCorpusByWords");
-    var searchOptionSelected = document.getElementById("searchOptions");
-    var userInput = document.getElementById("userInput");
-    var minusK = document.getElementById("minusK");
-    var plusK = document.getElementById("plusK");
-    var fileName = document.getElementById("fileName");
-    var selectDictionaryFile = document.getElementById("selectDictionaryFile");
-    var extractKSentences = document.getElementById("extractKSentences");
-    var coOccurringCommas = document.getElementById("coOccurringCommas");
-    var subDirectory = document.getElementById("subDirectory");
+// The endpoint wants exactly one search mode: dictionary mode enables its file
+// picker, keyword mode enables the term/±K/sentence-extraction controls.
+var searchCorpusByDictionary = document.getElementById("search_by_dictionary");
+var searchCorpusByWords = document.getElementById("search_by_keyword");
+var searchOptionSelected = document.getElementById("search_options");
+var userInput = document.getElementById("search_keyword_values");
+var minusK = document.getElementById("minus_K_words_sentences_var");
+var plusK = document.getElementById("plus_K_words_sentences_var");
+var fileName = document.getElementById("selectedCsvFile");
+var dictionaryFileButton = document.getElementById("selectDictionaryFile");
+var extractKSentences = document.getElementById("extract_sentences_var");
+var coOccurringCommas = document.getElementById("coOccurring_keywords_var");
+var createSubcorpus = document.getElementById("create_subcorpus_var");
 
-    availableGUIs.addEventListener('change',function() {
-        searchCorpusByDictionary.disabled = this.checked;
-        searchCorpusByWords.disabled = this.checked;
-        if(!this.checked){
-            searchCorpusByDictionary.checked = false;
-            searchCorpusByWords.checked = false;
-        }
-    });
+function syncSearchModeControls() {
+    var byDictionary = searchCorpusByDictionary.checked;
+    var byWords = searchCorpusByWords.checked;
 
-    searchCorpusByDictionary.addEventListener('change',function() {
-        availableGUIs.disabled = this.checked;
-        searchCorpusByWords.disabled = this.checked;
-        selectDictionaryFile.disabled = !this.checked;
-        fileName.disabled = !this.checked;
-        if(!this.checked){
-            availableGUIs.checked = false;
-            searchCorpusByWords.checked = false;
-        }
-    });
+    searchCorpusByDictionary.disabled = byWords;
+    searchCorpusByWords.disabled = byDictionary;
 
-    searchCorpusByWords.addEventListener('change',function() {
-        availableGUIs.disabled = this.checked;
-        searchCorpusByDictionary.disabled = this.checked;
-        userInput.disabled = !this.checked;
-        extractKSentences.disabled = !this.checked;
-        coOccurringCommas.disabled = !this.checked;
-        subDirectory.disabled = !this.checked;
-        if(!this.checked){
-            availableGUIs.checked = false;
-            searchCorpusByDictionary.checked = false;
-            extractKSentences.checked = false;
-            coOccurringCommas.checked = false;
-            subDirectory.checked = false;
-        }
-        if(searchCorpusByWords.checked && searchOptionSelected.value == "searchSentence"){
-            plusK.disabled = false;
-            minusK.disabled = false;
-        } else {
-            plusK.disabled = true;
-            minusK.disabled = true;
-        }
-        if(searchCorpusByWords.checked && searchOptionSelected.value == "searchDocument"){
-            extractKSentences.disabled = true;
-            extractKSentences.checked = false;
-        }
-    });
+    dictionaryFileButton.disabled = !byDictionary;
+    fileName.disabled = !byDictionary;
 
-    searchOptionSelected.addEventListener('change',function() {
-        if(searchCorpusByWords.checked && searchOptionSelected.value == "searchSentence"){
-            plusK.disabled = false;
-            minusK.disabled = false;
-        } else {
-            plusK.disabled = true;
-            minusK.disabled = true;
-        }
-        if(searchCorpusByWords.checked && searchOptionSelected.value == "searchDocument"){
-            extractKSentences.disabled = true;
-            extractKSentences.checked = false;
-        }
-    });
+    userInput.disabled = !byWords;
+    extractKSentences.disabled = !byWords;
+    coOccurringCommas.disabled = !byWords;
+    createSubcorpus.disabled = !byWords;
+    if (!byWords) {
+        extractKSentences.checked = false;
+        coOccurringCommas.checked = false;
+        createSubcorpus.checked = false;
+    }
 
+    var withinSentence = searchOptionSelected.value !== "Search within document";
+    plusK.disabled = !(byWords && withinSentence);
+    minusK.disabled = !(byWords && withinSentence);
+    if (byWords && !withinSentence) {
+        extractKSentences.disabled = true;
+        extractKSentences.checked = false;
+    }
+}
 
-
+searchCorpusByDictionary.addEventListener("change", syncSearchModeControls);
+searchCorpusByWords.addEventListener("change", syncSearchModeControls);
+searchOptionSelected.addEventListener("change", syncSearchModeControls);
+syncSearchModeControls();
 
 
 

@@ -705,10 +705,13 @@ def filesearchword(
     search_by_keyword: Annotated[bool, Form()] = False,
     extract_sentences_var: Annotated[bool, Form()] = False,
     coOccurring_keywords_var: Annotated[bool, Form()] = False,
+    create_subcorpus_var: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
     extract = 1 if extract_sentences_var else 0
     co_occur = 1 if coOccurring_keywords_var else 0
+    # the form sends the picked search options as a JSON list, e.g. ["Partial match"]
+    search_options_list = json.loads(search_options) if search_options.startswith("[") else []
     return dispatch(
         app,
         lambda: run_search_byWord(
@@ -727,9 +730,9 @@ def filesearchword(
             plus_K_words_sentences_var=plus_K_words_sentences_var,
             extract_sentences_var=extract,
             coOccurring_keywords_var=co_occur,
-            create_subcorpus_var=0,
+            create_subcorpus_var=1 if create_subcorpus_var else 0,
             search_options_menu_var="",
-            search_options_list=[],
+            search_options_list=search_options_list,
             language_list=["English"],
             language="English",
         ),
