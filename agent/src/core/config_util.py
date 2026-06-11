@@ -25,12 +25,7 @@ def checkConfigFileExists(config_filename, fileName, IO):
     # check that the config file exists first, after adding path to file
     if not os.path.isfile(os.path.join(GUI_IO_util.configPath, config_filename)):
         error = True
-        logger.info(
-            "File error",
-            'The "'
-            + config_filename
-            + '" config file does not exist. It must have been never created, deleted, or moved.\n\nYou must re-create the file by selecting the appropriate I/O options, save them, and try again!',
-        )
+        logger.info('File error %s', 'The "' + config_filename + '" config file does not exist. It must have been never created, deleted, or moved.\n\nYou must re-create the file by selecting the appropriate I/O options, save them, and try again!')
         fileName = ""
     else:
         if fileName != "":
@@ -40,18 +35,7 @@ def checkConfigFileExists(config_filename, fileName, IO):
                     os.path.join(GUI_IO_util.configPath, defaultConfigFilename)
                 ):
                     config_filename = defaultConfigFilename
-                logger.info(
-                    "File error",
-                    "The "
-                    + IO
-                    + " file saved in "
-                    + config_filename
-                    + "\n\n"
-                    + fileName
-                    + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new "
-                    + IO
-                    + " file and try again!",
-                )
+                logger.info('File error %s', "The " + IO + " file saved in " + config_filename + "\n\n" + fileName + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new " + IO + " file and try again!")
                 fileName = ""
     return error, fileName
 
@@ -63,12 +47,7 @@ def checkConfigDirExists(config_filename, dirName, IO):
     # check that the config file exists first, after adding path to file
     if not os.path.isfile(os.path.join(GUI_IO_util.configPath, config_filename)):
         error = True
-        logger.info(
-            "File error",
-            'The "'
-            + config_filename
-            + '" config file does not exist. It must have been never created, deleted, or moved.\n\nYou must re-create the file by selecting the appropriate I/O options, save them, and try again!',
-        )
+        logger.info('File error %s', 'The "' + config_filename + '" config file does not exist. It must have been never created, deleted, or moved.\n\nYou must re-create the file by selecting the appropriate I/O options, save them, and try again!')
 
         dirName = ""
     else:
@@ -79,18 +58,7 @@ def checkConfigDirExists(config_filename, dirName, IO):
                     os.path.join(GUI_IO_util.configPath, defaultConfigFilename)
                 ):
                     config_filename = defaultConfigFilename
-                logger.info(
-                    "Directory error",
-                    "The "
-                    + IO
-                    + " directory saved in "
-                    + config_filename
-                    + "\n\n"
-                    + dirName
-                    + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new "
-                    + IO
-                    + " directory and try again!",
-                )
+                logger.info('Directory error %s', "The " + IO + " directory saved in " + config_filename + "\n\n" + dirName + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new " + IO + " directory and try again!")
                 dirName = ""
     return error, dirName
 
@@ -118,10 +86,7 @@ def write_external_software_config_file(
         try:
             os.mkdir(GUI_IO_util.configPath)
         except Exception:
-            logger.info(
-                "Permission error?",
-                "The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
-            )
+            logger.info("Permission error? The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.")
             return
 
     config_filename_path = os.path.join(GUI_IO_util.configPath, config_filename)
@@ -146,12 +111,7 @@ def write_external_software_config_file(
             False,
         )
     except Exception:
-        logger.info(
-            "Permission error?",
-            "The command failed to save the config file\n\n"
-            + config_filename
-            + "\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
-        )
+        logger.info('Permission error? %s', "The command failed to save the config file\n\n" + config_filename + "\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.")
 
 
 def read_NLP_package_language_config():
@@ -169,10 +129,7 @@ def read_NLP_package_language_config():
     )
     error = False
     if not os.path.exists(config_filename):
-        logger.info(
-            "Warning",
-            "The config file 'NLP_default_package_language_config.csv' could not be found in the sub-directory 'config' of your main NLP Suite folder.\n\nPlease, setup the default NLP package and language options using the Setup button.",
-        )
+        logger.info("Warning The config file 'NLP_default_package_language_config.csv' could not be found in the sub-directory 'config' of your main NLP Suite folder.\n\nPlease, setup the default NLP package and language options using the Setup button.")
         error = True
     else:
         try:
@@ -237,10 +194,7 @@ def write_NLP_package_language_config_file(
         try:
             os.mkdir(GUI_IO_util.configPath)
         except Exception:
-            logger.info(
-                "Permission error?",
-                "The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
-            )
+            logger.info("Permission error? The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.")
             return
 
     config_filename_path = os.path.join(GUI_IO_util.configPath, config_filename)
@@ -273,12 +227,7 @@ def write_NLP_package_language_config_file(
             False,
         )
     except Exception:
-        logger.info(
-            "Permission error?",
-            "The command failed to save the config file\n\n"
-            + config_filename
-            + "\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
-        )
+        logger.info('Permission error? %s', "The command failed to save the config file\n\n" + config_filename + "\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.")
 
 
 def save_NLP_package_language_config(
@@ -396,12 +345,7 @@ def read_config_file(config_filename, config_input_output_numeric_options):
         config_input_output_alphabetic_options.pop(0)  # skip header
         # if not 'Date format' in config_input_output_alphabetic_options[0]: # len(config_input_output_alphabetic_options[0])==2:
         if len(config_input_output_alphabetic_options[0]) == 2:
-            logger.info(
-                "Obsolete csv config file structure",
-                "The "
-                + configFilePath
-                + " has an obsolete config file structure.\n\nIt will be automatically deleted.\n\nPlease, enter next the Input/output configuration options that will be saved with the new file structure.",
-            )
+            logger.info('Obsolete csv config file structure %s', "The " + configFilePath + " has an obsolete config file structure.\n\nIt will be automatically deleted.\n\nPlease, enter next the Input/output configuration options that will be saved with the new file structure.")
             csv_file.close()
             os.remove(configFilePath)
             # repeat until the user has entered the appropriate information in NLP_setup_IO_main.py
@@ -416,10 +360,7 @@ def read_config_file(config_filename, config_input_output_numeric_options):
                     shell=True,
                 )
                 if not os.path.isfile(configFilePath):
-                    logger.info(
-                        "Missing IO configuration data ",
-                        "You must enter the appropriate Input/output configuration options in NLP_setup_IO_main.py and SAVE them to exit this loop.",
-                    )
+                    logger.info('Missing IO configuration data  You must enter the appropriate Input/output configuration options in NLP_setup_IO_main.py and SAVE them to exit this loop.')
             # read the newly saved options
             csv_file = open(configFilePath, newline="")
             config_input_output_alphabetic_options = list(
@@ -530,10 +471,7 @@ def write_IO_config_file(
         try:
             os.mkdir(GUI_IO_util.configPath)
         except Exception:
-            logger.info(
-                "Permission error?",
-                "The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
-            )
+            logger.info("Permission error? The command failed to create the Config directory.\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.")
             return
 
     config_filename_path = os.path.join(GUI_IO_util.configPath, config_filename)
@@ -553,12 +491,7 @@ def write_IO_config_file(
             writer.writerows(config_input_output_alphabetic_options)
         csv_file.close()
     except Exception:
-        logger.info(
-            "Permission error?",
-            "The command failed to save the config file\n\n"
-            + config_filename
-            + "\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.",
-        )
+        logger.info('Permission error? %s', "The command failed to save the config file\n\n" + config_filename + "\n\nIf you look at your command line and you see a 'Permission error', it means that the folder where you installed your NLP Suite is Read only.\n\nYou can check whether that's the case by right clicking on the folder name, clicking on 'Properties'. Make sure that the 'Attributes' setting, the last one on the display window, is NOT set to 'Read only'. If so, click on the checkbox until the Read only is cleared, click on 'Apply' and then 'OK', exit the NLP Suite and try again.")
 
     if config_filename != "license_config.csv":
         IO_user_interface_util.timed_alert(

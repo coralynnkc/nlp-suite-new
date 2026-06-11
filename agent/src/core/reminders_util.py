@@ -574,17 +574,14 @@ def resetReminder(scriptName, title):
     routine = get_routine_from_scriptName(scriptName)
     if title != "Open reminders":
         if title == "No Reminders available":
-            logger.info("Reminders warning", "There are no reminders available for this script.")
+            logger.info('Reminders warning There are no reminders available for this script.')
             return
         remindersFile = os.path.join(GUI_IO_util.remindersPath, "reminders.csv")
         try:
             df = pd.read_csv(remindersFile, encoding="utf-8", on_bad_lines="skip")
             # get the row number of the routine that we are looking at
         except Exception:
-            logger.info(
-                "Reminders file error",
-                'The reminders.csv file saved in the reminders subdirectory is ill formed. Most likely, it contains extra , in one of the three fields (Routine, Title, Message).\n\nPlease, let the NLP Suite development team know the problem so it can be fixed.\n\nIf any of the fields contain , the field content must be enclosed in "".',
-            )
+            logger.info('Reminders file error The reminders.csv file saved in the reminders subdirectory is ill formed. Most likely, it contains extra , in one of the three fields (Routine, Title, Message).\n\nPlease, let the NLP Suite development team know the problem so it can be fixed.\n\nIf any of the fields contain , the field content must be enclosed in "".')
             return
         try:
             df1 = df.loc[(df["Routine"] == routine) & (df["Title"] == title)]
@@ -598,12 +595,7 @@ def resetReminder(scriptName, title):
                 else:
                     return
         except Exception:
-            logger.info(
-                "Reminders file error",
-                "The reminders.csv file saved in the reminders subdirectory does not contain the reminder '"
-                + title
-                + "'.\n\nPlease, let the NLP Suite development team know the problem so it can be fixed.",
-            )
+            logger.info('Reminders file error %s', "The reminders.csv file saved in the reminders subdirectory does not contain the reminder '" + title + "'.\n\nPlease, let the NLP Suite development team know the problem so it can be fixed.")
             return
         message = df.at[row_num, "Message"]
         status = df.at[row_num, "Status"]

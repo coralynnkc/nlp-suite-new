@@ -42,7 +42,7 @@ def prepare_data_to_be_plotted_inExcel(
                 io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip"
             )
         except ValueError as err:
-            logger.info("Input data read error", str(err))
+            logger.info('Input data read error %s', str(err))
             return None
         headers = list(data.columns)
         withHeader_var = True
@@ -97,7 +97,7 @@ def prepare_data_to_be_plotted_inExcel(
                         + inputFilename
                         + "\n\nPlease, check carefully the data in the csv file; it may contain filenames with non-utf-8/ISO-8859-1 characters; less likely, the data in the txt files that generated the csv file may also contain non-compliant characters. Run the utf-8 compliance algorithm and, perhaps, run the cleaning algorithm that converts apostrophes.\n\nNO EXCEL CHART PRODUCED."
                     )
-                logger.info("Input file read error", str(err))
+                logger.info('Input file read error %s', str(err))
                 return None
         data_to_be_plotted = get_data_to_be_plotted_NO_counts(
             inputFilename if not inputFileData else None,
@@ -313,7 +313,7 @@ def visualize_chart(
         inputFilename
     )
 
-    logger.info("\n\n\nRecords in inputfile (in charts_util)", nRecords, "  ", inputFilename)
+    logger.info('\n\n\nRecords in inputfile (in charts_util) %s    %s', nRecords, inputFilename)
 
     # standard bar chart ------------------------------------------------------------------------------
     # Form	Lemma	POS	Record ID	Sentence ID	Document ID	Document

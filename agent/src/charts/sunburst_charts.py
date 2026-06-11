@@ -17,7 +17,7 @@ def run_sun_burst(
     csv_file_categorical_field_list = json.loads(selected_pairs_data)
 
     #     for pair in saved_pairs
-    logger.info("IMPORTANT LIST ", csv_file_categorical_field_list)
+    logger.info('IMPORTANT LIST  %s', csv_file_categorical_field_list)
     filesToOpen = []
 
     # NOTE: set to default values, can allow user input flexibility later

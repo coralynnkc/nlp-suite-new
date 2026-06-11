@@ -166,7 +166,7 @@ def malletModelling(
         "Compute Mallet LDA coherence values for each topic.\n\nPlease, be patient...",
     )
     coherence_ldamallet = coherence_model_ldamallet.get_coherence()
-    logger.info("\nCoherence value: ", coherence_ldamallet)
+    logger.info('\nCoherence value:  %s', coherence_ldamallet)
     model_list, coherence_values = compute_coherence_values(
         MalletDir,
         dictionary=id2word,
@@ -199,7 +199,7 @@ def malletModelling(
         coherence_value = round(cv, 4)
         if coherence_value > optimal_coherence:
             optimal_index = index
-        logger.info("Topic number", m, "has coherence value ", coherence_value)
+        logger.info('Topic number %s has coherence value  %s', m, coherence_value)
         index += 1
     # Select the model and print the topics
 
@@ -338,8 +338,8 @@ def malletModelling(
     ]
     df_dominant_topics = df_dominant_topics.drop_duplicates()
 
-    logger.info("Number of rows of topic_distribution.csv: ", df_dominant_topics.shape[0])
-    logger.info("Number of columns of topic_distribution.csv: ", df_dominant_topics.shape[1])
+    logger.info('Number of rows of topic_distribution.csv:  %s', df_dominant_topics.shape[0])
+    logger.info('Number of columns of topic_distribution.csv:  %s', df_dominant_topics.shape[1])
     # Save csv file
     fileName = os.path.join(outputDir, "NLP_Gensim_topic_distribution.csv")
     df_dominant_topics.to_csv(fileName, encoding="utf-8", index=False)
@@ -554,7 +554,7 @@ def run_Gensim(
     )
 
     # Compute Perplexity; a measure of how good the model is. lower the better.
-    logger.info("\nPerplexity Score: ", lda_model.log_perplexity(corpus))
+    logger.info('\nPerplexity Score:  %s', lda_model.log_perplexity(corpus))
 
     # TODO the coherence lines produce an error
     # Compute Coherence Score

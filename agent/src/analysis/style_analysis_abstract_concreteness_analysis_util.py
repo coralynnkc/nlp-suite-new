@@ -60,7 +60,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
     # end method if file is empty
     if len(fulltext) < 1:
         logger.info(f"Error: The file '{inputFilename}' is empty.\n\nPlease, use another file and try again.")
-        logger.info("Empty file ", inputFilename)
+        logger.info('Empty file  %s', inputFilename)
         return
 
     # otherwise, split into sentences

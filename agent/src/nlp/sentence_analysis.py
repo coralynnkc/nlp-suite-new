@@ -96,7 +96,7 @@ def run_sentence_analysis(
                 return None
 
             except Exception as e:
-                logger.info("Error ", e, " has occurred.")
+                logger.info('Error  %s  has occurred.', e)
                 return None
 
         inputFilename = first_file(inputDir)

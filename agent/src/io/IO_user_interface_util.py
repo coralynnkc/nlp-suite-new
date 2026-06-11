@@ -92,7 +92,7 @@ def timed_alert(
                 message_text + "\n\nYou can follow the algorithm in command line."
             )
 
-        logger.info(message_title, message_text)
+        logger.info('%s %s', message_title, message_text)
 
     return time.time()
 

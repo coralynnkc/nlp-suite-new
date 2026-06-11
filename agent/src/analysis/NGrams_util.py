@@ -162,7 +162,7 @@ def operateongram(documents, files, ngramsNumber):
         ngrams.extend(find_ngrams(document, ngramsNumber))
     documents_ngram = [find_ngrams(document, ngramsNumber) for document in documents]
     ngram_freq = find_frequencies(documents_ngram, ngrams, files)
-    logger.info(ngramsNumber, "gram of your corpus is complete.")
+    logger.info('%s gram of your corpus is complete.', ngramsNumber)
     return ngram_freq
 
 

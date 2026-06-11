@@ -720,12 +720,7 @@ def remove_characters_between_characters(
                         str(os.stat(file).st_size - os.stat(outfile).st_size),
                     ]
                 )
-                logger.info(
-                    "   FILE SIZES (in bytes) - ORIGINAL ",
-                    os.stat(file).st_size,
-                    " EDITED ",
-                    os.stat(outfile).st_size,
-                )
+                logger.info('   FILE SIZES (in bytes) - ORIGINAL  %s  EDITED  %s', os.stat(file).st_size, os.stat(outfile).st_size)
 
                 if inputDir != "":
                     No_files_edited += 1

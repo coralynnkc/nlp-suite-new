@@ -90,9 +90,9 @@ def main():
             normalize_var,
             inputFileData=inputFileData,
         )
-        logger.info("Output files generated:", output_files)
+        logger.info('Output files generated: %s', output_files)
     except Exception as e:
-        logger.info("An error occurred during testing:", e)
+        logger.info('An error occurred during testing: %s', e)
 
 
 if __name__ == "__main__":

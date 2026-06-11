@@ -160,7 +160,7 @@ def purge_partial_matches(
         filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(
             header, filenameCol, inputFilename
         )
-        logger.info(nameColNum, filenameColNum)
+        logger.info('%s %s', nameColNum, filenameColNum)
         if header is not None:
             for row in csv_reader:
                 if os.path.splitext(row[filenameColNum])[1].lower() == ".pdf":
@@ -168,7 +168,7 @@ def purge_partial_matches(
                 elif os.path.splitext(row[filenameColNum])[1].lower() == ".docx":
                     fill_dictionary(row, docxdict, nameColNum, filenameColNum)
                 else:
-                    logger.info("Unrecognized file:", row[filenameColNum])
+                    logger.info('Unrecognized file: %s', row[filenameColNum])
 
     deleteList = []
     with open(inputFilename, encoding="utf-8", errors="ignore") as read_obj:

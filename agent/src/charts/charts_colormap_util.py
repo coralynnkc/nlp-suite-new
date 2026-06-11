@@ -43,7 +43,7 @@ def read_filename_color(inputFilename):
         missing_values = dataFrame.isnull().sum()
         if missing_values.any():
             logger.info("Number of missing values for each column:")
-            logger.info(missing_values[missing_values > 0], "\n")
+            logger.info('%s \n', missing_values[missing_values > 0])
         else:
             logger.info("There are no missing values in the dataset.\n")
         return dataFrame
@@ -265,7 +265,7 @@ def Sunburst_Treemap(
 ):
     import io
 
-    logger.info(fixed_param_var, rate_param_var, base_param_var, filter_options_var)
+    logger.info('%s %s %s %s', fixed_param_var, rate_param_var, base_param_var, filter_options_var)
     if file_data != "":
         data = pd.read_csv(io.StringIO(file_data))
     else:

@@ -141,7 +141,7 @@ def Stanza_annotate(
     filesToOpen = []
 
     if len(language) == 0:
-        logger.info("Warning", "The language list is empty.\n\nPlease, select a language and try again.")
+        logger.info('Warning The language list is empty.\n\nPlease, select a language and try again.')
         return filesToOpen
 
     available_language = check_Stanza_available_languages(language)
@@ -282,12 +282,7 @@ def Stanza_annotate(
             with open(doc, encoding=language_encoding) as f:
                 text = f.read()
                 if text == "":
-                    logger.info(
-                        "Warning",
-                        "The input file\n"
-                        + tail
-                        + "\nis empty. The file will be skipped from processing.\n\nPlease, check the file and try again.",
-                    )
+                    logger.info('Warning %s', "The input file\n" + tail + "\nis empty. The file will be skipped from processing.\n\nPlease, check the file and try again.")
                     break
                 text = text.split("\n\n")
                 text = [t for t in text if not re.match(r"^\s*$", t)]
@@ -307,18 +302,10 @@ def Stanza_annotate(
                     nlp = MultilingualPipeline(lang_id_config={"langid_lang_subset": ["en", "multilingual"]})
                     Stanza_output = nlp(text)
                 except Exception:
-                    logger.info(
-                        "Warning",
-                        "Stanza encountered an error trying to download the language pack "
-                        + str(language)
-                        + "\n\nTry manually selecting the appropriate language rather than multilingual.",
-                    )
+                    logger.info('Warning %s', "Stanza encountered an error trying to download the language pack " + str(language) + "\n\nTry manually selecting the appropriate language rather than multilingual.")
                     return
             else:
-                logger.info(
-                    "Warning",
-                    "Stanza encountered an error trying to download the selected language pack " + str(language),
-                )
+                logger.info('Warning %s', "Stanza encountered an error trying to download the selected language pack " + str(language))
                 return
 
         temp_df = convertStanzaDoctoDf(

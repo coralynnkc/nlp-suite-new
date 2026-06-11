@@ -36,18 +36,13 @@ def make_directory(newDirectory, silent=True):
     # Updates permission automatically
     if os.path.exists(newDirectory):
         if not silent:
-            logger.info(
-                "Directory already exists",
-                "There already exists a directory\n\n"
-                + newDirectory
-                + "\n\nThis directory will be replaced",
-            )
+            logger.info('Directory already exists %s', "There already exists a directory\n\n" + newDirectory + "\n\nThis directory will be replaced")
         shutil.rmtree(newDirectory)
     try:
         os.chmod(Path(newDirectory).parent.absolute(), 0o755)
         os.mkdir(newDirectory, 0o755)
     except Exception as e:
-        logger.info("error: ", e.__doc__)
+        logger.info('error:  %s', e.__doc__)
         newDirectory = ""
     return newDirectory
 
@@ -70,19 +65,11 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
         outputSubDir = outputDir
     if os.path.exists(outputSubDir):
         if not silent:
-            logger.info(
-                "Directory already exists",
-                "The algorithms will create a new directory\n\n"
-                + outputSubDir
-                + "\n\nA directory by the same name already exists and it will be replaced.\n\nAre you sure you want to continue?",
-            )
+            logger.info('Directory already exists %s', "The algorithms will create a new directory\n\n" + outputSubDir + "\n\nA directory by the same name already exists and it will be replaced.\n\nAre you sure you want to continue?")
         try:
             shutil.rmtree(outputSubDir)
         except Exception as e:
-            logger.info(
-                "Directory error",
-                "Could not create the directory " + outputSubDir + "\n\n" + str(e),
-            )
+            logger.info('Directory error %s', "Could not create the directory " + outputSubDir + "\n\n" + str(e))
             outputSubDir = ""
     try:
         # chmod() changes the mode of path to the passed numeric mode
@@ -90,11 +77,8 @@ def make_output_subdirectory(inputFilename, inputDir, outputDir, label, silent=T
             os.chmod(Path(outputSubDir).parent.absolute(), 0o755)
             os.mkdir(outputSubDir, 0o755)
     except Exception as e:
-        logger.info(
-            "Directory error",
-            "Could not create the directory " + outputSubDir + "\n\n" + str(e),
-        )
-        logger.info("error: ", e.__doc__)
+        logger.info('Directory error %s', "Could not create the directory " + outputSubDir + "\n\n" + str(e))
+        logger.info('error:  %s', e.__doc__)
         outputSubDir = ""
 
     return outputSubDir
@@ -119,12 +103,7 @@ def getFileList_SubDir(inputFilename, inputDir, fileType=".*", silent=False):
             files = [inputFilename]
         else:
             if not silent:
-                logger.info(
-                    "Input file error",
-                    "The input file type expected by the algorithm is "
-                    + fileType
-                    + ".\n\nPlease, select the expected file type and try again.",
-                )
+                logger.info('Input file error %s', "The input file type expected by the algorithm is " + fileType + ".\n\nPlease, select the expected file type and try again.")
     return files
 
 
@@ -256,7 +235,7 @@ def do_compare(input_list, file_end, sort_order, compare_split, date_format, dat
                 + filename2
                 + "\nYou should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration at the top of the GUI.\n\n"
             )
-            logger.info(filename1, "\n", filename2)
+            logger.info('%s \n %s', filename1, filename2)
             return -1
 
     return sorted(input_list, key=functools.cmp_to_key(compare))
@@ -273,25 +252,14 @@ def getFileList(
         for path in Path(inputDir).glob("*" + fileType):
             files.append(str(path))
         if len(files) == 0:
-            logger.info(
-                "Input files error",
-                "No files of type "
-                + fileType
-                + " found in the directory\n\n"
-                + inputDir,
-            )
+            logger.info('Input files error %s', "No files of type " + fileType + " found in the directory\n\n" + inputDir)
     else:
         if not checkFile(inputFile):
             return files
         if inputFile.endswith(fileType):
             files = [inputFile]
         else:
-            logger.info(
-                "Input file error",
-                "The input file type expected by the algorithm is "
-                + fileType
-                + ".\n\nPlease, select the expected file type and try again.",
-            )
+            logger.info('Input file error %s', "The input file type expected by the algorithm is " + fileType + ".\n\nPlease, select the expected file type and try again.")
     configFileName = GUI_IO_util.configPath + os.sep + configFileName
 
     # append sort order and separator
@@ -307,19 +275,9 @@ def getFileList(
         except Exception as e:
             logger.info(str(e))
             if configFileName == "NLP_default_IO_config.csv":
-                logger.info(
-                    "Input config file error",
-                    "The default I/O config file "
-                    + configFileName
-                    + ' does not exist.\n\nPlease, use the "Setup INPUT/OUTPUT configuration" button to setup the I/O config file and try again.',
-                )
+                logger.info('Input config file error %s', "The default I/O config file " + configFileName + ' does not exist.\n\nPlease, use the "Setup INPUT/OUTPUT configuration" button to setup the I/O config file and try again.')
             else:
-                logger.info(
-                    "Input config file error",
-                    "The GUI-specific config file "
-                    + configFileName
-                    + ' does not exist.\n\nPlease, use the dropdown menu "I/O configuration" to select the GUI-specific option, then click on "Setup INPUT/OUTPUT configuration" button to setup the GUI-specific I/O config file and try again.',
-                )
+                logger.info('Input config file error %s', "The GUI-specific config file " + configFileName + ' does not exist.\n\nPlease, use the dropdown menu "I/O configuration" to select the GUI-specific option, then click on "Setup INPUT/OUTPUT configuration" button to setup the GUI-specific I/O config file and try again.')
             return files
 
         try:
@@ -329,14 +287,7 @@ def getFileList(
 
         if str(sort_order) == "nan":
             sort_order = "1"
-            logger.info(
-                "No sort order available. Files will be read without sorting.\nIf you wish to sort the input files in a specific order, you should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration' at the top of the GUI.\n\n",
-                False,
-                "",
-                True,
-                "",
-                False,
-            )
+            logger.info("No sort order available. Files will be read without sorting.\nIf you wish to sort the input files in a specific order, you should edit the filename settings using the button 'Setup INPUT/OUTPUT configuration' at the top of the GUI.\n\n %s  %s  %s", False, True, False)
 
         try:
             aa = float(sort_order)
@@ -490,12 +441,7 @@ def checkDirectory(path, message=True):
         return True
     else:
         if message:
-            logger.info(
-                "Directory error",
-                "The directory "
-                + path
-                + " does not exist. It may have been renamed, deleted, moved.\n\nPlease, check the DIRECTORY and try again",
-            )
+            logger.info('Directory error %s', "The directory " + path + " does not exist. It may have been renamed, deleted, moved.\n\nPlease, check the DIRECTORY and try again")
         return False
 
 
@@ -508,24 +454,12 @@ def checkFile(inputFilename, extension=None, silent=False):
     if not os.path.isfile(inputFilename):
         if not silent:
             logger.info("The file " + inputFilename + " could not be found.")
-            logger.info(
-                "Input file not found",
-                "Error in input filename and path.\n\nThe file "
-                + inputFilename
-                + " could not be found.\n\nPlease, check the INPUT FILE PATH and try again.",
-            )
+            logger.info('Input file not found %s', "Error in input filename and path.\n\nThe file " + inputFilename + " could not be found.\n\nPlease, check the INPUT FILE PATH and try again.")
         return False
     if extension is not None and not "." + inputFilename.rsplit(".", 1)[1] == extension:
         if not silent:
             logger.info("File has the wrong extension.")
-            logger.info(
-                "Input file extension error",
-                "Error in input filename and path.\n\nThe file "
-                + inputFilename
-                + " does not have the expected extension "
-                + extension
-                + "\n\nPlease, check the INPUT FILE and try again.",
-            )
+            logger.info('Input file extension error %s', "Error in input filename and path.\n\nThe file " + inputFilename + " does not have the expected extension " + extension + "\n\nPlease, check the INPUT FILE and try again.")
         return False
     else:
         return True
@@ -665,14 +599,7 @@ def generate_output_file_name(
 
     if sys.platform == "win32":  # Windows
         if len(outFilename) > 255:
-            logger.info(
-                "Warning",
-                "The length ("
-                + str(len(outFilename))
-                + " characters) of the filename\n\n"
-                + outFilename
-                + "\n\nexceeds the maximum length of 255 characters allowed by Windows Operating System.\n\nPlease, reduce the filename length and try again.",
-            )
+            logger.info('Warning %s', "The length (" + str(len(outFilename)) + " characters) of the filename\n\n" + outFilename + "\n\nexceeds the maximum length of 255 characters allowed by Windows Operating System.\n\nPlease, reduce the filename length and try again.")
 
     return outFilename
 
@@ -681,10 +608,7 @@ def generate_output_file_name(
 def GetNumberOfDocumentsInDirectory(inputDirectory, extension=""):
     numberOfDocs = 0
     if inputDirectory == "":
-        logger.info(
-            "No directory selected",
-            "The directory passed to the GetNumberOfDocumentsInDirectory function is blank.\n\nFunction aborted.",
-        )
+        logger.info('No directory selected The directory passed to the GetNumberOfDocumentsInDirectory function is blank.\n\nFunction aborted.')
         return numberOfDocs
     if extension == "":  # count any document
         numberOfDocs = len(
@@ -707,7 +631,7 @@ def GetNumberOfDocumentsInDirectory(inputDirectory, extension=""):
 # return csvfile if opened up properly, or empty string if error occurs
 def openCSVFile(inputfile, open_type, encoding_type="utf-8"):
     if inputfile == "":
-        logger.info("File error", "The input file is blank.")
+        logger.info('File error The input file is blank.')
         return ""
     try:
         csvfile = open(
@@ -715,12 +639,7 @@ def openCSVFile(inputfile, open_type, encoding_type="utf-8"):
         )
         return csvfile
     except OSError:
-        logger.info(
-            "File error",
-            "Could not open the file "
-            + inputfile
-            + "\n\nA file with the same name is already open.\n\nPlease, close the Excel file and then click OK to resume.",
-        )
+        logger.info('File error %s', "Could not open the file " + inputfile + "\n\nA file with the same name is already open.\n\nPlease, close the Excel file and then click OK to resume.")
         return ""
 
 
@@ -746,28 +665,15 @@ def getScript(pydict, script):
         val = pydict[script]
     except Exception:
         if "---------------------" in script or len(script) == 0:
-            logger.info(
-                "Warning",
-                "The selected option '"
-                + script
-                + "' is not a valid option.\n\nIt is only an explanatory label. \n\nPlease, select a different option.",
-            )
+            logger.info('Warning %s', "The selected option '" + script + "' is not a valid option.\n\nIt is only an explanatory label. \n\nPlease, select a different option.")
             return script_to_run, IO_values
 
         # entry not in dic; programming error; must be added!
-        logger.info(
-            "Warning",
-            "The selected option '"
-            + script
-            + "' was not found in the Python dictionary in NLP_GUI.py.\n\nPlease, inform the NLP Suite developers of the problem.\n\nSorry!",
-        )
+        logger.info('Warning %s', "The selected option '" + script + "' was not found in the Python dictionary in NLP_GUI.py.\n\nPlease, inform the NLP Suite developers of the problem.\n\nSorry!")
         return script_to_run, IO_values
     # name of the python script
     if val[0] == "":
-        logger.info(
-            "Warning",
-            "The selected option '" + script + "' is not available yet.\n\nSorry!",
-        )
+        logger.info('Warning %s', "The selected option '" + script + "' is not available yet.\n\nSorry!")
         return script_to_run, IO_values
     # check that Python script exists
     scriptName = val[0]

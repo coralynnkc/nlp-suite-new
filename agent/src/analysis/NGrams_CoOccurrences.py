@@ -56,7 +56,7 @@ def run_ngrams(
         )
         return
 
-    logger.info("language_list", language_list)
+    logger.info('language_list %s', language_list)
 
     total_file_number = 0
     error_file_number = 0
@@ -109,7 +109,7 @@ def run_ngrams(
     # COMPUTE Ngrams ______________________________________________________________________________
 
     if Ngrams_compute_var:
-        logger.info("N-grams options:", ngrams_options_list)
+        logger.info('N-grams options: %s', ngrams_options_list)
         ngrams_word_var = False
         lemmatize = False
         normalize = False
@@ -221,8 +221,8 @@ def run_ngrams(
     # The following set of options apply to both csv-file search and viewer
 
     if Ngrams_search_var or (ngrams_viewer_var or CoOcc_Viewer_var):
-        logger.info("Search/VIEWER options:", viewer_options_list)
-        logger.info("Search word(s):", search_words)
+        logger.info('Search/VIEWER options: %s', viewer_options_list)
+        logger.info('Search word(s): %s', search_words)
 
         normalize = False
         useLemma = False

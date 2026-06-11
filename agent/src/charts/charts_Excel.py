@@ -86,7 +86,7 @@ def run_excelCharts(
     series_label_list = []
     for _i in range(len(selected_series)):
         series_label_list.append("")
-    logger.info("series_label_list", series_label_list)
+    logger.info('series_label_list %s', series_label_list)
     if charts_Excel_util.create_excel_chart(
         data_to_be_plotted,
         output_file_name,

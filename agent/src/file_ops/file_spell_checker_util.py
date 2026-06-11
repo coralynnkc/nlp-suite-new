@@ -733,7 +733,7 @@ def check_for_typo(
 
     else:
         logger.info("Running NER on each file...")
-        logger.info("documents: ", documents)
+        logger.info('documents:  %s', documents)
 
         NER = [
             [
@@ -780,7 +780,7 @@ def check_for_typo(
 
         word_list = list(set(word_list))
         processed_words = preprocess_word_list(word_list, true_spellings)
-        logger.info("Now word_list: ", word_list)
+        logger.info('Now word_list:  %s', word_list)
         unused_spells = find_unused_spells(true_spellings, set(word_list))
         potential_new_spells = find_potential_new_spells(documents, true_spellings)
 
@@ -1267,11 +1267,11 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
 
     for filename in files:
         if check_withinDir:
-            logger.info("Processing file:", filename)
+            logger.info('Processing file: %s', filename)
         fileID = fileID + 1
         # with open(inputFilenames_path, 'r', encoding='utf-8', errors='ignore') as opened_file:
         with open(filename, encoding="utf-8", errors="ignore") as opened_file:
-            logger.info("  Processing file:", filename)
+            logger.info('  Processing file: %s', filename)
             originalText = opened_file.read()
             os.path.join(inputDir, filename)
             if checker_value_var == "*" or "autocorrect" in checker_value_var:
@@ -1282,7 +1282,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
                 csv["Document ID"] = [fileID] * csv.shape[0]
                 autocorrect_df = pandas.concat([autocorrect_df, csv], ignore_index=True)
                 autocorrect_df = autocorrect_df.drop_duplicates()
-                logger.info("AUTOCORRECT\n", text)
+                logger.info('AUTOCORRECT\n %s', text)
 
             if checker_value_var == "*" or "pyspellchecker" in checker_value_var:
                 text, csv = spellchecking_pyspellchecker(originalText, filename)
@@ -1294,7 +1294,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
                     [pyspellchecker_df, csv], ignore_index=True
                 )
                 pyspellchecker_df = pyspellchecker_df.drop_duplicates()
-                logger.info("PYSPELLCHECKER\n", text)
+                logger.info('PYSPELLCHECKER\n %s', text)
 
             if checker_value_var == "*" or "textblob" in checker_value_var:
                 text, csv = spellchecking_text_blob(originalText, filename)
@@ -1304,7 +1304,7 @@ def spellcheck(inputFilename, inputDir, checker_value_var, check_withinDir):
                 csv["Document ID"] = [fileID] * csv.shape[0]
                 textblob_df = pandas.concat([textblob_df, csv], ignore_index=True)
                 textblob_df = textblob_df.drop_duplicates()
-                logger.info("TEXTBLOB\n", text)
+                logger.info('TEXTBLOB\n %s', text)
 
             head, tail = os.path.split(filename)
             # head is path, tail is filename
@@ -1429,7 +1429,7 @@ def language_detection(
             # hi, hr, hu, id, it, ja, kn, ko, lt, lv, mk, ml, mr, ne, nl, no, pa, pl,
             # pt, ro, ru, sk, sl, so, sq, sv, sw, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw
             # ISO codes https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-            logger.info("   LANGDETECT", language, probability)
+            logger.info('   LANGDETECT %s %s', language, probability)
             currentLine = [
                 [
                     "LANGDETECT",
@@ -1458,7 +1458,7 @@ def language_detection(
             # pt, qu, ro, ru, rw, se, si, sk, sl, sq,
             # sr, sv, sw, ta, te, th, tl, tr, ug, uk,
             # ur, vi, vo, wa, xh, zh, zu
-            logger.info("   LANGID", language, probability)  # ('en', 0.999999999999998)
+            logger.info('   LANGID %s %s', language, probability)  # ('en', 0.999999999999998)
             currentLine.append(
                 [
                     "LANGID",
@@ -1488,9 +1488,7 @@ def language_detection(
             language = lang_dict.get(language)
             probability = round(float(value["score"]), 2)
             #
-            logger.info(
-                "   SPACY", language, probability
-            )  # {'language': 'en', 'score': 0.9999978351575265}
+            logger.info('   SPACY %s %s', language, probability)  # {'language': 'en', 'score': 0.9999978351575265}
             currentLine.append(
                 [
                     "spaCy",
@@ -1519,7 +1517,7 @@ def language_detection(
             language = doc.lang
             language = lang_dict.get(language)
             probability = float(1)
-            logger.info("   Stanza", language, probability)
+            logger.info('   Stanza %s %s', language, probability)
             currentLine.append(
                 [
                     "Stanza",

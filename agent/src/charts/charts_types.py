@@ -91,26 +91,17 @@ def boxplot(
         data = pd.read_csv(inputFileData, encoding="utf-8", on_bad_lines="skip")
 
     if "int" not in str(type(data[var][0])) and "float" not in str(type(data[var][0])):
-        logger.info(
-            "Warning",
-            'The "Boxplots" option requires a numeric field.\n\nPlease, use the dropdown menu to select a numeric csv file field for visualization and try again.',
-        )
+        logger.info('Warning The "Boxplots" option requires a numeric field.\n\nPlease, use the dropdown menu to select a numeric csv file field for visualization and try again.')
         return
 
     if bycategory != 0 and bycategory is not None and category is not None:
         if "str" not in str(type(data[category][0])):
-            logger.info(
-                "Warning",
-                'The "Split data by category" Boxplots option requires a CATEGORICAL "csv file field"".\n\nPlease, use the "csv file field" dropdown menu to select a CATEGORICAL field and try again.',
-            )
+            logger.info('Warning The "Split data by category" Boxplots option requires a CATEGORICAL "csv file field"".\n\nPlease, use the "csv file field" dropdown menu to select a CATEGORICAL field and try again.')
             return
 
     if color is not None:
         if "str" not in str(type(data[color][0])):
-            logger.info(
-                "Warning",
-                'The Boxplots with "Split data by category" and color options requires a secodn CATEGORICAL "csv file field" for the color option".\n\nPlease, use the second "csv file field" dropdown menu to select a CATEGORICAL field and try again.',
-            )
+            logger.info('Warning The Boxplots with "Split data by category" and color options requires a secodn CATEGORICAL "csv file field" for the color option".\n\nPlease, use the second "csv file field" dropdown menu to select a CATEGORICAL field and try again.')
             return
 
     if not bycategory:
@@ -149,11 +140,7 @@ def Sankey(
         try:
             data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
         except Exception:
-            logger.info(
-                "Warning, the input file ",
-                data,
-                " is empty.\n\nNo Sankey flowchart can be produced.\n\nPlease, check your input file and try again.",
-            )
+            logger.info('Warning, the input file  %s  is empty.\n\nNo Sankey flowchart can be produced.\n\nPlease, check your input file and try again.', data)
             return
 
     if not isinstance(
@@ -322,12 +309,7 @@ def separator(data, interest, algorithm):
     finaldata = data.loc[id_list, :]  # filter dataset by row with interest values
     finaldata["interest"] = interestvector  # add interest column
     if finaldata.empty:
-        logger.info(
-            "Warning",
-            "The "
-            + algorithm
-            + " algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.",
-        )
+        logger.info('Warning %s', "The " + algorithm + " algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.")
     return finaldata
 
 
@@ -358,10 +340,7 @@ def Sunburst(
         data = data.fillna("Blank/missing value")
     # The presence of a Nan value will classify the object as float
     if not isinstance(data[label][0], str):
-        logger.info(
-            "Warning",
-            "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
-        )
+        logger.info('Warning The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.')
     # the last 3 arguments are optional. If first_sentences is specified and last_sentences is not or vice versa, we return a message stating they must both be specified or absent at the same time
     if (first_sentences is None and last_sentences is not None) or (
         first_sentences is not None and last_sentences is None
@@ -428,10 +407,7 @@ def Sunburst(
                     )  # return Sunburst
                 else:
                     if finaldata.empty:
-                        logger.info(
-                            "Warning",
-                            "The Sunburst algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.",
-                        )
+                        logger.info("Warning The Sunburst algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.")
 
             else:
                 tempdata1 = tempdata[
@@ -454,10 +430,7 @@ def Sunburst(
                         .drop(columns={"index"})
                     )  # all observations with last n sentences
                     if len(tempdata1) == 0:
-                        logger.info(
-                            "Warning",
-                            "The dataframe computed by theSunburst chart algorithm is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2",
-                        )
+                        logger.info('Warning The dataframe computed by theSunburst chart algorithm is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2')
                         return
 
                 list2 = list(
@@ -506,17 +479,11 @@ def Treemap(
         data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
     # The presence of a Nan value will classify the object as float
     if not isinstance(data[csv_file_field][0], str):
-        logger.info(
-            "Warning",
-            "The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.",
-        )
+        logger.info('Warning The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.')
     if extra_dimension_average and not isinstance(
         data[average_variable][0], np.float64
     ):
-        logger.info(
-            "Warning",
-            "The csv file field selected should be numeric.\n\nYou should select a numeric field, rather than an alphabetic field, and try again.",
-        )
+        logger.info('Warning The csv file field selected should be numeric.\n\nYou should select a numeric field, rather than an alphabetic field, and try again.')
         return
     data = separator(
         data, interest, "Treemap"

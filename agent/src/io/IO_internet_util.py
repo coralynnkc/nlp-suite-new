@@ -28,16 +28,7 @@ def check_internet_availability_warning(script):
             + script
             + "' requires internet connection to run. Please, check internet connection and try again."
         )
-        logger.info(
-            "Warning",
-            "Internet is not available... The script '"
-            + script
-            + "' requires internet connection to run.\n\nPlease, check internet connection and try again.\n\n\nIf you are running '"
-            + script
-            + "' from a country (e.g., China) with internet access barriers but you are connected to internet by other means (e.g., VPN) you can bypass the NLP Suite internet check.\n\nWould you like to bypass the check and run '"
-            + script
-            + "' anyway?",
-        )
+        logger.info('Warning %s', "Internet is not available... The script '" + script + "' requires internet connection to run.\n\nPlease, check internet connection and try again.\n\n\nIf you are running '" + script + "' from a country (e.g., China) with internet access barriers but you are connected to internet by other means (e.g., VPN) you can bypass the NLP Suite internet check.\n\nWould you like to bypass the check and run '" + script + "' anyway?")
         return False
     else:
         return True

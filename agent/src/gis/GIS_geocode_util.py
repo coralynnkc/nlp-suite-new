@@ -136,7 +136,7 @@ def nominatim_geocode(
         )
         # https: // gis.stackexchange.com / questions / 173569 / avoid - time - out - error - nominatim - geopy - openstreetmap
     except Exception as e:
-        logger.info(f"Nominatim TIMEOUT: {e}", timeout)
+        logger.info('%s %s', f"Nominatim TIMEOUT: {e}", timeout)
         if timeout < 20:
             try:
                 return nominatim_geocode(
@@ -645,11 +645,7 @@ def geocode(
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
                         notGeocodedList.append(itemToGeocode)
                         notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        logger.info(
-                            currRecord,
-                            "     LOCATION NOT FOUND BY " + geocoder,
-                            itemToGeocode,
-                        )
+                        logger.info('%s %s %s', currRecord, " LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
                 else:  # Google
                     try:  # use a try/except in case requests do not give results
                         lat, lng, address = (
@@ -663,11 +659,7 @@ def geocode(
                         geowriterNotFound.writerow([itemToGeocode, NER_Tag])
                         notGeocodedList.append(itemToGeocode)
                         notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        logger.info(
-                            currRecord,
-                            "     LOCATION NOT FOUND BY " + geocoder,
-                            itemToGeocode,
-                        )
+                        logger.info('%s %s %s', currRecord, " LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
                 if lat != 0 and lng != 0:
                     distinctGeocodedLocations[itemToGeocode] = (lat, lng, address)
                     lat = distinctGeocodedLocations[itemToGeocode][0]
