@@ -119,9 +119,8 @@ def genderanalysis(_: HttpRequest):
     return HttpResponse(template.render())
 
 
-def NER(_: HttpRequest):
-    template = loader.get_template("../templates/NER.html")
-    return HttpResponse(template.render())
+def NER(request: HttpRequest):
+    return _proxy_post(request, "/ner", "NER.html")
 
 
 def sunburst_charts(request: HttpRequest):

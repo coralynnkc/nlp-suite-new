@@ -5,7 +5,7 @@
 
 <div class="tool-container">
 <h1>NER (Named Entity Recognition) Annotator</h1>
-<form method="post" class="topic-modeling-form">
+<form method="post" class="ner-form">
     {% csrf_token %}
 
     {% include "partials/io_directories.html" %}
@@ -14,7 +14,7 @@
         <legend>Pre-processing</legend>
 
         <div class="field">
-            <button> Pre-processing tools (file checking &amp; cleaning GUI)</button>
+            <a href="{% url 'file_manager' %}">Pre-processing tools (file checking &amp; cleaning)</a>
             <p class="field-help">Check and clean your corpus before annotating (utf-8 compliance, sentence length, non-ASCII apostrophes &amp; quotes, % signs).</p>
             <details class="field-more">
                 <summary>Why pre-process</summary>
@@ -32,12 +32,11 @@
 
         <div class="field">
             <label for="ner_algorithm">NER package</label>
-            <select id="ner_algorithm" name="ner_algorithm">
+            <select id="ner_algorithm" name="NER_package">
                 <optgroup label="ner_packages_approaches">
                     <option value="*">*</option>
                     <option value="BERT English">BERT (English model)</option>
-                    <option value="ibm">IBM</option>
-                    <option value="spacy">spaCy</option>
+                    <option value="spaCy">spaCy</option>
                     <option value="Stanford CoreNLP">Stanford CoreNLP</option>
                     <option value="Stanza">Stanza</option>
                 </optgroup>
@@ -48,37 +47,37 @@
         <div class="field">
             <label for="ner_tags">NER tags</label>
             <div class="options">
-                <select id="ner_tags" name="ner_tags" disabled>
+                <select id="ner_tags" disabled>
                     <optgroup label="ner_tags">
-                        <option value="all_ner_tags">All NER tags</option>
-                        <option value="all_quant_expressions">--- All quantitative expresisons</option>
-                        <option value="number">NUMBER</option>
-                        <option value="ordinal">ORDINAL</option>
-                        <option value="percent">PERCENT</option>
-                        <option value="all_social_actors">--- All social actors</option>
-                        <option value="person">PERSON</option>
-                        <option value="organization">ORGANIZATION</option>
-                        <option value="all_spatial_expressions">--- All spatial expressions</option>
-                        <option value="city">CITY</option>
-                        <option value="state_or_province">STATE_OR_PROVINCE</option>
-                        <option value="country">COUNTRY</option>
-                        <option value="location">LOCATION</option>
-                        <option value="all_temporal_expressions">--- All temporal expressions</option>
-                        <option value="date">DATE</option>
-                        <option value="time">TIME</option>
-                        <option value="duration">DURATION</option>
-                        <option value="set">SET</option>
-                        <option value="all_other_expressions">--- All other expressions</option>
-                        <option value="cause_of_death">CAUSE_OF_DEATH</option>
-                        <option value="criminaL_charge">CRIMINAL_CHARGE</option>
-                        <option value="email">EMAIL</option>
-                        <option value="ideology">IDEOLOGY</option>
-                        <option value="misc">MISC</option>
-                        <option value="money">MONEY</option>
-                        <option value="nationality">NATIONALITY</option>
-                        <option value="religion">RELIGION</option>
-                        <option value="title">TITLE</option>
-                        <option value="url">URL</option>
+                        <option value="NUMBER,ORDINAL,PERCENT,PERSON,ORGANIZATION,CITY,STATE_OR_PROVINCE,COUNTRY,LOCATION,DATE,TIME,DURATION,SET,CAUSE_OF_DEATH,CRIMINAL_CHARGE,EMAIL,IDEOLOGY,MISC,MONEY,NATIONALITY,RELIGION,TITLE,URL">All NER tags</option>
+                        <option value="NUMBER,ORDINAL,PERCENT">--- All quantitative expressions</option>
+                        <option value="NUMBER">NUMBER</option>
+                        <option value="ORDINAL">ORDINAL</option>
+                        <option value="PERCENT">PERCENT</option>
+                        <option value="PERSON,ORGANIZATION">--- All social actors</option>
+                        <option value="PERSON">PERSON</option>
+                        <option value="ORGANIZATION">ORGANIZATION</option>
+                        <option value="CITY,STATE_OR_PROVINCE,COUNTRY,LOCATION">--- All spatial expressions</option>
+                        <option value="CITY">CITY</option>
+                        <option value="STATE_OR_PROVINCE">STATE_OR_PROVINCE</option>
+                        <option value="COUNTRY">COUNTRY</option>
+                        <option value="LOCATION">LOCATION</option>
+                        <option value="DATE,TIME,DURATION,SET">--- All temporal expressions</option>
+                        <option value="DATE">DATE</option>
+                        <option value="TIME">TIME</option>
+                        <option value="DURATION">DURATION</option>
+                        <option value="SET">SET</option>
+                        <option value="CAUSE_OF_DEATH,CRIMINAL_CHARGE,EMAIL,IDEOLOGY,MISC,MONEY,NATIONALITY,RELIGION,TITLE,URL">--- All other expressions</option>
+                        <option value="CAUSE_OF_DEATH">CAUSE_OF_DEATH</option>
+                        <option value="CRIMINAL_CHARGE">CRIMINAL_CHARGE</option>
+                        <option value="EMAIL">EMAIL</option>
+                        <option value="IDEOLOGY">IDEOLOGY</option>
+                        <option value="MISC">MISC</option>
+                        <option value="MONEY">MONEY</option>
+                        <option value="NATIONALITY">NATIONALITY</option>
+                        <option value="RELIGION">RELIGION</option>
+                        <option value="TITLE">TITLE</option>
+                        <option value="URL">URL</option>
                     </optgroup>
                 </select>
                 <button type="button" id="button_id">+</button>
@@ -96,7 +95,7 @@
 
         <div class="field">
             <label for="ner_list">NER list</label>
-            <input type="text" id="ner_list" name="ner_list" disabled>
+            <input type="text" id="ner_list" name="NER_list" disabled>
             <p class="field-help">NER tags added with the + button appear here, comma-separated.</p>
         </div>
     </fieldset>
