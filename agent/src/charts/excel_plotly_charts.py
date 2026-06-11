@@ -20,6 +20,7 @@ def run_excel_plotly_charts(
     inputFileData,
 ):
 
+    """Render Plotly charts from a csv file."""
     filesToOpen = []
 
     outputFiles = ""

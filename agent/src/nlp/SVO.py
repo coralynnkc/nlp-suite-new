@@ -57,6 +57,7 @@ def run_svo(
 
     # Already hard coded below
 
+    """Extract Subject-Verb-Object triples via CoreNLP enhanced dependencies."""
     config_filename = "NLP_default_IO_config.csv"
     # get the NLP package and language options
     (

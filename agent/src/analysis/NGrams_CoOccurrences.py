@@ -43,6 +43,7 @@ def run_ngrams(
     number_of_years,
 ):
 
+    """Compute n-gram frequencies and word co-occurrences, with charts."""
     config_filename = "NLP_default_IO_config.csv"
 
     extra_GUIs_var = False

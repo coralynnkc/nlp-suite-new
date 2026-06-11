@@ -33,6 +33,7 @@ def run_search_byWord(
 ):  # ,
     # extract_sentences_search_words_var_str):
 
+    """Search the corpus for keywords or dictionary terms and export the matches."""
     config_filename = "NLP_default_IO_config.csv"
 
     filesToOpen = []

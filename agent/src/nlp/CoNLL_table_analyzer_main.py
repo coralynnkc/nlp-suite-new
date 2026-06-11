@@ -39,6 +39,7 @@ def run_CoNLL_table_analyzer(
     k_sentences_var,
 ):
 
+    """Analyze and search a CoNLL table produced by the parsers."""
     inputFilename = first_csv(inputDir)
     logger.info('Input filename for CoNLL table analyzer  %s', inputFilename)
     extra_GUIs_var = False

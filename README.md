@@ -27,7 +27,7 @@ All input and output files live outside the repo on your host machine:
 To use a different base directory, set `NLP_SUITE_DIR` before running:
 
 ```bash
-NLP_SUITE_DIR=/data/myproject ./scripts/start.sh
+NLP_SUITE_DIR=/data/myproject ./start.sh
 ```
 
 ### Stopping
@@ -48,6 +48,8 @@ docker compose down
 | `mallet`  | MALLET topic modeling (Java) | 8081      |
 
 The UI sends form submissions to the agent. The agent calls CoreNLP or MALLET when needed and writes output files to `~/nlp-suite/output/`.
+
+Jobs run one at a time; submitting while a job is running returns "agent busy". After submitting, the status page shows a spinner, then either a completion message or the error that stopped the job (also logged in full: `docker compose logs agent`).
 
 ---
 
@@ -81,7 +83,7 @@ The UI sends form submissions to the agent. The agent calls CoreNLP or MALLET wh
 
 ## API keys (optional)
 
-Enter keys on the UI settings page. They are saved to `~/nlp-suite/.env` on your host machine and never committed to the repo.
+Enter keys on the UI settings page. They are saved to `~/nlp-suite/.env` on your host machine and never committed to the repo. See `.env.example` for the file format if you prefer to create it by hand.
 
 | Key                   | Effect                                                       |
 | --------------------- | ------------------------------------------------------------ |
@@ -113,3 +115,11 @@ cd agent && python -m pytest tests/ -v -m integration
 ```
 
 Test fixtures are in `agent/tests/fixtures/`.
+
+### Linting
+
+```bash
+ruff check .
+```
+
+Note: the agent container runs Python 3.9 — avoid 3.10+ syntax in `agent/src/`. Known deferred issues live in [TECH_DEBT.md](TECH_DEBT.md).

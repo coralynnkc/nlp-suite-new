@@ -17,6 +17,7 @@ def run_colormap(
     normalize_var,
     inputFileData,
 ):
+    """Render colormap charts from categorical csv fields."""
     filesToOpen = []
     all_fields = []
     intermediate_fields = []

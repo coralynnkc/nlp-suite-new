@@ -45,6 +45,7 @@ def run_wordcloud(
     doNotCreateIntermediateFiles,
 ):
 
+    """Generate word-cloud images from the corpus."""
     filesToOpen = []
 
     # get the NLP package and language options

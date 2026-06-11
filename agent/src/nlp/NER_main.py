@@ -25,6 +25,7 @@ def run_NER(
     NER_list,
 ):
 
+    """Extract named entities and export tables and charts."""
     config_input_output_numeric_options = [0, 1, 0, 1]
 
     config_filename = "NLP_default_IO_config.csv"

@@ -30,6 +30,7 @@ def run_sentence_analysis(
     num_sentences,
 ):
 
+    """Compute per-sentence length, complexity, and readability measures."""
     config_filename = "NLP_default_IO_config.csv"
 
     filesToOpen = []  # Store all files that are to be opened once finished

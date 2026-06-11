@@ -25,6 +25,7 @@ def run_topic_modeling(
     Gensim_MALLET_var,
 ):
 
+    """Run topic modeling (Gensim, MALLET, or BERTopic) over the corpus."""
     filesToOpen = []
 
     labels = []

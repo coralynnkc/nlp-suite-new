@@ -46,6 +46,7 @@ def run_kg_wordnet(
     noun_verb_menu_var,
 ):
 
+    """Build WordNet knowledge-graph tables/charts for the selected words."""
     config_filename = "NLP_default_IO_config.csv"
     filesToOpen = []  # Store all files that are to be opened once finished
     # get the NLP package and language options
