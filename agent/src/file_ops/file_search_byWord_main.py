@@ -133,28 +133,3 @@ def run_search_byWord(
                 chartPackage,
                 dataTransformation,
             )
-
-    # if extract_sentences_var:
-    #     if coOccurring_keywords_var:
-    #             inputDir,
-    #             outputDir,
-    #             config_filename,
-    #             chartPackage, dataTransformation,
-    #             0, # n-grams VIEWER
-    #             1, # coOccurring_keywords_var
-    #             extract_sentences_search_words_var_str,
-    #             minus_K_words_sentences_var,
-    #             plus_K_words_sentences_var,
-    #             language_list,
-    #             useLemma,
-    #             0,
-    #             '',
-    #             0,
-    #             '',
-    #             '',
-    #             0,
-    #             search_options_list,
-    #             0, '', '')
-    #
-    #         if outputFiles != None:
-    #             if isinstance(outputFiles, str):

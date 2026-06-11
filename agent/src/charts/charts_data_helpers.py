@@ -494,37 +494,3 @@ def complete_sentence_index(file_path):
 # output_file_name MUST be of xlsx type, rather tan csv
 
 # when NO hover-over data are displayed the Excel filename extension MUST be xlsx and NOT xlsm (becauuse no macro VBA is enabled in this case)
-
-# def df_to_list_w_header(df):
-#     for index, row in df.iterrows():
-#
-#
-# def df_to_list(df):
-#     for index, row in df.iterrows():
-#
-#
-# def list_to_df(tag_list):
-#
-#
-# def header_check(inputFile):
-#
-#     if isinstance(inputFile, pd.DataFrame):
-#     if 'Sentence ID' in header:
-#         pass
-#
-#     if 'Document ID' in header:
-#         pass
-#
-#     if 'Document' in header:
-#         pass
-#
-
-
-# written by Samir Kaddoura, March 2023
-
-
-# Returns a grid of barcharts for each algorithm.
-# Algorithms are horizontally organized based on the order on which they are inputted
-# datalist is list of algorithms
-# var is variable of choice
-# ntopchoices is the n max values
