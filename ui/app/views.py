@@ -143,7 +143,7 @@ def colormap_chart(request: HttpRequest):
     return _proxy_post(request, "/colormap", "colormap_chart.html")
 
 
-def excel_plotly_chars(_: HttpRequest):
+def excel_plotly_charts(_: HttpRequest):
     template = loader.get_template("../templates/excel_plotly_charts.html")
     return HttpResponse(template.render())
 
