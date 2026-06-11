@@ -2157,38 +2157,3 @@ def compute_sentence_complexity(
         2000, "Analysis end", "Finished running Sentence Complexity at", True, "", True, startTime
     )
     return filesToOpen
-
-
-# def compute_corpus_statistics_byPOS( inputFilename, inputDir, outputDir, configFileName, openOutputFiles,
-#                                     chartPackage, dataTransformation):
-#
-#     if nDocs==0:
-#
-#
-#     startTime=IO_user_interface_util.timed_alert(3000, 'Running STANZA & wordcloud',
-#                                        'Started running STANZA and wordcloud at', True,
-#                                        'Please, be patient. Depending upon the number of documents processed this may take a few minutes.',True,'',False)
-#
-#     for doc in inputDocs:
-#         if doc[-4:]=='.txt':
-#             with open(doc, 'r', encoding='utf-8', errors='ignore') as myfile:
-#                 # check for empty file
-#                 for sent_id in range(len(annotated.sentences)):
-#                     # words do not contain ner; tokens do
-#                     # words is a single list []; tokes a double list [[]]
-#                     # for word in annotated.sentences[sent_id].tokens:
-#                     for word in annotated.sentences[sent_id].words:
-#                         # pos & upos have the same tag value
-#                         if word.text.lower() == "'s" or word.text.lower() == "’s" or word.text.lower() == "s":
-#                             continue  # do not process the s of a saxon genitive
-#                         # RED for NOUNS, BLUE for VERBS, GREEN for ADJECTIVES, GREY for ADVERBS
-#                         #   YELLOW for anything else; no longer used
-#                         if lemmatize:
-#                             # if no lemma, use form value
-#                             if word_str==None:
-#                             pass
-#
-#                         if word_str != None:
-#
-#                 if len(textToProcess) == 0:
-#
