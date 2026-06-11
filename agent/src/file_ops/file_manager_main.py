@@ -51,7 +51,6 @@ def run_file_manager(
     date_separator,
     date_position,
 ):
-
     # if inputDir == outputDir and list_var ==False:
     # Frontend Implementation
 
@@ -114,12 +113,7 @@ def run_file_manager(
 
     if options == 1:
         if count_file_manager_var:
-            if (
-                not list_var
-                and not by_file_type_var
-                and not by_prefix_var
-                and not by_substring_var
-            ):
+            if not list_var and not by_file_type_var and not by_prefix_var and not by_substring_var:
                 logger.info(
                     "You have selected a file manager option, but no specific criteria for managing the files: By file type, By prefix value, or By substring value.\n\nPlease, select the file criteria to use and try again."
                 )
@@ -156,9 +150,7 @@ def run_file_manager(
 
     if by_embedded_items_var:
         if number_of_items_var > 0:
-            fieldnames = fieldnames + [
-                "Embedded items count (" + embedded_item_character_value_var + ")"
-            ]
+            fieldnames = fieldnames + ["Embedded items count (" + embedded_item_character_value_var + ")"]
             fieldnames = fieldnames + ["Count by document"]
     if fileName_embeds_date:
         fieldnames = fieldnames + ["Date"]
@@ -192,9 +184,7 @@ def run_file_manager(
     if count_file_manager_var:
         i = file_filename_util.get_count(inputDir, outputDir, outputFilename)
     else:
-        with open(
-            outputDir + os.sep + outputFilename, "w", errors="ignore", newline=""
-        ) as csvfile:
+        with open(outputDir + os.sep + outputFilename, "w", errors="ignore", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames)
             writer.writeheader()
 
@@ -202,12 +192,7 @@ def run_file_manager(
         # You can in fact have a blank entry
         # if rename_new_entry=='' and string_entry_var=='':
         # if rename_new_entry=='':
-        if (
-            not by_prefix_var
-            and not by_substring_var
-            and not by_foldername_var
-            and not by_embedded_items_var
-        ):
+        if not by_prefix_var and not by_substring_var and not by_foldername_var and not by_embedded_items_var:
             logger.info(
                 "You have selected the option to Rename files but you have not selected any of the available options for renaming the files.\n\nPlease, make a selection and enter the appropriate values and try again."
             )
@@ -338,12 +323,8 @@ def run_file_manager(
                 if fileFound:
                     i = i + 1
     else:
-        if (
-            hasFullPath
-        ):  # This is used when full paths are present in the CSV file, we ignore the input directory
-            logger.info(
-                "Full path present, processing regardless of existence in input directory"
-            )
+        if hasFullPath:  # This is used when full paths are present in the CSV file, we ignore the input directory
+            logger.info("Full path present, processing regardless of existence in input directory")
             for filename in fileList:
                 (
                     fileFound,
@@ -474,9 +455,7 @@ def run_file_manager(
         chart_title_label="",
     )
     if outputFiles:
-        filesToOpen.extend(
-            outputFiles if isinstance(outputFiles, list) else [outputFiles]
-        )
+        filesToOpen.extend(outputFiles if isinstance(outputFiles, list) else [outputFiles])
 
     if i > 0:
         if rename_var == 1:

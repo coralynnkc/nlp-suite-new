@@ -29,7 +29,9 @@ def run_parsers_annotators(
     """Run the selected parser/annotators (CoreNLP, spaCy, or Stanza) over the corpus."""
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
-    logger.info("started: inputFilename=%s parser_var=%s parser_menu_var=%s", inputFilename, parser_var, parser_menu_var)
+    logger.info(
+        "started: inputFilename=%s parser_var=%s parser_menu_var=%s", inputFilename, parser_var, parser_menu_var
+    )
     StanfordCoreNLP(CORENLP_URL)
 
     # Set the config filename
@@ -72,13 +74,13 @@ def run_parsers_annotators(
 
     # Check for invalid combinations
     if parser_var == 0 and CoNLL_table_analyzer_var == 1:
-        logger.info('%s %s Error1', parser_var, CoNLL_table_analyzer_var)
+        logger.info("%s %s Error1", parser_var, CoNLL_table_analyzer_var)
         raise ValueError(
             "You have selected to open the CoNLL table analyser. This option expects to run the parser first. Please select the CoreNLP parser option and try again."
         )
 
     if annotators_var and annotators_menu_var == "":
-        logger.info('%s %s Error2', annotators_var, annotators_menu_var)
+        logger.info("%s %s Error2", annotators_var, annotators_menu_var)
         raise ValueError(
             "You have selected to run an annotator but no annotator has been selected. Please select an annotator and try again."
         )

@@ -29,6 +29,7 @@ from IO_files_util import date_in_filename
 
 logger = logging.getLogger(__name__)
 
+
 def process_json_coref(config_filename, documentID, document, sentenceID, json, **kwargs):
     logger.info("   Processing Json output file for COREF annotator")
 
@@ -292,5 +293,3 @@ def process_json_quote(config_filename, documentID, document, sentenceID, json, 
             ]
         result.append(temp)
     return result
-
-

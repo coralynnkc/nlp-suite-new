@@ -16,7 +16,6 @@ def run(
     # TODO:
     inputFileData,
 ):
-
     """Render a boxplot from a numeric csv field."""
     filesToOpen = []
 
@@ -36,9 +35,7 @@ def run(
         # message='The "Split data by category" Boxplots option requires a second CATEGORICAL csv file field for processing.\n\nPlease, use the dropdown menu to select the csv file field and try again.')
         return
 
-    outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".html", "boxplot"
-    )
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".html", "boxplot")
     # You cannot keep it as float inside the csv. The csv will treat everything as strings.
     # https://stackoverflow.com/questions/65393774/writing-floats-into-a-csv-file-but-floats-become-a-string
     outputfilename = charts_util.boxplot(

@@ -25,9 +25,7 @@ def run_colormap(
     logger.info(csv_file_categorical_field_list)
     for i in range(len(csv_file_categorical_field_list)):
         if i > 0 and i < len(csv_file_categorical_field_list) - 1:
-            intermediate_fields.append(
-                csv_file_categorical_field_list[i][0].split("|")[0]
-            )
+            intermediate_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
         all_fields.append(csv_file_categorical_field_list[i][0].split("|")[0])
 
     # mb.showwarning(title='Search values',
@@ -91,9 +89,9 @@ def main():
             normalize_var,
             inputFileData=inputFileData,
         )
-        logger.info('Output files generated: %s', output_files)
+        logger.info("Output files generated: %s", output_files)
     except Exception as e:
-        logger.info('An error occurred during testing: %s', e)
+        logger.info("An error occurred during testing: %s", e)
 
 
 if __name__ == "__main__":

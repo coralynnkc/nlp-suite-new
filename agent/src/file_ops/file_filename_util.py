@@ -16,9 +16,7 @@ import IO_files_util
 logger = logging.getLogger(__name__)
 
 
-def backup_files(
-    inputFilename, inputDir, scripName, fileType=".txt", configFileName=""
-):
+def backup_files(inputFilename, inputDir, scripName, fileType=".txt", configFileName=""):
     if inputFilename != "":
         temp_inputDir, tail = os.path.split(inputFilename)
     else:
@@ -31,9 +29,7 @@ def backup_files(
         IO_files_util.make_directory(backup_path)
     else:
         return True
-    inputDocs = IO_files_util.getFileList(
-        inputFilename, inputDir, fileType, False, configFileName
-    )
+    inputDocs = IO_files_util.getFileList(inputFilename, inputDir, fileType, False, configFileName)
     nDocs = len(inputDocs)
     docID = 0
     for doc in inputDocs:
@@ -51,11 +47,7 @@ def backup_files(
     if nDocs != docID:
         # IO_user_interface_util.timed_alert(GUI_util.window, 2000, 'Warning',
         #                                    str(nDocs-docID) + ' could not be backed up. Check files and try again.)
-        logger.info(
-            "Warning"
-            + str(nDocs - docID)
-            + " could not be backed up. Check files and try again."
-        )
+        logger.info("Warning" + str(nDocs - docID) + " could not be backed up. Check files and try again.")
         return False
     else:
         return True
@@ -72,26 +64,20 @@ def dateGreater(d1, d2):
         return dt1.date() > dt2.date()
 
 
-def purge_duplicate_rows_byFilename(
-    window, inputFilename, outputDir, openOutputFiles, filenameCol
-):
+def purge_duplicate_rows_byFilename(window, inputFilename, outputDir, openOutputFiles, filenameCol):
     bestFiles = {}
     filenameColNum = 2
     with open(inputFilename, encoding="utf-8", errors="ignore") as read_obj:
         csv_reader = csv.reader(read_obj)
         header = next(csv_reader)
-        filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(
-            header, filenameCol, inputFilename
-        )
+        filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(header, filenameCol, inputFilename)
         if header is not None:
             for row in csv_reader:
                 head, fName = os.path.split(row[filenameColNum])
                 # First, check if the file at hand exists in the dictionary
                 if fName in bestFiles:
                     # File exists, compare it's modification date to the one in the dictionary currently
-                    dictDate = get_creation_date(bestFiles.get(fName)[filenameColNum])[
-                        1
-                    ]
+                    dictDate = get_creation_date(bestFiles.get(fName)[filenameColNum])[1]
                     testDate = get_creation_date(row[filenameColNum])[1]
                     if dateGreater(testDate, dictDate):
                         # The current row has a newer file, update the value in dictionary to this row
@@ -115,9 +101,7 @@ def purge_duplicate_rows_byFilename(
 
     # Now, we can call list_to_csv so that we can generate a new CSV with the list of files to be deleted
     filesToOpen = [outputDir + os.sep + "files_to_delete.csv"]
-    IO_csv_util.list_to_csv(
-        window, deleteList, outputDir + os.sep + "files_to_delete.csv", colnum=0
-    )
+    IO_csv_util.list_to_csv(window, deleteList, outputDir + os.sep + "files_to_delete.csv", colnum=0)
     if openOutputFiles:
         IO_files_util.OpenOutputFiles(openOutputFiles, filesToOpen, outputDir)
 
@@ -144,9 +128,7 @@ def fill_dictionary(row, dict, nameColNum=0, filenameColNum=2):
         dict[name] = row
 
 
-def purge_partial_matches(
-    window, inputFilename, outputDir, openOutputFiles, nameCol, filenameCol
-):
+def purge_partial_matches(window, inputFilename, outputDir, openOutputFiles, nameCol, filenameCol):
     pdfdict = {}
     docxdict = {}
     nameColNum = 0
@@ -154,13 +136,9 @@ def purge_partial_matches(
     with open(inputFilename, encoding="utf-8", errors="ignore") as read_obj:
         csv_reader = csv.reader(read_obj)
         header = next(csv_reader)
-        nameColNum = IO_csv_util.get_columnNumber_from_headerValue(
-            header, nameCol, inputFilename
-        )
-        filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(
-            header, filenameCol, inputFilename
-        )
-        logger.info('%s %s', nameColNum, filenameColNum)
+        nameColNum = IO_csv_util.get_columnNumber_from_headerValue(header, nameCol, inputFilename)
+        filenameColNum = IO_csv_util.get_columnNumber_from_headerValue(header, filenameCol, inputFilename)
+        logger.info("%s %s", nameColNum, filenameColNum)
         if header is not None:
             for row in csv_reader:
                 if os.path.splitext(row[filenameColNum])[1].lower() == ".pdf":
@@ -168,7 +146,7 @@ def purge_partial_matches(
                 elif os.path.splitext(row[filenameColNum])[1].lower() == ".docx":
                     fill_dictionary(row, docxdict, nameColNum, filenameColNum)
                 else:
-                    logger.info('Unrecognized file: %s', row[filenameColNum])
+                    logger.info("Unrecognized file: %s", row[filenameColNum])
 
     deleteList = []
     with open(inputFilename, encoding="utf-8", errors="ignore") as read_obj:
@@ -190,9 +168,7 @@ def purge_partial_matches(
 
     # Now, we can call list_to_csv so that we can generate a new CSV with the list of files to be deleted
     [outputDir + os.sep + "files_to_delete.csv"]
-    IO_csv_util.list_to_csv(
-        window, deleteList, outputDir + os.sep + "files_to_delete.csv", colnum=0
-    )
+    IO_csv_util.list_to_csv(window, deleteList, outputDir + os.sep + "files_to_delete.csv", colnum=0)
 
 
 def writeOutput(
@@ -223,18 +199,14 @@ def writeOutput(
 
     if not os.path.isdir(os.path.join(inputPath, inputFilenamename)):
         printLine = {}
-        with open(
-            outputPath + os.sep + outputFilename, "a", errors="ignore", newline=""
-        ) as csvfile:
+        with open(outputPath + os.sep + outputFilename, "a", errors="ignore", newline="") as csvfile:
             # write file headers
             writer = csv.DictWriter(csvfile, fieldnames)
             head, tail = os.path.split(inputFilenamename)
             printLine = {
                 "File_Name": tail,
                 "Path_To_File": IO_csv_util.dressFilenameForCSVHyperlink(inputPath),
-                "File_Name_With_Path": IO_csv_util.dressFilenameForCSVHyperlink(
-                    inputFilenamename
-                ),
+                "File_Name_With_Path": IO_csv_util.dressFilenameForCSVHyperlink(inputFilenamename),
             }
             if by_creation_date_var == 1:
                 printLine["Creation_date"] = creation_date
@@ -242,14 +214,10 @@ def writeOutput(
             if by_author_var == 1:
                 printLine["Author"] = author
             if by_embedded_items_var == 1 and number_of_items_var > 0:
-                printLine[
-                    "Embedded items count (" + embedded_item_character_value + ")"
-                ] = str(number_of_items_var)
+                printLine["Embedded items count (" + embedded_item_character_value + ")"] = str(number_of_items_var)
                 printLine["Count by document"] = str(itemCount)
             if character_count_var == 1:
-                printLine["Character count (" + character_entry_var + ")"] = str(
-                    characterCount
-                )
+                printLine["Character count (" + character_entry_var + ")"] = str(characterCount)
             if fileName_embeds_date == 1:
                 printLine["Date"] = dateStr
             if split_string != "":
@@ -366,9 +334,7 @@ def processFile(
         # ASCII_var,
 
         if by_creation_date_var == 1:
-            creation_date, modification_date = get_creation_date(
-                os.path.join(inputPath, filename)
-            )
+            creation_date, modification_date = get_creation_date(os.path.join(inputPath, filename))
 
         # https://stackoverflow.com/questions/7021141/how-to-retrieve-author-of-a-office-file-in-python
         # get_author works for docx files only
@@ -408,17 +374,12 @@ def processFile(
             filename_noExtension = filename[:-n]
             filenameOut = filename.replace(
                 filename,
-                filename_noExtension
-                + folder_character_separator_var
-                + currentDir
-                + ext,
+                filename_noExtension + folder_character_separator_var + currentDir + ext,
             )
 
         if fileFound:  # always True when Renaming the file
             try:
-                os.rename(
-                    inputPath + os.sep + filename, inputPath + os.sep + filenameOut
-                )
+                os.rename(inputPath + os.sep + filename, inputPath + os.sep + filenameOut)
             except Exception:
                 logger.info(
                     "Cannot rename file '"
@@ -451,9 +412,7 @@ def processFile(
         else:
             if fileFound:
                 try:
-                    shutil.copy(
-                        inputPath + os.sep + filename, outputPath + os.sep + filename
-                    )
+                    shutil.copy(inputPath + os.sep + filename, outputPath + os.sep + filename)
                 except Exception:
                     logger.info(
                         "The file "
@@ -476,9 +435,7 @@ def processFile(
         else:
             if fileFound:
                 try:
-                    shutil.move(
-                        inputPath + os.sep + filename, outputPath + os.sep + filename
-                    )
+                    shutil.move(inputPath + os.sep + filename, outputPath + os.sep + filename)
                 except Exception:
                     logger.info(
                         "The file "
@@ -675,15 +632,11 @@ def get_creation_date(path_to_file):
     if platform.system() == "Windows":
         named_tuple = time.ctime(os.path.getctime(path_to_file))
         try:
-            creation_date = datetime.strptime(
-                named_tuple, "%a %b %d %H:%M:%S %Y"
-            ).strftime("%m/%d/%Y")
+            creation_date = datetime.strptime(named_tuple, "%a %b %d %H:%M:%S %Y").strftime("%m/%d/%Y")
         except Exception:
             creation_date = ""
         try:
-            modification_date = datetime.fromtimestamp(
-                os.path.getmtime(path_to_file)
-            ).strftime("%m/%d/%Y")
+            modification_date = datetime.fromtimestamp(os.path.getmtime(path_to_file)).strftime("%m/%d/%Y")
         except Exception:
             modification_date = ""
         if creation_date is None or modification_date is None:
@@ -693,18 +646,14 @@ def get_creation_date(path_to_file):
         stat = os.stat(path_to_file)
         try:
             # https://www.w3resource.com/python-exercises/python-basic-exercise-64.php
-            return time.ctime(os.path.getmtime(path_to_file)), time.ctime(
-                os.path.getctime(path_to_file)
-            )
+            return time.ctime(os.path.getmtime(path_to_file)), time.ctime(os.path.getctime(path_to_file))
         except AttributeError:
             # We're probably on Linux. No easy way to get creation dates here,
             # so we'll settle for when its content was last modified.
             return stat.st_mtime
 
 
-def get_spec_num_files(
-    filename, comparator, number_of_items_var, embedded_item_character_value
-):
+def get_spec_num_files(filename, comparator, number_of_items_var, embedded_item_character_value):
     # with open(inputCSV, 'r', encoding="utf-8", errors='ignore') as read_obj:
     #     if header is not None:
     # for row in csv_reader:
@@ -723,9 +672,7 @@ def get_spec_num_files(
     return result, itemCount
 
 
-def numEmbedded(
-    filename, embedded_item_character_value, number_of_items_var, include_exclude_var
-):
+def numEmbedded(filename, embedded_item_character_value, number_of_items_var, include_exclude_var):
     number_of_items_var = int(number_of_items_var)
     item_lst = filename.split(embedded_item_character_value)
     ext_lst = item_lst[len(item_lst) - 1]

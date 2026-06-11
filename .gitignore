@@ -41,3 +41,7 @@ ui/static/
 
 # Docker
 *.log
+
+# Input & output
+input/
+output/

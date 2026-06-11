@@ -61,9 +61,7 @@ def timed_alert(
     if time_needed:
         # time has year [0], month [1], dat [2], hour [3], minute [4], second [5] & more
         time_report = time.localtime()
-        message_text = (
-            message_text + " " + str(time_report[3]) + ":" + str(time_report[4])
-        )
+        message_text = message_text + " " + str(time_report[3]) + ":" + str(time_report[4])
         if startTime != "":
             endTime = time.time()
             totalTime = endTime - startTime  # in number of seconds
@@ -88,27 +86,21 @@ def timed_alert(
         logger.info(print_message_text)
     if not silent:
         if "Finished" not in message_text and "Opening" not in message_text:
-            message_text = (
-                message_text + "\n\nYou can follow the algorithm in command line."
-            )
+            message_text = message_text + "\n\nYou can follow the algorithm in command line."
 
-        logger.info('%s %s', message_title, message_text)
+        logger.info("%s %s", message_title, message_text)
 
     return time.time()
 
 
 # inputFilename has complete path
-def process_CoreNLP_error(
-    CoreNLP_output, inputFilename, nDocs, filesError, text, silent=True
-):
+def process_CoreNLP_error(CoreNLP_output, inputFilename, nDocs, filesError, text, silent=True):
     errorFound = False
     duration = 1000
     head, tail = os.path.split(inputFilename)
     error = None
     if isinstance(CoreNLP_output, str):
-        logger.warning(
-            "[Warning] Stanford CoreNLP output is not JSON. Trying to convert output to JSON... "
-        )
+        logger.warning("[Warning] Stanford CoreNLP output is not JSON. Trying to convert output to JSON... ")
 
         if text and not CoreNLP_output:
             error = (
@@ -121,9 +113,7 @@ def process_CoreNLP_error(
         else:
             try:
                 CoreNLP_output = json.loads(CoreNLP_output)
-                logger.warning(
-                    "[Info] Successfully converted CoreNLP output to JSON. Proceeding as normal."
-                )
+                logger.warning("[Info] Successfully converted CoreNLP output to JSON. Proceeding as normal.")
             except Exception as e:
                 logger.error(
                     "[Error] Could not convert CoreNLP output to JSON! Please, check your input file for any corruption. Error: "

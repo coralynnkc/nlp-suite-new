@@ -32,9 +32,7 @@ def _proxy_post(request: HttpRequest, path: str, template_name: str):
                 timeout=AGENT_TIMEOUT_SECONDS,
             )
         except requests.RequestException as exc:
-            messages.add_message(
-                request, messages.ERROR, f"Could not reach the NLP agent: {exc}"
-            )
+            messages.add_message(request, messages.ERROR, f"Could not reach the NLP agent: {exc}")
         else:
             if response.ok:
                 return HttpResponseRedirect("/status")
@@ -173,9 +171,7 @@ def settings(request: HttpRequest):
                 timeout=10,
             )
         except requests.RequestException as exc:
-            messages.add_message(
-                request, messages.ERROR, f"Could not reach the NLP agent: {exc}"
-            )
+            messages.add_message(request, messages.ERROR, f"Could not reach the NLP agent: {exc}")
         else:
             if response.ok:
                 messages.add_message(request, messages.SUCCESS, "Settings saved.")

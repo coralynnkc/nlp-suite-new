@@ -81,9 +81,7 @@ def dictionary_annotate(
     #   would need to use split()
     if isinstance(csv_field1_var, str):
         csv_field1_var = [csv_field1_var]
-    files = IO_files_util.getFileList(
-        inputFile, inputDir, fileType, silent=False, configFileName=configFileName
-    )
+    files = IO_files_util.getFileList(inputFile, inputDir, fileType, silent=False, configFileName=configFileName)
     nFile = len(files)
     if nFile == 0:
         return
@@ -104,24 +102,25 @@ def dictionary_annotate(
         headers = IO_csv_util.get_csvfile_headers(dict_file)
         wordColNum = []
         for field in csv_field1_var:
-            col = IO_csv_util.get_columnNumber_from_headerValue(
-                headers, field, dict_file
-            )
+            col = IO_csv_util.get_columnNumber_from_headerValue(headers, field, dict_file)
             if col is None:
-                logger.info('Input file error %s', "The selected dictionary file\n\n" + dict_file + "\n\ndoes not contain the expected header '" + str(csv_field1_var) + "'\n\nPlease, select a different dictionary file and try again.")
+                logger.info(
+                    "Input file error %s",
+                    "The selected dictionary file\n\n"
+                    + dict_file
+                    + "\n\ndoes not contain the expected header '"
+                    + str(csv_field1_var)
+                    + "'\n\nPlease, select a different dictionary file and try again.",
+                )
                 return
             wordColNum.append(col)
         catColNum = []
         if len(csvValue_color_list) > 0:
             # for field in str(csvValue_color_list[0]):
             field = csvValue_color_list[0]
-            catColNum.append(
-                IO_csv_util.get_columnNumber_from_headerValue(headers, field, dict_file)
-            )
+            catColNum.append(IO_csv_util.get_columnNumber_from_headerValue(headers, field, dict_file))
 
-    dictionary, color_list = readCsv(
-        wordColNum, catColNum, dict_file, csvValue_color_list
-    )
+    dictionary, color_list = readCsv(wordColNum, catColNum, dict_file, csvValue_color_list)
     reserved_dictionary = [
         "bold",
         "color",
@@ -162,9 +161,7 @@ def dictionary_annotate(
             term_intextID = 0
             for term in terms:
                 termID = termID + 1
-                logger.info(
-                    f"Processing dictionary field '{csv_field1_var}' {termID}/{len(terms)} term"
-                )
+                logger.info(f"Processing dictionary field '{csv_field1_var}' {termID}/{len(terms)} term")
                 if re.search(r"\b" + term + r"\b", text) is None:
                     continue
                 for term1 in reserved_dictionary:
@@ -178,14 +175,7 @@ def dictionary_annotate(
                         terms.remove(str(term1))
                         continue
                 term_intextID = term_intextID + 1
-                logger.info(
-                    "   Annotating '"
-                    + term
-                    + "' in text "
-                    + str(term_intextID)
-                    + "/"
-                    + str(len(text))
-                )
+                logger.info("   Annotating '" + term + "' in text " + str(term_intextID) + "/" + str(len(text)))
                 tagString = tagAnnotations[0] + term + tagAnnotations[1]
 
                 # use regular expression replace to check for distinct words (e.g., he not tagging he in held)
@@ -203,14 +193,7 @@ def dictionary_annotate(
                     tagAnnotations = ['<span style="color: ' + color + '">', "</span>"]
                 for term in terms:
                     termID = termID + 1
-                    logger.info(
-                        "Processing dictionary field value "
-                        + str(termID)
-                        + "/"
-                        + str(len(terms))
-                        + " "
-                        + term
-                    )
+                    logger.info("Processing dictionary field value " + str(termID) + "/" + str(len(terms)) + " " + term)
                     try:
                         if re.search(r"\b" + term + r"\b", text) is None:
                             continue
@@ -225,14 +208,7 @@ def dictionary_annotate(
                             terms.remove(str(term1))
                             continue
                     term_intextID = term_intextID + 1
-                    logger.info(
-                        "   Annotating '"
-                        + term
-                        + "' in text "
-                        + str(term_intextID)
-                        + "/"
-                        + str(len(text))
-                    )
+                    logger.info("   Annotating '" + term + "' in text " + str(term_intextID) + "/" + str(len(text)))
                     tagString = tagAnnotations[0] + term + tagAnnotations[1]
                     # use regular expression replace to check for distinct words (e.g., he not tagging he in held)
                     try:
@@ -246,21 +222,15 @@ def dictionary_annotate(
         if "_multiDict_annotated_" in file:
             outputFilename = file
         elif "NLP_DBpedia_annotated_dict_annotated_" in file:
-            baseFilename = os.path.basename(os.path.normpath(file))[
-                len("NLP_DBpedia_annotated_dict_annotated_") :
-            ]
+            baseFilename = os.path.basename(os.path.normpath(file))[len("NLP_DBpedia_annotated_dict_annotated_") :]
             outputFilename = "NLP_DBpedia_annotated_multiDict_annotated_" + baseFilename
             outputFilename = os.path.join(outputDir, outputFilename)
         elif "NLP_DBpedia_annotated_" in file:
-            baseFilename = os.path.basename(os.path.normpath(file))[
-                len("NLP_DBpedia_annotated_") :
-            ]
+            baseFilename = os.path.basename(os.path.normpath(file))[len("NLP_DBpedia_annotated_") :]
             outputFilename = "NLP_DBpedia_annotated_dict_annotated_" + baseFilename
             outputFilename = os.path.join(outputDir, outputFilename)
         elif "NLP_dict_annotated_" in file:
-            baseFilename = os.path.basename(os.path.normpath(file))[
-                len("NLP_dict_annotated_") :
-            ]
+            baseFilename = os.path.basename(os.path.normpath(file))[len("NLP_dict_annotated_") :]
             outputFilename = "NLP_multiDict_annotated_" + baseFilename
             outputFilename = os.path.join(outputDir, outputFilename)
         else:
@@ -269,20 +239,12 @@ def dictionary_annotate(
         if inputDir != "":
             outputFilename = os.path.join(
                 outputDir,
-                "NLP_dict_annotated_"
-                + fileSubc
-                + "_"
-                + os.path.basename(os.path.normpath(inputDir))
-                + ".html",
+                "NLP_dict_annotated_" + fileSubc + "_" + os.path.basename(os.path.normpath(inputDir)) + ".html",
             )
         else:
             outputFilename = os.path.join(
                 outputDir,
-                "NLP_dict_annotated_"
-                + fileSubc
-                + "_"
-                + os.path.basename(os.path.normpath(file))[:-4]
-                + ".html",
+                "NLP_dict_annotated_" + fileSubc + "_" + os.path.basename(os.path.normpath(file))[:-4] + ".html",
             )
     filesToOpen.append(outputFilename)
     with open(outputFilename, "w+", encoding="utf-8", errors="ignore") as f:

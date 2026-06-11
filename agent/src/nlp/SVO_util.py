@@ -97,7 +97,9 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
         #     if not pd.isnull(CoreNLP_df.iloc[i, 5]) and not pd.isnull(CoreNLP_df.iloc[i, 3]):
         if pd.notnull(CoreNLP_df.iloc[i, 1]):
             if not pd.isnull(CoreNLP_df.iloc[i, 2]) and not pd.isnull(CoreNLP_df.iloc[i, 1]):
-                open_ie_svo.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], obj=CoreNLP_df.iloc[i, 2]))
+                open_ie_svo.add(
+                    generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], obj=CoreNLP_df.iloc[i, 2])
+                )
             elif not pd.isnull(CoreNLP_df.iloc[i, 0]):
                 open_ie_sv.add(generate_key(S=CoreNLP_df.iloc[i, 0], V=CoreNLP_df.iloc[i, 1], obj=""))
 
@@ -123,10 +125,13 @@ def count_frequency_two_svo(CoreNLP_csv, senna_csv, inputFilename, inputDir, out
     total_sv = len(same_sv) + len(diff_sv)
 
     df = pd.concat(
-        [df, pd.DataFrame(
-            [[len(same_svo), len(same_sv), len(diff_svo), len(diff_sv), total_svo, total_sv]],
-            columns=["Same SVO", "Same SV", "Different SVO", "Different SV", "Total SVO", "Total SV"],
-        )],
+        [
+            df,
+            pd.DataFrame(
+                [[len(same_svo), len(same_sv), len(diff_svo), len(diff_sv), total_svo, total_sv]],
+                columns=["Same SVO", "Same SV", "Different SVO", "Different SV", "Total SVO", "Total SV"],
+            ),
+        ],
         ignore_index=True,
     )
     freq_output_name = IO_files_util.generate_output_file_name(

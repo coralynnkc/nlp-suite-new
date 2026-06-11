@@ -146,7 +146,12 @@ def compute_csv_column_statistics_NoGroupBy(
         columnNumber = []
     filesToOpen = []
     if inputFilename[-4:] != ".csv":
-        logger.info('File type error %s', "The input file\n\n" + inputFilename + "\n\nis not a csv file. The statistical function only works with input csv files.\n\nPlease, select a csv file in input and try again!")
+        logger.info(
+            "File type error %s",
+            "The input file\n\n"
+            + inputFilename
+            + "\n\nis not a csv file. The statistical function only works with input csv files.\n\nPlease, select a csv file in input and try again!",
+        )
         return None
 
     outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "", "ungroup_stats")
@@ -184,7 +189,12 @@ def compute_csv_column_statistics_NoGroupBy(
             #   In that case you can safely call squeeze to ensure you have a Series.
             df = pd.read_csv(inputFilename, encoding="utf-8", index_col=False, on_bad_lines="skip", squeeze=True)
         except Exception:
-            logger.info('Data encoding error %s', "The input file\n\n" + inputFilename + "\n\nhas character encoding that breaks the code. The statistical function only works with utf-8 compliant files.\n\nPlease, check your input file encoding and try again!")
+            logger.info(
+                "Data encoding error %s",
+                "The input file\n\n"
+                + inputFilename
+                + "\n\nhas character encoding that breaks the code. The statistical function only works with utf-8 compliant files.\n\nPlease, check your input file encoding and try again!",
+            )
             return None
         if df.iloc[:, currentColumn].dtypes != "object":  # alphabetic field; do NOT process
             currentName = df.iloc[:, currentColumn].name
@@ -311,16 +321,34 @@ def compute_csv_column_statistics_groupBy(
     )
 
     if not set(groupByField).issubset(set(IO_csv_util.get_csvfile_headers(inputFilename))):
-        logger.info('Groupby field error %s', "The selected groupby fields (" + ", ".join(groupByField) + ") are not in the headers (" + ", ".join(IO_csv_util.get_csvfile_headers(inputFilename)) + ") of the file " + inputFilename)
+        logger.info(
+            "Groupby field error %s",
+            "The selected groupby fields ("
+            + ", ".join(groupByField)
+            + ") are not in the headers ("
+            + ", ".join(IO_csv_util.get_csvfile_headers(inputFilename))
+            + ") of the file "
+            + inputFilename,
+        )
 
     if inputFilename[-4:] != ".csv":
-        logger.info('File type error %s', "The input file\n\n" + inputFilename + "\n\nis not a csv file. The statistical function only works with input csv files.\n\nPlease, select a csv file in input and try again!")
+        logger.info(
+            "File type error %s",
+            "The input file\n\n"
+            + inputFilename
+            + "\n\nis not a csv file. The statistical function only works with input csv files.\n\nPlease, select a csv file in input and try again!",
+        )
         return None
     # reading csv file
     try:
         df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip", squeeze=True)
     except Exception:
-        logger.info('Data encoding error %s', "The input file\n\n" + inputFilename + "\n\nhas character encoding that breaks the code. The statistical function only works with utf-8 compliant files.\n\nPlease, check your input file encoding and try again!")
+        logger.info(
+            "Data encoding error %s",
+            "The input file\n\n"
+            + inputFilename
+            + "\n\nhas character encoding that breaks the code. The statistical function only works with utf-8 compliant files.\n\nPlease, check your input file encoding and try again!",
+        )
         return None
 
     # group the data frame by group columns
@@ -577,7 +605,9 @@ def compute_csv_column_frequencies(
     )  # + '_col-freq'
     # the outputFilename may get too long and lead to code breakdown when saving the file
     if len(plot_cols) == 0:
-        logger.info('Missing field You have not selected the csv field for which to compute frequencies.\n\nPlease, select the field and try again.')
+        logger.info(
+            "Missing field You have not selected the csv field for which to compute frequencies.\n\nPlease, select the field and try again."
+        )
         return filesToOpen
 
     # no aggregation by group_cols --------------------------------------------------------

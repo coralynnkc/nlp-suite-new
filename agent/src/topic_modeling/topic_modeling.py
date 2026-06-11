@@ -8,6 +8,7 @@ import topic_modeling_mallet_util
 
 logger = logging.getLogger(__name__)
 
+
 def run_topic_modeling(
     inputDir,
     outputDir,
@@ -24,7 +25,6 @@ def run_topic_modeling(
     nounsOnly_var,
     Gensim_MALLET_var,
 ):
-
     """Run topic modeling (Gensim, MALLET, or BERTopic) over the corpus."""
     filesToOpen = []
 
@@ -45,9 +45,7 @@ def run_topic_modeling(
     label = "-".join(labels)
 
     # Check internet availability
-    if not IO_internet_util.check_internet_availability_warning(
-        label + " Topic Modeling"
-    ):
+    if not IO_internet_util.check_internet_availability_warning(label + " Topic Modeling"):
         return
 
     if num_topics == 20:
@@ -58,17 +56,13 @@ def run_topic_modeling(
         #                              reminders_util.message_topic_modelling_number_of_topics, True)
 
     # Create a subdirectory of the output directory
-    outputDir = IO_files_util.make_output_subdirectory(
-        "", inputDir, outputDir, label="TM-" + label, silent=True
-    )
+    outputDir = IO_files_util.make_output_subdirectory("", inputDir, outputDir, label="TM-" + label, silent=True)
     if outputDir == "":
         return
 
     # Run BERTopic
     if BERT_var:
-        bert_files = topic_modeling_bert_util.run_BERTopic(
-            inputDir, outputDir, split_docs_var
-        )
+        bert_files = topic_modeling_bert_util.run_BERTopic(inputDir, outputDir, split_docs_var)
         if bert_files:
             filesToOpen.extend(bert_files)
 

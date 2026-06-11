@@ -24,7 +24,6 @@ def run_NER(
     NER_package,
     NER_list,
 ):
-
     """Extract named entities and export tables and charts."""
     config_input_output_numeric_options = [0, 1, 0, 1]
 
@@ -56,9 +55,7 @@ def run_NER(
         items_separator_var,
         date_position_var,
         config_file_exists,
-    ) = config_util.get_date_options(
-        config_filename, config_input_output_numeric_options
-    )
+    ) = config_util.get_date_options(config_filename, config_input_output_numeric_options)
     extract_date_from_text_var = 0
 
     if package_display_area_value == "":
@@ -68,9 +65,7 @@ def run_NER(
         return
 
     if len(NER_list) == 0 and "CoreNLP" in NER_package:
-        logger.info(
-            "No NER tag selected, No NER tag has been selected.\n\nPlease, select an NER tag and try again."
-        )
+        logger.info("No NER tag selected, No NER tag has been selected.\n\nPlease, select an NER tag and try again.")
         return
 
     # BERT -------------------------------------------------------------------------

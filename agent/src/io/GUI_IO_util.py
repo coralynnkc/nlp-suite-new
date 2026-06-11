@@ -30,16 +30,9 @@ msg_anyData = (
     "Please, select the directory where you store the files to be analyzed. ALL FILES OF A SELECTED EXTENSION TYPE (pdf, docx, txt, csv, conll), PRESENT IN THE DIRECTORY WILL BE PROCESSED. ALL OTHER FILE TYPES WILL BE IGNORED."
     + msg_openExplorer
 )  # + msg_dirButtonDisabled
-msg_anyFile = (
-    "Please, select the file to be analyzed (of any type: pdf, docx, txt, csv, conll)."
-    + msg_openFile
-)
-msg_txtFile = (
-    "Please, select the TXT file to be analyzed." + msg_openFile
-)  # + msg_fileButtonDisabled
-msg_csvFile = (
-    "Please, select the csv file to be analyzed." + msg_openFile
-)  # + msg_fileButtonDisabled
+msg_anyFile = "Please, select the file to be analyzed (of any type: pdf, docx, txt, csv, conll)." + msg_openFile
+msg_txtFile = "Please, select the TXT file to be analyzed." + msg_openFile  # + msg_fileButtonDisabled
+msg_csvFile = "Please, select the csv file to be analyzed." + msg_openFile  # + msg_fileButtonDisabled
 msg_csv_txtFile = (
     "Please, select either a CSV file or a TXT file to be analyzed." + msg_openFile
 )  # + msg_fileButtonDisabled
@@ -61,9 +54,7 @@ msg_openOutputFiles = (
 msg_multipleDocsCoNLL = "\n\nFOR CONLL FILES THAT INCLUDE MULTIPLE DOCUMENTS, THE EXCEL CHARTS PROVIDE OVERALL FREQUENCIES ACROSS ALL DOCUMENTS. FOR SPECIFIC DOCUMENT ANALYSES, PLEASE USE THE GENERAL EXCEL OUTPUT FILE."
 scriptPath = os.path.dirname(os.path.abspath(__file__))
 # File is now in src/io/ — go up two levels to reach the agent root (nlp-suite/)
-NLPPath = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir)
-)
+NLPPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir))
 configPath = os.path.join(NLPPath, "config")
 libPath = os.path.join(NLPPath, "lib")
 image_libPath = os.path.join(NLPPath, "lib" + os.sep + "images")
@@ -72,9 +63,7 @@ Excel_charts_libPath = os.path.join(NLPPath, "lib" + os.sep + "sampleCharts")
 sampleData_libPath = os.path.join(NLPPath, "lib" + os.sep + "sampleData")
 sentiment_libPath = os.path.join(NLPPath, "lib" + os.sep + "sentimentLib")
 concreteness_libPath = os.path.join(NLPPath, "lib" + os.sep + "concretenessLib")
-CoreNLP_enhanced_dependencies_libPath = os.path.join(
-    NLPPath, "lib" + os.sep + "CoreNLP_enhanced_dependencies"
-)
+CoreNLP_enhanced_dependencies_libPath = os.path.join(NLPPath, "lib" + os.sep + "CoreNLP_enhanced_dependencies")
 wordLists_libPath = os.path.join(NLPPath, "lib" + os.sep + "wordLists")
 namesGender_libPath = os.path.join(NLPPath, "lib" + os.sep + "namesGender")
 GISLocations_libPath = os.path.join(NLPPath, "lib" + os.sep + "GIS")
@@ -85,6 +74,4 @@ iconicity_libPath = os.path.join(NLPPath, "lib" + os.sep + "iconicityLib")
 config_filename = "NLP_default_IO_config.csv"
 input_folder = os.path.join(os.path.expanduser("~"), "nlp-suite", "input")
 output_folder = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")
-external_software = os.path.join(
-    os.path.expanduser("~"), "nlp-suite", "external_software"
-)
+external_software = os.path.join(os.path.expanduser("~"), "nlp-suite", "external_software")

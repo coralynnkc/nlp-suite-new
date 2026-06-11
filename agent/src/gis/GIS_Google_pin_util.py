@@ -122,28 +122,114 @@ _ICON_URLS: dict[str, dict[str, str]] = {
         "white": f"{_PUSH}wht-pushpin.png",
         "yellow": f"{_PUSH}ylw-pushpin.png",
     },
-    "Shapes": {s: f"{_SHAPE}{s}.png" for s in [
-        "airports", "arrow-reverse", "arrow", "arts", "bars", "broken_link",
-        "bus", "camera", "campfire", "campground", "capital_big",
-        "capital_big_highlight", "capital_small", "capital_small_highlight",
-        "caution", "church", "coffee", "convenience", "cross-hairs",
-        "cross-hairs_highlight", "cycling", "dining", "dollar", "donut",
-        "earthquake", "electronics", "euro", "falling_rocks", "ferry",
-        "firedept", "fishing", "flag", "forbidden", "gas_stations", "golf",
-        "grocery", "heliport", "highway", "hiker", "homegardenbusiness",
-        "horsebackriding", "hospitals", "info-i", "info", "info_circle",
-        "lodging", "man", "marina", "mechanic", "motorcycling", "mountains",
-        "movies", "open-diamond", "parking_lot", "parks", "pharmacy_rx",
-        "phone", "picnic", "placemark_circle", "placemark_circle_highlight",
-        "placemark_square", "placemark_square_highlight", "play", "poi",
-        "police", "polygon", "post_office", "rail", "ranger_station",
-        "realestate", "road_shield1", "road_shield2", "road_shield3", "ruler",
-        "sailing", "salon", "schools", "shaded_dot", "shopping", "ski",
-        "snack_bar", "square", "star", "subway", "swimming", "target",
-        "terrain", "toilets", "trail", "tram", "triangle", "truck", "volcano",
-        "water", "webcam", "wheel_chair_accessible", "woman", "yen",
-        "sunny", "partly_cloudy", "snowflake_simple", "rainy", "thunderstorm",
-    ]},
+    "Shapes": {
+        s: f"{_SHAPE}{s}.png"
+        for s in [
+            "airports",
+            "arrow-reverse",
+            "arrow",
+            "arts",
+            "bars",
+            "broken_link",
+            "bus",
+            "camera",
+            "campfire",
+            "campground",
+            "capital_big",
+            "capital_big_highlight",
+            "capital_small",
+            "capital_small_highlight",
+            "caution",
+            "church",
+            "coffee",
+            "convenience",
+            "cross-hairs",
+            "cross-hairs_highlight",
+            "cycling",
+            "dining",
+            "dollar",
+            "donut",
+            "earthquake",
+            "electronics",
+            "euro",
+            "falling_rocks",
+            "ferry",
+            "firedept",
+            "fishing",
+            "flag",
+            "forbidden",
+            "gas_stations",
+            "golf",
+            "grocery",
+            "heliport",
+            "highway",
+            "hiker",
+            "homegardenbusiness",
+            "horsebackriding",
+            "hospitals",
+            "info-i",
+            "info",
+            "info_circle",
+            "lodging",
+            "man",
+            "marina",
+            "mechanic",
+            "motorcycling",
+            "mountains",
+            "movies",
+            "open-diamond",
+            "parking_lot",
+            "parks",
+            "pharmacy_rx",
+            "phone",
+            "picnic",
+            "placemark_circle",
+            "placemark_circle_highlight",
+            "placemark_square",
+            "placemark_square_highlight",
+            "play",
+            "poi",
+            "police",
+            "polygon",
+            "post_office",
+            "rail",
+            "ranger_station",
+            "realestate",
+            "road_shield1",
+            "road_shield2",
+            "road_shield3",
+            "ruler",
+            "sailing",
+            "salon",
+            "schools",
+            "shaded_dot",
+            "shopping",
+            "ski",
+            "snack_bar",
+            "square",
+            "star",
+            "subway",
+            "swimming",
+            "target",
+            "terrain",
+            "toilets",
+            "trail",
+            "tram",
+            "triangle",
+            "truck",
+            "volcano",
+            "water",
+            "webcam",
+            "wheel_chair_accessible",
+            "woman",
+            "yen",
+            "sunny",
+            "partly_cloudy",
+            "snowflake_simple",
+            "rainy",
+            "thunderstorm",
+        ]
+    },
 }
 # cabs reuses the arts URL
 _ICON_URLS["Shapes"]["cabs"] = f"{_SHAPE}arts.png"
@@ -210,12 +296,8 @@ def pin_customizer(
     if group_values is None:
         group_values = [""]
     if data is None:
-        withHeader_var = IO_csv_util.csvFile_has_header(
-            inputFilename
-        )  # check if the file has header
-        data, headers = IO_csv_util.get_csv_data(
-            inputFilename, withHeader_var
-        )  # get the data and header
+        withHeader_var = IO_csv_util.csvFile_has_header(inputFilename)  # check if the file has header
+        data, headers = IO_csv_util.get_csv_data(inputFilename, withHeader_var)  # get the data and header
 
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'GIS kml pin customizer', 'Started running kml pin customizer at',
     # 											   True, '', True, '', silent=True)
@@ -331,9 +413,7 @@ def pin_description(
     if group_values is None:
         group_values = [""]
     if "Document ID" in headers:
-        IO_csv_util.GetMaxValueInCSVField(
-            inputFilename, "GIS_Google_pin", "Document ID"
-        )
+        IO_csv_util.GetMaxValueInCSVField(inputFilename, "GIS_Google_pin", "Document ID")
 
     if description_location_var_name == "NER":
         description_location_var_name = "Location"
@@ -347,9 +427,7 @@ def pin_description(
         for a in range(len(headers)):
             if "Document" == headers[a]:
                 pass
-            if (
-                description_csv_field_var == headers[a]
-            ):  # description_csv_field_var is typically set to sentence
+            if description_csv_field_var == headers[a]:  # description_csv_field_var is typically set to sentence
                 pass
             if description_location_var_name == headers[a]:
                 pass
@@ -494,26 +572,14 @@ def pin_description(
                     )
                 elif bold_var == 1:
                     pnt.description = (
-                        "<b>Group Label</b>: "
-                        + group_label
-                        + "<br/><br/><b>Group Value</b>: "
-                        + group_value
+                        "<b>Group Label</b>: " + group_label + "<br/><br/><b>Group Value</b>: " + group_value
                     )
                 elif italic_var == 1:
                     pnt.description = (
-                        "<i>Group Label</i>: "
-                        + group_label
-                        + "<br/><br/><i>Group Value</i>: "
-                        + group_value
+                        "<i>Group Label</i>: " + group_label + "<br/><br/><i>Group Value</i>: " + group_value
                     )
                 else:
-                    pnt.description = (
-                        "Group Label: "
-                        + group_label
-                        + "<br/><br/>"
-                        + "Group Value: "
-                        + group_value
-                    )
+                    pnt.description = "Group Label: " + group_label + "<br/><br/>" + "Group Value: " + group_value
             else:
                 if italic_var == 1 and bold_var == 1:
                     pnt.description = (
@@ -696,12 +762,7 @@ def pin_description(
 
             else:
                 pnt.description = (
-                    description_csv_field_var
-                    + ": "
-                    + description[index - 1]
-                    + "Document"
-                    + ": "
-                    + documents[index - 1]
+                    description_csv_field_var + ": " + description[index - 1] + "Document" + ": " + documents[index - 1]
                 )
 
     return pnt
@@ -755,8 +816,6 @@ def pin_name(
     g_value = rgb_value[1]
     b = rgb_value[2].split(")")
     b_value = b[0]
-    pnt.style.labelstyle.color = simplekml.Color.rgb(
-        int(r_value), int(g_value), int(b_value)
-    )
+    pnt.style.labelstyle.color = simplekml.Color.rgb(int(r_value), int(g_value), int(b_value))
 
     return pnt

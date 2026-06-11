@@ -15,5 +15,4 @@ WORD_LISTS_DIR = Path(__file__).parent.parent.parent / "lib" / "wordLists"
 
 LOCATION_NER_TAGS = {"LOCATION", "CITY", "STATE_OR_PROVINCE", "COUNTRY"}
 
-CONTINENTS = {"Africa", "Antarctica", "Asia", "Australia", "Europe",
-              "North America", "South America", "Oceania"}
+CONTINENTS = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America", "Oceania"}

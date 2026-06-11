@@ -110,9 +110,7 @@ def csv_converter(
             )
             return
         else:
-            logger.info(
-                "INFO: No input filename. Please select an input csv file and try again."
-            )
+            logger.info("INFO: No input filename. Please select an input csv file and try again.")
             return
         logger.info("INFO: The function is still under construction.\nSorry!")
         return
@@ -144,21 +142,11 @@ def rtf_converter(
     if len(inputDir) > 0:
         msgbox_subDir = False
         if msgbox_subDir:
-            inputRTFs = IO_files_util.getFileList_SubDir(
-                inputFilename, inputDir, ".rtf"
-            )
+            inputRTFs = IO_files_util.getFileList_SubDir(inputFilename, inputDir, ".rtf")
 
-            inputRTFs = [
-                f
-                for f in inputRTFs
-                if os.path.basename(f)[:2] != "~$" and f[-4:] == ".rtf"
-            ]
+            inputRTFs = [f for f in inputRTFs if os.path.basename(f)[:2] != "~$" and f[-4:] == ".rtf"]
         else:
-            inputRTFs = [
-                os.path.join(inputDir, f)
-                for f in os.listdir(inputDir)
-                if f[:2] != "~$" and f[-4:] == ".rtf"
-            ]
+            inputRTFs = [os.path.join(inputDir, f) for f in os.listdir(inputDir) if f[:2] != "~$" and f[-4:] == ".rtf"]
     elif len(inputFilename) > 0:
         if inputFilename[:2] != "~$" and inputFilename[-4:] == ".rtf":
             inputRTFs = [inputFilename]
@@ -172,17 +160,13 @@ def rtf_converter(
         logger.info("INFO: No input filename or directory specified. The program will exit.")
         return
     if len(inputRTFs) == 0:
-        logger.info(
-            "WARNING: There are no rtf files in the input directory. The program will exit."
-        )
+        logger.info("WARNING: There are no rtf files in the input directory. The program will exit.")
         return
     numberOfDocs = len(inputRTFs)
 
     for docNum, doc in enumerate(inputRTFs):
         head, tail = os.path.split(doc)
-        logger.info(
-            "Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail
-        )
+        logger.info("Processing file " + str(docNum + 1) + "/" + str(numberOfDocs) + " " + tail)
         fileExtension = doc.split(".")[-1]
         if fileExtension == "rtf":
             fullText = open(doc, encoding="utf-8", errors="ignore").read()
@@ -192,9 +176,7 @@ def rtf_converter(
             text = rtf_to_text(fullText)
             common = os.path.commonprefix([doc, inputDir])
             relativePath = os.path.relpath(doc, common)
-            textFilename = os.path.join(
-                outputDir, os.path.splitext(relativePath)[0] + ".txt"
-            )
+            textFilename = os.path.join(outputDir, os.path.splitext(relativePath)[0] + ".txt")
             # TODO: if the subdirectory doesn't exist in output directory, create it
             if not os.path.exists(os.path.dirname(textFilename)):
                 try:

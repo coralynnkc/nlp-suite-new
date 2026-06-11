@@ -102,19 +102,11 @@ def search_deps(token_id_in_sentence, sentence_CoNLL_records, searchedCoNLLField
     for index in deps_list:
         if index != token[SearchField.ID.value] and index != 0:
             if searchedCoNLLField == "FORM":
-                head_form = sentence_CoNLL_records[index - 1][
-                    SearchField.FORM.value
-                ]  # form
+                head_form = sentence_CoNLL_records[index - 1][SearchField.FORM.value]  # form
             else:
-                head_form = sentence_CoNLL_records[index - 1][
-                    SearchField.LEMMA.value
-                ]  # lemma
-            head_postag = sentence_CoNLL_records[index - 1][
-                SearchField.POSTAG.value
-            ]  # postag
-            head_deprel = sentence_CoNLL_records[index - 1][
-                SearchField.DEPREL.value
-            ]  # deprel
+                head_form = sentence_CoNLL_records[index - 1][SearchField.LEMMA.value]  # lemma
+            head_postag = sentence_CoNLL_records[index - 1][SearchField.POSTAG.value]  # postag
+            head_deprel = sentence_CoNLL_records[index - 1][SearchField.DEPREL.value]  # deprel
             res.append(((head_form, head_postag, head_deprel), index))
         elif index == 0:
             continue
@@ -125,9 +117,7 @@ def search_deps(token_id_in_sentence, sentence_CoNLL_records, searchedCoNLLField
 
 
 # Chen
-def search_governors(
-    sentence_CoNLL_records, searchedCoNLLField, target, target_index_list
-):
+def search_governors(sentence_CoNLL_records, searchedCoNLLField, target, target_index_list):
     """
     find all words whose head is the target word
 
@@ -146,10 +136,7 @@ def search_governors(
 
     res = []
     for token in sentence_CoNLL_records:
-        if (
-            token[SearchField.FORM.value] == target
-            or token[SearchField.LEMMA.value] == target
-        ):  # skip the target word
+        if token[SearchField.FORM.value] == target or token[SearchField.LEMMA.value] == target:  # skip the target word
             continue
 
         deps_list = deps_index(token[SearchField.DEPS.value])
@@ -196,15 +183,11 @@ def filter_list_by_POStag(keyword_list, kw_desired_postag="*"):
         keyword_list = keyword_list
     elif kw_desired_postag == "NN*":
         keyword_list = [
-            keyword
-            for keyword in keyword_list
-            if keyword[SearchField.POSTAG.value] in ["NN", "NNS", "NNP", "NNPS"]
+            keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] in ["NN", "NNS", "NNP", "NNPS"]
         ]
     elif kw_desired_postag == "JJ*":
         keyword_list = [
-            keyword
-            for keyword in keyword_list
-            if keyword[SearchField.POSTAG.value] in ["JJ", "JJR", "JJS"]
+            keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] in ["JJ", "JJR", "JJS"]
         ]
     elif kw_desired_postag == "RB*":
         keyword_list = [
@@ -221,15 +204,10 @@ def filter_list_by_POStag(keyword_list, kw_desired_postag="*"):
         keyword_list = [
             keyword
             for keyword in keyword_list
-            if keyword[SearchField.POSTAG.value]
-            in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]
+            if keyword[SearchField.POSTAG.value] in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]
         ]
     else:
-        keyword_list = [
-            keyword
-            for keyword in keyword_list
-            if keyword[SearchField.POSTAG.value] == kw_desired_postag
-        ]
+        keyword_list = [keyword for keyword in keyword_list if keyword[SearchField.POSTAG.value] == kw_desired_postag]
 
     return keyword_list
 
@@ -239,11 +217,7 @@ def filter_list_by_deprel(keyword_list, kw_desired_deprel="*"):
     if kw_desired_deprel == "*":
         keyword_list = keyword_list
     else:
-        keyword_list = [
-            keyword
-            for keyword in keyword_list
-            if keyword[SearchField.DEPREL.value] == kw_desired_deprel
-        ]
+        keyword_list = [keyword for keyword in keyword_list if keyword[SearchField.DEPREL.value] == kw_desired_deprel]
     return keyword_list
 
 
@@ -269,40 +243,22 @@ def filter_output_list(
     deprel_list_queried: a list of filtered output [('the', 'DT', 'det', 2, '1', '1', file_path, whole_sentence, 'pig', 'NN', 'obj')]
     """
     # filter the output list
-    if (
-        related_token_POSTAG == "*"
-        and related_token_DEPREL == "*"
-        and Sentence_ID == "*"
-    ):
+    if related_token_POSTAG == "*" and related_token_DEPREL == "*" and Sentence_ID == "*":
         return list_queried
     if "*" not in related_token_POSTAG:
-        postag_list_queried = list(
-            filter(lambda tok: tok[1] == related_token_POSTAG, list_queried)
-        )
+        postag_list_queried = list(filter(lambda tok: tok[1] == related_token_POSTAG, list_queried))
     elif related_token_POSTAG == "NN*":
-        postag_list_queried = [
-            token for token in list_queried if token[6] in ["NN", "NNS", "NNP", "NNPS"]
-        ]
+        postag_list_queried = [token for token in list_queried if token[6] in ["NN", "NNS", "NNP", "NNPS"]]
     elif related_token_POSTAG == "JJ*":
-        postag_list_queried = [
-            token for token in list_queried if token[6] in ["JJ", "JJR", "JJS"]
-        ]
+        postag_list_queried = [token for token in list_queried if token[6] in ["JJ", "JJR", "JJS"]]
     elif related_token_POSTAG == "RB*":
-        postag_list_queried = [
-            token for token in list_queried if token[6] in ["RB", "RBR", "RBS"]
-        ]
+        postag_list_queried = [token for token in list_queried if token[6] in ["RB", "RBR", "RBS"]]
     elif related_token_POSTAG == "VB*":
-        postag_list_queried = [
-            token
-            for token in list_queried
-            if token[6] in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]
-        ]
+        postag_list_queried = [token for token in list_queried if token[6] in ["VB", "VBN", "VBG", "VBZ", "VBP", "VBD"]]
     else:
         postag_list_queried = list_queried
     if "*" not in related_token_DEPREL:
-        deprel_list_queried = list(
-            filter(lambda tok: tok[7] == related_token_DEPREL, postag_list_queried)
-        )
+        deprel_list_queried = list(filter(lambda tok: tok[7] == related_token_DEPREL, postag_list_queried))
     else:
         deprel_list_queried = postag_list_queried
     # re-insert the header filtered out
@@ -348,26 +304,18 @@ def search_in_sentence(
         keyword_list = filter_list_by_POStag(keyword_list, kw_desired_postag)
     else:
         # if desired form is not *, need to search governor word
-        keyword_list = [
-            keyword
-            for keyword in sentence_CoNLL_records
-            if keyword[compare_term] == searched_token
-        ]
+        keyword_list = [keyword for keyword in sentence_CoNLL_records if keyword[compare_term] == searched_token]
 
     if len(keyword_list) == 0:
         return list_indices_related_word
 
     keyword_list = filter_list_by_POStag(keyword_list, kw_desired_postag)
     keyword_index_list = [int(word[0]) for word in keyword_list]
-    targets_governors = search_governors(
-        sentence_CoNLL_records, __field__, searched_token, keyword_index_list
-    )
+    targets_governors = search_governors(sentence_CoNLL_records, __field__, searched_token, keyword_index_list)
 
     for governor in targets_governors:
         # Return form of search governors: [(governor_index, governor_word, target_index)]
-        list_indices_related_word.append(
-            (governor[0], 2, sentence_CoNLL_records[governor[2] - 1])
-        )
+        list_indices_related_word.append((governor[0], 2, sentence_CoNLL_records[governor[2] - 1]))
 
     for keyword in keyword_list:
         token_id = keyword[0]
@@ -479,9 +427,7 @@ def search_CoNLL_table(
 ):
 
     # create a subdirectory of the output directory
-    outputDir = IO_files_util.make_output_subdirectory(
-        inputFilename, "", outputDir, label="CoNLL_search", silent=True
-    )
+    outputDir = IO_files_util.make_output_subdirectory(inputFilename, "", outputDir, label="CoNLL_search", silent=True)
     if outputDir == "":
         return outputDir, filesToOpen
 
@@ -532,9 +478,7 @@ def search_CoNLL_table(
                 whole_sent += token[1] + " "
         whole_sent = whole_sent.strip()
         # record is a list of all the CoNLL table records for a given sentence
-        list_word_indices = search_in_sentence(
-            form_of_token, sentence_record, _field_, _tok_postag_, _tok_deprel_
-        )
+        list_word_indices = search_in_sentence(form_of_token, sentence_record, _field_, _tok_postag_, _tok_deprel_)
         for node in list_word_indices:
             co_token_ID = node[0]
             is_head = node[1]
@@ -591,15 +535,11 @@ def search_CoNLL_table(
 
     # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir, '.csv',
     #                                                            '', srcField_kw, _field_)
-    outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "search"
-    )
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "search")
 
     # convert list to dataframe and save
     df = pd.DataFrame(deprel_list_queried)
-    IO_csv_util.df_to_csv(
-        df, outputFilename, headers=None, index=False, language_encoding="utf-8"
-    )
+    IO_csv_util.df_to_csv(df, outputFilename, headers=None, index=False, language_encoding="utf-8")
 
     filesToOpen.append(outputFilename)
 
@@ -625,10 +565,7 @@ def search_CoNLL_table(
             columns_to_be_plotted_yAxis,
             chart_title="Frequency Distribution of ' + _tok_postag_ + ' POS Tag of Searched Token/Word",
             outputFileNameType="",
-            column_xAxis_label=_tok_postag_
-            + ' POS Tag for the word "'
-            + form_of_token
-            + '"',
+            column_xAxis_label=_tok_postag_ + ' POS Tag for the word "' + form_of_token + '"',
             count_var=count_var,
             hover_label=[],
             groupByList=[],  # ['Document ID', 'Document'],
@@ -648,14 +585,9 @@ def search_CoNLL_table(
                 outputDir,
                 columns_to_be_plotted_xAxis,
                 columns_to_be_plotted_yAxis,
-                chart_title="Frequency Distribution of "
-                + _tok_deprel_
-                + " DepRel of Searched Token/Word",
+                chart_title="Frequency Distribution of " + _tok_deprel_ + " DepRel of Searched Token/Word",
                 outputFileNameType="",
-                column_xAxis_label=_tok_deprel_
-                + ' DepRel Tag for the word "'
-                + form_of_token
-                + '"',
+                column_xAxis_label=_tok_deprel_ + ' DepRel Tag for the word "' + form_of_token + '"',
                 count_var=count_var,
                 hover_label=[],
                 groupByList=[],  # ['Document ID', 'Document'],
@@ -674,14 +606,9 @@ def search_CoNLL_table(
             outputDir,
             columns_to_be_plotted_xAxis,
             columns_to_be_plotted_yAxis,
-            chart_title="Frequency Distribution of Co-occurring "
-            + related_token_POSTAG
-            + " words/tokens",
+            chart_title="Frequency Distribution of Co-occurring " + related_token_POSTAG + " words/tokens",
             outputFileNameType="",
-            column_xAxis_label=related_token_POSTAG
-            + ' Co-occurring words for the word "'
-            + form_of_token
-            + '"',
+            column_xAxis_label=related_token_POSTAG + ' Co-occurring words for the word "' + form_of_token + '"',
             count_var=count_var,
             hover_label=[],
             groupByList=[],  # ['Document ID', 'Document'],
@@ -700,14 +627,9 @@ def search_CoNLL_table(
             outputDir,
             columns_to_be_plotted_xAxis,
             columns_to_be_plotted_yAxis,
-            chart_title="Frequency Distribution of Co-occurring "
-            + related_token_POSTAG
-            + " POS Tags",
+            chart_title="Frequency Distribution of Co-occurring " + related_token_POSTAG + " POS Tags",
             outputFileNameType="search_CoOc_POS",
-            column_xAxis_label=related_token_POSTAG
-            + ' POS Tag co-occurring with the word "'
-            + form_of_token
-            + '"',
+            column_xAxis_label=related_token_POSTAG + ' POS Tag co-occurring with the word "' + form_of_token + '"',
             count_var=count_var,
             hover_label=[],
             groupByList=[],  # ['Document ID', 'Document'],
@@ -727,14 +649,9 @@ def search_CoNLL_table(
             outputDir,
             columns_to_be_plotted_xAxis,
             columns_to_be_plotted_yAxis,
-            chart_title="Frequency Distribution of Co-occurring "
-            + related_token_DEPREL
-            + " DepRel Tags",
+            chart_title="Frequency Distribution of Co-occurring " + related_token_DEPREL + " DepRel Tags",
             outputFileNameType="search_CoOc_DepRel",
-            column_xAxis_label=related_token_DEPREL
-            + ' DepRel Tag co-occurring with the word "'
-            + form_of_token
-            + '"',
+            column_xAxis_label=related_token_DEPREL + ' DepRel Tag co-occurring with the word "' + form_of_token + '"',
             count_var=count_var,
             hover_label=[],
             groupByList=[],  # ['Document ID', 'Document'],

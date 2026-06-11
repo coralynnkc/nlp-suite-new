@@ -49,14 +49,10 @@ def getGoogleAPIkey(Google_config, display_key=False):
             )
             if "geocode" in Google_config:
                 message = (
-                    message
-                    + "\n\nWithout a Google geocoder API key you can only geocode locations with Nominatim."
+                    message + "\n\nWithout a Google geocoder API key you can only geocode locations with Nominatim."
                 )
             if "Maps" in Google_config:
-                message = (
-                    message
-                    + "\n\nWithout a Google Maps API key you can only map locations in Google Earth Pro."
-                )
+                message = message + "\n\nWithout a Google Maps API key you can only map locations in Google Earth Pro."
             message = (
                 message
                 + "\n\nPlease, read the TIPS file TIPS_NLP_GIS_Google API Key.pdf on how to obtain free Google API keys.\n\nWould you like to open the TIPS file now?"
@@ -75,11 +71,7 @@ def getGoogleAPIkey(Google_config, display_key=False):
         if key == "":
             message = "Enter the Google " + config_type + " API key"
         else:
-            message = (
-                "Enter a new Google "
-                + config_type
-                + " API key if you want to change the key"
-            )
+            message = "Enter a new Google " + config_type + " API key if you want to change the key"
         key = ""
         # save the API key
         if key != "":
@@ -141,18 +133,14 @@ def GIS_pipeline(
         filenamePositionInCoNLLTable,
     ) = GIS_file_check_util.CoNLL_checker(inputFilename)
 
-    locationColumnNumber = IO_csv_util.get_columnNumber_from_headerValue(
-        headers, locationColumnName, inputFilename
-    )
+    locationColumnNumber = IO_csv_util.get_columnNumber_from_headerValue(headers, locationColumnName, inputFilename)
 
     if locationColumnNumber is None:
         return
 
     dateColumnNumber = -1
     if datePresent:
-        dateColumnNumber = IO_csv_util.get_columnNumber_from_headerValue(
-            headers, "Date", inputFilename
-        )
+        dateColumnNumber = IO_csv_util.get_columnNumber_from_headerValue(headers, "Date", inputFilename)
 
     outputCsvLocationsOnly = ""
 
@@ -223,9 +211,7 @@ def GIS_pipeline(
             False,
             True,
         )
-        locations = GIS_location_util.extract_NER_locations(
-            inputFilename, encodingValue, datePresent
-        )
+        locations = GIS_location_util.extract_NER_locations(inputFilename, encodingValue, datePresent)
     else:
         # locations is a double list of names of locations in the form [['United States','COUNTRY']]
         locations = GIS_location_util.extract_csvFile_locations(
@@ -290,16 +276,12 @@ def GIS_pipeline(
             for i, row in nom_df.iterrows():
                 # if i!=0 and row[0] in constants_util.continents and nom_df.at[i-1, 'Location'] in constants_util.directions:
                 if i != 0 and row[0] in CONTINENTS:
-                    nom_df.at[i, "Location"] = (
-                        nom_df.at[i - 1, "Location"] + " " + row[0]
-                    )
+                    nom_df.at[i, "Location"] = nom_df.at[i - 1, "Location"] + " " + row[0]
                     drop_idx.append(i - 1)
                     changed_idx[i] = nom_df.at[i, "Location"]
                     changed = True
             if changed:
-                tmp_df = pd.read_csv(
-                    inputFilename, encoding="utf-8", on_bad_lines="skip"
-                )
+                tmp_df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
                 for k, v in changed_idx.items():
                     tmp_df.at[k, "Location"] = v
                 tmp_df = tmp_df.drop(drop_idx)
@@ -353,9 +335,7 @@ def GIS_pipeline(
         False,
         True,
     )
-    locationsNotFoundoutputFilename = locationsNotFoundoutputFilename.replace(
-        "LOCATIONS", "LOCATIONS_not-found"
-    )
+    locationsNotFoundoutputFilename = locationsNotFoundoutputFilename.replace("LOCATIONS", "LOCATIONS_not-found")
 
     geocodedLocationsOutputFilename = inputFilename
 
@@ -382,8 +362,7 @@ def GIS_pipeline(
         if kmloutputFilename != "":
             filesToOpen.append(kmloutputFilename)
         if (
-            geocodedLocationsOutputFilename == ""
-            and locationsNotFoundoutputFilename == ""
+            geocodedLocationsOutputFilename == "" and locationsNotFoundoutputFilename == ""
         ):  # when geocoding cannot run because of internet connection
             return
 
@@ -436,9 +415,7 @@ def GIS_pipeline(
     # the plot of location NERs frequencies is done in the function CoreNLP_annotator_util
     # need to plot locations geocoded and not geocoded
 
-    nRecordsFound, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
-        geocodedLocationsOutputFilename
-    )
+    nRecordsFound, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(geocodedLocationsOutputFilename)
     if geocodedLocationsOutputFilename != "" and nRecordsFound > 0:
         # set inputIsGeocoded
         inputIsGeocoded = True
@@ -501,10 +478,8 @@ def GIS_pipeline(
 
     if not inputIsGeocoded:
         if locationsNotFoundNonDistinctoutputFilename != "":
-            nRecordsNotFound, nColumns = (
-                IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
-                    locationsNotFoundNonDistinctoutputFilename
-                )
+            nRecordsNotFound, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
+                locationsNotFoundNonDistinctoutputFilename
             )
             if nRecordsNotFound > 0:
                 filesToOpen.append(locationsNotFoundNonDistinctoutputFilename)
@@ -532,21 +507,13 @@ def GIS_pipeline(
                             head, tail = os.path.split(outputFiles[0])
                             tail = tail.replace("LOCATIONS", "LOCATIONS_not_found")
                             # change the filename on the computer drive
-                            outputFiles[0] = os.rename(
-                                outputFiles[0], head + os.sep + tail
-                            )
+                            outputFiles[0] = os.rename(outputFiles[0], head + os.sep + tail)
                             filesToOpen.extend(outputFiles)
 
                 # save to csv file and run visualization
-                outputFilename = IO_files_util.generate_output_file_name(
-                    inputFilename, "", outputDir, ".csv"
-                )
-                outputFilename = outputFilename.replace(
-                    "LOCATIONS", "LOCATIONS_found-notFound"
-                )
-                with open(
-                    outputFilename, "w", newline="", encoding="utf-8", errors="ignore"
-                ) as csvFile:
+                outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv")
+                outputFilename = outputFilename.replace("LOCATIONS", "LOCATIONS_found-notFound")
+                with open(outputFilename, "w", newline="", encoding="utf-8", errors="ignore") as csvFile:
                     writer = csv.writer(csvFile)
                     writer.writerow(
                         [
@@ -581,9 +548,7 @@ def GIS_pipeline(
                 if outputFiles is not None:
                     collect(filesToOpen, outputFiles)
 
-    nRecordsFound, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
-        geocodedLocationsOutputFilename
-    )
+    nRecordsFound, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(geocodedLocationsOutputFilename)
 
     # ------------------------------------------------------------------------------------
     # map
@@ -605,9 +570,7 @@ def GIS_pipeline(
             False,
             True,
         )
-        folium_heatmap_outputFilename = folium_pinmap_outputFilename.replace(
-            "pin", "heat"
-        )
+        folium_heatmap_outputFilename = folium_pinmap_outputFilename.replace("pin", "heat")
         outputFiles = GIS_folium_map_util.run(
             geocodedLocationsOutputFilename,
             folium_pinmap_outputFilename,
@@ -639,9 +602,7 @@ def GIS_pipeline(
         )
         coordList = []
 
-        df = pd.read_csv(
-            geocodedLocationsOutputFilename, encoding="utf-8", on_bad_lines="skip"
-        )
+        df = pd.read_csv(geocodedLocationsOutputFilename, encoding="utf-8", on_bad_lines="skip")
         if "Latitude" in df and "Longitude" in df:
             lat = df.Latitude
             lon = df.Longitude

@@ -21,7 +21,6 @@ def run_statistics(
     corpus_statistics_var,
     corpus_statistics_byPOS_var,
 ):
-
     """Compute corpus statistics (counts, lengths, optional by-POS) and charts."""
     config_filename = "NLP_default_IO_config.csv"
     filesToOpen = []  # Store all files that are to be opened once finished

@@ -45,9 +45,7 @@ def run_search_byWord(
         )
         return
 
-    if search_options_menu_var != "" and search_options_menu_var not in str(
-        search_options_list
-    ):
+    if search_options_menu_var != "" and search_options_menu_var not in str(search_options_list):
         logger.info(
             "Warning, There is a search value '"
             + str(search_options_menu_var.get())

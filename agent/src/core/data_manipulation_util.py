@@ -49,8 +49,17 @@ def append(outputDir: str, operation_results_text_list: list) -> str:
             tempHeaders = "`" + tempHeaders + "`"
 
     outputFilename = IO_files_util.generate_output_file_name(
-        files[0], os.path.dirname(files[0]), outputDir, ".csv",
-        "append", "", "", "", "", False, True,
+        files[0],
+        os.path.dirname(files[0]),
+        outputDir,
+        ".csv",
+        "append",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     data_files = list(select_csv(files))
@@ -62,8 +71,10 @@ def append(outputDir: str, operation_results_text_list: list) -> str:
     sep = ","
     df_append = pd.concat(data_cols, axis=0)
     df_append.to_csv(
-        outputFilename, encoding="utf-8",
-        header=[listToString(headers, sep)], index=False,
+        outputFilename,
+        encoding="utf-8",
+        header=[listToString(headers, sep)],
+        index=False,
     )
     return outputFilename
 
@@ -95,8 +106,17 @@ def concatenate(outputDir: str, operation_results_text_list: list) -> str:
             sep = s.split(",")[2]
 
     outputFilename = IO_files_util.generate_output_file_name(
-        files[0], os.path.dirname(files[0]), outputDir, ".csv",
-        "concatenate", "", "", "", "", False, True,
+        files[0],
+        os.path.dirname(files[0]),
+        outputDir,
+        ".csv",
+        "concatenate",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
 
     data_files = list(select_csv(files))
@@ -107,15 +127,19 @@ def concatenate(outputDir: str, operation_results_text_list: list) -> str:
         return ""
     df_concat = concat(data_cols, sep)
     df_concat.to_csv(
-        outputFilename, header=[listToString(headers, sep)],
-        encoding="utf-8", index=False,
+        outputFilename,
+        header=[listToString(headers, sep)],
+        encoding="utf-8",
+        index=False,
     )
     return outputFilename
 
 
 def export_csv_to_csv_txt(
-    outputDir: str, operation_results_text_list: list,
-    export_type: str = ".csv", cols: Optional[list] = None,
+    outputDir: str,
+    operation_results_text_list: list,
+    export_type: str = ".csv",
+    cols: Optional[list] = None,
 ) -> str:
     files = []
     headers = []
@@ -148,9 +172,7 @@ def export_csv_to_csv_txt(
     df_list = []
     value: str
     header: str
-    for sign, value, cond, header, df in zip(
-        sign_var, value_var, and_or, headers, data_files
-    ):
+    for sign, value, cond, header, df in zip(sign_var, value_var, and_or, headers, data_files):
         if sign == "''" and value == "''":
             df_list.append(df[[header]])
         else:
@@ -173,19 +195,12 @@ def export_csv_to_csv_txt(
         if operation_results_text_list[index].split(",")[4] in ["and", "''"]:
             if index == len(df_list) - 1:
                 continue
-            df_extract = df_extract.merge(
-                df_list[index + 1], how="inner", right_index=True, left_index=True
-            )
+            df_extract = df_extract.merge(df_list[index + 1], how="inner", right_index=True, left_index=True)
         elif operation_results_text_list[index].split(",")[4] == "or":
             if index == len(df_list) - 1:
                 continue
-            df_extract = df_extract.merge(
-                df_list[index + 1], how="outer", right_index=True, left_index=True
-            )
-        elif (
-            operation_results_text_list[index].split(",")[4] == ""
-            and index != len(df_list) - 1
-        ):
+            df_extract = df_extract.merge(df_list[index + 1], how="outer", right_index=True, left_index=True)
+        elif operation_results_text_list[index].split(",")[4] == "" and index != len(df_list) - 1:
             raise Exception("Missing and/or condition")
     if export_type == ".csv":
         df_extract.to_csv(outputFilename, encoding="utf-8", index=False)
@@ -238,8 +253,17 @@ def MERGE(outputDir: str, operation_results_text_list) -> str:
         raise FileNotFoundError(f"Error merging files: {err}") from err
 
     outputFilename = IO_files_util.generate_output_file_name(
-        csv_lst[0], os.path.dirname(csv_lst[0]), outputDir, ".csv",
-        "merge", "", "", "", "", False, True,
+        csv_lst[0],
+        os.path.dirname(csv_lst[0]),
+        outputDir,
+        ".csv",
+        "merge",
+        "",
+        "",
+        "",
+        "",
+        False,
+        True,
     )
     df.to_csv(outputFilename, encoding="utf-8", index=False)
     return outputFilename

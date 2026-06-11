@@ -19,9 +19,7 @@ def create_input_subdir(inputDir, label):
     # create a subdirectory of the input directory
     inputDirBase = os.path.basename(inputDir)
     outputDir = inputDir + os.sep + inputDirBase + label
-    outputDir = IO_files_util.make_output_subdirectory(
-        "", "", outputDir, label="", silent=True
-    )
+    outputDir = IO_files_util.make_output_subdirectory("", "", outputDir, label="", silent=True)
     return outputDir
 
 
@@ -132,14 +130,9 @@ def add_full_stop_to_paragraph(
         )
     if count > 0:
         if inputFilename != "":
-            msgString = (
-                msgString + "\n\nAll edits were saved directly in the input file."
-            )
+            msgString = msgString + "\n\nAll edits were saved directly in the input file."
         else:
-            msgString = (
-                msgString
-                + "\n\nAll edits were saved directly in all affected input files."
-            )
+            msgString = msgString + "\n\nAll edits were saved directly in all affected input files."
 
     logger.info("End of paragraph punctuation" + msgString)
     # always open outputDir
@@ -211,9 +204,7 @@ def check_typesetting_hyphenation(
             # if openOutputFiles:
         else:
             logger.info(
-                "Warning: There are "
-                + str(hyphenated_lines)
-                + " typesetting hyphenated lines in the input file(s)."
+                "Warning: There are " + str(hyphenated_lines) + " typesetting hyphenated lines in the input file(s)."
             )
 
 
@@ -303,23 +294,14 @@ def remove_typeseting_hyphenation(
     if removed_hyphens > 0:
         if inputDir != "":
             save_msg = (
-                "\n\nOutput files saved in the subdirectory "
-                + outputDir
-                + " of the same directory of input files."
+                "\n\nOutput files saved in the subdirectory " + outputDir + " of the same directory of input files."
             )
         else:
-            save_msg = (
-                "\n\nOutput file saved in the same directory of the input file with "
-                + label
-                + ".txt ending."
-            )
+            save_msg = "\n\nOutput file saved in the same directory of the input file with " + label + ".txt ending."
     else:
         save_msg = ""
     logger.info(
-        "Warning: "
-        + str(removed_hyphens)
-        + " end-line typesetting hyphens removed from the input file(s)."
-        + save_msg
+        "Warning: " + str(removed_hyphens) + " end-line typesetting hyphens removed from the input file(s)." + save_msg
     )
     # always open outputDir
     IO_files_util.openExplorer(window, head)
@@ -412,23 +394,14 @@ def remove_hard_carriage_returns(
     if removed_hard_returns > 0:
         if inputDir != "":
             save_msg = (
-                "\n\nOutput files saved in the subdirectory "
-                + outputDir
-                + " of the same directory of input files."
+                "\n\nOutput files saved in the subdirectory " + outputDir + " of the same directory of input files."
             )
         else:
-            save_msg = (
-                "\n\nOutput file saved in the same directory of the input file with "
-                + label
-                + ".txt ending."
-            )
+            save_msg = "\n\nOutput file saved in the same directory of the input file with " + label + ".txt ending."
     else:
         save_msg = ""
     logger.info(
-        "Warning"
-        + str(removed_hard_returns)
-        + " hard-carriage returns removed from the input file(s)."
-        + save_msg
+        "Warning" + str(removed_hard_returns) + " hard-carriage returns removed from the input file(s)." + save_msg
     )
     # always open outputDir
     IO_files_util.openExplorer(window, head)
@@ -518,23 +491,14 @@ def add_missing_blank_after_punctuation(
     if blanks_added > 0:
         if inputDir != "":
             save_msg = (
-                "\n\nOutput files saved in the subdirectory "
-                + outputDir
-                + " of the same directory of input files."
+                "\n\nOutput files saved in the subdirectory " + outputDir + " of the same directory of input files."
             )
         else:
-            save_msg = (
-                "\n\nOutput file saved in the same directory of the input file with "
-                + label
-                + ".txt ending."
-            )
+            save_msg = "\n\nOutput file saved in the same directory of the input file with " + label + ".txt ending."
     else:
         save_msg = ""
     logger.info(
-        "Warning, Missing blanks were inserted after punctuation in "
-        + str(blanks_added)
-        + " input file(s)."
-        + save_msg
+        "Warning, Missing blanks were inserted after punctuation in " + str(blanks_added) + " input file(s)." + save_msg
     )
     # always open outputDir
     IO_files_util.openExplorer(window, head)
@@ -625,11 +589,7 @@ def remove_characters_between_characters(
                 IO_user_interface_util.timed_alert(
                     1000,
                     "Warning",
-                    "   No Start character "
-                    + startCharacter
-                    + " was found in the input file "
-                    + tail
-                    + ".",
+                    "   No Start character " + startCharacter + " was found in the input file " + tail + ".",
                     True,
                     "",
                     True,
@@ -642,11 +602,7 @@ def remove_characters_between_characters(
                 IO_user_interface_util.timed_alert(
                     1000,
                     "Warning",
-                    "   No End character "
-                    + endCharacter
-                    + " was found in the input file "
-                    + tail
-                    + ".",
+                    "   No End character " + endCharacter + " was found in the input file " + tail + ".",
                     True,
                     "",
                     True,
@@ -681,19 +637,13 @@ def remove_characters_between_characters(
                 number_of_characters_pairs = int(number_of_characters_start)
             i = 0
             while i < number_of_characters_pairs:
-                split_string_A = fullText.split(
-                    startCharacter, 1
-                )  # Split into "ab" and "cd"
+                split_string_A = fullText.split(startCharacter, 1)  # Split into "ab" and "cd"
                 split_string_A = split_string_A[0]
-                split_string_B = fullText.split(
-                    endCharacter, 1
-                )  # Split into "ab" and "cd"
+                split_string_B = fullText.split(endCharacter, 1)  # Split into "ab" and "cd"
                 if len(split_string_B) > 1:
                     split_string_B = split_string_B[1]
                     if startCharacter == endCharacter:
-                        split_string_B = split_string_B.split(
-                            endCharacter, 1
-                        )  # Split into "ab" and "cd"
+                        split_string_B = split_string_B.split(endCharacter, 1)  # Split into "ab" and "cd"
                         split_string_B = split_string_B[1]
                 else:
                     split_string_B = split_string_B[0]
@@ -720,7 +670,11 @@ def remove_characters_between_characters(
                         str(os.stat(file).st_size - os.stat(outfile).st_size),
                     ]
                 )
-                logger.info('   FILE SIZES (in bytes) - ORIGINAL  %s  EDITED  %s', os.stat(file).st_size, os.stat(outfile).st_size)
+                logger.info(
+                    "   FILE SIZES (in bytes) - ORIGINAL  %s  EDITED  %s",
+                    os.stat(file).st_size,
+                    os.stat(outfile).st_size,
+                )
 
                 if inputDir != "":
                     No_files_edited += 1
@@ -786,9 +740,7 @@ def remove_characters_between_characters(
                 "Difference in bytes (should be >0)",
             ]
             file_sizes.insert(0, header)
-            IO_csv_util.list_to_csv(
-                window, file_sizes, outputDir + os.sep + "file_sizes.csv"
-            )
+            IO_csv_util.list_to_csv(window, file_sizes, outputDir + os.sep + "file_sizes.csv")
             IO_files_util.openFile(window, outputDir + os.sep + "file_sizes.csv")
 
     if No_odd_pairs > 0:
@@ -896,9 +848,7 @@ def remove_blank_lines(
             filesWithEmptyLines += 1
     if inputFilename != "":
         if filesWithEmptyLines == 0:
-            logger.info(
-                "Blank lines removed, No blank lines were removed from the input file."
-            )
+            logger.info("Blank lines removed, No blank lines were removed from the input file.")
         else:
             logger.info("Blank lines removed, Blank lines were removed from the input file.")
     else:
@@ -1201,12 +1151,8 @@ def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
             ):
                 # u0027 apostrophe
                 fullText = str(fullText).replace("%", " percent")  # left single quote
-                fullText = str(fullText).replace(
-                    "\u2018", "\u0027"
-                )  # left single quote
-                fullText = str(fullText).replace(
-                    "\u2019", "\u0027"
-                )  # right single quote
+                fullText = str(fullText).replace("\u2018", "\u0027")  # left single quote
+                fullText = str(fullText).replace("\u2019", "\u0027")  # right single quote
                 fullText = str(fullText).replace("\u201c", '"')  # left double quote
                 fullText = str(fullText).replace("\u201d", '"')  # right double quote
                 docError = docError + 1
@@ -1278,9 +1224,7 @@ def find_replace_string(
         string_OUT = []
     if string_IN is None:
         string_IN = []
-    result = file_filename_util.backup_files(
-        inputFilename, inputDir, "Find and replace string", ".txt", configFileName
-    )
+    result = file_filename_util.backup_files(inputFilename, inputDir, "Find and replace string", ".txt", configFileName)
     if not result:
         return
 
@@ -1367,17 +1311,13 @@ def find_replace_string(
                     )
             file.close()
 
-    outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, inputDir, outputDir, ".csv", "find_replace"
-    )
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".csv", "find_replace")
     header = ["Find string", "Replace string", "Document ID", "Document"]
     changed_values.insert(0, header)
     IO_error = IO_csv_util.list_to_csv(window, changed_values, outputFilename)
 
     if docError > 0:
-        if (
-            len(string_IN) == 1 and docError == 1
-        ):  # if only one FIND string, it can be typed in the message box
+        if len(string_IN) == 1 and docError == 1:  # if only one FIND string, it can be typed in the message box
             if not silent:
                 logger.info(
                     "String edit"

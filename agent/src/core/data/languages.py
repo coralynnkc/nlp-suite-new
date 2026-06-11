@@ -228,4 +228,3 @@ languages = [
     ("zh", "Chinese"),
     ("zu", "Zulu"),
 ]
-

@@ -183,7 +183,13 @@ def spaCy_annotate(
         if "sentiment" in annotator_params:
             nlp.add_pipe("spacytextblob")
     except Exception as e:
-        logger.info('Warning %s %s', "spaCy encountered an error trying to download the language pack " + str(language) + "\n\nCheck if this language is available in spaCy.", str(e))
+        logger.info(
+            "Warning %s %s",
+            "spaCy encountered an error trying to download the language pack "
+            + str(language)
+            + "\n\nCheck if this language is available in spaCy.",
+            str(e),
+        )
         return
 
     # different outputFilename if SVO is selected
@@ -224,7 +230,12 @@ def spaCy_annotate(
         try:
             Spacy_output = nlp(text)
         except Exception:
-            logger.info('Warning %s', "spaCy encountered an error trying to download the language pack " + str(language) + "\n\nTry manually selecting the appropriate language rather than multilingual.")
+            logger.info(
+                "Warning %s",
+                "spaCy encountered an error trying to download the language pack "
+                + str(language)
+                + "\n\nTry manually selecting the appropriate language rather than multilingual.",
+            )
             return
 
         if "NER" in str(annotator_params) or "parse" in str(annotator_params) or "sentiment" in str(annotator_params):
@@ -608,6 +619,7 @@ def extractNER(word, df, idx, column, NER_bool, ent_iob):
 
 # extract date in filename from Stanford_CoreNLP_util
 date_in_filename = IO_files_util.date_in_filename
+
 
 # create locations file for GIS
 def visualize_GIS_maps_spaCy(svo_df):

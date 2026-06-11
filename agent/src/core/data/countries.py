@@ -515,4 +515,3 @@ ISO_GIS_country_menu = (
 # 'MeanOfTransportation','Media','MedicalSpecialty','Medicine','Name','Person','Place','Population', \
 # 'Protocol','PublicService','Relationship','Species','SportCompetitionResult','SportsSeason','Spreadsheet', \
 # 'StarCluster','Statistic','Tank','TimePeriod','TopicalConcept', 'UnitOfWork','Unknown', 'Work'
-

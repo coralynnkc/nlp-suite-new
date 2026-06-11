@@ -47,9 +47,7 @@ def create_Plotly_chart(
     if inputFileData:
         try:
             # Convert inputFileData to a DataFrame
-            data = pd.read_csv(
-                io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip"
-            )
+            data = pd.read_csv(io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip")
             inputFilename = None  # No need to refer to a file when using inputFileData
         except pd.errors.ParserError:
             logger.info("Error: failed to parse the provided inputFileData.")
@@ -60,9 +58,7 @@ def create_Plotly_chart(
     else:
         # Process inputFilename as usual
         if remove_hyperlinks:
-            remove_hyperlinks, inputFilename = IO_csv_util.remove_hyperlinks(
-                inputFilename
-            )
+            remove_hyperlinks, inputFilename = IO_csv_util.remove_hyperlinks(inputFilename)
         try:
             data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
         except pd.errors.ParserError:
@@ -125,9 +121,7 @@ def create_Plotly_chart(
                                 </html>
                                 """
 
-            def process_multiple(
-                x_cols, y_cols, lst, df2_fn, fig_fn, types, data, _html_template=html_template
-            ):
+            def process_multiple(x_cols, y_cols, lst, df2_fn, fig_fn, types, data, _html_template=html_template):
                 chart_htmls = []
                 for chart_name in lst:
                     df2 = df2_fn(chart_name) if df2_fn else None
@@ -135,9 +129,7 @@ def create_Plotly_chart(
                     chart_html = fig.to_html(full_html=False, include_Plotlyjs="cdn")
                     chart_htmls.append(f'<div class="chart">{chart_html}</div>')
                 final_html = _html_template.format(charts="".join(chart_htmls))
-                with open(
-                    outputDir + os.sep + types + "chart of the " + x_cols + ".html", "w"
-                ) as file:
+                with open(outputDir + os.sep + types + "chart of the " + x_cols + ".html", "w") as file:
                     file.write(final_html)
 
             if i.lower() == "bar":
@@ -150,9 +142,7 @@ def create_Plotly_chart(
                     "bar",
                     data,
                 )
-                file_list.append(
-                    outputDir + os.sep + "bar" + "chart of the " + x_cols + ".html"
-                )
+                file_list.append(outputDir + os.sep + "bar" + "chart of the " + x_cols + ".html")
                 # file_list.append(
                 #    save_chart(fig, outputDir, 'Frequency Distribution of '+x_cols, static_flag, x_cols))
             elif i.lower() == "pie":
@@ -174,14 +164,14 @@ def create_Plotly_chart(
                         x_cols,
                         y_cols,
                         lst,
-                        lambda chart_name, x_cols=x_cols, y_cols=y_cols: data[data[x_cols] == chart_name][y_cols[0]].value_counts(),
+                        lambda chart_name, x_cols=x_cols, y_cols=y_cols: data[data[x_cols] == chart_name][
+                            y_cols[0]
+                        ].value_counts(),
                         lambda df2, chart_name: px.pie(df2, values=df2.values, names=df2.index, title=chart_name),
                         "Pie",
                         data,
                     )
-                    file_list.append(
-                        outputDir + os.sep + "pie" + "chart of the " + x_cols + ".html"
-                    )
+                    file_list.append(outputDir + os.sep + "pie" + "chart of the " + x_cols + ".html")
             elif i.lower() == "scatter":
                 process_multiple(
                     x_cols,
@@ -192,9 +182,7 @@ def create_Plotly_chart(
                     "scatter",
                     data,
                 )
-                file_list.append(
-                    outputDir + os.sep + "scatter" + "chart of the " + x_cols + ".html"
-                )
+                file_list.append(outputDir + os.sep + "scatter" + "chart of the " + x_cols + ".html")
             elif i.lower() == "radar":
                 process_multiple(
                     x_cols,
@@ -205,9 +193,7 @@ def create_Plotly_chart(
                     "Radar",
                     data,
                 )
-                file_list.append(
-                    outputDir + os.sep + "radar" + "chart of the " + x_cols + ".html"
-                )
+                file_list.append(outputDir + os.sep + "radar" + "chart of the " + x_cols + ".html")
             elif i.lower() == "line":
                 process_multiple(
                     x_cols,
@@ -218,20 +204,12 @@ def create_Plotly_chart(
                     "line",
                     data,
                 )
-                file_list.append(
-                    outputDir + os.sep + "line" + "chart of the " + x_cols + ".html"
-                )
+                file_list.append(outputDir + os.sep + "line" + "chart of the " + x_cols + ".html")
                 # file_list.append(
                 #    save_chart(fig, outputDir, 'Frequency Distribution of ' + x_cols, static_flag, x_cols))
             elif i.lower() == "bubble":
-                fig = px.scatter(
-                    data, x=x_cols, y=y_cols[0], size=y_cols[1], color=y_cols[2]
-                )
-                file_list.append(
-                    save_chart(
-                        fig, outputDir, "Bubble Chart of " + x_cols, static_flag, x_cols
-                    )
-                )
+                fig = px.scatter(data, x=x_cols, y=y_cols[0], size=y_cols[1], color=y_cols[2])
+                file_list.append(save_chart(fig, outputDir, "Bubble Chart of " + x_cols, static_flag, x_cols))
 
             else:
                 logger.info("Bad for now!")
@@ -263,9 +241,7 @@ def create_Plotly_chart(
         elif i.lower() == "radar":
             fig = plot_radar_chart_px(x_cols, y_cols, inputFilename, chart_title)
         elif i.lower() == "line":
-            fig = plot_multi_line_chart_w_slider_px(
-                inputFilename, chart_title, cols_to_plot
-            )
+            fig = plot_multi_line_chart_w_slider_px(inputFilename, chart_title, cols_to_plot)
             file_list.append(
                 save_chart(
                     fig,
@@ -278,9 +254,7 @@ def create_Plotly_chart(
             )
             break
         else:
-            logger.info(
-                i + " chart currently not supported in the NLP Suite. Check back soon!"
-            )
+            logger.info(i + " chart currently not supported in the NLP Suite. Check back soon!")
             continue
         file_list.append(
             save_chart(
@@ -413,11 +387,7 @@ def plot_multi_bar_chart_px(data, chart_title, cols_to_plot):
     fig = go.Figure()
     headers = data.columns.values.tolist()
     for col in cols_to_plot:
-        fig.add_trace(
-            go.Bar(
-                x=data[headers[col[0]]], y=data[headers[col[1]]], name=headers[col[0]]
-            )
-        )
+        fig.add_trace(go.Bar(x=data[headers[col[0]]], y=data[headers[col[1]]], name=headers[col[0]]))
     fig.update_layout(title=chart_title, title_x=0.5)
     if len(cols_to_plot) < 5:
         fig.update_traces(width=0.2)
@@ -425,9 +395,7 @@ def plot_multi_bar_chart_px(data, chart_title, cols_to_plot):
 
 
 # plot multi line chart
-def plot_multi_line_chart_w_slider_px(
-    fileName, chart_title, col_to_be_ploted, series_label_list=None
-):
+def plot_multi_line_chart_w_slider_px(fileName, chart_title, col_to_be_ploted, series_label_list=None):
     data = pd.read_csv(fileName, encoding="utf-8", on_bad_lines="skip")
     data.fillna(0, inplace=True)
     figs = make_subplots()
@@ -521,9 +489,7 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
         )
 
     # Tune marker appearance and layout
-    fig.update_traces(
-        mode="markers", marker=dict(sizemode="area", sizeref=sizeref, line_width=2)
-    )
+    fig.update_traces(mode="markers", marker=dict(sizemode="area", sizeref=sizeref, line_width=2))
 
     # Adjust bubble positions based on the values of the x and y axes
     if sizeref:
@@ -557,11 +523,7 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
                     label=str(category),
                     method="update",
                     args=[
-                        {
-                            "visible": [
-                                True if x == category else False for x in df[cat]
-                            ]
-                        },
+                        {"visible": [True if x == category else False for x in df[cat]]},
                         {"title": f"{x_axis} vs {y_axis} - {category}"},
                     ],
                 )
@@ -603,9 +565,7 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
     return fig
 
 
-def bubble_chart(
-    inputFilename, outputFilename, x, y, color, show_labels=True, inputFileData=""
-):
+def bubble_chart(inputFilename, outputFilename, x, y, color, show_labels=True, inputFileData=""):
     import random
     from collections import Counter
 
@@ -635,24 +595,17 @@ def bubble_chart(
     min_size = max_size / 10
 
     sizes = np.array(frequencies)
-    sizes = (sizes - sizes.min()) / (sizes.max() - sizes.min()) * 50 * (
-        max_size - min_size
-    ) + min_size
+    sizes = (sizes - sizes.min()) / (sizes.max() - sizes.min()) * 50 * (max_size - min_size) + min_size
 
     unique_x = sorted(set(df[x]))
     unique_y = sorted(set(df[y]))
     x_pos = [unique_x.index(pair[0]) for pair in unique_pairs]
     y_pos = [unique_y.index(pair[1]) for pair in unique_pairs]
 
-    labels = [
-        f"{pair[0]}, {pair[1]}\nFreq: {freq}"
-        for pair, freq in zip(unique_pairs, frequencies)
-    ]
+    labels = [f"{pair[0]}, {pair[1]}\nFreq: {freq}" for pair, freq in zip(unique_pairs, frequencies)]
 
     unique_frequencies = sorted(set(frequencies))
-    frequency_colors = {
-        freq: f"#{random.randint(0, 0xFFFFFF):06x}" for freq in unique_frequencies
-    }
+    frequency_colors = {freq: f"#{random.randint(0, 0xFFFFFF):06x}" for freq in unique_frequencies}
     colors = [frequency_colors[freq] for freq in frequencies]
 
     class BubbleChart:
@@ -725,12 +678,8 @@ def bubble_chart(
                             orth = np.array([dir_vec[1], -dir_vec[0]])
                             new_point1 = self.bubbles[i, :2] + orth * self.step_dist
                             new_point2 = self.bubbles[i, :2] - orth * self.step_dist
-                            dist1 = self.center_distance(
-                                self.com, np.array([new_point1])
-                            )
-                            dist2 = self.center_distance(
-                                self.com, np.array([new_point2])
-                            )
+                            dist1 = self.center_distance(self.com, np.array([new_point1]))
+                            dist2 = self.center_distance(self.com, np.array([new_point2]))
                             new_point = new_point1 if dist1 < dist2 else new_point2
                             new_bubble = np.append(new_point, self.bubbles[i, 2:4])
                             if not self.check_collisions(new_bubble, rest_bub):
@@ -753,9 +702,7 @@ def bubble_chart(
             self.circles = []
             self.texts = []
             for i in range(len(self.bubbles)):
-                circ = plt.Circle(
-                    self.bubbles[i, :2], self.bubbles[i, 2], color=self.colors[i]
-                )
+                circ = plt.Circle(self.bubbles[i, :2], self.bubbles[i, 2], color=self.colors[i])
                 self.circles.append(circ)
                 ax.add_patch(circ)
 

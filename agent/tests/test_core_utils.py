@@ -13,9 +13,7 @@ try:
 except ImportError:
     _constants_available = False
 
-pytestmark_constants = pytest.mark.skipif(
-    not _constants_available, reason="constants_util not importable"
-)
+pytestmark_constants = pytest.mark.skipif(not _constants_available, reason="constants_util not importable")
 
 
 @pytestmark_constants
@@ -59,9 +57,7 @@ try:
 except ImportError:
     _dmu_available = False
 
-pytestmark_dmu = pytest.mark.skipif(
-    not _dmu_available, reason="data_manipulation_util not importable"
-)
+pytestmark_dmu = pytest.mark.skipif(not _dmu_available, reason="data_manipulation_util not importable")
 
 
 @pytestmark_dmu
