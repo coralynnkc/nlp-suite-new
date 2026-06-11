@@ -455,7 +455,9 @@ def search_ngrams_csv_file(
         return
     data = pd.read_csv(csv_file_var)
     if "gram" not in data.columns[0]:
-        logger.info('Input file error: The selected csv file is not the expected csv N-grams file. This file should contain a header with the word "gram".')
+        logger.info(
+            'Input file error: The selected csv file is not the expected csv N-grams file. This file should contain a header with the word "gram".'
+        )
         return
 
     # Check the input parameters, i comment it out for now because we don't know the design
@@ -464,7 +466,9 @@ def search_ngrams_csv_file(
         or plus_K_words_var < 0
         or (minus_K_words_var + plus_K_words_var) > int(data.columns[0][0]) - 1
     ):
-        logger.info(f"Warning: The sum of -K and +K values should be < than the n-grams value. The n-grams value in your input csv file is {data.columns[0][0]}.")
+        logger.info(
+            f"Warning: The sum of -K and +K values should be < than the n-grams value. The n-grams value in your input csv file is {data.columns[0][0]}."
+        )
         return
 
     words = search_keywords_list
@@ -566,7 +570,7 @@ def search_ngrams_csv_file(
                 q = f.read()
             for word in search_keywords_list:
                 q = q.replace(word, "")
-                logger.info('%s %s', q, word)
+                logger.info("%s %s", q, word)
             with open(NgramsSearchFileName_txt, "w", encoding="utf-8") as f:
                 f.write(q)
 

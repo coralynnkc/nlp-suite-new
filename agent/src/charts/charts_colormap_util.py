@@ -43,7 +43,7 @@ def read_filename_color(inputFilename):
         missing_values = dataFrame.isnull().sum()
         if missing_values.any():
             logger.info("Number of missing values for each column:")
-            logger.info('%s \n', missing_values[missing_values > 0])
+            logger.info("%s \n", missing_values[missing_values > 0])
         else:
             logger.info("There are no missing values in the dataset.\n")
         return dataFrame
@@ -91,9 +91,7 @@ def sql_commands(s, dataFrame):
     if add:
         all_values = add.split(", ")
         further_group(dataFrame, GROUPBY, all_values)
-        logger.info(
-            "The function detected string values in input, and they were mapped accordingly"
-        )
+        logger.info("The function detected string values in input, and they were mapped accordingly")
         GROUPBY = "Real_" + GROUPBY
     SELECT = s[-1][0].replace("|", "")
     WHERE = {}
@@ -125,9 +123,7 @@ def special_sql_commands(s, dataFrame):
     if add:
         all_values = add.split(", ")
         further_group(dataFrame, GROUPBY, all_values)
-        logger.info(
-            "The function detected string values in input, and they were mapped accordingly"
-        )
+        logger.info("The function detected string values in input, and they were mapped accordingly")
         GROUPBY = "Real_" + GROUPBY
     WHERE = {}
     if WHERE_s:
@@ -145,10 +141,7 @@ logger = logging.getLogger(__name__)
 
 def interpolate_colors(color1, color2, num_colors):
     color1, color2 = [x / 255.0 for x in color1], [x / 255.0 for x in color2]
-    return [
-        np.array(color1) * (1 - ratio) + np.array(color2) * ratio
-        for ratio in np.linspace(0, 1, num_colors)
-    ]
+    return [np.array(color1) * (1 - ratio) + np.array(color2) * ratio for ratio in np.linspace(0, 1, num_colors)]
 
 
 def cmaps(start_color, end_color):
@@ -157,20 +150,14 @@ def cmaps(start_color, end_color):
     return cmap_custom
 
 
-def main_colormap(
-    inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=""
-):
+def main_colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=""):
     if inputFileData:
         dataFrame = pd.read_csv(io.StringIO(inputFileData))
     else:
         dataFrame = read_filename_color(inputFilename)
     WHERE, GROUPBY, SELECT = sql_commands(csv_file_categorical_field_list, dataFrame)
-    step1 = process_and_aggregate_data(
-        dataFrame, where_column=WHERE, groupby_column=GROUPBY, select_column=SELECT
-    )
-    step2 = transform_data(
-        step1
-    )  # There needs to be a GUI to allow transformation, but...
+    step1 = process_and_aggregate_data(dataFrame, where_column=WHERE, groupby_column=GROUPBY, select_column=SELECT)
+    step2 = transform_data(step1)  # There needs to be a GUI to allow transformation, but...
     # We proceed with default instead perhaps...
     if GROUPBY == "Document":
         renamedf(step2)  # We rename to file relative location, not absolute location
@@ -180,9 +167,7 @@ def main_colormap(
         cmap = cmaps((135, 207, 236), (0, 0, 255))
     import IO_files_util
 
-    outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".colormetric"
-    )
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".colormetric")
     visualize_data(
         step2,
         outputname=outputFilename,
@@ -265,7 +250,7 @@ def Sunburst_Treemap(
 ):
     import io
 
-    logger.info('%s %s %s %s', fixed_param_var, rate_param_var, base_param_var, filter_options_var)
+    logger.info("%s %s %s %s", fixed_param_var, rate_param_var, base_param_var, filter_options_var)
     if file_data != "":
         data = pd.read_csv(io.StringIO(file_data))
     else:
@@ -287,9 +272,7 @@ def Sunburst_Treemap(
         logger.info("Propagating parameter applied")
     logger.info(df_grouped)
     if suntree:
-        fig = px.sunburst(
-            df_grouped, path=select_and_count, values="counts"
-        )  # Ensure the hierarchy levels are correct
+        fig = px.sunburst(df_grouped, path=select_and_count, values="counts")  # Ensure the hierarchy levels are correct
     else:
         fig = px.treemap(df_grouped, path=select_and_count, values="counts")
     fig.write_html(outputFilename)
@@ -342,23 +325,13 @@ def visualize_colormap_data(
     ax.set_ylabel(y_label)
     x_label = x_label.replace("Real_", "")
     ax.set_xlabel(x_label)
-    ax.set_title(
-        "Colormap/heatmap of "
-        + y_label
-        + " Frequency by "
-        + x_label
-        + " Values ("
-        + normalize
-        + " Scale)"
-    )
+    ax.set_title("Colormap/heatmap of " + y_label + " Frequency by " + x_label + " Values (" + normalize + " Scale)")
     plt.savefig(outputname + ".png")
     logger.info(f"Data visualization saved as {outputname}.png.")
     # plt.show() // we don't need to show it because we have that other option
 
 
-def colormap(
-    inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=""
-):
+def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=""):
     filesToOpen = []
     if inputFileData:
         dataFrame = pd.read_csv(io.StringIO(inputFileData))
@@ -367,9 +340,7 @@ def colormap(
 
     WHERE, GROUPBY, SELECT = sql_commands(csv_file_categorical_field_list, dataFrame)
     # step1 is a dataframe
-    step1 = process_and_aggregate_data(
-        dataFrame, where_column=WHERE, groupby_column=GROUPBY, select_column=SELECT
-    )
+    step1 = process_and_aggregate_data(dataFrame, where_column=WHERE, groupby_column=GROUPBY, select_column=SELECT)
     if step1.empty:
         logger.info(
             "No search values found"
@@ -389,9 +360,7 @@ def colormap(
                 step1 = step1.rename(columns={header: "Frequency in: " + tail})
     step1.to_csv(colormap_dataframe_csv_filename, index=True)
 
-    step2 = transform_data(
-        step1
-    )  # There needs to be a GUI to allow transformation, but...
+    step2 = transform_data(step1)  # There needs to be a GUI to allow transformation, but...
     # We proceed with default instead perhaps...
     if GROUPBY == "Document":
         # if len(WHERE)==0:
@@ -406,9 +375,7 @@ def colormap(
         cmap = cmaps((135, 207, 236), (0, 0, 255))
     import IO_files_util
 
-    outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".colormetric"
-    )
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".colormetric")
 
     visualize_colormap_data(
         step2,
@@ -435,9 +402,7 @@ def timechart(
 ):
     if inputFileData:
         try:
-            data = pd.read_csv(
-                io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip"
-            )
+            data = pd.read_csv(io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip")
             headers = IO_csv_util.get_csvfile_headers(data, inputFileData=inputFileData)
         except Exception as e:
             logger.info(f"Error processing inputFileData: {e}")
@@ -467,9 +432,7 @@ def timechart(
         for i in range(0, len(data["Document"])):
             year.append(re.search(r"\d{4}", data[date_field][i])[0])
             data["year"] = year
-    elif (
-        date_format_var == "mm-yyyy"
-    ):  # creates year and month variable in yyyy-mm format
+    elif date_format_var == "mm-yyyy":  # creates year and month variable in yyyy-mm format
         for i in range(0, len(data["Document"])):
             date.append(re.search(r"\d.*\d", data[date_field][i])[0])
         for i in range(0, len(data["Document"])):
@@ -478,9 +441,7 @@ def timechart(
             month.append(year[i] + "-" + date[i][0:2])
         data["year"] = year
         data["month"] = month
-    elif (
-        date_format_var == "yyyy-mm"
-    ):  # creates year and month variable in yyyy-mm format
+    elif date_format_var == "yyyy-mm":  # creates year and month variable in yyyy-mm format
         for i in range(0, len(data[date_field])):
             date.append(re.search(r"\d.*\d", data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
@@ -489,9 +450,7 @@ def timechart(
             month.append(year[i] + "-" + date[i][-2:])
         data["year"] = year
         data["month"] = month
-    elif (
-        date_format_var == "dd-mm-yyyy"
-    ):  # creates year,month and day variable in yyyy-mm-dd format
+    elif date_format_var == "dd-mm-yyyy":  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
             date.append(re.search(r"\d.*\d", data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
@@ -503,9 +462,7 @@ def timechart(
         data["day"] = day
         data["year"] = year
         data["month"] = month
-    elif (
-        date_format_var == "mm-dd-yyyy"
-    ):  # creates year,month and day variable in yyyy-mm-dd format
+    elif date_format_var == "mm-dd-yyyy":  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
             try:
                 date.append(re.search(r"\d.*\d", data[date_field][i])[0])
@@ -529,9 +486,7 @@ def timechart(
         data["year"] = year
         data["month"] = month
         data["day"] = day
-    elif (
-        date_format_var == "yyyy-mm-dd"
-    ):  # creates year,month and day variable in yyyy-mm-dd format
+    elif date_format_var == "yyyy-mm-dd":  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
             date.append(re.search(r"\d.*\d", data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
@@ -541,9 +496,7 @@ def timechart(
         data["year"] = year
         data["month"] = month
         data["day"] = date
-    elif (
-        date_format_var == "yyyy-dd-mm"
-    ):  # creates year,month and day variable in yyyy-mm-dd format
+    elif date_format_var == "yyyy-dd-mm":  # creates year,month and day variable in yyyy-mm-dd format
         for i in range(0, len(data[date_field])):
             date.append(re.search(r"\d.*\d", data[date_field][i])[0])
         for i in range(0, len(data[date_field])):
@@ -559,9 +512,7 @@ def timechart(
     # Plot corresponding graph depending on the options
     if not cumulative:
         if monthly and yearly:
-            return (
-                "Choose one of the following: daily graph, monthly graph, yearly graph"
-            )
+            return "Choose one of the following: daily graph, monthly graph, yearly graph"
         elif monthly:
             data = data.sort_values("month")
             finalframe = pd.DataFrame()
@@ -573,11 +524,7 @@ def timechart(
                 )
                 for j in set(data[var]):
                     if j not in set(tester[var]):
-                        temp = (
-                            pd.DataFrame([j, 0])
-                            .T.rename(columns={0: var})
-                            .rename(columns={0: var, 1: "Frequency"})
-                        )
+                        temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
                 date = np.repeat(i, len(tester))
@@ -606,11 +553,7 @@ def timechart(
                 )
                 for j in set(data[var]):
                     if j not in set(tester[var]):
-                        temp = (
-                            pd.DataFrame([j, 0])
-                            .T.rename(columns={0: var})
-                            .rename(columns={0: var, 1: "Frequency"})
-                        )
+                        temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
                 date = np.repeat(i, len(tester))
@@ -639,11 +582,7 @@ def timechart(
                 )
                 for j in set(data[var]):
                     if j not in set(tester[var]):
-                        temp = (
-                            pd.DataFrame([j, 0])
-                            .T.rename(columns={0: var})
-                            .rename(columns={0: var, 1: "Frequency"})
-                        )
+                        temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
                 date = np.repeat(i, len(tester))
@@ -663,9 +602,7 @@ def timechart(
             ).update_yaxes(categoryorder="total ascending")
     else:
         if monthly and yearly:
-            return (
-                "Choose one of the following: daily graph, monthly graph, yearly graph"
-            )
+            return "Choose one of the following: daily graph, monthly graph, yearly graph"
         elif yearly:
             data = data.sort_values("year")
             finalframe = pd.DataFrame()
@@ -677,11 +614,7 @@ def timechart(
                 )
                 for j in set(data[var]):
                     if j not in set(tester[var]):
-                        temp = (
-                            pd.DataFrame([j, 0])
-                            .T.rename(columns={0: var})
-                            .rename(columns={0: var, 1: "Frequency"})
-                        )
+                        temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
                 date = np.repeat(i, len(tester))
@@ -710,11 +643,7 @@ def timechart(
                 )
                 for j in set(data[var]):
                     if j not in set(tester[var]):
-                        temp = (
-                            pd.DataFrame([j, 0])
-                            .T.rename(columns={0: var})
-                            .rename(columns={0: var, 1: "Frequency"})
-                        )
+                        temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
                 date = np.repeat(i, len(tester))
@@ -743,11 +672,7 @@ def timechart(
                 )
                 for j in set(data[var]):
                     if j not in set(tester[var]):
-                        temp = (
-                            pd.DataFrame([j, 0])
-                            .T.rename(columns={0: var})
-                            .rename(columns={0: var, 1: "Frequency"})
-                        )
+                        temp = pd.DataFrame([j, 0]).T.rename(columns={0: var}).rename(columns={0: var, 1: "Frequency"})
                         tester = pd.concat([tester, temp])
                 tester = tester.sort_values(var)
                 date = np.repeat(i, len(tester))
@@ -765,9 +690,7 @@ def timechart(
                 orientation="h",
                 range_x=[0, max(value)],
             ).update_yaxes(categoryorder="total ascending")
-    fig = fig.update_geos(
-        projection_type="equirectangular", visible=True, resolution=110
-    )
+    fig = fig.update_geos(projection_type="equirectangular", visible=True, resolution=110)
     fig.write_html(outputFilename)
 
     return outputFilename

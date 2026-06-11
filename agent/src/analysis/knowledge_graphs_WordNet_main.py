@@ -45,7 +45,6 @@ def run_kg_wordnet(
     hidden_verb_lemma_csv,
     noun_verb_menu_var,
 ):
-
     """Build WordNet knowledge-graph tables/charts for the selected words."""
     config_filename = "NLP_default_IO_config.csv"
     filesToOpen = []  # Store all files that are to be opened once finished
@@ -66,14 +65,12 @@ def run_kg_wordnet(
 
     language_var = "English"  # WordNet works only for English language
 
-    WordNetDir, existing_software_config, errorFound = (
-        IO_libraries_util.external_software_install(
-            "knowledge_graphs_WordNet_util",
-            "WordNet",
-            "",
-            silent=False,
-            errorFound=False,
-        )
+    WordNetDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
+        "knowledge_graphs_WordNet_util",
+        "WordNet",
+        "",
+        silent=False,
+        errorFound=False,
     )
     if WordNetDir is None:
         return filesToOpen
@@ -188,13 +185,9 @@ def run_kg_wordnet(
             )
             return
         if extract_proper_nouns:
-            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(
-                csv_file, outputDir, sel_col, True
-            )
+            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(csv_file, outputDir, sel_col, True)
         if extract_improper_nouns:
-            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(
-                csv_file, outputDir, sel_col, False
-            )
+            filesToOpen = knowledge_graphs_WordNet_util.get_case_initial_row(csv_file, outputDir, sel_col, False)
 
     if aggregate_lemmatized_var:
         if len(csv_file) == 0:
@@ -240,8 +233,8 @@ def run_kg_wordnet(
         # check that input file is a CoNLL table
         if not CoNLL_util.check_CoNLL(csv_file):
             return
-        noun_form_csv, noun_lemma_csv, verb_form_csv, verb_lemma_csv = (
-            CoNLL_util.get_nouns_verbs_CoNLL(csv_file, outputDir)
+        noun_form_csv, noun_lemma_csv, verb_form_csv, verb_lemma_csv = CoNLL_util.get_nouns_verbs_CoNLL(
+            csv_file, outputDir
         )
         filesToOpen.append(noun_form_csv)
         filesToOpen.append(noun_lemma_csv)
@@ -321,9 +314,7 @@ def run_kg_wordnet(
         # check that input file is a CoNLL table
         if not CoNLL_util.check_CoNLL(csv_file):
             return
-        outputFilename = IO_files_util.generate_output_file_name(
-            csv_file, outputDir, ".csv", "WordNet", "conll"
-        )
+        outputFilename = IO_files_util.generate_output_file_name(csv_file, outputDir, ".csv", "WordNet", "conll")
         filesToOpen.append(outputFilename)
         outputFiles = knowledge_graphs_WordNet_util.Wordnet_bySentenceID(
             csv_file,

@@ -85,7 +85,7 @@ STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Use manifest storage so static files include a hash in their filename
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 
 # Default primary key field type
@@ -108,4 +108,4 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # settings.py
-DATA_UPLOAD_MAX_MEMORY_SIZE = 500 * 1024 * 1024 # 500MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 500 * 1024 * 1024  # 500MB

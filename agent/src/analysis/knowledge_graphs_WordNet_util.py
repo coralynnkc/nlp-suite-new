@@ -42,27 +42,23 @@ def disaggregate_GoingDOWN(WordNetDir, outputDir, wordNet_keyword_list, noun_ver
     from nltk.corpus import wordnet as wn
 
     filesToOpen = []
-    if not IO_libraries_util.check_inputPythonJavaProgramFile(
-        "WordNet_Search_DOWN.jar"
-    ):
+    if not IO_libraries_util.check_inputPythonJavaProgramFile("WordNet_Search_DOWN.jar"):
         return filesToOpen
 
     # check that external software WordNet has been setup
-    WordNetDir, existing_software_config, errorFound = (
-        IO_libraries_util.external_software_install(
-            "knowledge_graphs_WordNet_util",
-            "WordNet",
-            "",
-            silent=False,
-            errorFound=False,
-        )
+    WordNetDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
+        "knowledge_graphs_WordNet_util",
+        "WordNet",
+        "",
+        silent=False,
+        errorFound=False,
     )
 
     if WordNetDir is None or WordNetDir == "":
         return filesToOpen
 
-    errorFound, error_code, system_output, java_version = (
-        IO_libraries_util.check_java_installation("WordNet downward search")
+    errorFound, error_code, system_output, java_version = IO_libraries_util.check_java_installation(
+        "WordNet downward search"
     )
     if errorFound:
         return filesToOpen
@@ -87,10 +83,7 @@ def disaggregate_GoingDOWN(WordNetDir, outputDir, wordNet_keyword_list, noun_ver
         "Analysis start",
         "Started running WordNet (Zoom IN/DOWN) at",
         True,
-        "Running WordNet with the "
-        + noun_verb
-        + " option with following keywords:\n\n"
-        + str(wordNet_keyword_list),
+        "Running WordNet with the " + noun_verb + " option with following keywords:\n\n" + str(wordNet_keyword_list),
     )
     warning = subprocess.call(call_list)
     if warning == 1:
@@ -115,9 +108,7 @@ def disaggregate_GoingDOWN(WordNetDir, outputDir, wordNet_keyword_list, noun_ver
             + ".\n\nPlease, check your synset list (or your Java JDK version) and try again.",
         )
     filesToOpen.append(os.path.join(outputDir, "NLP_WordNet_DOWN_" + fileName + ".csv"))
-    filesToOpen.append(
-        os.path.join(outputDir, "NLP_WordNet_DOWN_" + fileName + "-verbose.csv")
-    )
+    filesToOpen.append(os.path.join(outputDir, "NLP_WordNet_DOWN_" + fileName + "-verbose.csv"))
     IO_user_interface_util.timed_alert(
         2000,
         "Analysis end",
@@ -156,8 +147,8 @@ def aggregate_GoingUP(
 
     # if WordNetDir == None or WordNetDir == '':
 
-    errorFound, error_code, system_output, java_version = (
-        IO_libraries_util.check_java_installation("WordNet upward search")
+    errorFound, error_code, system_output, java_version = IO_libraries_util.check_java_installation(
+        "WordNet upward search"
     )
     if errorFound:
         return filesToOpen
@@ -184,8 +175,8 @@ def aggregate_GoingUP(
 
     if not IO_libraries_util.check_inputPythonJavaProgramFile("WordNet_Search_UP.jar"):
         return filesToOpen
-    errorFound, error_code, system_output, java_version = (
-        IO_libraries_util.check_java_installation("WordNet upward search")
+    errorFound, error_code, system_output, java_version = IO_libraries_util.check_java_installation(
+        "WordNet upward search"
     )
     if errorFound:
         return filesToOpen
@@ -242,25 +233,15 @@ def aggregate_GoingUP(
     # the Java script returns the filenames without VERB or NOUN in the filename
     # the next two lines reconstruct the filename as exported by the JAVA script
     fileName = os.path.basename(inputFile).split(".")[0]
-    outputFilenameCSV1 = os.path.join(
-        outputDir, "NLP_WordNet_UP_" + fileName + "_output.csv"
-    )
-    outputFilenameCSV2 = os.path.join(
-        outputDir, "NLP_WordNet_UP_" + fileName + "_frequency.csv"
-    )
+    outputFilenameCSV1 = os.path.join(outputDir, "NLP_WordNet_UP_" + fileName + "_output.csv")
+    outputFilenameCSV2 = os.path.join(outputDir, "NLP_WordNet_UP_" + fileName + "_frequency.csv")
     # remove _output from the Java output
     outputFilenameCSV1_new = outputFilenameCSV1.replace("_output", "")
     # the Java script returns the filenames without VERB or NOUN in the filename
     #   one for # intermediate synsets, the other of frequencies
-    if ("VERB" not in outputFilenameCSV1_new) and (
-        "NOUN" not in outputFilenameCSV1_new
-    ):
-        outputFilenameCSV1_new = outputFilenameCSV1_new.replace(
-            "NLP_WordNet_UP_", "NLP_WordNet_UP_" + noun_verb + "_"
-        )
-        outputFilenameCSV2_new = outputFilenameCSV2.replace(
-            "NLP_WordNet_UP_", "NLP_WordNet_UP_" + noun_verb + "_"
-        )
+    if ("VERB" not in outputFilenameCSV1_new) and ("NOUN" not in outputFilenameCSV1_new):
+        outputFilenameCSV1_new = outputFilenameCSV1_new.replace("NLP_WordNet_UP_", "NLP_WordNet_UP_" + noun_verb + "_")
+        outputFilenameCSV2_new = outputFilenameCSV2.replace("NLP_WordNet_UP_", "NLP_WordNet_UP_" + noun_verb + "_")
         # the synsets file already exists and must be removed
         if os.path.isfile(outputFilenameCSV1_new):
             os.remove(outputFilenameCSV1_new)
@@ -277,18 +258,12 @@ def aggregate_GoingUP(
     filesToOpen.append(outputFilenameCSV1_new)
     complete_csv_header(outputFilenameCSV1_new, "Intermediate synset")
     # outputFilenameCSV2 - with frequency in the filename - is the file with the handful of WordNett aggregated synsets and their frequency
-    outputFilenameCSV2 = os.path.join(
-        outputDir, "NLP_WordNet_UP_" + noun_verb + "_" + fileName + "_frequency.csv"
-    )
+    outputFilenameCSV2 = os.path.join(outputDir, "NLP_WordNet_UP_" + noun_verb + "_" + fileName + "_frequency.csv")
     # Since the original output file returned by the JAVA script WordNet_Search_UP.jar contains
     #   the header Intermediate Synsets, this must be renamed to Intermediate synset 1
-    IO_csv_util.rename_header(
-        outputFilenameCSV1_new, "Intermediate Synsets", "Intermediate synset 1"
-    )
+    IO_csv_util.rename_header(outputFilenameCSV1_new, "Intermediate Synsets", "Intermediate synset 1")
     if ("VERB" not in outputFilenameCSV2) and ("NOUN" not in outputFilenameCSV2):
-        outputFilenameCSV2_new = outputFilenameCSV1.replace(
-            "NLP_WordNet_UP_", "NLP_WordNet_UP_" + noun_verb + "_"
-        )
+        outputFilenameCSV2_new = outputFilenameCSV1.replace("NLP_WordNet_UP_", "NLP_WordNet_UP_" + noun_verb + "_")
         # the file already exists and must be removed
         if os.path.isfile(outputFilenameCSV2_new):
             os.remove(outputFilenameCSV2_new)
@@ -322,12 +297,8 @@ def aggregate_GoingUP(
         # # the file already exists and must be removed
         # if os.path.isfile(outputFilenameCSV3_new):
         # Word is the header from the _output file created by the Java WordNet script
-        operation_results_text_list.append(
-            str(outputFilenameCSV1_new) + ",Word,<>,be,and"
-        )
-        operation_results_text_list.append(
-            str(outputFilenameCSV1_new) + ",Word,<>,have,and"
-        )
+        operation_results_text_list.append(str(outputFilenameCSV1_new) + ",Word,<>,be,and")
+        operation_results_text_list.append(str(outputFilenameCSV1_new) + ",Word,<>,have,and")
         outputFilenameCSV3_new = data_manipulation_util.export_csv_to_csv_txt(
             outputDir, operation_results_text_list, ".csv", [0, 1]
         )
@@ -339,9 +310,7 @@ def aggregate_GoingUP(
             outputDir,
             columns_to_be_plotted_xAxis=[],
             columns_to_be_plotted_yAxis=["WordNet Category"],
-            chart_title="Frequency of WordNet Aggregate Categories for "
-            + noun_verb
-            + " (No Auxiliaries)",
+            chart_title="Frequency of WordNet Aggregate Categories for " + noun_verb + " (No Auxiliaries)",
             count_var=1,  # 1 for alphabetic fields that need to be coounted;  1 for numeric fields (e.g., frequencies, scorers)
             hover_label=[],
             outputFileNameType="",
@@ -417,9 +386,7 @@ def Wordnet_bySentenceID(
         return
     # set up the double list conll from the conll data
     try:
-        connl = connl[
-            ["Form", "Lemma", "POS", "Sentence ID", "Document ID", "Document"]
-        ]
+        connl = connl[["Form", "Lemma", "POS", "Sentence ID", "Document ID", "Document"]]
     except Exception:
         logger.info(
             "The file \n\n"
@@ -434,17 +401,13 @@ def Wordnet_bySentenceID(
     connl = connl[connl["POS"].isin(checklist)]
     # eliminate any duplicate value in Word (Form))
     # Term is exported by the WordNet java script and cannot be modifiied
-    dict = dict.drop_duplicates().rename(
-        columns={"Term": "Lemma", "WordNet Category": "Category"}
-    )
+    dict = dict.drop_duplicates().rename(columns={"Term": "Lemma", "WordNet Category": "Category"})
     # ?
     connl = connl.merge(dict, how="left", on="Lemma")
     # the CoNLL table value is not found in the dictionary Word value
     connl.fillna("Not in INPUT dictionary for " + noun_verb, inplace=True)
     # add the WordNet category to the conll list
-    connl = connl[
-        ["Form", "Lemma", "POS", "Category", "Sentence ID", "Document ID", "Document"]
-    ]
+    connl = connl[["Form", "Lemma", "POS", "Category", "Sentence ID", "Document ID", "Document"]]
     # put headers on conll list
     connl.columns = [
         "Form",
@@ -474,14 +437,9 @@ def Wordnet_bySentenceID(
     for index, _row in enumerate(Row_list):
         if index == 0 and Row_list[index][4] != 1:
             for i in range(Row_list[index][4] - 1, 0, -1):
-                Row_list.insert(
-                    0, ["", "", "", "", i, Row_list[index][5], Row_list[index][6]]
-                )
+                Row_list.insert(0, ["", "", "", "", i, Row_list[index][5], Row_list[index][6]])
         else:
-            if (
-                index < len(Row_list) - 1
-                and Row_list[index + 1][4] - Row_list[index][4] > 1
-            ):
+            if index < len(Row_list) - 1 and Row_list[index + 1][4] - Row_list[index][4] > 1:
                 for i in range(Row_list[index + 1][4] - 1, Row_list[index][4], -1):
                     Row_list.insert(
                         index + 1,
@@ -529,25 +487,19 @@ def Wordnet_bySentenceID(
     return filesToOpen
 
 
-def get_case_initial_row(
-    inputFilename, outputDir, check_column, firstLetterCapitalized=True
-):
+def get_case_initial_row(inputFilename, outputDir, check_column, firstLetterCapitalized=True):
     if firstLetterCapitalized:
         str = "Upper"
     else:
         str = "Lower"
-    outputFilename = IO_files_util.generate_output_file_name(
-        inputFilename, "", outputDir, ".csv", "filter_" + str
-    )
+    outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "filter_" + str)
     filesToOpen.append(outputFilename)
     data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     if firstLetterCapitalized:
         regex = "^[A-Z].*"
     else:
         regex = "^[a-z].*"
-    data = data[
-        data[check_column].str.contains(regex, regex=True, na=False)
-    ]  # select by regular expression
+    data = data[data[check_column].str.contains(regex, regex=True, na=False)]  # select by regular expression
     data.to_csv(outputFilename, encoding="utf-8", index=False)
     return filesToOpen
 

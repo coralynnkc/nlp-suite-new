@@ -11,14 +11,13 @@ logger = logging.getLogger(__name__)
 def run_sun_burst(
     inputFilename, inputDir, outputDir, file_data, filter_options_var, selected_pairs_data, piechart_var, treemap_var
 ):
-
     """Render sunburst/treemap charts from csv fields."""
     csv_path = first_csv(inputDir)
 
     csv_file_categorical_field_list = json.loads(selected_pairs_data)
 
     #     for pair in saved_pairs
-    logger.info('IMPORTANT LIST  %s', csv_file_categorical_field_list)
+    logger.info("IMPORTANT LIST  %s", csv_file_categorical_field_list)
     filesToOpen = []
 
     # NOTE: set to default values, can allow user input flexibility later

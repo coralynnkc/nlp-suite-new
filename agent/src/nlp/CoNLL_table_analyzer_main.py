@@ -38,10 +38,9 @@ def run_CoNLL_table_analyzer(
     compute_sentence_var,
     k_sentences_var,
 ):
-
     """Analyze and search a CoNLL table produced by the parsers."""
     inputFilename = first_csv(inputDir)
-    logger.info('Input filename for CoNLL table analyzer  %s', inputFilename)
+    logger.info("Input filename for CoNLL table analyzer  %s", inputFilename)
     extra_GUIs_var = False
     global recordID_position, documentId_position, data, all_CoNLL_records
     recordID_position = 9  # NEW CoNLL_U
@@ -326,11 +325,11 @@ def run_CoNLL_table_analyzer(
 
                 return
             msg = "Please, check the 'Searched token' field and try again.\n\nThe value entered must be different from the default value (e.g.: father)."
-            logger.info('Searched Token Input Error,  %s', msg)
+            logger.info("Searched Token Input Error,  %s", msg)
             return  # breaks loop
         if len(searchField_kw) == 0:
             msg = "Please, check the 'Searched token' field and try again.\n\nThe value entered must be different from blank."
-            logger.info('Searched Token Input Error,  %s', msg)
+            logger.info("Searched Token Input Error,  %s", msg)
             return  # breaks loop
 
         # startTime=IO_user_interface_util.timed_alert(GUI_util.window,2000,'Analysis start', 'Started running CoNLL search at',
@@ -384,9 +383,7 @@ def run_CoNLL_table_analyzer(
         df_nouns = df[df["POS"].isin(["NN", "NNPS", "NNP", "NNS"])][["Lemma", "POS"]]
         inputFilename_nouns = outputDir + os.sep + "CoNLL_nouns_forWordNet.csv"
         df_nouns.to_csv(inputFilename_nouns, index=False)  # , header=None
-        df_verbs = df[df["POS"].isin(["VB", "VBN", "VBD", "VBG", "VBP", "VBZ"])][
-            ["Lemma", "POS"]
-        ]
+        df_verbs = df[df["POS"].isin(["VB", "VBN", "VBD", "VBG", "VBP", "VBZ"])][["Lemma", "POS"]]
         inputFilename_verbs = outputDir + os.sep + "CoNLL_verbs_forWordNet.csv"
         df_verbs.to_csv(inputFilename_verbs, index=False)  # , header=None
 

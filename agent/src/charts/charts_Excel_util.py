@@ -22,9 +22,7 @@ def checkExcel_extension(output_file_name, hover_info_column_list):
 
     filename, file_extension = os.path.splitext(str(output_file_name))
     if filename != "":
-        if (
-            len(hover_info_column_list) > 0
-        ):  # there are hover over effects; must be an xlsm file
+        if len(hover_info_column_list) > 0:  # there are hover over effects; must be an xlsm file
             if file_extension != "xlsm":
                 output_file_name = filename + ".xlsm"
         else:
@@ -40,9 +38,7 @@ def prepare_hover_data(inputFilename, hover_info_column, index, inputFileData=""
     if inputFileData:
         # Use inputFileData if provided
         withHeader_var = IO_csv_util.csvFile_has_header("", inputFileData=inputFileData)
-        data, headers = IO_csv_util.get_csv_data(
-            "", withHeader_var, inputFileData=inputFileData
-        )
+        data, headers = IO_csv_util.get_csv_data("", withHeader_var, inputFileData=inputFileData)
     else:
         # Fallback to using inputFilename
         withHeader_var = IO_csv_util.csvFile_has_header(inputFilename)
@@ -76,13 +72,25 @@ def get_hover_column_numbers(withHeader_var, headers, hover_info_column_list):
                 x = headers.index(hover_info_column_list[i])
             else:
                 if len(hover_info_column_list[i]) > 0:
-                    logger.info('%s %s', "Series No." + str(i + 1) + " " + hover_info_column_list[i] + "Hover Data Warning", "The hover-over data column for series No." + str(i + 1) + " will be empty.\n\nYou may have entered a column name which does not exist in the input CSV file.\n\nPlease, exit the program, check your input and try again.")
+                    logger.info(
+                        "%s %s",
+                        "Series No." + str(i + 1) + " " + hover_info_column_list[i] + "Hover Data Warning",
+                        "The hover-over data column for series No."
+                        + str(i + 1)
+                        + " will be empty.\n\nYou may have entered a column name which does not exist in the input CSV file.\n\nPlease, exit the program, check your input and try again.",
+                    )
                 x = -1
         else:  # NO headers
             try:
                 x = int(hover_info_column_list[i])
             except Exception:
-                logger.info('%s %s', "Series No." + str(i + 1) + " " + hover_info_column_list[i] + " Hover Data Header", "The input csv file has no header so the expected hover-over column header should be numbers(o for A, 1 for B,...) but the ENTERED hover-over data column for series No." + str(i + 1) + " is not a number.\n\nPlease, exit the program, check your input and try again.")
+                logger.info(
+                    "%s %s",
+                    "Series No." + str(i + 1) + " " + hover_info_column_list[i] + " Hover Data Header",
+                    "The input csv file has no header so the expected hover-over column header should be numbers(o for A, 1 for B,...) but the ENTERED hover-over data column for series No."
+                    + str(i + 1)
+                    + " is not a number.\n\nPlease, exit the program, check your input and try again.",
+                )
                 return
         hover_column_numbers.append(x)
     return hover_column_numbers
@@ -157,9 +165,7 @@ def create_excel_chart(
     # ValueError: Row numbers must be between 1 and 1048576
     # 1048576 is simply 2 to the 20th power, and thus this number is the largest that can be represented in twenty bits.
     # https://stackoverflow.com/questions/33775423/how-to-set-a-data-type-for-a-column-with-closedxml
-    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
-        inputFilename, inputFileData=inputFileData
-    )
+    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(inputFilename, inputFileData=inputFileData)
     if nRecords > 1048575:
         IO_user_interface_util.timed_alert(
             2000,
@@ -201,9 +207,7 @@ def create_excel_chart(
     else:
         outputExtension = ".xlsx"
 
-    if (
-        "NLP" in scriptType and "_" + scriptType + "_" in inputFilename
-    ):  # do not repeat the same name
+    if "NLP" in scriptType and "_" + scriptType + "_" in inputFilename:  # do not repeat the same name
         scriptType = ""
     chart_outputFilename = IO_files_util.generate_output_file_name(
         inputFilename,
@@ -243,45 +247,35 @@ def create_excel_chart(
     # for color in bar charts depending upon value
 
     # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
-    if (
-        len(hover_info_column_list) > 0
-    ):  # hover-over effects are invoked and the Excel filename extension MUST be xlsm
+    if len(hover_info_column_list) > 0:  # hover-over effects are invoked and the Excel filename extension MUST be xlsm
         if len(chart_type_list) == 0:
-            logger.info('Chart type error No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!')
+            logger.info(
+                "Chart type error No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!"
+            )
             return
         fpath = ""
         first_chart_type = chart_type_list[0]
-        if chart_type_list and all(
-            type == first_chart_type for type in chart_type_list
-        ):
+        if chart_type_list and all(type == first_chart_type for type in chart_type_list):
             if first_chart_type == "bar":
                 chartName = BarChart()
-                fpath = (
-                    GUI_IO_util.Excel_charts_libPath + os.sep + "barchartsample.xlsm"
-                )
+                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "barchartsample.xlsm"
                 chartFile = "barchartsample.xlsm"
             elif first_chart_type == "pie":
                 chartName = BarChart()
-                fpath = (
-                    GUI_IO_util.Excel_charts_libPath + os.sep + "piechartsample.xlsm"
-                )
+                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "piechartsample.xlsm"
                 chartFile = "piechartsample.xlsm"
                 if len(chart_type_list) > 1:
-                    logger.info('Pie Chart error If you selected pie chart as the intended chart type for display data, only one group of data can be displayed. The system indicates more than one group of data are selected.\n\nPlease, check your input and try again!')
+                    logger.info(
+                        "Pie Chart error If you selected pie chart as the intended chart type for display data, only one group of data can be displayed. The system indicates more than one group of data are selected.\n\nPlease, check your input and try again!"
+                    )
                     return
             elif first_chart_type == "line":
                 chartName = LineChart()
-                fpath = (
-                    GUI_IO_util.Excel_charts_libPath + os.sep + "linechartsample.xlsm"
-                )
+                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "linechartsample.xlsm"
                 chartFile = "linechartsample.xlsm"
             elif first_chart_type == "scatter":
                 chartName = ScatterChart()
-                fpath = (
-                    GUI_IO_util.Excel_charts_libPath
-                    + os.sep
-                    + "scatterchartsample.xlsm"
-                )
+                fpath = GUI_IO_util.Excel_charts_libPath + os.sep + "scatterchartsample.xlsm"
                 chartFile = "scatterchartsample.xlsm"
                 new_data_to_be_plotted = []
                 for idx in range(len(data_to_be_plotted)):
@@ -297,25 +291,24 @@ def create_excel_chart(
                                 y = float(i[1])
                                 new_data_to_be_plotted[idx].append((x, y))
                         except Exception:
-                            logger.info('Scatter Chart error If you selected a scatter chart as the intended chart type to display data, both X-axis and Y-axis can only contain numeric values. Among the columns selected, at least one contains non-numeric values.\n\nPlease, check your input and try again!')
+                            logger.info(
+                                "Scatter Chart error If you selected a scatter chart as the intended chart type to display data, both X-axis and Y-axis can only contain numeric values. Among the columns selected, at least one contains non-numeric values.\n\nPlease, check your input and try again!"
+                            )
                             return
                 data_to_be_plotted = new_data_to_be_plotted
             else:
-                logger.info('Chart type error The hover-over feature is only available for Bar, Line, Pie, and Scatter charts. The selected chart type is not allowed.\n\nPlease, check your input and try again!')
+                logger.info(
+                    "Chart type error The hover-over feature is only available for Bar, Line, Pie, and Scatter charts. The selected chart type is not allowed.\n\nPlease, check your input and try again!"
+                )
                 return
         else:
-            logger.info('Chart type error The hover-over feature for multiple groups of data requires that all  groups have the same chart type. The system indicated more than one chart type.\n\nPlease, check your input and try again!')
+            logger.info(
+                "Chart type error The hover-over feature for multiple groups of data requires that all  groups have the same chart type. The system indicated more than one chart type.\n\nPlease, check your input and try again!"
+            )
             return
 
-        if (
-            IO_libraries_util.check_inputPythonJavaProgramFile(
-                chartFile, "lib" + os.sep + "sampleCharts"
-            )
-            == 0
-        ):
-            logger.info(
-                "Check input python java program file failed! Could not generate charts"
-            )
+        if IO_libraries_util.check_inputPythonJavaProgramFile(chartFile, "lib" + os.sep + "sampleCharts") == 0:
+            logger.info("Check input python java program file failed! Could not generate charts")
             return
 
         wb = openpyxl.load_workbook(fpath, read_only=False, keep_vba=True)
@@ -333,7 +326,9 @@ def create_excel_chart(
             ws2.delete_rows(row_count2 - i)
 
         if reverse_column_position_for_series_label:
-            logger.info("Reverse Series Label Variable Warning The system indicates that you set reverse var for series labels to be true; however, in the hover-over feature, the series labels can only be the header of the Y-axis values (Column B, C, D,... in 'Data' sheet). Or you can specify series labels in series_label_list.\n\nPlease click 'OK' and continue.")
+            logger.info(
+                "Reverse Series Label Variable Warning The system indicates that you set reverse var for series labels to be true; however, in the hover-over feature, the series labels can only be the header of the Y-axis values (Column B, C, D,... in 'Data' sheet). Or you can specify series labels in series_label_list.\n\nPlease click 'OK' and continue."
+            )
 
         for i in range(len(series_label_list)):
             if len(series_label_list[i]) > 0:
@@ -343,12 +338,8 @@ def create_excel_chart(
             row = []
             index = 0
             for stats_list in data_to_be_plotted:  # Iterate through all the lists
-                if i < len(
-                    stats_list
-                ):  # if i is smaller than the length of the current series
-                    tail, tail_noExtension, filename_no_hyperlink = (
-                        IO_files_util.getFilename(str(stats_list[i][0]))
-                    )
+                if i < len(stats_list):  # if i is smaller than the length of the current series
+                    tail, tail_noExtension, filename_no_hyperlink = IO_files_util.getFilename(str(stats_list[i][0]))
                     stats_list[i][0] = tail
                     if index > 0:
                         row.append(stats_list[i][1])  # then we append the data
@@ -370,13 +361,9 @@ def create_excel_chart(
         data, headers = IO_csv_util.get_csv_data(
             inputFilename, withHeader_var, inputFileData=inputFileData
         )  # get the data and header
-        hover_column_numbers = get_hover_column_numbers(
-            withHeader_var, headers, hover_info_column_list
-        )
+        hover_column_numbers = get_hover_column_numbers(withHeader_var, headers, hover_info_column_list)
         for i in range(len(hover_column_numbers)):
-            hover_data = prepare_hover_data(
-                inputFilename, hover_column_numbers[i], i, inputFileData=inputFileData
-            )
+            hover_data = prepare_hover_data(inputFilename, hover_column_numbers[i], i, inputFileData=inputFileData)
             for j in range(len(hover_data)):
                 if j > 1048575:
                     logger.info(
@@ -417,12 +404,8 @@ def create_excel_chart(
             for stats_list in data_to_be_plotted:  # Iterate through all the lists
                 # when X-axis values contain a document dressed for hyperlink and with full path
                 #   undressed the hyperlink and only display the tail of the document
-                if i < len(
-                    stats_list
-                ):  # if i is smaller than the length of the current series
-                    tail, tail_noExtension, filename_no_hyperlink = (
-                        IO_files_util.getFilename(str(stats_list[i][0]))
-                    )
+                if i < len(stats_list):  # if i is smaller than the length of the current series
+                    tail, tail_noExtension, filename_no_hyperlink = IO_files_util.getFilename(str(stats_list[i][0]))
                     stats_list[i][0] = tail
                     # if index > 0:
                     row += stats_list[i]  # then we append the data
@@ -442,7 +425,9 @@ def create_excel_chart(
         if second_y_var == 0:  # we are NOT plotting with 2 y axes with different scales
             chartName = ""
             if len(chart_type_list) == 0:
-                logger.info('Chart type error No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!')
+                logger.info(
+                    "Chart type error No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!"
+                )
                 return
             if str(chart_type_list[0]).lower() == "bar":
                 chartName = BarChart()
@@ -457,7 +442,7 @@ def create_excel_chart(
             elif str(chart_type_list[0]).lower() == "scatter":
                 chartName = ScatterChart()
             else:
-                logger.info('chart type list was not matched:  %s', chart_type_list[0])
+                logger.info("chart type list was not matched:  %s", chart_type_list[0])
                 return
             # Excel allows to group a series value by another series values (e.g., Form or Lemma values by POS or NER tags)
             #   two x-axis labels will be created
@@ -476,20 +461,21 @@ def create_excel_chart(
                     chartName.x_axis.title = str(column_xAxis_label) + insertLines
 
                 if len(column_yAxis_label) > 0:
-                    chartName.y_axis.title = str(
-                        column_yAxis_label
-                    )  # displayed on the y-axis
+                    chartName.y_axis.title = str(column_yAxis_label)  # displayed on the y-axis
 
             if len(series_label_list) > n:
-                logger.info('Series Label Warning %s', "The system indicates that there are more series hover_over_values specified than the number of series (" + str(n) + "). The system will automatically choose the first " + str(n) + " in the series label list.\n\nPlease click 'OK' and continue.")
+                logger.info(
+                    "Series Label Warning %s",
+                    "The system indicates that there are more series hover_over_values specified than the number of series ("
+                    + str(n)
+                    + "). The system will automatically choose the first "
+                    + str(n)
+                    + " in the series label list.\n\nPlease click 'OK' and continue.",
+                )
 
             for i in range(n):  # iterate n times, n is the number of series
-                data = Reference(
-                    ws, min_col=i * 2 + 2, min_row=2, max_row=1 + num_label
-                )
-                hover_over_values = Reference(
-                    ws, min_col=i * 2 + 1, min_row=2, max_row=1 + num_label
-                )
+                data = Reference(ws, min_col=i * 2 + 2, min_row=2, max_row=1 + num_label)
+                hover_over_values = Reference(ws, min_col=i * 2 + 1, min_row=2, max_row=1 + num_label)
 
                 if (
                     chart_type_list[0].lower() == "line"
@@ -498,9 +484,7 @@ def create_excel_chart(
                     or chart_type_list[0].lower() == "scatter"
                 ):
                     if len(series_label_list) > 0 and len(series_label_list[i]) > 0:
-                        chartName.series.append(
-                            Series(data, title=series_label_list[i])
-                        )
+                        chartName.series.append(Series(data, title=series_label_list[i]))
                     else:
                         # the title_series is displayed to the right of the chart as the title of the series
                         # should NOT be displayed when you have only one series
@@ -532,18 +516,20 @@ def create_excel_chart(
                 ):
                     # https://stackoverflow.com/questions/35010050/setting-x-axis-label-to-bottom-in-openpyxl
                     chartName.x_axis.tickLblPos = "low"
-                    chartName.x_axis.tickLblSkip = (
-                        1  # changing to 2 would skip every other label; 3 every 3; etc.
-                    )
+                    chartName.x_axis.tickLblSkip = 1  # changing to 2 would skip every other label; 3 every 3; etc.
             ws_chart.add_chart(chartName, "A1")
         else:  # plotting with 2 y axes because using different scales
             # if there is no chart at all
             if len(chart_type_list) == 0:
-                logger.info('Chart type error No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!')
+                logger.info(
+                    "Chart type error No chart type was specified (e.g., line, bubble). The chart could not be created.\n\nPlease, select a chart type and try again!"
+                )
                 return
             # if there are more than two charts
             if len(chart_type_list) > 2:
-                logger.info('Number of series error When creating a chart with two y axis, you can ONLY choose two series of data. Here more than two series of data were specified. The chart could not be created.\n\nPlease, select a new pair of series and try again!')
+                logger.info(
+                    "Number of series error When creating a chart with two y axis, you can ONLY choose two series of data. Here more than two series of data were specified. The chart could not be created.\n\nPlease, select a new pair of series and try again!"
+                )
                 return
 
             if chart_type_list[0].lower() == "bar":
@@ -555,7 +541,9 @@ def create_excel_chart(
             elif chart_type_list[0].lower() == "scatter":
                 chartName1 = ScatterChart()
             else:
-                logger.info('Chart type 1 error Wrong chart type selected. Only bar, bubble, line and scatter chart are allowed to have y axis')
+                logger.info(
+                    "Chart type 1 error Wrong chart type selected. Only bar, bubble, line and scatter chart are allowed to have y axis"
+                )
 
             if chart_type_list[1].lower() == "bar":
                 chartName2 = BarChart()
@@ -566,7 +554,9 @@ def create_excel_chart(
             elif chart_type_list[1].lower() == "scatter":
                 chartName2 = ScatterChart()
             else:
-                logger.info('Chart type 2 error Wrong chart type selected. Only bar, bubble, line and scatter chart are allowed to have y axis')
+                logger.info(
+                    "Chart type 2 error Wrong chart type selected. Only bar, bubble, line and scatter chart are allowed to have y axis"
+                )
                 return
 
             # TODO must center the X-axis label
@@ -581,9 +571,7 @@ def create_excel_chart(
                 chartName2.y_axis.title = str(second_yAxis_label)
 
             data = Reference(ws, min_col=2, min_row=2, max_row=1 + num_label)
-            hover_over_values = Reference(
-                ws, min_col=1, min_row=2, max_row=1 + num_label
-            )
+            hover_over_values = Reference(ws, min_col=1, min_row=2, max_row=1 + num_label)
 
             if len(series_label_list) > 2:
                 logger.info(
@@ -607,9 +595,7 @@ def create_excel_chart(
 
             # Create a second chart
             data = Reference(ws, min_col=4, min_row=2, max_row=1 + num_label)
-            hover_over_values = Reference(
-                ws, min_col=3, min_row=2, max_row=1 + num_label
-            )
+            hover_over_values = Reference(ws, min_col=3, min_row=2, max_row=1 + num_label)
 
             if len(series_label_list) > 0 and len(series_label_list[1]) > 0:
                 chartName2.series.append(Series(data, title=series_label_list[1]))
@@ -633,9 +619,7 @@ def create_excel_chart(
             ):
                 # https://stackoverflow.com/questions/35010050/setting-x-axis-label-to-bottom-in-openpyxl
                 chartName1.x_axis.tickLblPos = "low"
-                chartName1.x_axis.tickLblSkip = (
-                    1  # changing to 2 would skip every other label; 3 every 3; etc.
-                )
+                chartName1.x_axis.tickLblSkip = 1  # changing to 2 would skip every other label; 3 every 3; etc.
 
             chartName1 += chartName2
 
@@ -651,11 +635,15 @@ def create_excel_chart(
     try:
         wb.save(chart_outputFilename)
     except OSError:
-        logger.info('Output file error %s', "Could not write the Excel chart file " + chart_outputFilename + "\n\nA file with the same name is already open. Please close the Excel file and try again!")
+        logger.info(
+            "Output file error %s",
+            "Could not write the Excel chart file "
+            + chart_outputFilename
+            + "\n\nA file with the same name is already open. Please close the Excel file and try again!",
+        )
         return
     # if errorFound==True:
 
     # IO_user_interface_util.timed_alert(2000, 'Excel charts', 'Finished preparing Excel chart at',
     #                                    True, '', True, startTime, silent=True)
     return chart_outputFilename
-

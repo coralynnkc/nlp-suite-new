@@ -35,7 +35,7 @@ def get_docs(inputDir, split_docs_var):
 
 
 def run_BERTopic(inputDir, outputDir, split_docs_var=False):  # split_docs_var=True
-    logger.info('%s %s', inputDir, outputDir)
+    logger.info("%s %s", inputDir, outputDir)
     # Get documents
     docs = get_docs(inputDir, split_docs_var)
 

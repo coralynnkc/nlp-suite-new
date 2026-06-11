@@ -30,6 +30,7 @@ from IO_files_util import date_in_filename
 
 logger = logging.getLogger(__name__)
 
+
 def date_get_tense(norm_date):
     tense = ""
     if (len(norm_date) >= 9 and "PREV" in norm_date) or "OFFSET person_list" in norm_date or "PAST" in norm_date:
@@ -386,5 +387,3 @@ def process_json_sentiment(config_filename, documentID, document, sentenceID, js
             ]
         sentiment.append(temp)
     return sentiment
-
-

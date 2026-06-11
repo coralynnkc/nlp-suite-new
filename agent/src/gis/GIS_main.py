@@ -38,7 +38,6 @@ def run_GIS(
     GIS_package_var,
     GIS_package2_var,
 ):
-
     """Geocode locations found in the corpus and produce interactive maps."""
     config_filename = "NLP_default_IO_config.csv"
 
@@ -74,9 +73,7 @@ def run_GIS(
         items_separator_var,
         date_position_var,
         config_file_exists,
-    ) = config_util.get_date_options(
-        config_filename, config_input_output_numeric_options
-    )
+    ) = config_util.get_date_options(config_filename, config_input_output_numeric_options)
     extract_date_from_text_var = 0
 
     # get last two characters for ISO country code
@@ -84,9 +81,7 @@ def run_GIS(
 
     box_tuple = ""
     if "e.g.," not in area_var:
-        if (area_var.count("(") + area_var.count(")") != 4) or (
-            area_var.count(",") != 3
-        ):
+        if (area_var.count("(") + area_var.count(")") != 4) or (area_var.count(",") != 3):
             logger.info(
                 "Warning, The area variable is not set correctly. The expected value should be something like this: (34.98527, -85.59790), (30.770444, -81.521974)\n\nThe two sets of values refer to the upper left-hand and lower right-hand corner latitude and longitude coordinates of the area to wich you wish to restrict geocoding.\n\nPlease, enter the correct value and try again."
             )
@@ -96,9 +91,7 @@ def run_GIS(
 
     geocode_locations_var = True
     if not NER_extractor and not geocode_locations_var and GIS_package_var == "":
-        logger.info(
-            "Warning, no options have been selected.\n\nPlease, select an option to run and try again."
-        )
+        logger.info("Warning, no options have been selected.\n\nPlease, select an option to run and try again.")
         return
 
     if csv_file != "":
@@ -151,9 +144,7 @@ def run_GIS(
     # NER extraction via CoreNLP
 
     # create a subdirectory of the output directory
-    outputDir = IO_files_util.make_output_subdirectory(
-        inputFilename, inputDir, outputDir, label="GIS", silent=True
-    )
+    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label="GIS", silent=True)
     if outputDir == "":
         return
 
@@ -193,9 +184,7 @@ def run_GIS(
 
         # If Column A is 'Word' (coming from CoreNLP NER annotator), rename to 'Location'
         # if IO_csv_util.rename_header(inputFilename, "Word", "Location") == False:
-        df = pd.read_csv(
-            locationFiles[0], encoding="utf-8", on_bad_lines="skip"
-        ).rename(columns={"Word": "Location"})
+        df = pd.read_csv(locationFiles[0], encoding="utf-8", on_bad_lines="skip").rename(columns={"Word": "Location"})
 
         # Clean dataframe, remove any 'DATE' or non-location rows
         del_list = []
@@ -249,17 +238,13 @@ def run_GIS(
             0,
             1,
             [""],
-            [
-                ""
-            ],  # group_var, group_number_var, group_values_entry_var_list, group_label_entry_var_list,
+            [""],  # group_var, group_number_var, group_values_entry_var_list, group_label_entry_var_list,
             ["Pushpins"],
             ["red"],  # icon_var_list, specific_icon_var_list,
             [0],
             ["1"],
             [0],
-            [
-                ""
-            ],  # name_var_list, scale_var_list, color_var_list, color_style_var_list,
+            [""],  # name_var_list, scale_var_list, color_var_list, color_style_var_list,
             [1],
             [1],
         )  # bold_var_list, italic_var_list)

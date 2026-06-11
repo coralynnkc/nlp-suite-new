@@ -22,9 +22,9 @@ import spacy
 from gensim.models import CoherenceModel
 from gensim.utils import simple_preprocess
 
-logging.basicConfig(
-    format="%(asctime)s : %(levelname)s : %(message)s", level=logging.ERROR
-)
+# Quiet gensim's very chatty INFO logging without capping the root logger
+# (logging is configured app-wide in main.py).
+logging.getLogger("gensim").setLevel(logging.WARNING)
 import warnings
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -74,9 +74,7 @@ except OSError:
 
 # find the optimal number of topics for LDA
 def compute_coherence_values(MalletDir, dictionary, corpus, texts, start, limit, step):
-    IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Started computing the coherence value for each topic"
-    )
+    IO_user_interface_util.timed_alert(2000, "Analysis start", "Started computing the coherence value for each topic")
     coherence_values = []
     model_list = []
     for num_topics in range(start, limit, step):
@@ -85,17 +83,11 @@ def compute_coherence_values(MalletDir, dictionary, corpus, texts, start, limit,
             "Analysis start",
             "Computing coherence value for topic number " + str(num_topics),
         )
-        model = gensim.models.wrappers.LdaMallet(
-            MalletDir, corpus=corpus, num_topics=num_topics, id2word=dictionary
-        )
+        model = gensim.models.wrappers.LdaMallet(MalletDir, corpus=corpus, num_topics=num_topics, id2word=dictionary)
         model_list.append(model)
-        coherencemodel = CoherenceModel(
-            model=model, texts=texts, dictionary=dictionary, coherence="c_v"
-        )
+        coherencemodel = CoherenceModel(model=model, texts=texts, dictionary=dictionary, coherence="c_v")
         coherence_values.append(coherencemodel.get_coherence())
-    IO_user_interface_util.timed_alert(
-        "Analysis end", "Finished computing the coherence value for each topic"
-    )
+    IO_user_interface_util.timed_alert("Analysis end", "Finished computing the coherence value for each topic")
     return model_list, coherence_values
 
 
@@ -126,16 +118,12 @@ def format_topics_sentences(ldamodel, corpus, texts):
     return sent_topics_df
 
 
-def malletModelling(
-    MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data, filesToOpen
-):
+def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemmatized, lda_model, data, filesToOpen):
     startTime = IO_user_interface_util.timed_alert(
         2000, "Analysis start", "Started running Mallet LDA topic modeling at", True
     )
     try:
-        ldamallet = gensim.models.wrappers.LdaMallet(
-            MalletDir, corpus=corpus, num_topics=num_topics, id2word=id2word
-        )
+        ldamallet = gensim.models.wrappers.LdaMallet(MalletDir, corpus=corpus, num_topics=num_topics, id2word=id2word)
     except (RuntimeError, OSError):
         head, scriptName = os.path.split(os.path.basename(__file__))
         reminders_util.getReminders_list(scriptName)
@@ -166,7 +154,7 @@ def malletModelling(
         "Compute Mallet LDA coherence values for each topic.\n\nPlease, be patient...",
     )
     coherence_ldamallet = coherence_model_ldamallet.get_coherence()
-    logger.info('\nCoherence value:  %s', coherence_ldamallet)
+    logger.info("\nCoherence value:  %s", coherence_ldamallet)
     model_list, coherence_values = compute_coherence_values(
         MalletDir,
         dictionary=id2word,
@@ -176,9 +164,7 @@ def malletModelling(
         limit=limit,
         step=6,
     )
-    startTime = IO_user_interface_util.timed_alert(
-        2000, "Analysis start", "Compute graph of optimal topics number."
-    )
+    startTime = IO_user_interface_util.timed_alert(2000, "Analysis start", "Compute graph of optimal topics number.")
     limit = limit
     start = 2
     step = 6
@@ -199,7 +185,7 @@ def malletModelling(
         coherence_value = round(cv, 4)
         if coherence_value > optimal_coherence:
             optimal_index = index
-        logger.info('Topic number %s has coherence value  %s', m, coherence_value)
+        logger.info("Topic number %s has coherence value  %s", m, coherence_value)
         index += 1
     # Select the model and print the topics
 
@@ -214,9 +200,7 @@ def malletModelling(
     for index, text in enumerate(data):
         data[index] = text.replace("\n", " ")
 
-    df_topic_sents_keywords = format_topics_sentences(
-        ldamodel=optimal_model, corpus=corpus, texts=data
-    )
+    df_topic_sents_keywords = format_topics_sentences(ldamodel=optimal_model, corpus=corpus, texts=data)
 
     # Format
     df_dominant_topic = df_topic_sents_keywords.reset_index()
@@ -338,8 +322,8 @@ def malletModelling(
     ]
     df_dominant_topics = df_dominant_topics.drop_duplicates()
 
-    logger.info('Number of rows of topic_distribution.csv:  %s', df_dominant_topics.shape[0])
-    logger.info('Number of columns of topic_distribution.csv:  %s', df_dominant_topics.shape[1])
+    logger.info("Number of rows of topic_distribution.csv:  %s", df_dominant_topics.shape[0])
+    logger.info("Number of columns of topic_distribution.csv:  %s", df_dominant_topics.shape[1])
     # Save csv file
     fileName = os.path.join(outputDir, "NLP_Gensim_topic_distribution.csv")
     df_dominant_topics.to_csv(fileName, encoding="utf-8", index=False)
@@ -408,23 +392,17 @@ def run_Gensim(
         "Depending upon corpus size, computations may take a while... Please, be patient...",
     )
 
-    outputFilename = IO_files_util.generate_output_file_name(
-        "", inputDir, outputDir, ".html", "Gensim_topic_modeling"
-    )
+    outputFilename = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".html", "Gensim_topic_modeling")
 
     content = []
-    inputDocs = IO_files_util.getFileList(
-        "", inputDir, fileType=".txt", silent=False, configFileName=config_filename
-    )
+    inputDocs = IO_files_util.getFileList("", inputDir, fileType=".txt", silent=False, configFileName=config_filename)
     nFile = len(inputDocs)
     if nFile == 0:
         return
 
     for fileName in inputDocs:
         if fileName.endswith(".txt"):
-            with open(
-                os.path.join(inputDir, fileName), encoding="utf-8", errors="ignore"
-            ) as file:
+            with open(os.path.join(inputDir, fileName), encoding="utf-8", errors="ignore") as file:
                 content.append(file.read())
             file.close()
 
@@ -450,9 +428,7 @@ def run_Gensim(
     data_words = list(sent_to_words(data))
 
     # Build the bigram and trigram models
-    bigram = gensim.models.Phrases(
-        data_words, min_count=5, threshold=100
-    )  # higher threshold fewer phrases.
+    bigram = gensim.models.Phrases(data_words, min_count=5, threshold=100)  # higher threshold fewer phrases.
     trigram = gensim.models.Phrases(bigram[data_words], threshold=100)
 
     # Faster way to get a sentence clubbed as a trigram/bigram
@@ -464,10 +440,7 @@ def run_Gensim(
 
     # Define functions for stopwords, bigrams, trigrams and lemmatization
     def remove_stopwords(texts):
-        return [
-            [word for word in simple_preprocess(str(doc)) if word not in stop_words]
-            for doc in texts
-        ]
+        return [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in texts]
 
     def make_bigrams(texts):
         return [bigram_mod[doc] for doc in texts]
@@ -483,13 +456,9 @@ def run_Gensim(
         for sent in texts:
             doc = nlp(" ".join(sent))
             if lemmatize:
-                texts_out.append(
-                    [token.lemma_ for token in doc if token.pos_ in allowed_postags]
-                )
+                texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
             else:
-                texts_out.append(
-                    [token for token in doc if token.pos_ in allowed_postags]
-                )
+                texts_out.append([token for token in doc if token.pos_ in allowed_postags])
         return texts_out
 
     # Remove Stop Words
@@ -508,9 +477,7 @@ def run_Gensim(
     if lemmatize:
         if nounsOnly:
             # Do lemmatization keeping only noun
-            data_lemmatized = lemmatization(
-                data_words_bigrams, lemmatize, allowed_postags=["NOUN"]
-            )
+            data_lemmatized = lemmatization(data_words_bigrams, lemmatize, allowed_postags=["NOUN"])
         else:
             # Do lemmatization keeping only noun, adj, vb, adv
             data_lemmatized = lemmatization(
@@ -554,7 +521,7 @@ def run_Gensim(
     )
 
     # Compute Perplexity; a measure of how good the model is. lower the better.
-    logger.info('\nPerplexity Score:  %s', lda_model.log_perplexity(corpus))
+    logger.info("\nPerplexity Score:  %s", lda_model.log_perplexity(corpus))
 
     # TODO the coherence lines produce an error
     # Compute Coherence Score
@@ -583,9 +550,7 @@ def run_Gensim(
         "Analysis end",
         "Finished running Gensim topic modeling at",
         True,
-        "\n\nThe file "
-        + outputFilename
-        + " was created. The results will display shortly on the web browser.",
+        "\n\nThe file " + outputFilename + " was created. The results will display shortly on the web browser.",
     )
     # \n\nYou now need to exit the server.\n\nAt command prompt, enter Ctrl+C, perhaps repeatedly, to exit the server.'
 
@@ -596,14 +561,12 @@ def run_Gensim(
 
     if run_Mallet:
         # check that the CoreNLPdir as been setup
-        MalletDir, existing_software_config, errorFound = (
-            IO_libraries_util.external_software_install(
-                "topic_modeling_gensim_util",
-                "MALLET",
-                "",
-                silent=False,
-                errorFound=False,
-            )
+        MalletDir, existing_software_config, errorFound = IO_libraries_util.external_software_install(
+            "topic_modeling_gensim_util",
+            "MALLET",
+            "",
+            silent=False,
+            errorFound=False,
         )
 
         if MalletDir is None or MalletDir == "":

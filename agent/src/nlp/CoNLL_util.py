@@ -140,11 +140,7 @@ def sentence_division(list_csv_rows, searchedCoNLLField):
                 Document_ID_prev = Document_ID
                 # skip empty sentence at the very beginning
                 # TODO Document_ID should be an integer!
-                if (
-                    Sentence_ID == 1
-                    and Document_ID == "1"
-                    and len(current_sentence) == 0
-                ):
+                if Sentence_ID == 1 and Document_ID == "1" and len(current_sentence) == 0:
                     continue
                 list_sentences.append(current_sentence)
                 current_sentence = []
@@ -168,9 +164,7 @@ def sentence_division(list_csv_rows, searchedCoNLLField):
 def Sentence_searcher(list_all_sents, Document_ID, sent_id):
     for sent in list_all_sents:
         if len(sent) > 0:
-            if sent[0][documentID_position] == Document_ID and int(
-                sent[0][sentenceID_position]
-            ) == int(sent_id):
+            if sent[0][documentID_position] == Document_ID and int(sent[0][sentenceID_position]) == int(sent_id):
                 sent_str = " ".join([i[1] for i in sent])
                 break
     return sent_str
@@ -307,23 +301,17 @@ def compute_sentence(CoNLL_table, recordID, sentenceID, documentID):
     df = df[df["Document ID"] == documentID]
     sent_str = ""  # Build string
     index = recordID
-    for recordID in range(
-        df.shape[0]
-    ):  # For every row in the ConLL table starting from RecordID
+    for recordID in range(df.shape[0]):  # For every row in the ConLL table starting from RecordID
         row = df.iloc[recordID, :]
         if (
-            sentenceID == row[sentenceID_position]
-            and documentID == row[documentID_position]
+            sentenceID == row[sentenceID_position] and documentID == row[documentID_position]
         ):  # Build the sentence if we are on the same document and sentence
             if row[6] == "punct":
                 sent_str = sent_str + str(row[1])
             else:
                 sent_str = sent_str + " " + str(row[1])
         else:
-            if (
-                row[sentenceID_position] > sentenceID
-                or row[documentID_position] > documentID
-            ):
+            if row[sentenceID_position] > sentenceID or row[documentID_position] > documentID:
                 break
         index = index + 1
     return index, sent_str
@@ -335,9 +323,7 @@ def compute_sentence_table(CoNLL_table, output_path):
     RunningCoreNLPFromCommandLine = False
     time.localtime()
     if not RunningCoreNLPFromCommandLine:
-        IO_user_interface_util.timed_alert(
-            4000, "Analysis start", "Started computing the Sentence table at", True
-        )
+        IO_user_interface_util.timed_alert(4000, "Analysis start", "Started computing the Sentence table at", True)
     df = pd.read_csv(
         open(os.path.join(output_path, CoNLL_table), "rb"),
         sep=",",
@@ -354,8 +340,7 @@ def compute_sentence_table(CoNLL_table, output_path):
 
     for _index, row in df.iterrows():  # For every row in the ConLL
         if (
-            sent_index == row[sentenceID_position]
-            and doc_id == row[documentID_position]
+            sent_index == row[sentenceID_position] and doc_id == row[documentID_position]
         ):  # Build the sentence if we are on the same document and sentence
             if row[6] == "punct":
                 sent_str = sent_str + str(row[1])
@@ -392,9 +377,7 @@ def compute_sentence_table(CoNLL_table, output_path):
         outputFilename, encoding="utf-8", index=False
     )  # os.path.join(output_path,outputFilename), sep='\t', encoding='utf-8')
     if not RunningCoreNLPFromCommandLine:
-        IO_user_interface_util.timed_alert(
-            4000, "Analysis end", "Finished computing the Sentence table at", True
-        )
+        IO_user_interface_util.timed_alert(4000, "Analysis end", "Finished computing the Sentence table at", True)
     time.localtime()
     logger.info(
         "\nSentence table output written to: " + outputFilename
@@ -431,18 +414,10 @@ def get_nouns_verbs_CoNLL(inputFilename, output_dir):
     nouns_form_df = pd.DataFrame(noun_form_set, columns=["Nouns"])
     nouns_lemma_df = pd.DataFrame(noun_lemma_set, columns=["Nouns"])
 
-    nouns_form_csv = os.path.join(
-        output_dir, os.path.basename(inputFilename[:-4]) + "_nouns_form.csv"
-    )
-    nouns_lemma_csv = os.path.join(
-        output_dir, os.path.basename(inputFilename[:-4]) + "_nouns_lemma.csv"
-    )
-    verbs_form_csv = os.path.join(
-        output_dir, os.path.basename(inputFilename[:-4]) + "_verbs_form.csv"
-    )
-    verbs_lemma_csv = os.path.join(
-        output_dir, os.path.basename(inputFilename[:-4]) + "_verbs_lemma.csv"
-    )
+    nouns_form_csv = os.path.join(output_dir, os.path.basename(inputFilename[:-4]) + "_nouns_form.csv")
+    nouns_lemma_csv = os.path.join(output_dir, os.path.basename(inputFilename[:-4]) + "_nouns_lemma.csv")
+    verbs_form_csv = os.path.join(output_dir, os.path.basename(inputFilename[:-4]) + "_verbs_form.csv")
+    verbs_lemma_csv = os.path.join(output_dir, os.path.basename(inputFilename[:-4]) + "_verbs_lemma.csv")
 
     nouns_form_df.to_csv(nouns_form_csv, encoding="utf-8", index=False)
     nouns_lemma_df.to_csv(nouns_lemma_csv, encoding="utf-8", index=False)

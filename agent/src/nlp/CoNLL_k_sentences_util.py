@@ -27,9 +27,7 @@ def k_sent(
 
     label = "CoNLL_" + str(Begin_K_sent_var) + "-" + str(End_K_sent_var) + "-sent"
     # create a subdirectory of the output directory
-    outputDir = IO_files_util.make_output_subdirectory(
-        inputFilename, "", outputDir, label=label, silent=True
-    )
+    outputDir = IO_files_util.make_output_subdirectory(inputFilename, "", outputDir, label=label, silent=True)
     if outputDir == "":
         return outputDir, filesToOpen
 
@@ -130,9 +128,7 @@ def k_sent(
                     rep_words_first.append(wrd)
 
                 elif sentenceID > len(sentences) - End_K_sent_var:
-                    result_rep_words_temp.append(
-                        ["Last", End_K_sent_var, wrd, wrdID + 1, sentenceID, s, i, DOC]
-                    )
+                    result_rep_words_temp.append(["Last", End_K_sent_var, wrd, wrdID + 1, sentenceID, s, i, DOC])
                     rep_words_last.append(wrd)
 
         result_rep_words.extend(
@@ -165,10 +161,7 @@ def k_sent(
                 + "-"
                 + str(End_K_sent_var)
                 + ") Sentences",
-                outputFileNameType=str(Begin_K_sent_var)
-                + "-"
-                + str(End_K_sent_var)
-                + "-sent_rep_words",
+                outputFileNameType=str(Begin_K_sent_var) + "-" + str(End_K_sent_var) + "-sent_rep_words",
                 column_xAxis_label="Words",
                 count_var=count_var,
                 hover_label=[],
@@ -192,29 +185,16 @@ def k_sent(
                 ksentences_last = doc_conll.loc[doc_conll["Sentence ID"]]
 
         else:
-            ksentences_first = doc_conll.loc[
-                (doc_conll["Sentence ID"] <= Begin_K_sent_var)
-            ]
-            ksentences_last = doc_conll.loc[
-                (
-                    doc_conll["Sentence ID"]
-                    > max(doc_conll["Sentence ID"]) - End_K_sent_var
-                )
-            ]
+            ksentences_first = doc_conll.loc[(doc_conll["Sentence ID"] <= Begin_K_sent_var)]
+            ksentences_last = doc_conll.loc[(doc_conll["Sentence ID"] > max(doc_conll["Sentence ID"]) - End_K_sent_var)]
 
-        word_count_first = (
-            len(ksentences_first["POS"])
-            - ksentences_first["DepRel"].value_counts()["punct"]
-        )
+        word_count_first = len(ksentences_first["POS"]) - ksentences_first["DepRel"].value_counts()["punct"]
         verb_count_first = 0
         noun_count_first = 0
         adj_count_first = 0
         pp_count_first = 0  # proper nouns
 
-        word_count_last = (
-            len(ksentences_last["POS"])
-            - ksentences_last["DepRel"].value_counts()["punct"]
-        )
+        word_count_last = len(ksentences_last["POS"]) - ksentences_last["DepRel"].value_counts()["punct"]
         verb_count_last = 0
         noun_count_last = 0
         adj_count_last = 0

@@ -19,7 +19,6 @@ def run_excel_plotly_charts(
     data_transformation,
     inputFileData,
 ):
-
     """Render Plotly charts from a csv file."""
     filesToOpen = []
 
@@ -44,16 +43,11 @@ def run_excel_plotly_charts(
     if "scatter" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 1:
             return
-    if (
-        "bubble" in charts_type_options.lower()
-        or "radar" in charts_type_options.lower()
-    ):
+    if "bubble" in charts_type_options.lower() or "radar" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 3:
             # print(title='Warning',message='A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least THREE Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))
             return
-    headers = IO_csv_util.get_csvfile_headers(
-        inputFilename, inputFileData=inputFileData
-    )
+    headers = IO_csv_util.get_csvfile_headers(inputFilename, inputFileData=inputFileData)
     col_num = IO_csv_util.get_columnNumber_from_headerValue(
         headers,
         csv_field_visualization_var,

@@ -29,7 +29,6 @@ def run_sentence_analysis(
     visualize_sentence_structure_var,
     num_sentences,
 ):
-
     """Compute per-sentence length, complexity, and readability measures."""
     config_filename = "NLP_default_IO_config.csv"
 
@@ -97,7 +96,7 @@ def run_sentence_analysis(
                 return None
 
             except Exception as e:
-                logger.info('Error  %s  has occurred.', e)
+                logger.info("Error  %s  has occurred.", e)
                 return None
 
         inputFilename = first_file(inputDir)

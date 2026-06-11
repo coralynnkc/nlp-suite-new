@@ -209,4 +209,3 @@ YAGO_ontology_class_menu = (
     "Place",
     "Product",
 )
-

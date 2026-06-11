@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 
 language_encoding = "utf-8"
 
+
 def process_json_sentence(config_filename, documentID, document, sentenceID, json, **kwargs):
     temp = []
     for sentence in json["sentences"]:  # traverse output of each sentence
@@ -833,4 +834,3 @@ def exportJson(
             json.dump(CoreNLP_output, json_out_nn, indent=4, ensure_ascii=False)
     # no need to open the Json file
     # if jsonFilename not in filesToOpen:
-

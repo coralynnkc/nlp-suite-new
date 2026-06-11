@@ -25,24 +25,18 @@ logger = logging.getLogger(__name__)
 # gmaps_list is a list of lat/long values to be written in the java script html output file
 # then saves a new file that contains the html/js to display the heatmap
 def create_google_heatmap(outputFilename, gmaps_list):
-    api_key = os.environ.get(
-        "GOOGLE_MAPS_API_KEY"
-    ) or GIS_pipeline_util.getGoogleAPIkey("Google-Maps-API_config.csv")
+    api_key = os.environ.get("GOOGLE_MAPS_API_KEY") or GIS_pipeline_util.getGoogleAPIkey("Google-Maps-API_config.csv")
     if not api_key or len(api_key) < 5:
         logger.info(
             "Google Maps API key error: The expected API key required by Google Maps is missing. Please enter it via the settings page. No Google Maps heatmap can be produced."
         )
         return
 
-    js_template_loc = (
-        GUI_IO_util.Google_heatmaps_libPath + os.sep + "heatmap_template.html"
-    )
+    js_template_loc = GUI_IO_util.Google_heatmaps_libPath + os.sep + "heatmap_template.html"
     with open(js_template_loc) as open_js:
         js_template = open_js.read()
 
-    js_to_write = js_template.split(
-        "//DO NOT REMOVE! PROGRAM INSERTS THE CORRECT JS HERE!"
-    )
+    js_to_write = js_template.split("//DO NOT REMOVE! PROGRAM INSERTS THE CORRECT JS HERE!")
     s = "".join(str(item) + "\n" for item in gmaps_list)
     with open(outputFilename, "w+") as js_output_file:
         js_output_file.write(js_to_write[0].replace("<YOUR API KEY HERE>", api_key))
@@ -70,9 +64,7 @@ def create_js(outputFilename, locations, geocoder, latLongList):
     else:
         latLongList = locations
     for item in latLongList:
-        gmaps_str = "".join(
-            ["new google.maps.LatLng(", str(item[0]), ", ", str(item[1]), "),"]
-        )
+        gmaps_str = "".join(["new google.maps.LatLng(", str(item[0]), ", ", str(item[1]), "),"])
         gmaps_list.append(gmaps_str)
         # gmaps_list geocoded values`
     create_google_heatmap(outputFilename, gmaps_list)

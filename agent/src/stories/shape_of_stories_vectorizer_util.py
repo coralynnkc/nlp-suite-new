@@ -49,7 +49,9 @@ class Vectorizer:
                 readerList = list(reader)
                 df = pd.read_csv(narrativeFile, encoding="utf-8", on_bad_lines="skip")  # ANGEL
                 if len(readerList) == 0 or "Sentiment score" not in df.columns:
-                    logger.info(f"Sentiment Analysis Score Error: {narrativeFile} doesn't have any sentiment score. The file will be dropped from the analyses.")
+                    logger.info(
+                        f"Sentiment Analysis Score Error: {narrativeFile} doesn't have any sentiment score. The file will be dropped from the analyses."
+                    )
                     filesToDelete.append(narrativeFile)
                     continue
                 # ============== Angel ================= added additional checks for merged file
@@ -62,14 +64,18 @@ class Vectorizer:
                     for index, sub_df in enumerate(splitted):
                         if len(sub_df) == 1:
                             if not self.doNotRepeat1:
-                                logger.info(f"Sentiment Analysis Score Error: Document {doc_ls[index]} only contains one sentiment score. This document will be dropped from the analyses.")
+                                logger.info(
+                                    f"Sentiment Analysis Score Error: Document {doc_ls[index]} only contains one sentiment score. This document will be dropped from the analyses."
+                                )
                             splitted.pop(index)
                             continue  # won't add to doclengths list
                         elif len(sub_df) < 10:
                             result = False
                             if not self.doNotRepeat2:
                                 # TODO should export csv file with culprit files
-                                logger.info(f"Sentiment Analysis Score Error: Document {doc_ls[index]} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
+                                logger.info(
+                                    f"Sentiment Analysis Score Error: Document {doc_ls[index]} contains less than 10 sentiment scores. It might influence the analysis of shape of stories."
+                                )
                             if result:
                                 splitted.pop(index)
                                 continue
@@ -84,14 +90,18 @@ class Vectorizer:
                     if len(readerList) == 1:
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
-                            logger.info(f"Sentiment Analysis Score Error: {narrativeFile} only contains one sentiment score. The file will be dropped from the analyses.")
+                            logger.info(
+                                f"Sentiment Analysis Score Error: {narrativeFile} only contains one sentiment score. The file will be dropped from the analyses."
+                            )
                         filesToDelete.append(narrativeFile)
                         continue
                     elif len(readerList) < 10:
                         result = False
                         if not doNotRepeat:
                             # TODO should export csv file with culprit files
-                            logger.info(f"Sentiment Analysis Score Error: {narrativeFile} contains less than 10 sentiment scores. It might influence the analysis of shape of stories.")
+                            logger.info(
+                                f"Sentiment Analysis Score Error: {narrativeFile} contains less than 10 sentiment scores. It might influence the analysis of shape of stories."
+                            )
                         if result:
                             filesToDelete.append(narrativeFile)
                             continue
@@ -191,7 +201,9 @@ class Vectorizer:
         n_features = len(sentiment_vectors[0])
         pca = PCA(n_components=n_features)
         if len(sentiment_vectors) < n_features:
-            logger.info("Corpus size error: The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.")
+            logger.info(
+                "Corpus size error: The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files."
+            )
             return None
         pca.fit(sentiment_vectors)
         expl_vars = -np.sort(-pca.explained_variance_ratio_)

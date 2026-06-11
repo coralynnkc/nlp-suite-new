@@ -1,3 +1,9 @@
+---
+id: TECH_DEBT
+aliases: []
+tags: []
+---
+
 # Tech Debt
 
 Issues known but deliberately not fixed during the June 2026 overhaul, with
@@ -12,6 +18,18 @@ enough context to pick each one up later.
   `excel_plotly_charts.html` → `/excel_charts`. Wiring them up means converting
   each view in `ui/app/views.py` to the `_proxy_post` helper and making the form
   field names match the endpoint's `Form()` parameters in `agent/src/main.py`.
+- **Python WordCloud backend is a stub.** `run_wordcloud` returns immediately
+  with "wordclouds_util module has been removed" when the (default) Python
+  WordCloud service is selected — the UI offers a tool that produces nothing.
+  The other wordcloud "services" just open external websites, which a headless
+  agent cannot do either. Restore `wordclouds_util` from the desktop NLP-Suite
+  repo or remove the page.
+- **Job warnings are invisible.** `topic_modeling_gensim_util` calls
+  `logging.basicConfig(level=ERROR)` at import, capping the root logger for the
+  whole agent; the many `logger.info(...)` validation warnings (e.g. "no options
+  selected") never reach the Docker logs, so a job that bails out early looks
+  identical to a successful one. Configure logging once in `main.py` (INFO) and
+  drop the import-time basicConfig.
 - **Tips File feature removed, not replaced.** The web templates shipped broken
   "Tips File" buttons pointing at `tips_files.js` and `TIPS_*.pdf` assets that
   were never ported from the desktop app. The blocks were deleted (commit
@@ -71,7 +89,7 @@ enough context to pick each one up later.
 
 - **~20 of 26 agent endpoints have no tests** (covered: core utils, NER,
   wordnet, boxplot, excel charts, gender analysis*, shape of stories*;
-  *integration-marked). The biggest gaps: sentiment, topic modeling, parse,
+  \*integration-marked). The biggest gaps: sentiment, topic modeling, parse,
   word2vec, conll_table, svo, gis, wordcloud, ngrams, statistics.
 
 ## Forks (corenlp/, mallet/) — no code changes by policy

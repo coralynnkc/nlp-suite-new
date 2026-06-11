@@ -62,9 +62,7 @@ def splitAt(text, index):
 # called by Stanford_CoreNL_parser
 # called by annotators DBpedia, YAGO utils
 #   In DBpedia and YAGO the temporary split files are deleted
-def splitDocument_byLength(
-    config_filename, filename_path, output_path="", maxLength=90000, inWords=False
-):
+def splitDocument_byLength(config_filename, filename_path, output_path="", maxLength=90000, inWords=False):
     # a new folder is created in output
     #   as a subfolder of the input folder and/or file
     #   the subfolder will be named split_files_9000_filename (no extension)
@@ -74,9 +72,7 @@ def splitDocument_byLength(
     # Stanford_CoreNLP_parser_util does not pass the output dir
     if output_path == "":
         output_path = head
-    new_splitFiles_folder = (
-        output_path + os.sep + "split_files_" + str(maxLength) + "_" + filename[:-4]
-    )
+    new_splitFiles_folder = output_path + os.sep + "split_files_" + str(maxLength) + "_" + filename[:-4]
     with open(filename_path, encoding="utf-8", errors="ignore") as F:
         text = F.read()
         length = len(text)
@@ -89,7 +85,7 @@ def splitDocument_byLength(
         try:
             os.mkdir(new_splitFiles_folder)
         except Exception as e:
-            logger.info('error:  %s', e.__doc__)
+            logger.info("error:  %s", e.__doc__)
         splits = [-1]  # start at -1 not 0 because of +1 later in loop
         if inWords:
             i = maxLength - 5
@@ -107,15 +103,8 @@ def splitDocument_byLength(
             # write output file
             fname = os.path.basename(os.path.normpath(filename_path))
 
-            SplitFile = (
-                os.path.join(new_splitFiles_folder, fname).split(".txt")[0]
-                + "_"
-                + str(i)
-                + ".txt"
-            )
-            with open(
-                SplitFile, "w+", newline="", encoding="utf-8", errors="ignore"
-            ) as sf:
+            SplitFile = os.path.join(new_splitFiles_folder, fname).split(".txt")[0] + "_" + str(i) + ".txt"
+            with open(SplitFile, "w+", newline="", encoding="utf-8", errors="ignore") as sf:
                 sf.write(text[splits[i - 1] + 1 : splits[i] + 1])
                 filesToReturn.append(SplitFile)
             sf.close()
@@ -160,14 +149,10 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
 
     # inSentence: no incomplete sentence in subfiles
     docname = os.path.split(filename)[1]
-    title = docname.partition(".")[
-        0
-    ]  # get the title of the file(without path and .txt)
+    title = docname.partition(".")[0]  # get the title of the file(without path and .txt)
     with open(filename, encoding="utf-8", errors="ignore") as F:
         text = F.read()
-        sentences = sent_tokenize_stanza(
-            stanzaPipeLine(text)
-        )  # sentnece list of the input txt
+        sentences = sent_tokenize_stanza(stanzaPipeLine(text))  # sentnece list of the input txt
     F.close()
     if maxLength > len(word_tokenize_stanza(stanzaPipeLine(text))):
         IO_user_interface_util.timed_alert(
@@ -204,9 +189,7 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
             splitText = ""
             word_count = 0
         else:
-            if (
-                inSentence
-            ):  # the subfile's word count is less than max limit, but contain no incomplete sentences
+            if inSentence:  # the subfile's word count is less than max limit, but contain no incomplete sentences
                 subfile = open(
                     output_path + "/" + title + "_" + str(subfileIndex) + ".txt",
                     "w",
@@ -218,16 +201,11 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
                 splitText = sent + " "
                 word_count = len(words)
             else:
-                diff = (
-                    maxLength - word_count
-                )  # the index of the last word of this subfile in the sentence
+                diff = maxLength - word_count  # the index of the last word of this subfile in the sentence
                 if (
                     words.index(words[diff - 1]) == diff - 1
                 ):  # no other same word in the setence or that's the first occurrence of the word
-                    splitText += (
-                        sent.partition(words[diff - 1])[0]
-                        + sent.partition(words[diff - 1])[1]
-                    )
+                    splitText += sent.partition(words[diff - 1])[0] + sent.partition(words[diff - 1])[1]
                     subfile = open(
                         output_path + "/" + title + "_" + str(subfileIndex) + ".txt",
                         "w",
@@ -244,10 +222,7 @@ def split_byLength(input_path, filename, output_path, maxLength, inSentence=Fals
                     while (
                         len(word_tokenize_stanza(stanzaPipeLine(text))) <= diff
                     ):  # check each same word until the previous text reached the maxLength
-                        subsent += (
-                            restsent.partition(words[diff - 1])[0]
-                            + restsent.partition(words[diff - 1])[1]
-                        )
+                        subsent += restsent.partition(words[diff - 1])[0] + restsent.partition(words[diff - 1])[1]
                         restsent = restsent.partition(words[diff - 1])[2]
                     subfile = open(
                         output_path + "/" + title + "_" + str(subfileIndex) + ".txt",

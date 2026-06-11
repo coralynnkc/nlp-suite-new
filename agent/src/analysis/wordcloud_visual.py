@@ -44,7 +44,6 @@ def run_wordcloud(
     openOutputFiles,
     doNotCreateIntermediateFiles,
 ):
-
     """Generate word-cloud images from the corpus."""
     filesToOpen = []
 
@@ -64,14 +63,10 @@ def run_wordcloud(
     ) = config_util.read_NLP_package_language_config()
 
     if len(visualization_tools) == 0 and not differentColumns_differentColors:
-        logger.info(
-            "Warning, No options have been selected.\n\nPlease, select an option to run and try again."
-        )
+        logger.info("Warning, No options have been selected.\n\nPlease, select an option to run and try again.")
         return
 
-    if (differentColumns_differentColors) and (
-        (len(inputFilename) == 0) or (inputFilename[-3:] != "csv")
-    ):
+    if (differentColumns_differentColors) and ((len(inputFilename) == 0) or (inputFilename[-3:] != "csv")):
         logger.info(
             "Warning, You have selected the option of using different colors for different columns of a single csv file. But... you have not selected in input a csv file.\n\nPlease, select an appropriate csv file in input and try again."
         )
@@ -121,9 +116,7 @@ def run_wordcloud(
         or visualization_tools == "Wordle"
     ):
         # check internet connection
-        if not IO_internet_util.check_internet_availability_warning(
-            visualization_tools
-        ):
+        if not IO_internet_util.check_internet_availability_warning(visualization_tools):
             return
         if visualization_tools == "TagCrowd":
             url = "https://tagcrowd.com/"

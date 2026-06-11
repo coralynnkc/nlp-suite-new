@@ -27,12 +27,8 @@ def build_timed_alert_message(chart_type, withHeader_var, count_var):
 
 # split the pairs of gui x y values into two separate lists of x axis values and y axis value
 def get_xaxis_yaxis_values(columns_to_be_plotted):
-    x = [
-        a[0] for a in columns_to_be_plotted
-    ]  # select all the x axis number and put them in a list
-    y = [
-        a[1] for a in columns_to_be_plotted
-    ]  # select all the y axis number and put them in a list
+    x = [a[0] for a in columns_to_be_plotted]  # select all the x axis number and put them in a list
+    y = [a[1] for a in columns_to_be_plotted]  # select all the y axis number and put them in a list
     x1 = [int(b) for b in x]  # convert them into int type
     y1 = [int(b) for b in y]  # convert them into int type
     return x1, y1
@@ -47,9 +43,7 @@ def get_dataRange(columns_to_be_plotted, data):
                 dataRange.append(rowValues)
             except IndexError:
                 continue
-    dataRange = [
-        dataRange[i : i + len(data)] for i in range(0, len(dataRange), len(data))
-    ]
+    dataRange = [dataRange[i : i + len(data)] for i in range(0, len(dataRange), len(data))]
     return dataRange
 
 
@@ -102,18 +96,13 @@ def get_data_to_be_plotted_with_counts(
                 column_name_num = columns_to_be_plotted[k][1]
                 column_name = headers[column_name_num]
                 if len(specific_column_value_list) == 0:
-                    column_frequencies = [
-                        [column_name + " values", "Frequencies of " + column_name]
-                    ]
+                    column_frequencies = [[column_name + " values", "Frequencies of " + column_name]]
                 else:
                     for _y in range(len(specific_column_value_list)):
                         column_frequencies = [
                             [
                                 id_name,
-                                "Frequencies of "
-                                + str(specific_column_value)
-                                + " in Column "
-                                + str(column_name),
+                                "Frequencies of " + str(specific_column_value) + " in Column " + str(column_name),
                             ]
                         ]
             else:
@@ -122,9 +111,7 @@ def get_data_to_be_plotted_with_counts(
                 column_name_num = columns_to_be_plotted[k][1]
                 column_name = "column_" + str(column_name_num + 1)
                 if len(specific_column_value) == 0:
-                    column_frequencies = [
-                        [column_name + " values", "Frequencies of " + column_name]
-                    ]
+                    column_frequencies = [[column_name + " values", "Frequencies of " + column_name]]
                 else:
                     for _y in range(len(specific_column_value_list)):
                         column_frequencies = [
@@ -152,9 +139,7 @@ def get_data_to_be_plotted_with_counts(
     return data_to_be_plotted
 
 
-def get_data_to_be_plotted_NO_counts(
-    inputFilename, withHeader_var, headers, columns_to_be_plotted, data
-):
+def get_data_to_be_plotted_NO_counts(inputFilename, withHeader_var, headers, columns_to_be_plotted, data):
     data_to_be_plotted = []
     for gp in columns_to_be_plotted:
         data.iloc[:, gp[1]].replace("N/A", 0)
@@ -192,12 +177,7 @@ def header_check(inputFile):
     # str added since the header may contain several instances of the searched item (e.g., Mean score, Median score)
     #   in which case it would not be found
     str_header = str(", ".join(header))
-    if (
-        "Frequenc" in str_header
-        or "Number of" in str_header
-        or "score" in str_header
-        or "Score" in str_header
-    ):
+    if "Frequenc" in str_header or "Number of" in str_header or "score" in str_header or "Score" in str_header:
         # the code would break with the wrong header item (e.g., no Frequency in header to get the index
         # We do 2 things here:
         #   1. get the right header value (e.g., Number of words, or Score, instead of Frequency)
@@ -206,10 +186,7 @@ def header_check(inputFile):
         # https://stackoverflow.com/questions/64127075/how-to-retrieve-partial-matches-from-a-list-of-strings
         result = list(
             filter(
-                lambda x: "Frequenc" in x
-                or "Number of" in x
-                or "Score" in x
-                or "score" in x,
+                lambda x: "Frequenc" in x or "Number of" in x or "Score" in x or "score" in x,
                 header,
             )
         )
@@ -357,9 +334,7 @@ def add_missing_IDs(input, outputFilename):
                 for i in range(len(number_sentences)):
                     # TODO hyperlinks should be removed in file before passing it to add_missing_IDs
                     if (
-                        IO_csv_util.undressFilenameForCSVHyperlink(
-                            Row_list[index - 1][docName_pos]
-                        )
+                        IO_csv_util.undressFilenameForCSVHyperlink(Row_list[index - 1][docName_pos])
                         == number_sentences[i][0]
                     ):
                         n_sentences = number_sentences[i][1]
@@ -400,10 +375,7 @@ def add_missing_IDs(input, outputFilename):
         else:  # same document
             # check that current sentence is not just one sentence greater than previous one
             #   in which case start and end are the same
-            if (
-                Row_list[index][sentenceID_pos]
-                == Row_list[index - 1][sentenceID_pos] + 1
-            ):
+            if Row_list[index][sentenceID_pos] == Row_list[index - 1][sentenceID_pos] + 1:
                 start_sentence = Row_list[index][sentenceID_pos]
                 end_sentence = Row_list[index][sentenceID_pos]
             else:

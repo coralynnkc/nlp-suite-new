@@ -38,11 +38,9 @@ def prepare_data_to_be_plotted_inExcel(
     if inputFileData:
         try:
             # Convert inputFileData to a DataFrame
-            data = pd.read_csv(
-                io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip"
-            )
+            data = pd.read_csv(io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip")
         except ValueError as err:
-            logger.info('Input data read error %s', str(err))
+            logger.info("Input data read error %s", str(err))
             return None
         headers = list(data.columns)
         withHeader_var = True
@@ -57,9 +55,7 @@ def prepare_data_to_be_plotted_inExcel(
             return None
         headers = list(headers)
 
-    count_msg, withHeader_msg = build_timed_alert_message(
-        chart_type_list[0], withHeader_var, count_var
-    )
+    count_msg, withHeader_msg = build_timed_alert_message(chart_type_list[0], withHeader_var, count_var)
     if count_var == 1:
         dataRange = get_dataRange(columns_to_be_plotted, data)
         # Get data with counts
@@ -76,9 +72,7 @@ def prepare_data_to_be_plotted_inExcel(
         except Exception:
             try:
                 if not inputFileData:  # Handle encoding fallback only for inputFilename
-                    data = pd.read_csv(
-                        inputFilename, encoding="ISO-8859-1", on_bad_lines="skip"
-                    )
+                    data = pd.read_csv(inputFilename, encoding="ISO-8859-1", on_bad_lines="skip")
                     IO_user_interface_util.timed_alert(
                         2000,
                         "Warning",
@@ -97,7 +91,7 @@ def prepare_data_to_be_plotted_inExcel(
                         + inputFilename
                         + "\n\nPlease, check carefully the data in the csv file; it may contain filenames with non-utf-8/ISO-8859-1 characters; less likely, the data in the txt files that generated the csv file may also contain non-compliant characters. Run the utf-8 compliance algorithm and, perhaps, run the cleaning algorithm that converts apostrophes.\n\nNO EXCEL CHART PRODUCED."
                     )
-                logger.info('Input file read error %s', str(err))
+                logger.info("Input file read error %s", str(err))
                 return None
         data_to_be_plotted = get_data_to_be_plotted_NO_counts(
             inputFilename if not inputFileData else None,
@@ -160,9 +154,7 @@ def visualize_chart_byGroup(
     # @@@
     headers = IO_csv_util.get_csvfile_headers(inputFilename, ask_Question=False)
     IO_csv_util.get_columnNumber_from_headerValue(headers, "Document", inputFilename)
-    IO_csv_util.get_columnNumber_from_headerValue(
-        headers, columns_to_be_plotted_yAxis[0], inputFilename
-    )
+    IO_csv_util.get_columnNumber_from_headerValue(headers, columns_to_be_plotted_yAxis[0], inputFilename)
 
     # if chartPackage == "Excel":
     # chart is visualized in compute_csv_column_frequencies
@@ -259,17 +251,13 @@ def visualize_chart(
         )
 
     if "Document" in str(groupByList):
-        docCol = IO_csv_util.get_columnNumber_from_headerValue(
-            headers, "Document", inputFilename
-        )
+        docCol = IO_csv_util.get_columnNumber_from_headerValue(headers, "Document", inputFilename)
         # we need to visualize the doc filename
         byDoc = True
     else:
         byDoc = False
     if "Sentence ID" in headers:
-        sentCol = IO_csv_util.get_columnNumber_from_headerValue(
-            headers, "Sentence ID", inputFilename
-        )
+        sentCol = IO_csv_util.get_columnNumber_from_headerValue(headers, "Sentence ID", inputFilename)
         bySent = True
     else:
         bySent = False
@@ -284,13 +272,9 @@ def visualize_chart(
             return filesToOpen
 
         if len(columns_to_be_plotted_xAxis) == 0:  # no x-Axis field
-            columns_to_be_plotted_numeric.append(
-                [field_number_yAxis, field_number_yAxis]
-            )
+            columns_to_be_plotted_numeric.append([field_number_yAxis, field_number_yAxis])
         else:  # there is an X-Axis (e.g., ngrams values)
-            columns_to_be_plotted_numeric.append(
-                [field_number_xAxis, field_number_yAxis]
-            )
+            columns_to_be_plotted_numeric.append([field_number_xAxis, field_number_yAxis])
 
         if byDoc:
             columns_to_be_plotted_byDoc.append([docCol, field_number_yAxis])
@@ -309,19 +293,15 @@ def visualize_chart(
     # for i in range(1, n_documents):
     count_var_SV = count_var
 
-    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(
-        inputFilename
-    )
+    nRecords, nColumns = IO_csv_util.GetNumberOf_Records_Columns_inCSVFile(inputFilename)
 
-    logger.info('\n\n\nRecords in inputfile (in charts_util) %s    %s', nRecords, inputFilename)
+    logger.info("\n\n\nRecords in inputfile (in charts_util) %s    %s", nRecords, inputFilename)
 
     # standard bar chart ------------------------------------------------------------------------------
     # Form	Lemma	POS	Record ID	Sentence ID	Document ID	Document
     # columns_to_be_plotted_numeric = [[0,0], [1,1]] with count_var = 1 since these values need to be counted
     # @@@ 9/29/2023
-    if (
-        len(columns_to_be_plotted_numeric[0]) > 0
-    ):  # compute only if the double list is not empty
+    if len(columns_to_be_plotted_numeric[0]) > 0:  # compute only if the double list is not empty
         outputFiles = run_all(
             columns_to_be_plotted_numeric,
             inputFilename,
@@ -348,17 +328,13 @@ def visualize_chart(
     if byDoc:
         # TODO depends on how many documents we have;
         #   no point charting one document since these charts would be the same as no document
-        n_documents = IO_csv_util.GetMaxValueInCSVField(
-            inputFilename, "visualize_charts_util", "Document ID"
-        )
+        n_documents = IO_csv_util.GetMaxValueInCSVField(inputFilename, "visualize_charts_util", "Document ID")
         if n_documents > 1:
             column_yAxis_label = "Frequencies"
             columns_to_be_plotted_byGroup = []
             chart_title = chart_title + " by Document"
             for header in groupByList:
-                groupCol = IO_csv_util.get_columnNumber_from_headerValue(
-                    headers, header, inputFilename
-                )
+                groupCol = IO_csv_util.get_columnNumber_from_headerValue(headers, header, inputFilename)
                 columns_to_be_plotted_byGroup.append([groupCol, field_number_yAxis])
 
             # by DOCUMENT
@@ -383,9 +359,7 @@ def visualize_chart(
     if len(groupByList) > 0 and groupByList != ["Document ID", "Document"]:
         columns_to_be_plotted_byGroup = []
         for header in groupByList:
-            groupCol = IO_csv_util.get_columnNumber_from_headerValue(
-                headers, header, inputFilename
-            )
+            groupCol = IO_csv_util.get_columnNumber_from_headerValue(headers, header, inputFilename)
             columns_to_be_plotted_byGroup.append([groupCol, field_number_yAxis])
 
         outputFiles = visualize_chart_byGroup(
@@ -409,9 +383,7 @@ def visualize_chart(
     # compute field STATISTICS (mean, median, skeweness, kurtosis...)--------------------------------------------------------------
     # TODO THE FIELD MUST CONTAIN NUMERIC VALUES
     # plotList (a list []) contains the columns headers to be used to compute their stats
-    if len(groupByList) > 0 and not isinstance(
-        outputFiles, str
-    ):  # compute only if list is not empty
+    if len(groupByList) > 0 and not isinstance(outputFiles, str):  # compute only if list is not empty
         if count_var == 1:
             if len(outputFiles) == 0:
                 return filesToOpen  # []
@@ -525,9 +497,7 @@ def run_all(
     # the extra parameter "complete_sid" is set to True by default to avoid extra code mortification elsewhere
     if complete_sid:
         # TODO Samir
-        inputFilename = add_missing_IDs(
-            pd.read_csv(StringIO(inputFileData)), inputFilename
-        )
+        inputFilename = add_missing_IDs(pd.read_csv(StringIO(inputFileData)), inputFilename)
     if use_Plotly:
         if "static" in chartPackage.lower():
             static_flag = True
@@ -568,9 +538,7 @@ def run_all(
 
     if isinstance(data_to_be_plotted[0], list):
         list_of_lists_to_csv(data_to_be_plotted[0], "temptemp2.csv")
-        df = statistics_csv_util.data_transformation(
-            "temptemp2.csv", dataTransformation
-        )
+        df = statistics_csv_util.data_transformation("temptemp2.csv", dataTransformation)
         os.remove("temptemp2.csv")
         data_to_be_plotted = [[df.columns.tolist()] + df.values.tolist()]
 
@@ -609,14 +577,10 @@ def run_all(
             group_cols_count = data[group_cols[0]].value_counts().reset_index()
             group_cols_count.columns = [group_cols[0], f"Frequency_{group_cols[0]}"]
             plot_cols_count = (
-                data.groupby(group_cols)[plot_cols[0]]
-                .value_counts()
-                .reset_index(name=f"Frequency_{plot_cols[0]}")
+                data.groupby(group_cols)[plot_cols[0]].value_counts().reset_index(name=f"Frequency_{plot_cols[0]}")
             )
             # Merge the counts back into the original dataframe
-            data_final = pd.merge(
-                group_cols_count, plot_cols_count, how="inner", on=group_cols[0]
-            )
+            data_final = pd.merge(group_cols_count, plot_cols_count, how="inner", on=group_cols[0])
             data_final = data_final.drop_duplicates()  # Remove potential duplicate rows
             return data_final
             # Convert DataFrame into list of lists
@@ -628,22 +592,14 @@ def run_all(
             and data_to_be_plotted[1][0] == ["Lemma values", "Frequencies of Lemma"]
         ):
             data = pd.DataFrame(data, columns=headers)
-            data_to_be_plotted = double_level_grouping_and_frequency(
-                data, ["Form"], ["Lemma"]
-            )
+            data_to_be_plotted = double_level_grouping_and_frequency(data, ["Form"], ["Lemma"])
             data_to_be_plotted.to_csv("Temptemp.csv", index=False)
-            data_final = statistics_csv_util.data_transformation(
-                "Temptemp.csv", dataTransformation
-            )
+            data_final = statistics_csv_util.data_transformation("Temptemp.csv", dataTransformation)
             data_list = data_final.values.tolist()
             list_1 = [[row[2], row[3]] for row in data_list]
             list_2 = [[row[0], row[1]] for row in data_list]
-            list_1.insert(
-                0, ["Form values", "Frequencies of Form" + "_" + dataTransformation]
-            )
-            list_2.insert(
-                0, ["Lemma values", "Frequencies of Lemma" + "_" + dataTransformation]
-            )
+            list_1.insert(0, ["Form values", "Frequencies of Form" + "_" + dataTransformation])
+            list_2.insert(0, ["Lemma values", "Frequencies of Lemma" + "_" + dataTransformation])
             data_to_be_plotted = [list_1, list_2]
             os.remove("Temptemp.csv")
 
@@ -666,5 +622,3 @@ def run_all(
         )
 
     return outputFiles
-
-

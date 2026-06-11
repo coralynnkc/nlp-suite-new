@@ -54,7 +54,6 @@ def run_svo(
     gephi_var,
     google_earth_var,
 ):
-
     # Already hard coded below
 
     """Extract Subject-Verb-Object triples via CoreNLP enhanced dependencies."""
@@ -228,7 +227,9 @@ def run_svo(
 
     if package_var == "CoreNLP" and inputFilename[-4:] != ".csv":
         if language_var == "Arabic" or language_var == "Hungarian":
-            logger.info("language, The Stanford CoreNLP dependency parsing is is not available for Arabic and Hungarian.")
+            logger.info(
+                "language, The Stanford CoreNLP dependency parsing is is not available for Arabic and Hungarian."
+            )
             return
 
         if not IO_libraries_util.check_inputPythonJavaProgramFile("Stanford_CoreNLP_util.py"):

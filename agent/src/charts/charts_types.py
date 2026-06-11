@@ -17,17 +17,11 @@ logger = logging.getLogger(__name__)
 
 def multiple_barchart(datalist, outputFilename, var, ntopchoices):
     # Read each file in datalist into a pandas DataFrame
-    tempdatalist = [
-        pd.read_csv(i, encoding="utf-8", on_bad_lines="skip") for i in datalist
-    ]
+    tempdatalist = [pd.read_csv(i, encoding="utf-8", on_bad_lines="skip") for i in datalist]
 
     # Process each DataFrame to count the top 'ntopchoices' values of the column 'var'
     newDatalist = [
-        df[var]
-        .value_counts()
-        .reset_index()
-        .rename(columns={"index": var, var: "Frequency"})
-        .head(ntopchoices)
+        df[var].value_counts().reset_index().rename(columns={"index": var, var: "Frequency"}).head(ntopchoices)
         for df in tempdatalist
     ]
 
@@ -84,24 +78,28 @@ def boxplot(
         color = None
 
     if inputFileData:
-        data = pd.read_csv(
-            io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip"
-        )
+        data = pd.read_csv(io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip")
     elif isinstance(data, str):
         data = pd.read_csv(inputFileData, encoding="utf-8", on_bad_lines="skip")
 
     if "int" not in str(type(data[var][0])) and "float" not in str(type(data[var][0])):
-        logger.info('Warning The "Boxplots" option requires a numeric field.\n\nPlease, use the dropdown menu to select a numeric csv file field for visualization and try again.')
+        logger.info(
+            'Warning The "Boxplots" option requires a numeric field.\n\nPlease, use the dropdown menu to select a numeric csv file field for visualization and try again.'
+        )
         return
 
     if bycategory != 0 and bycategory is not None and category is not None:
         if "str" not in str(type(data[category][0])):
-            logger.info('Warning The "Split data by category" Boxplots option requires a CATEGORICAL "csv file field"".\n\nPlease, use the "csv file field" dropdown menu to select a CATEGORICAL field and try again.')
+            logger.info(
+                'Warning The "Split data by category" Boxplots option requires a CATEGORICAL "csv file field"".\n\nPlease, use the "csv file field" dropdown menu to select a CATEGORICAL field and try again.'
+            )
             return
 
     if color is not None:
         if "str" not in str(type(data[color][0])):
-            logger.info('Warning The Boxplots with "Split data by category" and color options requires a secodn CATEGORICAL "csv file field" for the color option".\n\nPlease, use the second "csv file field" dropdown menu to select a CATEGORICAL field and try again.')
+            logger.info(
+                'Warning The Boxplots with "Split data by category" and color options requires a secodn CATEGORICAL "csv file field" for the color option".\n\nPlease, use the second "csv file field" dropdown menu to select a CATEGORICAL field and try again.'
+            )
             return
 
     if not bycategory:
@@ -140,12 +138,13 @@ def Sankey(
         try:
             data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
         except Exception:
-            logger.info('Warning, the input file  %s  is empty.\n\nNo Sankey flowchart can be produced.\n\nPlease, check your input file and try again.', data)
+            logger.info(
+                "Warning, the input file  %s  is empty.\n\nNo Sankey flowchart can be produced.\n\nPlease, check your input file and try again.",
+                data,
+            )
             return
 
-    if not isinstance(
-        data[var1][0], float
-    ):  # nan values are float, but do not need to be checked here
+    if not isinstance(data[var1][0], float):  # nan values are float, but do not need to be checked here
         if not isinstance(data[var1][0], str) or not isinstance(data[var2][0], str):
             logger.info(
                 "Waring, all csv file fields should be categorical for a Saneky flowchart.\n\nPlease, select categorical field(s) (i.e., fields with string values), rather than continuous numeric field(s), and try again. "
@@ -154,9 +153,7 @@ def Sankey(
     if three_way_Sankey:
         # 3 variables
         data[var1] = data[var1].str.lower()
-        tempframe = pd.DataFrame(
-            data[var1].value_counts().head(lengthvar1)
-        ).reset_index()
+        tempframe = pd.DataFrame(data[var1].value_counts().head(lengthvar1)).reset_index()
         try:
             finalframe = data[data[var1].isin(list(set(tempframe["index"])))]
         except Exception:
@@ -167,34 +164,18 @@ def Sankey(
                 return
 
             finalframe = data[data[var1].isin(list(set(tempframe.index)))]
-        tempframe2 = (
-            pd.DataFrame(finalframe[var2]).value_counts().head(lengthvar2).reset_index()
-        )
-        tempframe3 = (
-            pd.DataFrame(finalframe[var3]).value_counts().head(lengthvar3).reset_index()
-        )
+        tempframe2 = pd.DataFrame(finalframe[var2]).value_counts().head(lengthvar2).reset_index()
+        tempframe3 = pd.DataFrame(finalframe[var3]).value_counts().head(lengthvar3).reset_index()
         finalframe = finalframe[finalframe[var2].isin(list(set(tempframe2[var2])))]
         finalframe = finalframe[finalframe[var3].isin(list(set(tempframe3[var3])))]
         finalframe = finalframe.reset_index(drop=True)
-        sourcelist = list(
-            range(0, len(set(finalframe[var1])) + len(set(finalframe[var2])))
-        )
-        source = [
-            item
-            for item in sourcelist
-            for _ in range(len(set(finalframe[var2])) + len(set(finalframe[var3])))
-        ]
-        target1 = list(
-            range(0, len(set(finalframe[var2])) + len(set(finalframe[var3])))
-        )
+        sourcelist = list(range(0, len(set(finalframe[var1])) + len(set(finalframe[var2]))))
+        source = [item for item in sourcelist for _ in range(len(set(finalframe[var2])) + len(set(finalframe[var3])))]
+        target1 = list(range(0, len(set(finalframe[var2])) + len(set(finalframe[var3]))))
         target2 = [x + len(set(finalframe[var1])) for x in target1]
         target = target2 * len(sourcelist)
 
-        labelvector = (
-            sorted(set(finalframe[var1]))
-            + sorted(set(finalframe[var2]))
-            + sorted(set(finalframe[var3]))
-        )
+        labelvector = sorted(set(finalframe[var1])) + sorted(set(finalframe[var2])) + sorted(set(finalframe[var3]))
         valuevector = []
 
         for i in sorted(list(set(finalframe[var1]))):
@@ -209,9 +190,7 @@ def Sankey(
                 if j not in list(wantedframe[var2]):
                     tempvec.append(0)
                 else:
-                    tempvec.append(
-                        list(wantedframe[wantedframe[var2] == j]["Frequency"])[0]
-                    )
+                    tempvec.append(list(wantedframe[wantedframe[var2] == j]["Frequency"])[0])
             tempvec = tempvec + list(np.repeat(0, len(target2) - len(tempvec)))
             valuevector = valuevector + tempvec
         for i in sorted(list(set(finalframe[var2]))):
@@ -227,9 +206,7 @@ def Sankey(
                 if j not in list(wantedframe[var3]):
                     tempvec.append(0)
                 else:
-                    tempvec.append(
-                        list(wantedframe[wantedframe[var3] == j]["Frequency"])[0]
-                    )
+                    tempvec.append(list(wantedframe[wantedframe[var3] == j]["Frequency"])[0])
             valuevector = valuevector + tempvec
 
     else:
@@ -253,13 +230,7 @@ def Sankey(
             for j, val2 in enumerate(finalframe[var2].unique()):
                 source.append(i)
                 target.append(j + len(finalframe[var1].unique()))
-                valuevector.append(
-                    len(
-                        finalframe[
-                            (finalframe[var1] == val1) & (finalframe[var2] == val2)
-                        ]
-                    )
-                )
+                valuevector.append(len(finalframe[(finalframe[var1] == val1) & (finalframe[var2] == val2)]))
 
         labelvector = list(finalframe[var1].unique()) + list(finalframe[var2].unique())
 
@@ -292,9 +263,7 @@ def Sankey(
 
 def separator(data, interest, algorithm):
     interestvector = []  # empty interest vector
-    id_list = (
-        []
-    )  # empty id list in which we record every entry in the dataset that contains one of the interest inputs
+    id_list = []  # empty id list in which we record every entry in the dataset that contains one of the interest inputs
 
     for i in range(0, len(data)):  # check every entry in dataset
         for j in range(0, len(interest)):  # check every interest vector
@@ -302,14 +271,17 @@ def separator(data, interest, algorithm):
                 ".*" + interest[j] + "[^.]", data["Document"][i]
             ):  # if the name of the document contains a word of intersest, we append that word to a vector
                 interestvector.append(interest[j])
-                id_list.append(
-                    i
-                )  # append the index of the row that contains the interest value
+                id_list.append(i)  # append the index of the row that contains the interest value
 
     finaldata = data.loc[id_list, :]  # filter dataset by row with interest values
     finaldata["interest"] = interestvector  # add interest column
     if finaldata.empty:
-        logger.info('Warning %s', "The " + algorithm + " algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.")
+        logger.info(
+            "Warning %s",
+            "The "
+            + algorithm
+            + " algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.",
+        )
     return finaldata
 
 
@@ -340,7 +312,9 @@ def Sunburst(
         data = data.fillna("Blank/missing value")
     # The presence of a Nan value will classify the object as float
     if not isinstance(data[label][0], str):
-        logger.info('Warning The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.')
+        logger.info(
+            "Warning The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again."
+        )
     # the last 3 arguments are optional. If first_sentences is specified and last_sentences is not or vice versa, we return a message stating they must both be specified or absent at the same time
     if (first_sentences is None and last_sentences is not None) or (
         first_sentences is not None and last_sentences is None
@@ -349,43 +323,29 @@ def Sunburst(
     else:  # Otherwise, we run the Sunburst
         tempdata = separator(data, interest, "Sunburst")  # Create "interest" variable
         if not beginning_and_end:
-            if half_text or (
-                first_sentences is None and last_sentences is None
+            if (
+                half_text or (first_sentences is None and last_sentences is None)
             ):  # If half text is true or both number of first sentences and last sentences is absent, we split each text in half and attribute a "beginning" half and "end" half
                 first_docID = tempdata["Document ID"].iloc[0]
-                ogdata = tempdata[
-                    tempdata["Document ID"] == first_docID
-                ]  # take the first document
+                ogdata = tempdata[tempdata["Document ID"] == first_docID]  # take the first document
 
-                ogdata1 = ogdata[
-                    ogdata["Sentence ID"] <= len(ogdata) / 2
-                ]  # split the document by first half
+                ogdata1 = ogdata[ogdata["Sentence ID"] <= len(ogdata) / 2]  # split the document by first half
                 oglist1 = list(np.repeat("Beginning", len(ogdata1)))
-                ogdata1["Beginning or End"] = (
-                    oglist1  # add list "Beginning" the length of the first half
-                )
+                ogdata1["Beginning or End"] = oglist1  # add list "Beginning" the length of the first half
 
-                ogdata2 = ogdata[
-                    ogdata["Sentence ID"] > len(ogdata) / 2
-                ]  # split the document by first half
+                ogdata2 = ogdata[ogdata["Sentence ID"] > len(ogdata) / 2]  # split the document by first half
                 oglist2 = list(np.repeat("End", len(ogdata2)))
-                ogdata2["Beginning or End"] = (
-                    oglist2  # add list "End" the length of the first half
-                )
+                ogdata2["Beginning or End"] = oglist2  # add list "End" the length of the first half
 
                 finaldata = pd.concat([ogdata1, ogdata2])  # merge dataframes
                 if not finaldata.empty:
-                    for i in range(
-                        2, max(data["Document ID"]) + 1
-                    ):  # iterate same process for each document
+                    for i in range(2, max(data["Document ID"]) + 1):  # iterate same process for each document
                         intermediatedata = tempdata[tempdata["Document ID"] == i]
 
                         intermediatedata1 = intermediatedata[
                             intermediatedata["Sentence ID"] <= len(intermediatedata) / 2
                         ]
-                        intermediatelist1 = list(
-                            np.repeat("Beginning", len(intermediatedata1))
-                        )
+                        intermediatelist1 = list(np.repeat("Beginning", len(intermediatedata1)))
                         intermediatedata1["Beginning or End"] = intermediatelist1
 
                         finaldata = pd.concat([finaldata, intermediatedata1])
@@ -393,58 +353,47 @@ def Sunburst(
                         intermediatedata2 = intermediatedata[
                             intermediatedata["Sentence ID"] > len(intermediatedata) / 2
                         ]
-                        intermediatelist2 = list(
-                            np.repeat("End", len(intermediatedata2))
-                        )
+                        intermediatelist2 = list(np.repeat("End", len(intermediatedata2)))
                         intermediatedata2["Beginning or End"] = intermediatelist2
 
                         finaldata = pd.concat([finaldata, intermediatedata2])
                     # finaldata not empty
                     # @@@ nan values will break the code
                     finaldata = finaldata.fillna("Blank/missing value")
-                    fig = px.sunburst(
-                        finaldata, path=["interest", "Beginning or End", label]
-                    )  # return Sunburst
+                    fig = px.sunburst(finaldata, path=["interest", "Beginning or End", label])  # return Sunburst
                 else:
                     if finaldata.empty:
-                        logger.info("Warning The Sunburst algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again.")
+                        logger.info(
+                            "Warning The Sunburst algorithm has produced an empty dataframe.\n\nPlease, make sure that the 'Filename label/part' you have entered are in the document name under the Document field of your input file.\n\nREMEMBER THAT SEARCH WORDS ARE CASE SENSITIVE.\n\nPlease, try again."
+                        )
 
             else:
                 tempdata1 = tempdata[
                     tempdata["Sentence ID"] <= first_sentences
                 ]  # all observations with the first n sentences
 
-                list1 = list(
-                    np.repeat("Beginning", len(tempdata1))
-                )  # List repeating 'Beginning'
+                list1 = list(np.repeat("Beginning", len(tempdata1)))  # List repeating 'Beginning'
 
                 for i in range(1, max(data["Document ID"]) + 1):
                     intermediatedata1 = tempdata[tempdata["Document ID"] == i]
                     intermediatedata2 = intermediatedata1[
-                        intermediatedata1["Sentence ID"]
-                        > (len(intermediatedata1) - last_sentences)
+                        intermediatedata1["Sentence ID"] > (len(intermediatedata1) - last_sentences)
                     ]
                     tempdata1 = (
-                        pd.concat([tempdata1, intermediatedata2])
-                        .reset_index()
-                        .drop(columns={"index"})
+                        pd.concat([tempdata1, intermediatedata2]).reset_index().drop(columns={"index"})
                     )  # all observations with last n sentences
                     if len(tempdata1) == 0:
-                        logger.info('Warning The dataframe computed by theSunburst chart algorithm is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2')
+                        logger.info(
+                            "Warning The dataframe computed by theSunburst chart algorithm is empty.\n\nIt is likely that you are using a version of pandas > 1.5.2. If so, in command line please, pip unistall pandas and pip install pandas==1.5.2"
+                        )
                         return
 
-                list2 = list(
-                    np.repeat("End", len(tempdata1) - len(list1))
-                )  # List repeating 'End'
-                finallist = (
-                    list1 + list2
-                )  # Create a vector defining if the sentence is at the beginning or the end
+                list2 = list(np.repeat("End", len(tempdata1) - len(list1)))  # List repeating 'End'
+                finallist = list1 + list2  # Create a vector defining if the sentence is at the beginning or the end
                 finaldata = tempdata1
                 finaldata["Beginning or End"] = finallist
 
-                fig = px.sunburst(
-                    finaldata, path=["interest", "Beginning or End", label]
-                )  # create sunburst chart
+                fig = px.sunburst(finaldata, path=["interest", "Beginning or End", label])  # create sunburst chart
         else:
             # @@@ nan values will break the code
             tempdata = tempdata.fillna("Blank/missing value")
@@ -479,22 +428,20 @@ def Treemap(
         data = pd.read_csv(data, encoding="utf-8", on_bad_lines="skip")
     # The presence of a Nan value will classify the object as float
     if not isinstance(data[csv_file_field][0], str):
-        logger.info('Warning The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again.')
-    if extra_dimension_average and not isinstance(
-        data[average_variable][0], np.float64
-    ):
-        logger.info('Warning The csv file field selected should be numeric.\n\nYou should select a numeric field, rather than an alphabetic field, and try again.')
+        logger.info(
+            "Warning The csv file field selected should be categorical.\n\nYou should select a categorical field, rather than a continuous numeric field, and try again."
+        )
+    if extra_dimension_average and not isinstance(data[average_variable][0], np.float64):
+        logger.info(
+            "Warning The csv file field selected should be numeric.\n\nYou should select a numeric field, rather than an alphabetic field, and try again."
+        )
         return
-    data = separator(
-        data, interest, "Treemap"
-    )  # use separator function to create interest vector
+    data = separator(data, interest, "Treemap")  # use separator function to create interest vector
     if data.empty:
         outputFilename = None
     else:
         if not extra_dimension_average:  # return regular 2 variable graph if false
-            fig = px.treemap(
-                data, path=[px.Constant("Total Frequency"), "interest", csv_file_field]
-            )
+            fig = px.treemap(data, path=[px.Constant("Total Frequency"), "interest", csv_file_field])
         else:  # return graph with extra variable if true
             fig = px.treemap(
                 data,
@@ -538,13 +485,9 @@ def process_and_aggregate_data(data, **kwargs):
         )
         return
         # Group by the specified column along with select_columns and calculate the count
-    agg_data = (
-        data.groupby([agg_column, select_columns]).size().reset_index(name="Count")
-    )
+    agg_data = data.groupby([agg_column, select_columns]).size().reset_index(name="Count")
     # Pivot the table. If select_columns is empty, this will consider all other columns.
-    pivot_data = agg_data.pivot_table(
-        index=select_columns, columns=agg_column, values="Count", fill_value=0
-    )
+    pivot_data = agg_data.pivot_table(index=select_columns, columns=agg_column, values="Count", fill_value=0)
     return pivot_data
 
 
@@ -561,16 +504,12 @@ def transform_data(pivot_data, transformation="min-max"):
         means = pivot_data.mean()
         stds = pivot_data.std()
         # Skip columns with std very close to zero
-        z_scores = pivot_data.subtract(means, axis="columns").divide(
-            stds.where(stds > 1e-5, 1), axis="columns"
-        )
+        z_scores = pivot_data.subtract(means, axis="columns").divide(stds.where(stds > 1e-5, 1), axis="columns")
         # Replace inf and -inf values with NaN for safety
         z_scores.replace([np.inf, -np.inf], np.nan, inplace=True)
         return z_scores
     else:
-        return (
-            pivot_data  # return original data if no recognized transformation is given
-        )
+        return pivot_data  # return original data if no recognized transformation is given
 
 
 def visualize_data(
@@ -618,16 +557,7 @@ def visualize_data(
     ax.set_xticklabels(transposed_data.columns, rotation=90)
     ax.set_ylabel(y_label)
     ax.set_xlabel(x_label)
-    ax.set_title(
-        y_label
-        + " Frequency Visualization over "
-        + x_label
-        + " on a "
-        + normalize
-        + " Scale"
-    )
+    ax.set_title(y_label + " Frequency Visualization over " + x_label + " on a " + normalize + " Scale")
     plt.savefig(outputname + ".png")
     logger.info(f"Data visualization saved as {outputname}.png.")
     # plt.show() // we don't need to show it because we have that other option
-
-

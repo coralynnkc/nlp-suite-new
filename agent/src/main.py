@@ -6,6 +6,10 @@ from collections.abc import Callable
 from threading import Lock, Thread
 from typing import Annotated
 
+# Configure logging before any processing module is imported: the first
+# basicConfig call wins, and INFO is where job validation warnings surface.
+logging.basicConfig(format="%(asctime)s : %(levelname)s : %(name)s : %(message)s", level=logging.INFO)
+
 # Add all src subdirectories to sys.path so flat imports in util files work
 # regardless of which subdirectory the module lives in.
 _src_dir = os.path.dirname(os.path.abspath(__file__))
@@ -125,9 +129,7 @@ async def single_runner(request: Request, call_next):
         return await call_next(request)
 
     if not _worker_lock.acquire(blocking=False):
-        return PlainTextResponse(
-            "The agent is currently busy running another job", status_code=503
-        )
+        return PlainTextResponse("The agent is currently busy running another job", status_code=503)
 
     app.worker = True
     response = await call_next(request)
@@ -184,47 +186,50 @@ def file_manager(
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    return dispatch(app, lambda: run_file_manager(
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        chartPackage=chartPackage,
-        dataTransformation=dataTransformation,
-        selectedCsvFile_var=selectedCsvFile_var,
-        selectedCsvFile_colName=selectedCsvFile_colName,
-        utf8_var=False,
-        ASCII_var=False,
-        list_var=list_var,
-        rename_var=rename_var,
-        copy_var=copy_var,
-        move_var=move_var,
-        delete_var=delete_var,
-        count_file_manager_var=count_file_manager_var,
-        split_var=split_var,
-        rename_new_entry=rename_new_entry,
-        by_file_type_var=by_file_type_var,
-        file_type_menu_var=file_type_menu_var,
-        by_creation_date_var=by_creation_date_var,
-        by_author_var=by_author_var,
-        before_date_var=before_date_var,
-        after_date_var=after_date_var,
-        by_prefix_var=by_prefix_var,
-        by_substring_var=by_substring_var,
-        string_entry_var=string_entry_var,
-        by_foldername_var=by_foldername_var,
-        folder_character_separator_var=folder_character_separator_var,
-        by_embedded_items_var=by_embedded_items_var,
-        comparison_var=comparison_var,
-        number_of_items_var=number_of_items_var,
-        embedded_item_character_value_var=embedded_item_character_value_var,
-        include_exclude_var=include_exclude_var,
-        character_count_file_manager_var=character_count_file_manager_var,
-        character_entry_var=character_entry_var,
-        include_subdir_var=include_subdir_var,
-        fileName_embeds_date=fileName_embeds_date,
-        date_format=date_format,
-        date_separator=date_separator,
-        date_position=date_position,
-    ))
+    return dispatch(
+        app,
+        lambda: run_file_manager(
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            chartPackage=chartPackage,
+            dataTransformation=dataTransformation,
+            selectedCsvFile_var=selectedCsvFile_var,
+            selectedCsvFile_colName=selectedCsvFile_colName,
+            utf8_var=False,
+            ASCII_var=False,
+            list_var=list_var,
+            rename_var=rename_var,
+            copy_var=copy_var,
+            move_var=move_var,
+            delete_var=delete_var,
+            count_file_manager_var=count_file_manager_var,
+            split_var=split_var,
+            rename_new_entry=rename_new_entry,
+            by_file_type_var=by_file_type_var,
+            file_type_menu_var=file_type_menu_var,
+            by_creation_date_var=by_creation_date_var,
+            by_author_var=by_author_var,
+            before_date_var=before_date_var,
+            after_date_var=after_date_var,
+            by_prefix_var=by_prefix_var,
+            by_substring_var=by_substring_var,
+            string_entry_var=string_entry_var,
+            by_foldername_var=by_foldername_var,
+            folder_character_separator_var=folder_character_separator_var,
+            by_embedded_items_var=by_embedded_items_var,
+            comparison_var=comparison_var,
+            number_of_items_var=number_of_items_var,
+            embedded_item_character_value_var=embedded_item_character_value_var,
+            include_exclude_var=include_exclude_var,
+            character_count_file_manager_var=character_count_file_manager_var,
+            character_entry_var=character_entry_var,
+            include_subdir_var=include_subdir_var,
+            fileName_embeds_date=fileName_embeds_date,
+            date_format=date_format,
+            date_separator=date_separator,
+            date_position=date_position,
+        ),
+    )
 
 
 @app.post("/sentiment_analysis")
@@ -236,16 +241,19 @@ def sentiment_analysis(
     calculateMedian: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_sentiment_analysis(
-        input_dir,
-        OUTPUT_DIR,
-        False,
-        "Excel",
-        dataTransformation,
-        calculateMean,
-        calculateMedian,
-        algorithm,
-    ))
+    return dispatch(
+        app,
+        lambda: run_sentiment_analysis(
+            input_dir,
+            OUTPUT_DIR,
+            False,
+            "Excel",
+            dataTransformation,
+            calculateMean,
+            calculateMedian,
+            algorithm,
+        ),
+    )
 
 
 @app.post("/topic_modeling")
@@ -264,22 +272,25 @@ def topic_modeling(
     Gensim_MALLET_var: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_topic_modeling(
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        num_topics=numberOfTopics,
-        BERT_var=topicModelingBERT,
-        split_docs_var=splitToSentence,
-        MALLET_var=topicModelingMALLET,
-        optimize_intervals_var=optimizeTopicIntervals,
-        Gensim_var=topicModelingGensim,
-        remove_stopwords_var=removeStopwords,
-        lemmatize_var=lemmatizeWords,
-        nounsOnly_var=nounsOnly_var,
-        Gensim_MALLET_var=Gensim_MALLET_var,
-    ))
+    return dispatch(
+        app,
+        lambda: run_topic_modeling(
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            num_topics=numberOfTopics,
+            BERT_var=topicModelingBERT,
+            split_docs_var=splitToSentence,
+            MALLET_var=topicModelingMALLET,
+            optimize_intervals_var=optimizeTopicIntervals,
+            Gensim_var=topicModelingGensim,
+            remove_stopwords_var=removeStopwords,
+            lemmatize_var=lemmatizeWords,
+            nounsOnly_var=nounsOnly_var,
+            Gensim_MALLET_var=Gensim_MALLET_var,
+        ),
+    )
 
 
 @app.post("/parse")
@@ -295,22 +306,25 @@ def parsers_annotators(
     package: Annotated[str, Form()] = "Stanford CoreNLP",
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_parsers_annotators(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        manual_Coref=manual_Coref,
-        parser_var=parser_var,
-        parser_menu_var=parser_menu_var,
-        single_quote=single_quote,
-        CoNLL_table_analyzer_var=False,
-        annotators_var=annotators_var,
-        annotators_menu_var=annotators_menu_var,
-        package=package,
-    ))
+    return dispatch(
+        app,
+        lambda: run_parsers_annotators(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            manual_Coref=manual_Coref,
+            parser_var=parser_var,
+            parser_menu_var=parser_menu_var,
+            single_quote=single_quote,
+            CoNLL_table_analyzer_var=False,
+            annotators_var=annotators_var,
+            annotators_menu_var=annotators_menu_var,
+            package=package,
+        ),
+    )
 
 
 @app.post("/word2vec")
@@ -338,32 +352,35 @@ def word2vec(
     range20: Annotated[int, Form()] = 10,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_word2vec(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        remove_stopwords_var=remove_stopwords_var,
-        lemmatize_var=lemmatize_var,
-        WSI_var=WSI_var,
-        BERT_var=BERT_var,
-        Gensim_var=Gensim_var,
-        sg_menu_var=sg_menu_var,
-        vector_size_var=vector_size_var,
-        window_var=window_var,
-        min_count_var=min_count_var,
-        vis_menu_var=vis_menu_var,
-        dim_menu_var=dim_menu_var,
-        compute_distances_var=compute_distances_var,
-        top_words_var=top_words_var,
-        keywords_var=keywords_var,
-        keywordInput=keywordInput,
-        range4=range4,
-        range6=range6,
-        range20=range20,
-        ngramsDropDown=ngramsDropDown,
-    ))
+    return dispatch(
+        app,
+        lambda: run_word2vec(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            remove_stopwords_var=remove_stopwords_var,
+            lemmatize_var=lemmatize_var,
+            WSI_var=WSI_var,
+            BERT_var=BERT_var,
+            Gensim_var=Gensim_var,
+            sg_menu_var=sg_menu_var,
+            vector_size_var=vector_size_var,
+            window_var=window_var,
+            min_count_var=min_count_var,
+            vis_menu_var=vis_menu_var,
+            dim_menu_var=dim_menu_var,
+            compute_distances_var=compute_distances_var,
+            top_words_var=top_words_var,
+            keywords_var=keywords_var,
+            keywordInput=keywordInput,
+            range4=range4,
+            range6=range6,
+            range20=range20,
+            ngramsDropDown=ngramsDropDown,
+        ),
+    )
 
 
 @app.post("/conll_table")
@@ -386,28 +403,31 @@ def CoNLL_table_analyzer(
     k_sentences_var: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_CoNLL_table_analyzer(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        searchedCoNLLField=searchedCoNLLField,
-        searchField_kw=searchField_kw,
-        postag_var=postag_var,
-        deprel=deprel,
-        co_postag=co_postag,
-        co_deprel=co_deprel,
-        Begin_K_sent_var=Begin_K_sent_var,
-        End_K_sent_var=End_K_sent_var,
-        all_analyses_var=all_analyses_var,
-        all_analyses=all_analyses,
-        search_token_var=search_token_var,
-        WordNet_var=False,
-        compute_sentence_var=compute_sentence_var,
-        k_sentences_var=k_sentences_var,
-    ))
+    return dispatch(
+        app,
+        lambda: run_CoNLL_table_analyzer(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            searchedCoNLLField=searchedCoNLLField,
+            searchField_kw=searchField_kw,
+            postag_var=postag_var,
+            deprel=deprel,
+            co_postag=co_postag,
+            co_deprel=co_deprel,
+            Begin_K_sent_var=Begin_K_sent_var,
+            End_K_sent_var=End_K_sent_var,
+            all_analyses_var=all_analyses_var,
+            all_analyses=all_analyses,
+            search_token_var=search_token_var,
+            WordNet_var=False,
+            compute_sentence_var=compute_sentence_var,
+            k_sentences_var=k_sentences_var,
+        ),
+    )
 
 
 @app.post("/style_analysis")
@@ -422,21 +442,24 @@ def style_analysis(
     vocabulary_analysis: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_style_analysis(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        extra_GUIs_var=False,
-        complexity_readability_analysis_var=complexity_analysis,
-        complexity_readability_analysis_menu_var=analysis_dropdown,
-        vocabulary_analysis_var=vocabulary_analysis,
-        vocabulary_analysis_menu_var=voc_options,
-        gender_guesser_var=False,
-        min_rating=min_rating,
-        max_rating_sd=max_rating_sd,
-    ))
+    return dispatch(
+        app,
+        lambda: run_style_analysis(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            extra_GUIs_var=False,
+            complexity_readability_analysis_var=complexity_analysis,
+            complexity_readability_analysis_menu_var=analysis_dropdown,
+            vocabulary_analysis_var=vocabulary_analysis,
+            vocabulary_analysis_menu_var=voc_options,
+            gender_guesser_var=False,
+            min_rating=min_rating,
+            max_rating_sd=max_rating_sd,
+        ),
+    )
 
 
 @app.post("/sunburst")
@@ -450,16 +473,19 @@ def sunburst_charts(
     treemap_var: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_sun_burst(
-        inputFilename=sunburst_file_input,
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        file_data=file_data,
-        filter_options_var=filter_options_var,
-        selected_pairs_data=savedPairsToSend,
-        piechart_var=piechart_var,
-        treemap_var=treemap_var,
-    ))
+    return dispatch(
+        app,
+        lambda: run_sun_burst(
+            inputFilename=sunburst_file_input,
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            file_data=file_data,
+            filter_options_var=filter_options_var,
+            selected_pairs_data=savedPairsToSend,
+            piechart_var=piechart_var,
+            treemap_var=treemap_var,
+        ),
+    )
 
 
 @app.post("/colormap")
@@ -472,16 +498,19 @@ def colormap_chart(
     normalize: Annotated[str, Form()] = False,
     file_data: Annotated[str, Form()] = "",
 ) -> PlainTextResponse:
-    return dispatch(app, lambda: run_colormap(
-        inputFilename=colormap_file_input,
-        outputDir=OUTPUT_DIR,
-        csv_file_categorical_field_list=csv_file_categorical_field_list_front,
-        max_rows_var=max_number_of_rows,
-        color_1_style_var=less_freq_color_picker,
-        color_2_style_var=more_freq_color_picker,
-        normalize_var=normalize,
-        inputFileData=file_data,
-    ))
+    return dispatch(
+        app,
+        lambda: run_colormap(
+            inputFilename=colormap_file_input,
+            outputDir=OUTPUT_DIR,
+            csv_file_categorical_field_list=csv_file_categorical_field_list_front,
+            max_rows_var=max_number_of_rows,
+            color_1_style_var=less_freq_color_picker,
+            color_2_style_var=more_freq_color_picker,
+            normalize_var=normalize,
+            inputFileData=file_data,
+        ),
+    )
 
 
 @app.post("/sankey")
@@ -493,14 +522,17 @@ def sankey_flowchart(
     selected_pairs_data: Annotated[str, Form()] = "[]",
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_sankey(
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        csv_file_relational_field_list=selected_pairs_data,
-        Sankey_limit1_var=variable_1_max,
-        Sankey_limit2_var=variable_2_max,
-        Sankey_limit3_var=variable_3_max,
-    ))
+    return dispatch(
+        app,
+        lambda: run_sankey(
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            csv_file_relational_field_list=selected_pairs_data,
+            Sankey_limit1_var=variable_1_max,
+            Sankey_limit2_var=variable_2_max,
+            Sankey_limit3_var=variable_3_max,
+        ),
+    )
 
 
 @app.post("/svo")
@@ -521,31 +553,34 @@ def SVO(
     google_earth_var: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_svo(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        coref_var=coreferenceResolution,
-        manual_coref_var=manualCoreference,
-        normalized_NER_date_extractor_var=False,
-        package_var=package,
-        gender_var=so_gender,
-        quote_var=so_quote,
-        subjects_dict_path_var=False,
-        verbs_dict_path_var=False,
-        objects_dict_path_var=False,
-        filter_subjects=filter_subjects,
-        filter_verbs=filter_verbs,
-        filter_objects=filter_objects,
-        lemmatize_subjects=lemmatize_subjects,
-        lemmatize_verbs=lemmatize_verbs,
-        lemmatize_objects=lemmatize_objects,
-        gephi_var=False,
-        google_earth_var=google_earth_var,
-    ))
+    return dispatch(
+        app,
+        lambda: run_svo(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            coref_var=coreferenceResolution,
+            manual_coref_var=manualCoreference,
+            normalized_NER_date_extractor_var=False,
+            package_var=package,
+            gender_var=so_gender,
+            quote_var=so_quote,
+            subjects_dict_path_var=False,
+            verbs_dict_path_var=False,
+            objects_dict_path_var=False,
+            filter_subjects=filter_subjects,
+            filter_verbs=filter_verbs,
+            filter_objects=filter_objects,
+            lemmatize_subjects=lemmatize_subjects,
+            lemmatize_verbs=lemmatize_verbs,
+            lemmatize_objects=lemmatize_objects,
+            gephi_var=False,
+            google_earth_var=google_earth_var,
+        ),
+    )
 
 
 @app.post("/wordcloud")
@@ -568,28 +603,31 @@ def wordcloud(
     intermediateWordcloudFiles: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_wordcloud(
-        "",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        visualization_tools=wordcloudservice,
-        prefer_horizontal=horizontal,
-        font=font_name,
-        max_words=maxNumberOfWords,
-        lemmatize=lemmas,
-        exclude_stopwords=stopwords,
-        exclude_punctuation=punctuation,
-        lowercase=lowercase_checkbox,
-        collocation=collocation,
-        differentPOS_differentColor=differentColorsByPOS,
-        prepare_image_var=prepareImage,
-        selectedImage="",
-        use_contour_only=imageContour,
-        differentColumns_differentColors=useColorsForCsvColumns,
-        csvField_color_list=csvField,
-        openOutputFiles=False,
-        doNotCreateIntermediateFiles=intermediateWordcloudFiles,
-    ))
+    return dispatch(
+        app,
+        lambda: run_wordcloud(
+            "",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            visualization_tools=wordcloudservice,
+            prefer_horizontal=horizontal,
+            font=font_name,
+            max_words=maxNumberOfWords,
+            lemmatize=lemmas,
+            exclude_stopwords=stopwords,
+            exclude_punctuation=punctuation,
+            lowercase=lowercase_checkbox,
+            collocation=collocation,
+            differentPOS_differentColor=differentColorsByPOS,
+            prepare_image_var=prepareImage,
+            selectedImage="",
+            use_contour_only=imageContour,
+            differentColumns_differentColors=useColorsForCsvColumns,
+            csvField_color_list=csvField,
+            openOutputFiles=False,
+            doNotCreateIntermediateFiles=intermediateWordcloudFiles,
+        ),
+    )
 
 
 @app.post("/ngrams")
@@ -613,32 +651,35 @@ def NGrams_CoOccurrences(
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
     csv_path = input_dir if csv_file_var else ""
-    return dispatch(app, lambda: run_ngrams(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        ngrams_options_list=ngrams_options_list,
-        Ngrams_compute_var=Ngrams_compute_var,
-        ngrams_menu_var=ngrams_menu_var,
-        ngrams_options_menu_var="",
-        ngrams_size=ngrams_size,
-        search_words=search_words,
-        minus_K_words_var=minus_K_words_var,
-        plus_K_words_var=plus_K_words_var,
-        Ngrams_search_var=Ngrams_search_var,
-        csv_file_var=csv_path,
-        ngrams_viewer_var=ngrams_viewer_var,
-        CoOcc_Viewer_var=CoOcc_Viewer_var,
-        date_options=date_options,
-        temporal_aggregation_var=temporal_aggregation_var,
-        viewer_options_list=viewer_options_list,
-        language_list=["English"],
-        config_input_output_numeric_options=[1, 0, 0, 1],
-        number_of_years=0,
-    ))
+    return dispatch(
+        app,
+        lambda: run_ngrams(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            ngrams_options_list=ngrams_options_list,
+            Ngrams_compute_var=Ngrams_compute_var,
+            ngrams_menu_var=ngrams_menu_var,
+            ngrams_options_menu_var="",
+            ngrams_size=ngrams_size,
+            search_words=search_words,
+            minus_K_words_var=minus_K_words_var,
+            plus_K_words_var=plus_K_words_var,
+            Ngrams_search_var=Ngrams_search_var,
+            csv_file_var=csv_path,
+            ngrams_viewer_var=ngrams_viewer_var,
+            CoOcc_Viewer_var=CoOcc_Viewer_var,
+            date_options=date_options,
+            temporal_aggregation_var=temporal_aggregation_var,
+            viewer_options_list=viewer_options_list,
+            language_list=["English"],
+            config_input_output_numeric_options=[1, 0, 0, 1],
+            number_of_years=0,
+        ),
+    )
 
 
 @app.post("/file_search")
@@ -658,28 +699,31 @@ def filesearchword(
     input_dir = os.path.expanduser(inputDirectory)
     extract = 1 if extract_sentences_var else 0
     co_occur = 1 if coOccurring_keywords_var else 0
-    return dispatch(app, lambda: run_search_byWord(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        search_options=search_options,
-        search_by_dictionary=search_by_dictionary,
-        selectedCsvFile=selectedCsvFile,
-        search_by_keyword=search_by_keyword,
-        search_keyword_values=search_keyword_values,
-        minus_K_words_sentences_var=minus_K_words_sentences_var,
-        plus_K_words_sentences_var=plus_K_words_sentences_var,
-        extract_sentences_var=extract,
-        coOccurring_keywords_var=co_occur,
-        create_subcorpus_var=0,
-        search_options_menu_var="",
-        search_options_list=[],
-        language_list=["English"],
-        language="English",
-    ))
+    return dispatch(
+        app,
+        lambda: run_search_byWord(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            search_options=search_options,
+            search_by_dictionary=search_by_dictionary,
+            selectedCsvFile=selectedCsvFile,
+            search_by_keyword=search_by_keyword,
+            search_keyword_values=search_keyword_values,
+            minus_K_words_sentences_var=minus_K_words_sentences_var,
+            plus_K_words_sentences_var=plus_K_words_sentences_var,
+            extract_sentences_var=extract,
+            coOccurring_keywords_var=co_occur,
+            create_subcorpus_var=0,
+            search_options_menu_var="",
+            search_options_list=[],
+            language_list=["English"],
+            language="English",
+        ),
+    )
 
 
 @app.post("/statistics")
@@ -692,18 +736,21 @@ def document_statistics(
     corpus_statistics_byPOS_var: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_statistics(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        corpus_statistics_options_menu_var=corpus_statistics_options_menu_var,
-        corpus_text_options_menu_var=corpus_text_options_menu_var,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        corpus_statistics_var=corpus_statistics_var,
-        corpus_statistics_byPOS_var=corpus_statistics_byPOS_var,
-    ))
+    return dispatch(
+        app,
+        lambda: run_statistics(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            corpus_statistics_options_menu_var=corpus_statistics_options_menu_var,
+            corpus_text_options_menu_var=corpus_text_options_menu_var,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            corpus_statistics_var=corpus_statistics_var,
+            corpus_statistics_byPOS_var=corpus_statistics_byPOS_var,
+        ),
+    )
 
 
 @app.post("/sentence_analysis")
@@ -717,23 +764,26 @@ def sentence_analysis(
     num_sentences: Annotated[int, Form()] = 1,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_sentence_analysis(
-        inputFilename="",
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=False,
-        chartPackage="Excel",
-        dataTransformation=dataTransformation,
-        compute_sentence_length_var=compute_sentence_length_var,
-        visualize_bySentenceIndex_var=False,
-        visualize_bySentenceIndex_options_var="",
-        script_to_run="",
-        IO_values="",
-        sentence_complexity_var=sentence_complexity_var,
-        text_readability_var=text_readability_var,
-        visualize_sentence_structure_var=visualize_sentence_structure_var,
-        num_sentences=num_sentences,
-    ))
+    return dispatch(
+        app,
+        lambda: run_sentence_analysis(
+            inputFilename="",
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=False,
+            chartPackage="Excel",
+            dataTransformation=dataTransformation,
+            compute_sentence_length_var=compute_sentence_length_var,
+            visualize_bySentenceIndex_var=False,
+            visualize_bySentenceIndex_options_var="",
+            script_to_run="",
+            IO_values="",
+            sentence_complexity_var=sentence_complexity_var,
+            text_readability_var=text_readability_var,
+            visualize_sentence_structure_var=visualize_sentence_structure_var,
+            num_sentences=num_sentences,
+        ),
+    )
 
 
 @app.post("/gis")
@@ -748,25 +798,28 @@ def gis(
     GIS_package_var: Annotated[str, Form()] = "",
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_GIS(
-        "",
-        input_dir,
-        OUTPUT_DIR,
-        False,
-        "Excel",
-        dataTransformation,
-        "",
-        NER_extractor,
-        "",
-        geocoder,
-        False,
-        country_bias_var,
-        area_var,
-        restrict_var,
-        "",
-        GIS_package_var,
-        False,
-    ))
+    return dispatch(
+        app,
+        lambda: run_GIS(
+            "",
+            input_dir,
+            OUTPUT_DIR,
+            False,
+            "Excel",
+            dataTransformation,
+            "",
+            NER_extractor,
+            "",
+            geocoder,
+            False,
+            country_bias_var,
+            area_var,
+            restrict_var,
+            "",
+            GIS_package_var,
+            False,
+        ),
+    )
 
 
 @app.post("/ner")
@@ -782,17 +835,20 @@ def ner(
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
     ner_list = [t.strip() for t in NER_list.split(",") if t.strip()]
-    return dispatch(app, lambda: run_NER(
-        inputFilename=inputFilename,
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=openOutputFiles,
-        chartPackage=chartPackage,
-        dataTransformation=dataTransformation,
-        config_filename=config_filename,
-        NER_package=NER_package,
-        NER_list=ner_list,
-    ))
+    return dispatch(
+        app,
+        lambda: run_NER(
+            inputFilename=inputFilename,
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=openOutputFiles,
+            chartPackage=chartPackage,
+            dataTransformation=dataTransformation,
+            config_filename=config_filename,
+            NER_package=NER_package,
+            NER_list=ner_list,
+        ),
+    )
 
 
 @app.post("/wordnet")
@@ -820,29 +876,32 @@ def wordnet(
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
     keyword_list = [k.strip() for k in wordNet_keyword_list.split(",") if k.strip()]
-    return dispatch(app, lambda: run_kg_wordnet(
-        inputFilename=inputFilename,
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=openOutputFiles,
-        chartPackage=chartPackage,
-        dataTransformation=dataTransformation,
-        csv_file=csv_file,
-        aggregate_POS_var=aggregate_POS_var,
-        noun_verb=noun_verb,
-        disaggregate_var=disaggregate_var,
-        wordNet_keyword_list=keyword_list,
-        annotate_file_var=annotate_file_var,
-        extract_proper_nouns=extract_proper_nouns,
-        extract_improper_nouns=extract_improper_nouns,
-        aggregate_lemmatized_var=aggregate_lemmatized_var,
-        extract_nouns_verbs_from_CoNLL_var=extract_nouns_verbs_from_CoNLL_var,
-        aggregate_bySentenceID_var=aggregate_bySentenceID_var,
-        dict_WordNet_filename_var=dict_WordNet_filename_var,
-        hidden_noun_lemma_csv=hidden_noun_lemma_csv,
-        hidden_verb_lemma_csv=hidden_verb_lemma_csv,
-        noun_verb_menu_var=noun_verb_menu_var,
-    ))
+    return dispatch(
+        app,
+        lambda: run_kg_wordnet(
+            inputFilename=inputFilename,
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=openOutputFiles,
+            chartPackage=chartPackage,
+            dataTransformation=dataTransformation,
+            csv_file=csv_file,
+            aggregate_POS_var=aggregate_POS_var,
+            noun_verb=noun_verb,
+            disaggregate_var=disaggregate_var,
+            wordNet_keyword_list=keyword_list,
+            annotate_file_var=annotate_file_var,
+            extract_proper_nouns=extract_proper_nouns,
+            extract_improper_nouns=extract_improper_nouns,
+            aggregate_lemmatized_var=aggregate_lemmatized_var,
+            extract_nouns_verbs_from_CoNLL_var=extract_nouns_verbs_from_CoNLL_var,
+            aggregate_bySentenceID_var=aggregate_bySentenceID_var,
+            dict_WordNet_filename_var=dict_WordNet_filename_var,
+            hidden_noun_lemma_csv=hidden_noun_lemma_csv,
+            hidden_verb_lemma_csv=hidden_verb_lemma_csv,
+            noun_verb_menu_var=noun_verb_menu_var,
+        ),
+    )
 
 
 @app.post("/stories")
@@ -862,22 +921,25 @@ def shape_of_stories(
     best_topic_estimation: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
-    return dispatch(app, lambda: run_shape_of_stories(
-        inputFilename=inputFilename,
-        inputDir=input_dir,
-        outputDir=OUTPUT_DIR,
-        openOutputFiles=openOutputFiles,
-        chartPackage=chartPackage,
-        dataTransformation=dataTransformation,
-        sentimentAnalysis=sentimentAnalysis,
-        sentimentAnalysisMethod=sentimentAnalysisMethod,
-        memory_var=memory_var,
-        corpus_analysis=corpus_analysis,
-        hierarchical_clustering=hierarchical_clustering,
-        SVD=SVD,
-        NMF=NMF,
-        best_topic_estimation=best_topic_estimation,
-    ))
+    return dispatch(
+        app,
+        lambda: run_shape_of_stories(
+            inputFilename=inputFilename,
+            inputDir=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=openOutputFiles,
+            chartPackage=chartPackage,
+            dataTransformation=dataTransformation,
+            sentimentAnalysis=sentimentAnalysis,
+            sentimentAnalysisMethod=sentimentAnalysisMethod,
+            memory_var=memory_var,
+            corpus_analysis=corpus_analysis,
+            hierarchical_clustering=hierarchical_clustering,
+            SVD=SVD,
+            NMF=NMF,
+            best_topic_estimation=best_topic_estimation,
+        ),
+    )
 
 
 @app.post("/excel_charts")
@@ -891,17 +953,20 @@ def excel_plotly_charts(
     data_transformation: Annotated[str, Form()] = "No transformation",
     inputFileData: Annotated[str, Form()] = "",
 ) -> PlainTextResponse:
-    return dispatch(app, lambda: run_excel_plotly_charts(
-        inputFilename=inputFilename,
-        outputDir=OUTPUT_DIR,
-        csv_field_visualization_var=csv_field_visualization_var,
-        X_axis_var=X_axis_var,
-        csv_file_field_Y_axis_list=csv_file_field_Y_axis_list,
-        charts_type_options=charts_type_options,
-        chart_package=chart_package,
-        data_transformation=data_transformation,
-        inputFileData=inputFileData,
-    ))
+    return dispatch(
+        app,
+        lambda: run_excel_plotly_charts(
+            inputFilename=inputFilename,
+            outputDir=OUTPUT_DIR,
+            csv_field_visualization_var=csv_field_visualization_var,
+            X_axis_var=X_axis_var,
+            csv_file_field_Y_axis_list=csv_file_field_Y_axis_list,
+            charts_type_options=charts_type_options,
+            chart_package=chart_package,
+            data_transformation=data_transformation,
+            inputFileData=inputFileData,
+        ),
+    )
 
 
 @app.post("/boxplot")
@@ -914,16 +979,19 @@ def boxplot(
     csv_field_boxplot_color_var: Annotated[str, Form()] = "",
     inputFileData: Annotated[str, Form()] = "",
 ) -> PlainTextResponse:
-    return dispatch(app, lambda: run_boxplot(
-        inputFilename=inputFilename,
-        outputDir=OUTPUT_DIR,
-        csv_field_visualization_var=csv_field_visualization_var,
-        points_var=points_var,
-        split_data_byCategory_var=split_data_byCategory_var,
-        csv_field_boxplot_var=csv_field_boxplot_var,
-        csv_field_boxplot_color_var=csv_field_boxplot_color_var,
-        inputFileData=inputFileData,
-    ))
+    return dispatch(
+        app,
+        lambda: run_boxplot(
+            inputFilename=inputFilename,
+            outputDir=OUTPUT_DIR,
+            csv_field_visualization_var=csv_field_visualization_var,
+            points_var=points_var,
+            split_data_byCategory_var=split_data_byCategory_var,
+            csv_field_boxplot_var=csv_field_boxplot_var,
+            csv_field_boxplot_color_var=csv_field_boxplot_color_var,
+            inputFileData=inputFileData,
+        ),
+    )
 
 
 @app.get("/settings")

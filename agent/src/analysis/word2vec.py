@@ -34,7 +34,6 @@ def run_word2vec(
     range20,
     ngramsDropDown,
 ):
-
     """Train Word2Vec embeddings on the corpus and visualize them."""
     config_filename = "NLP_default_IO_config.csv"
     scriptName = "word2vec.py"
@@ -61,9 +60,7 @@ def run_word2vec(
     elif WSI_var:
         label = "WSI"
 
-    Word2Vec_Dir = IO_files_util.make_output_subdirectory(
-        inputFilename, inputDir, outputDir, label=label, silent=True
-    )
+    Word2Vec_Dir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label=label, silent=True)
     logger.info("Word2vec directory")
     logger.info(Word2Vec_Dir)
     if Word2Vec_Dir == "":
@@ -108,13 +105,9 @@ def run_word2vec(
         s_paths = WSI_util.get_cluster_sentences(Word2Vec_Dir)
         v_paths = WSI_viz.sense_bar_chart(Word2Vec_Dir)
 
-        ngrams_menu_var = int(
-            ngramsDropDown.split("-")[0]
-        )  # TODO: needs to be between 1 and 4
+        ngrams_menu_var = int(ngramsDropDown.split("-")[0])  # TODO: needs to be between 1 and 4
         top_keywords_var = int(range20)  # TODO: change to between 5 to 20
-        k_paths = WSI_keyterms.get_keyterms(
-            Word2Vec_Dir, topn=top_keywords_var, ngram_range=(1, ngrams_menu_var)
-        )
+        k_paths = WSI_keyterms.get_keyterms(Word2Vec_Dir, topn=top_keywords_var, ngram_range=(1, ngrams_menu_var))
 
         filesToOpen = s_paths + v_paths + k_paths
 
