@@ -87,6 +87,18 @@ enough context to pick each one up later.
   \*integration-marked). The biggest gaps: sentiment, topic modeling, parse,
   word2vec, conll_table, svo, gis, wordcloud, ngrams, statistics.
 
+## UI / UX
+
+- **Permanently disabled controls** are scattered across several pages — they look
+  interactive but can never be clicked. Examples: UTF-8/ASCII encoding checkboxes
+  in `file_manager.html`, image-mask options in `wordclouds.html` (`prepareImage`,
+  `usePNGFile`, `imageContour`, `useColorsForCsvColumns`), `manualCoreference` and
+  `gephi_var` in `SVO.html`, `WordNet_var` in `CoNLL_table_analyzer_main.html`.
+  These are stubs from the desktop app for features not yet ported. They should
+  either be removed from the template or rendered as greyed-out "coming soon" items
+  with a tooltip explaining why. (JS-dependent disabling — e.g. `ner_tags` enabled
+  only when Stanford package is selected — is intentional and should stay.)
+
 ## Forks (corenlp/, mallet/) — no code changes by policy
 
 - `mallet/Dockerfile` installs unversioned `python3` + `fastapi`/`uvicorn`;
