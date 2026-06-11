@@ -5,171 +5,113 @@
 
 <div class="tool-container">
     <h1>Wordnet</h1>
-    {% csrf_token %}
+    <form method="post" class="wordnet-form">
+        {% csrf_token %}
 
-    <form method="post" class="wordnet"></form>
+        {% include "partials/io_directories.html" %}
 
-    {% include "partials/io_directories.html" %}
+        <fieldset class="form-section">
+            <legend>Input csv file</legend>
 
-    <fieldset class="form-section">
-        <legend>Zoom IN/DOWN</legend>
-
-        <div class="field">
-            <label for="input_csv_file">Select INPUT CSV file</label>
-            <input type="file" id="input_csv_file" name="input_csv_file">
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="zoom-in-related-words" name="zomm-in-related-words">
-                Zoom IN/DOWN to find related words
-            </label>
-        </div>
-        <div class="field-row sub-option">
             <div class="field">
-                <label for="top-level-synset">Top-Level Synset</label>
-                <select id="top-level-synset" name="top-level-synset" disabled>
-                    <option> act</option>
-                    <option> animal</option>
-                    <option> artifact</option>
+                <label for="csv_file">csv file path</label>
+                <input type="text" id="csv_file" name="csv_file" placeholder="~/nlp-suite/output/...csv">
+                <p class="field-help">Path to the csv file used by the csv-based options below (WordNet output file, lemma file, or CoNLL table, depending on the option).</p>
+            </div>
+
+            <div class="field">
+                <label for="noun_verb">Process nouns or verbs</label>
+                <select id="noun_verb" name="noun_verb">
+                    <option value="NOUN">NOUN</option>
+                    <option value="VERB">VERB</option>
                 </select>
             </div>
-            <div class="field">
+        </fieldset>
+
+        <fieldset class="form-section">
+            <legend>Zoom IN/DOWN</legend>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="zoom-in-related-words" name="disaggregate_var">
+                    Zoom IN/DOWN to find related words
+                </label>
+            </div>
+            <div class="field sub-option">
                 <label for="your-synset">Your synsets</label>
-                <input type="text" id="your-synset" name="your-synset" disabled>
+                <input type="text" id="your-synset" name="wordNet_keyword_list" disabled>
+                <p class="field-help">Comma-separated keywords (e.g. dog, cat) to expand via WordNet.</p>
             </div>
-        </div>
 
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="annotate-corpus-checkbox" name="annotate-corpus-checkbox">
-                Annotate corpus (using Wordnet csv output file from Zoom IN/DOWN)
-            </label>
-        </div>
-        <div class="field sub-option">
-            <input type="file" id="annotate-corpus-file" name="annotate-corpus-file" disabled>
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="extract-proper-noun-checkbox" name="extract-proper-noun-checkbox">
-                Extract PROPER nouns (using Wordnet csv output file from Zoom IN/DOWN)
-            </label>
-        </div>
-        <div class="field sub-option">
-            <input type="file" id="extract-proper-noun-from-csv" name="extract-proper-noun-from-csv" disabled>
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="extract-improper-noun-checkbox" name="extract-improper-noun-checkbox">
-                Extract IMPROPER nouns (using Wordnet csv output file from Zoom IN/DOWN)
-            </label>
-        </div>
-        <div class="field sub-option">
-            <input type="file" id="extract-improper-noun-from-csv" name="extract-improper-noun-from-csv" disabled>
-        </div>
-    </fieldset>
-
-    <fieldset class="form-section">
-        <legend>Zoom OUT/UP</legend>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="zoom-out-up" name="zoom-out-up">
-                Zoom OUT/UP (classify/aggregate lemmatized words in csv file)
-            </label>
-        </div>
-        <div class="field sub-option">
-            <input type="file" id="classify-aggregate-lemmatized-csv" name="classify-aggregate-lemmatized-csv" disabled>
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="extract-noun-verb-conll" name="extract-noun-verb-conll">
-                Extract nouns &amp; verbs from CoNLL table (for Zoom OUT/UP)
-            </label>
-        </div>
-        <div class="field sub-option">
-            <input type="file" id="extract-noun-verb-conll-csv" name="extract-noun-verb-conll-csv" disabled>
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="zoom-out-classify-aggregate-input" name="zoom-out-classify-aggregate-input">
-                Zoom OUT/UP (classify/aggregate input text documents by CoreNLP NOUN &amp; VERB POS) tags and WordNet NOUN &amp; VERB synsets
-            </label>
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="zoom-out-sentenceID" name="zoom-out-sentenceID">
-                Zoom OUT/UP by Sentence ID
-            </label>
-        </div>
-        <div class="field-row sub-option">
-            <div class="field">
-                <label for="zoom-out-sentenceID-csv">csv file with Sentence IDs</label>
-                <input type="file" id="zoom-out-sentenceID-csv" name="zoom-out-sentenceID-csv" disabled>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="annotate-corpus-checkbox" name="annotate_file_var">
+                    Annotate corpus (using Wordnet csv output file from Zoom IN/DOWN)
+                </label>
             </div>
-            <div class="field">
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="extract-proper-noun-checkbox" name="extract_proper_nouns">
+                    Extract PROPER nouns (using Wordnet csv output file from Zoom IN/DOWN)
+                </label>
+            </div>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="extract-improper-noun-checkbox" name="extract_improper_nouns">
+                    Extract IMPROPER nouns (using Wordnet csv output file from Zoom IN/DOWN)
+                </label>
+            </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+            <legend>Zoom OUT/UP</legend>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="zoom-out-up" name="aggregate_lemmatized_var">
+                    Zoom OUT/UP (classify/aggregate lemmatized words in csv file)
+                </label>
+            </div>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="extract-noun-verb-conll" name="extract_nouns_verbs_from_CoNLL_var">
+                    Extract nouns &amp; verbs from CoNLL table (for Zoom OUT/UP)
+                </label>
+            </div>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="zoom-out-classify-aggregate-input" name="aggregate_POS_var">
+                    Zoom OUT/UP (classify/aggregate input text documents by CoreNLP NOUN &amp; VERB POS tags and WordNet NOUN &amp; VERB synsets)
+                </label>
+                <p class="field-help">Uses the txt files in the input directory; requires Stanford CoreNLP.</p>
+            </div>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="zoom-out-sentenceID" name="aggregate_bySentenceID_var">
+                    Zoom OUT/UP by Sentence ID
+                </label>
+            </div>
+            <div class="field sub-option">
                 <label for="wordnet-classified-aggregated-csv">csv file of WordNet classified/aggregated words</label>
-                <input type="file" id="wordnet-classified-aggregated-csv" name="wordnet-classified-aggregated-csv" disabled>
+                <input type="text" id="wordnet-classified-aggregated-csv" name="dict_WordNet_filename_var" placeholder="~/nlp-suite/output/...csv" disabled>
+                <p class="field-help">The csv file path above must point to a CoNLL table for this option.</p>
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
 
-    <fieldset class="form-section">
-        <legend>Output &amp; visualization</legend>
+        <fieldset class="form-section">
+            <legend>Visualization</legend>
+            {% include "partials/data_transformation.html" %}
+        </fieldset>
 
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="open-output-files" name="open-output-files">
-                Do NOT open output files
-            </label>
-        </div>
-        <div class="field sub-option">
-            <select id="excel" name="excel">
-                <option value="no-charts">No Charts</option>
-                <option value="excel">Excel</option>
-                <option value="python-plotly-dynamic">Python Plotly Dynamic</option>
-                <option value="python-plotly-static">Python Plotly Static</option>
-            </select>
-        </div>
-
-        <div class="field field-check">
-            <label>
-                <input type="checkbox" id="python-opengui-barchart" name="python-opengui-barchart">
-                Python &amp; Excel / Open GUI Bar chart
-            </label>
-        </div>
-        <div class="field sub-option">
-            <select id="bar-chart-python-gui" name="bar-chart-python-gui">
-                <option value="excel">No Charts</option>
-                <option value="excel">Excel</option>
-                <option value="python-plotly-dynamic">Python Plotly Dynamic</option>
-                <option value="python-plotly-static">Python Plotly Static</option>
-                <option value="bubble-radar-scatterplot"> Bubble, Radar, Scatter Plots </option>
-                <option value="boxplot">Box Plot</option>
-                <option value="colormap"> Colormap </option>
-                <option value="compartive-bar-chart"> Comparative Bar Chart </option>
-                <option value="geographic-map"> Geographic Map </option>
-                <option value="gephi"> Gephi </option>
-                <option value="sanky-flowchart"> Sanky Flowchart </option>
-                <option value="sunburst-chart"> Sunburst Chart </option>
-                <option value="time-mapper"> Time Mapper </option>
-                <option value="tree-map-chart"> Tree Map Chart </option>
-                <option value="wordcloud"> Wordcloud </option>
-            </select>
-        </div>
-
-        {% include "partials/data_transformation.html" %}
-    </fieldset>
-
-    {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_WordNet.pdf" %}
-
-    <script src="{% static 'js/wordnet.js' %}"></script>
+        {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_WordNet.pdf" %}
+    </form>
 </div>
 
+<script src="{% static 'js/wordnet.js' %}"></script>
 <script src="{% static 'js/onlyone.js' %}"></script>
 {% endblock %}
