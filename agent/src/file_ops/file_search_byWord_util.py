@@ -18,7 +18,7 @@ import shutil  # for copy of files
 import charts_util
 import IO_csv_util
 import IO_files_util
-import stanza
+from model_cache import get_stanza_pipeline
 from util import collect
 
 logger = logging.getLogger(__name__)
@@ -127,7 +127,7 @@ def get_words_minus_K_plus_K(
 # not used
 def get_lemma(form_lemma_pair, lang, keyword):
     if keyword not in form_lemma_pair:
-        nlp = stanza.Pipeline(lang=lang, processors="tokenize, lemma")
+        nlp = get_stanza_pipeline(lang=lang, processors="tokenize, lemma")
         doc = nlp(keyword)
         lemma_value = doc.sentences[0].words[0].lemma
         form_lemma_pair[keyword] = lemma_value

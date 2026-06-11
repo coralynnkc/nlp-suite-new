@@ -18,7 +18,6 @@ import nltk
 import pandas
 import pandas as pd
 import reminders_util
-import spacy
 import stanza
 from app_constants import CORENLP_URL
 from autocorrect import Speller
@@ -26,6 +25,7 @@ from fuzzywuzzy import fuzz, process
 from IO_files_util import make_directory
 from langdetect import detect_langs
 from langid.langid import LanguageIdentifier, model
+from model_cache import get_spacy_model
 from pandas import DataFrame
 from pycorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 from spacy.language import Language
@@ -1368,9 +1368,10 @@ def language_detection(
             )
 
             # spaCY ----------------------------------------------------------
-            nlp_spacy = spacy.load("en_core_web_sm")
-            Language.factory("language_detector", func=get_lang_detector)
-            nlp_spacy.add_pipe("language_detector", last=True)
+            nlp_spacy = get_spacy_model("en_core_web_sm")
+            if "language_detector" not in nlp_spacy.pipe_names:
+                Language.factory("language_detector", func=get_lang_detector)
+                nlp_spacy.add_pipe("language_detector", last=True)
             try:
                 doc = nlp_spacy(text)
             except Exception:

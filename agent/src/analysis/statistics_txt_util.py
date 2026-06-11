@@ -57,7 +57,6 @@ from itertools import groupby
 import nltk
 import pandas as pd
 import sentence_complexity_node_util as Node
-import spacy
 import tree
 from nltk.draw import TreeView
 from nltk.tree import Tree
@@ -80,6 +79,7 @@ import IO_user_interface_util
 import reminders_util
 import statistics_csv_util
 import textstat
+from model_cache import get_spacy_model, get_stanza_pipeline
 from nltk.corpus import wordnet
 
 # https://github.com/nltk/nltk/wiki/Frequently-Asked-Questions-(Stackoverflow-Edition)
@@ -1117,8 +1117,9 @@ def process_words(
     # load the spaCy subjectivity pipeline once, not per sentence
     subjectivity_nlp = None
     if "Objectivity/subjectivity" in processType:
-        subjectivity_nlp = spacy.load("en_core_web_sm")
-        subjectivity_nlp.add_pipe("spacytextblob")
+        subjectivity_nlp = get_spacy_model("en_core_web_sm")
+        if "spacytextblob" not in subjectivity_nlp.pipe_names:
+            subjectivity_nlp.add_pipe("spacytextblob")
 
     for doc in inputDocs:
         head, tail = os.path.split(doc)
@@ -1957,7 +1958,7 @@ def sentence_structure_tree(inputFilename, outputDir, num_sentences):
 
     sentenceID = 0  # to store sentence index
 
-    spacy_nlp = spacy.load("en_core_web_sm")
+    spacy_nlp = get_spacy_model("en_core_web_sm")
 
     for sent in sentences:
         sentenceID = sentenceID + 1
@@ -2058,13 +2059,13 @@ def compute_sentence_complexity(
         "Document",
     ]
     try:
-        nlp = stanza.Pipeline(lang="en", processors="tokenize,pos,constituency", use_gpu=False)
+        nlp = get_stanza_pipeline(lang="en", processors="tokenize,pos,constituency", use_gpu=False)
     except Exception:
         import subprocess
         import sys
 
         subprocess.check_call([sys.executable, "-m", "pip", "install", "stanza==1.4.0"])
-        nlp = stanza.Pipeline(lang="en", processors="tokenize,pos,constituency", use_gpu=False)
+        nlp = get_stanza_pipeline(lang="en", processors="tokenize,pos,constituency", use_gpu=False)
     op = pd.DataFrame(columns=columns)
     for idx, txt in enumerate(all_input_docs.items()):
         doc = nlp(txt[1])
