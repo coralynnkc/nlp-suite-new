@@ -134,6 +134,30 @@ fieldset.form-section legend {
   color: rgba(15, 23, 42, 0.70);
 }
 
+.field input[type="file"]::file-selector-button {
+  height: 32px;
+  padding: 0 14px;
+  margin-right: 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  transition: background 0.15s ease;
+}
+
+.field input[type="file"]::file-selector-button:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.field input[type="file"]:disabled::file-selector-button {
+  background: rgba(15, 23, 42, 0.06);
+  color: rgba(15, 23, 42, 0.40);
+  cursor: not-allowed;
+}
+
 .field input[type="range"] {
   accent-color: #2563eb;
   vertical-align: middle;
@@ -208,7 +232,6 @@ input[type="checkbox"]:disabled {
   line-height: 1.55;
   color: rgba(15, 23, 42, 0.55);
   margin: 6px 0 0;
-  max-width: 62ch;
 }
 
 details.field-more {
