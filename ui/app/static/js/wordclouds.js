@@ -1,11 +1,8 @@
 function toggleForService(){
     var worldCloudService = document.getElementById("wordcloud_service");
     var numberOfWords = document.getElementById("maxNumberOfWords");
-    var imagePrepare = document.getElementById("prepareImage");
-    var imageSelectPNG = document.getElementById("usePNGFile");
-    var inputImage = document.getElementById("PNGinput");
-    var imageContour = document.getElementById("imageContour");
     var horizontalButton = document.getElementById("horizontal");
+    // image-mask options are permanently disabled (coming soon) and not toggled here
 
     //gonna loop through this cause theres so many
     var listofElements = ['stopwords', 'lemmas', 'punctuation', 'lowercase_checkbox', 'collocation', 'differentColorsByPOS'];
@@ -22,18 +19,10 @@ function toggleForService(){
     
     if(worldCloudService.value !== "Python WordCloud"){
         numberOfWords.disabled = true;
-        imagePrepare.disabled = true;
-        imageSelectPNG.disabled = true;
-        inputImage.disabled = true;
-        imageContour.disabled = true;
         horizontalButton.disabled = true;
     }
     else{
         numberOfWords.disabled = false;
-        imagePrepare.disabled = false;
-        imageSelectPNG.disabled = false;
-        inputImage.disabled = false;
-        imageContour.disabled = false;
         horizontalButton.disabled = false;
     }
 }
