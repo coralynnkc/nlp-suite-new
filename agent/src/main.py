@@ -1,5 +1,7 @@
+import logging
 import os
 import sys
+import traceback
 from collections.abc import Callable
 from threading import Lock, Thread
 from typing import Annotated
@@ -90,6 +92,12 @@ app.add_middleware(
 _worker_lock = Lock()
 app.worker = False
 
+logger = logging.getLogger(__name__)
+
+# Error message from the most recently finished job, or None if it succeeded.
+# Read by /status so the UI can tell "done" apart from "crashed".
+_job_state: dict = {"last_error": None}
+
 # Paths that never trigger background jobs and must not participate in lock management.
 _LOCK_EXEMPT_PATHS = {"/settings", "/status"}
 
@@ -97,6 +105,10 @@ _LOCK_EXEMPT_PATHS = {"/settings", "/status"}
 def run(app, method):
     try:
         method()
+        _job_state["last_error"] = None
+    except Exception as exc:
+        _job_state["last_error"] = f"{type(exc).__name__}: {exc}"
+        logger.error("Background job failed:\n%s", traceback.format_exc())
     finally:
         app.worker = False
         _worker_lock.release()
@@ -127,8 +139,8 @@ async def single_runner(request: Request, call_next):
 
 
 @app.get("/status")
-def status() -> PlainTextResponse:
-    return PlainTextResponse("", status_code=200)
+def status() -> JSONResponse:
+    return JSONResponse({"busy": app.worker, "last_error": _job_state["last_error"]})
 
 
 @app.post("/file_manager")
