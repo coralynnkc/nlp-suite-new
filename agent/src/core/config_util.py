@@ -504,9 +504,6 @@ def check_missing_IO(
     if config_filename == "NLP_config.csv" or "NLP_menu_main" in scriptName:
         config_filename = "NLP_default_IO_config.csv"
     Run_Button_Off = False
-    if config_filename == "social-science-research_config.csv":
-        Run_Button_Off = False
-        missing_IO = ""
     if Run_Button_Off:
         run_button_state = "disabled"
     else:
