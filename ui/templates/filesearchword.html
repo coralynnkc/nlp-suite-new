@@ -1,135 +1,112 @@
 {% extends 'index.html' %}
 
 {% block content %}
-{%load static%}
+{% load static %}
 
-<div class="sentiment-analysis-container">
+<div class="tool-container">
 <h1>File Search: Words</h1>
     <form method="POST" class="sentiment-analysis-form" action="{% url 'file_search' %}">
     {% csrf_token %}
-    
-    <div class="form-row">
-            <label for="inputDirectory">Input Directory:</label>
-            <div class="io-hover"><!--- using div to preserve format issues.-->
-                <select name="inputDirectory" id="inputDirectory">
-                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
-                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+
+    {% include "partials/io_directories.html" %}
+
+    <fieldset class="form-section">
+        <legend>Search options</legend>
+
+        <div class="field">
+            <label for="search_options">Search options</label>
+            <div class="options">
+                <select id="search_options" name="search_options">
+                    <option value="caseSensitive">Case sensitive (Default)</option>
+                    <option value="caseInsensitive">Case insensitive</option>
+                    <option value="lemmatize">Lemmatize</option>
+                    <option value="exactMatch">Exact match (Default)</option>
+                    <option value="partialMatch">Partial match</option>
+                    <option value="searchSentence">Search within sentence (Default)</option>
+                    <option value="searchDocument">Search within document</option>
                 </select>
-                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
-                    more specifics on how to access these folders.
-                </span>
+                <input type="button" name="search-options-+" value="+">
+                <input type="button" name="search-options-show" value="-">
+                <input type="button" name="search-options-reset" value="Reset">
             </div>
-    </div>
+            <p class="field-help">Click + to add an option to the selected list, - to remove the highlighted one, Reset to start over.</p>
+        </div>
 
-    <div class = "form-row">
-        <label for="outputDirectory">Output Directory:</label>
-        <input type="text" name="outputDirectory" value="~/nlp-suite/output"/>
-    </div>
-    <div class="form-row">
+        <div id="optionPicked" class="field">
+            <label for="optionss">Selected</label>
+            <select id="optionss" name="options"></select>
+        </div>
 
-        <label for="search_options" style="margin-right: 10px;">Search options</label>
-    
-        <select id="search_options" name="search_options">
-            <option value="caseSensitive">Case sensitive (Default)</option>
-            <option value="caseInsensitive">Case insensitive</option>
-            <option value="lemmatize">Lemmatize</option>
-            <option value="exactMatch">Exact match (Default)</option>
-            <option value="partialMatch">Partial match</option>
-            <option value="searchSentence">Search within sentence (Default)</option>
-            <option value="searchDocument">Search within document</option>
-        </select>
-    
-        <!-- <button id="plus"style="margin-right: 10px; padding: 5px 10px;">+</button>
-        <button id="reset" style="margin-right: 10px; padding: 5px 10px;">Reset</button>
-        <button id="show" style="padding: 5px 10px;">Show</button> -->
+        <input type="hidden" id="search_options_hidden_list" name="search_options" value="">
+    </fieldset>
 
-        <input type="button" name="search-options-+" value="+">&nbsp;
-        <input type="button" name="search-options-show" value="-">&nbsp;
-        <input type="button" name="search-options-reset" value="Reset">
-    </div>    
+    <fieldset class="form-section">
+        <legend>Search by</legend>
 
+        <div class="field field-check">
+            <label>
+                <input type="checkbox" id="search_by_dictionary" name="search_by_dictionary">
+                Search corpus by dictionary value
+            </label>
+        </div>
+        <div class="field sub-option">
+            <label for="selectedCsvFile">Dictionary file</label>
+            <div class="options">
+                <button type="button" id="selectDictionaryFile" onclick="document.getElementById('csvFile').click();">Select dictionary file</button>
+                <input type="file" id="file" name="file" accept=".csv" style="display: none;" onchange="document.getElementById('fileName').value = this.value;">
+                <input type="text" id="selectedCsvFile" name="selectedCsvFile" placeholder="No file selected" value="">
+            </div>
+        </div>
 
-    <div id="optionPicked" class="options">
-        <label for="options">Selected </label>&nbsp;
-        <select id="optionss" name="options"></select>
-    </div>
+        <div class="field field-check">
+            <label>
+                <input type="checkbox" id="search_by_keyword" name="search_by_keyword">
+                Search corpus by word(s)
+            </label>
+        </div>
+        <div class="field sub-option">
+            <label for="search_keyword_values">Search term</label>
+            <input type="text" id="search_keyword_values" name="search_keyword_values" placeholder="Enter your search term" value="">
+        </div>
+        <div class="field-row sub-option">
+            <div class="field">
+                <label for="minus_K_words_sentences_var">-K</label>
+                <input type="number" id="minus_K_words_sentences_var" name="minus_K_words_sentences_var" value="0">
+            </div>
+            <div class="field">
+                <label for="plus_K_words_sentences_var">+K</label>
+                <input type="number" id="plus_K_words_sentences_var" name="plus_K_words_sentences_var" value="0">
+            </div>
+        </div>
 
-    <input type="hidden" id="search_options_hidden_list" name="search_options" value="">
+        <div class="field-row">
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="extract_sentences_var" name="extract_sentences_var">
+                    Extract sentences
+                </label>
+            </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="coOccurring_keywords_var" name="coOccurring_keywords_var">
+                    Co-occurring words
+                </label>
+            </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="create_subcorpus_var" name="create_subcorpus_var">
+                    Create sub corpus
+                </label>
+            </div>
+        </div>
+    </fieldset>
 
+    <fieldset class="form-section">
+        <legend>Visualization</legend>
+        {% include "partials/data_transformation.html" %}
+    </fieldset>
 
-    <div class="form-row">
-        <label>
-            <input type="checkbox" id="search_by_dictionary" name="search_by_dictionary">
-            Search corpus by dictionary value
-        </label>
-    </div>
-    <div class="form-row" >
-        <!-- Button to upload a CSV file -->
-        <label for="selectDictionaryFile" style="margin-right: 10px;">
-            <button type="button" id="selectDictionaryFile" onclick="document.getElementById('csvFile').click();" >Select dictionary file</button>
-        </label>
-    
-        <input type="file" id="file" name="file" accept=".csv" style="display: none;" onchange="document.getElementById('fileName').value = this.value;">
-    
-        <input type="text" id="selectedCsvFile" name="selectedCsvFile" placeholder="No file selected" style="flex-grow: 1;"value = "">
-    </div>
-    <div class="form-row" style="display: flex; align-items: center;">
-        <label>
-            <input type="checkbox" id="search_by_keyword" name="search_by_keyword">
-            Search corpus by word(s)
-        </label>
-    
-        <!-- Input text field for user input -->
-        <input type="text" id="search_keyword_values" name="search_keyword_values" placeholder="Enter your search term" style="flex-grow: 1; margin-left: 10px;" value="">
-    
-        <label for="minus_K_words_sentences_var" style="margin-left: 10px;">-K</label>
-        <input type="number" id="minus_K_words_sentences_var" name="minus_K_words_sentences_var" value="0" style="width: 40px; margin-left: 5px;" >
-    
-        <label for="plus_K_words_sentences_var" style="margin-left: 10px;">+K</label>
-        <input type="number" id="plus_K_words_sentences_var" name="plus_K_words_sentences_var" value="0" style="width: 40px; margin-left: 5px;" >
-        
-    </div>
-    <div class="form-row">
-        <label>
-            <input type="checkbox" id="extract_sentences_var" name="extract_sentences_var">
-            Extract Sentences
-        </label>
-        <label>
-            <input type="checkbox" id="coOccurring_keywords_var" name="coOccurring_keywords_var">
-            Co-Occurring Words 
-        </label>
-        <label>
-            <input type="checkbox" id="create_subcorpus_var" name="create_subcorpus_var" >
-            Create Sub corpus
-        </label>
-    </div>
-    
-    <div class="form-row">
-            <label for="dataTransformation">Transformation:</label>
-            <select id="dataTransformation" name="dataTransformation">
-                <option value="No transformation">No transformation</option>
-                <option value="Ln">Ln</option>
-                <option value="Log">Log</option>
-                <option value="Square">Square root</option>
-                <option value="Z score">Z score</option>
-            </select>
-    </div>
-    
-    <div class="buttons-section">
-        <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
-
-        <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
-
-            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Sentiment%20analysis.pdf" target ="_blank" rel="noopener noreferrer"
-            class = "tipsfile-button">
-                <div class = "tipsfile-mask">
-                    <div class = "tipsfile-glow"></div>
-                </div>
-                Tips File
-            </a>
-
-        <button type="submit" class="run-button" onclick="return submitbutton2();">Run</button>
-    </div>
+    {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Sentiment%20analysis.pdf" run_onclick="return submitbutton2();" %}
 </form>
 </div>
 

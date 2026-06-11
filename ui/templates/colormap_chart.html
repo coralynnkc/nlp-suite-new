@@ -2,119 +2,91 @@
 {% block content %}
 {% load static %}
 
-<div class="sentiment-analysis-container">
+<div class="tool-container">
    <h1>Color and Heat Map Charts</h1>
    <form method="post" class="sentiment-analysis-form" action="{% url 'colormap' %}">
        {% csrf_token %}
 
-       <div class="form-row">
-            <label for="inputDirectory">Input Directory:</label>
-            <div class="io-hover"><!--- using div to preserve format issues.-->
-                <select name="inputDirectory" id="inputDirectory">
-                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
-                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
-                </select>
-                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
-                    more specifics on how to access these folders.
-                </span>
-            </div>
-        </div>
-        
-       <div class="form-row">
-           <label for="outputDirectory">Output Directory:</label>
-           <input type="text" name="outputDirectory" value="~/nlp-suite/output" />
-       </div>
+        {% include "partials/io_directories.html" %}
 
-       <div class="form-row">
-           <label for="search_field">Search field</label>
-           <input type="file" id="colormap_file_input" name="colormap_file_input" accept=".csv" required>
-           <select id="search_field" name="search_field">
-               <option value="" disabled selected>Select a field</option>
-           </select>
-           <button type="button" id="add_search_field" class="action-button">+</button>
-           <button type="button" id="reset_search_field" class="action-button">Reset</button>
+        <fieldset class="form-section">
+            <legend>Chart data</legend>
 
-           <div id="selected_fields_container" style="margin-top: 10px;">
-               <label>Selected Fields:</label>
-               <div id="selected_fields_list"></div>
-           </div>
-       </div>
-
-       <input type="hidden" name="csv_file_categorical_field_list_front" id="csv_file_categorical_field_list_front">
-       <input type="hidden" name="file_data" id="file_data">
-       
-       <div class="form-row">
-           <label>
-               Search Values
-               <span class="tooltip">
-                   <span class="tooltiptext">
-                       Enter a comma-separated list of specific words or values for the selected Column/Search Field (minimum of 3). (e.g., the, three, little, pigs)
-                   </span>
-               </span>
-               <input type="text" id="keywordInput" name="keywordInput" autocomplete="off" style="position: relative;">
-               <div id="suggestion_dropdown" class="suggestion-dropdown"></div>
-           </label>
-           <div class="form-row">
-               <button type="button" id="add_pair_button">Add Pair</button>
-           </div>
-       </div>
-       <div class="form-row">
-           <div class="form-row">
-               <label for="saved_pairs">Saved Pairs:</label>
-               <div id="saved_pairs_container"></div>
-           </div>
-       </div>
-
-       <div class="form-row">
-           <label for="max_number_of_rows">Max no. of rows</label>
-           <input type="number" value="20" id="max_number_of_rows" name="max_number_of_rows">
-       </div>
-
-       <div class="form-row">
-           <div class="color-picker-container">
-               <label for="less_freq_color_picker">Choose less frequent occurrence(s) color</label>
-               <input type="color" id="less_freq_color_picker" name="less_freq_color_picker" class="color-picker" value="#000000">
-           </div>
-
-           <div class="color-picker-container">
-               <label for="more_freq_color_picker">Choose more frequent occurrence(s) color</label>
-               <input type="color" id="more_freq_color_picker" name="more_freq_color_picker" class="color-picker" value="#000000">
-           </div>
-       </div>
-
-       <div class="form-row">
-           <label for="normalize">Normalize</label>
-           <select id="normalize" name="normalize">
-               <option value="no_transform">No transform</option>
-               <option value="min-max">Min-Max</option>
-               <option value="z-score">Z-score</option>
-               <option value="square_root">Square root</option>
-               <option value="log">Log</option>
-               <option value="ln">Ln</option>
-           </select>
-       </div>
-
-       <div class="buttons-section">
-           <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
-
-
-           <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
-
-            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Colormap-heatmap.pdf" target ="_blank" rel="noopener noreferrer"
-            class = "tipsfile-button">
-                <div class = "tipsfile-mask">
-                    <div class = "tipsfile-glow"></div>
+            <div class="field">
+                <label for="colormap_file_input">Search field</label>
+                <div class="options">
+                    <input type="file" id="colormap_file_input" name="colormap_file_input" accept=".csv" required>
+                    <select id="search_field" name="search_field">
+                        <option value="" disabled selected>Select a field</option>
+                    </select>
+                    <button type="button" id="add_search_field" class="action-button">+</button>
+                    <button type="button" id="reset_search_field" class="action-button">Reset</button>
                 </div>
-                Tips File
-            </a>
+                <div id="selected_fields_container">
+                    <label>Selected Fields:</label>
+                    <div id="selected_fields_list"></div>
+                </div>
+            </div>
 
-           <button type="submit" class="run-button">Run</button>
-       </div>
+            <input type="hidden" name="csv_file_categorical_field_list_front" id="csv_file_categorical_field_list_front">
+            <input type="hidden" name="file_data" id="file_data">
+
+            <div class="field">
+                <label for="keywordInput">Search Values</label>
+                <input type="text" id="keywordInput" name="keywordInput" autocomplete="off">
+                <div id="suggestion_dropdown" class="suggestion-dropdown"></div>
+                <p class="field-help">Enter a comma-separated list of specific words or values for the selected Column/Search Field (minimum of 3), e.g.: the, three, little, pigs.</p>
+            </div>
+            <div class="field">
+                <button type="button" id="add_pair_button">Add Pair</button>
+            </div>
+            <div class="field">
+                <label for="saved_pairs">Saved Pairs:</label>
+                <div id="saved_pairs_container"></div>
+            </div>
+
+            <div class="field">
+                <label for="max_number_of_rows">Max no. of rows</label>
+                <input type="number" value="20" id="max_number_of_rows" name="max_number_of_rows">
+            </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+            <legend>Colors &amp; scaling</legend>
+
+            <div class="field-row">
+                <div class="field">
+                    <div class="color-picker-container">
+                        <label for="less_freq_color_picker">Choose less frequent occurrence(s) color</label>
+                        <input type="color" id="less_freq_color_picker" name="less_freq_color_picker" class="color-picker" value="#000000">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="color-picker-container">
+                        <label for="more_freq_color_picker">Choose more frequent occurrence(s) color</label>
+                        <input type="color" id="more_freq_color_picker" name="more_freq_color_picker" class="color-picker" value="#000000">
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="normalize">Normalize</label>
+                <select id="normalize" name="normalize">
+                    <option value="no_transform">No transform</option>
+                    <option value="min-max">Min-Max</option>
+                    <option value="z-score">Z-score</option>
+                    <option value="square_root">Square root</option>
+                    <option value="log">Log</option>
+                    <option value="ln">Ln</option>
+                </select>
+            </div>
+        </fieldset>
+
+        {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_Charts%20-%20Colormap-heatmap.pdf" %}
    </form>
 </div>
 
 
-<!-- JavaScript for Dynamic Functionality -->
 <script src="{% static 'js/colormap_chart.js' %}"></script>
 <script src="{% static 'js/onlyone.js' %}"></script>
 
