@@ -1,283 +1,157 @@
 {% extends 'index.html' %}
 
 {% block content %}
-{%load static %}
-<div class="sentiment-analysis-container">
-    <h1>SVO  (Subject-Verb-Object) extractor & visualization</h1>
-    <form method="post" class ="sentiment-analysis-form" action = "{% url 'svo' %}">
+{% load static %}
+<div class="tool-container">
+    <h1>SVO (Subject-Verb-Object) extractor &amp; visualization</h1>
+    <form method="post" class="sentiment-analysis-form" action="{% url 'svo' %}">
     {% csrf_token %}
 
-    <div class="form-row">
-        <span class="tooltip">
-            <span class="tooltiptext forupper">
-               Please, select either a txt file to be analyzed and extract SVO triplets from it, or a csv file of previously extracted SVOs if all you want to do is to visualize the previously computed results.
-            </span>
-        </span>
-            <label for="inputDirectory">Input Directory:</label>
-            <div class="io-hover"><!--- using div to preserve format issues.-->
-                <select name="inputDirectory" id="inputDirectory">
-                    <option value="~/nlp-suite/input" selected>~/nlp-suite/input</option>
-                    <option value="~/nlp-suite/csvInput">~/nlp-suite/csvInput</option>
+        {% include "partials/io_directories.html" %}
+
+        <fieldset class="form-section">
+            <legend>Coreference resolution</legend>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="coreferenceResolution" name="coreferenceResolution">
+                    Coreference resolution, PRONOMINAL (via Stanford CoreNLP - Neural Network)
+                </label>
+                <p class="field-help">Resolves pronouns to the nouns they refer to before extracting SVOs. Be patient: depending on the size and number of documents, this may take a long time.</p>
+                <details class="field-more">
+                    <summary>More about coreference resolution</summary>
+                    <div class="more-body">
+                        <p>Only pronominal, and not nominal, coreference resolution is implemented, for four different types of pronouns: nominative (I, you, he/she, it, we, they); possessive (my, mine, our(s), his/her(s), their, its, yours); objective (me, you, him, her, it, them); reflexive (myself, yourself, himself, herself, oneself, itself, ourselves, yourselves, themselves).</p>
+                        <p>In INPUT the algorithm expects a single txt file or a directory of txt files. In OUTPUT it produces txt-format copies of the same input files, co-referenced.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="field field-check sub-option">
+                <label>
+                    <input type="checkbox" id="manualCoreference" name="manualCoreference" disabled>
+                    Manually edit coreferenced document
+                </label>
+                <p class="field-help">Fix missed or wrongly coreferenced pronouns by hand. Only available when coreferencing a single input document.</p>
+                <details class="field-more">
+                    <summary>More about manual editing</summary>
+                    <div class="more-body">
+                        <p>If manual edit is selected, the script displays a split-screen file for manual editing. On the left-hand side, pronouns cross-referenced by CoreNLP are tagged in YELLOW; pronouns NOT cross-referenced by CoreNLP are tagged in BLUE. On the right-hand side, pronouns cross-referenced by CoreNLP are tagged in RED, with the pronouns replaced by the referenced nouns.</p>
+                        <p>Manual editing requires a lot of memory since both original and co-referenced file are brought in memory; depending on file sizes, you may not have enough memory for this step. You can always use the 'coreference_main' GUI to open or split merged coreferenced files.</p>
+                    </div>
+                </details>
+            </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+            <legend>Extraction</legend>
+
+            <div class="field">
+                <label for="package">SVO package</label>
+                <select id="package" name="package">
+                    <option value="spaCy">spaCy</option>
+                    <option value="Stanford CoreNLP" selected>Stanford CoreNLP</option>
+                    <option value="stanza">Stanza</option>
+                    <option value="openIE">OpenIE (via Stanford CoreNLP)</option>
                 </select>
-                <span class="dropdowntext">Mac users, the folder is located in your home folder. For Windows users, they're in your Users: folder. See the NLP-Suite GitHub runner for
-                    more specifics on how to access these folders.
-                </span>
+                <p class="field-help">NLP package used to extract SVO triplets from your corpus.</p>
             </div>
-    </div>
-    
-    <div class = "form-row">
-        <span class="tooltip">
-            <span class="tooltiptext forupper">
-                Please, select the directory where the script will save all OUTPUT files of any type (txt, csv, png, html).
-                MOST GUI SCRIPTS WILL ORGANIZE OUTPUT FILES IN SPECIFIC SUBDIRECTORIES INSIDE THE MAIN OUTPUT DIRECTORY SELECTED HERE (e.g., the SVO GUI will create several subdirectories: GIS, SVO, SVO-filtered, SVO-unfiltered, SVO-lemma, WordNet).          
-            </span>
-        </span>
-        <label for="outputDirectory">Output Directory:</label>
-        <input type="text" name="outputDirectory" value="~/nlp-suite/output"/>
-    </div>
 
-    
-
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext forupper">
-                    Please, tick the checkbox to run the Stanford CoreNLP coreference resolution annotator using the Neural Network approach.
-                    Only pronominal, and not nominal, coreference resolution is implemented for four different types of PRONOUNS:
-                    nominative: I, you, he/she, it, we, they;
-                    possessive: my, mine, our(s), his/her(s), their, its, yours;
-                    objective: me, you, him, her, it, them;
-                    reflexive: myself, yourself, himself, herself, oneself, itself, ourselves, yourselves, themselves.
-                    Please, BE PATIENT. Depending upon size and number of documents to be coreferenced the algorithm may take a long a time.
-                    In INPUT the algorithm expects a single txt file or a directory of txt files.
-                    In OUTPUT the algorithm will produce txt-format copies of the same input txt files but co-referenced.
-
-                    <!-- # right below = hover over? -->
-                    Tick the checkbox to run the pronominal coreference resolution and run the SVO extractor on coreferenced files.
-                </span>
-            </span>
-            <label>
-                <input type="checkbox" id="coreferenceResolution" name="coreferenceResolution" unchecked>
-                Coreference Resolution, PRONMINAL (via Stanford CoreNLP - Neural Network)
-            </label>
-        </div>
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext forupper">
-                    Please, tick the checkbox if you wish to resolve manually cases of unresolved or wrongly resolved coreferences.
-                    The option is not available when processing a directory of files. You can always use the 'coreference_main' GUI to
-                    1. open a merged coreferenced file;
-                    2. split merged coreferenced files.
-                    If manual edit is selected, the script will also display a split-screen file for manual editing. On the left-hand side, pronouns cross-referenced by CoreNLP are tagged in YELLOW; pronouns NOT cross-referenced by CoreNLP are tagged in BLUE. On the right-hand side, pronouns cross-referenced by CoreNLP are tagged in RED, with the pronouns replaced by the referenced nouns.\n\nMANUAL EDITING REQUIRES A LOT OF MEMORY SINCE BOTH ORIGINAL AND CO-REFERENCED FILE ARE BROUGHT IN MEMORY. DEPENDING UPON FILE SIZES, YOU MAY NOT HAVE ENOUGH MEMORY FOR THIS STEP.
-
-                    <!-- hover over? -->
-                    Tick the checkbox to manually edit a coreferenced file fixing missed (or wrongly) coreferenced pronouns. Manual coreference is available only when coreferencing a single input document.
-                </span>
-            </span>
-            <label>
-                <input type="checkbox" id="manualCoreference" name="manualCoreference" disabled>
-                Manually edit coreferenced document
-            </label>
-        </div>
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, using the dropdown menu, select the NLP package to be used to extract SVOs from your corpus.
-                </span>
-            </span>
-            <label for="algorithm">SVO package:</label>
-            <span class="dropdown">
-            <select id="package" name="package">
-                <option value="spaCy">spaCy</option>
-                <option value="Stanford CoreNLP" selected>Stanford CoreNLP</option>
-                <option value="stanza">Stanza</option>
-                <option value="openIE">OpenIE (via Stanford CoreNLP)</option>
-            </select>
-                <span class="dropdowntext">
-                Use the dropdown menu to select the NLP package you wish to use to extract SVO information from your corpus.
-                </span>
-            </span>
-        </div>
-
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                   The three widgets display the currently selected dictionary filter files for Subjects, Verbs, and Objects (Objects share the same file as Subjects and you may wish to change that).
-                   The filter file social-actor-list, created via WordNet with the multiple keywords act, group, person and saved in the \'lib/wordLists\' subfolder, will be automatically set as the DEFAULT filter for subjects (Press ESCape to clear selection); the file \'social-action-list.csv\' is similarly created via WordNet using multiple keywords (change, cognition, communication, contact, emotion, motion, social), saved in the \'lib/wordLists\' subfolder, and automatically loaded as the DEFAULT dictionary file for verbs.
-                   The widgets are disabled because you are not allowed to tamper with these values. If you wish to change a selected file, please tick the appropriate checkbox in the line above (e.g., Filter Subject) and you will be prompted to select a new file.
-                </span>
-            </span>
-             Upload csv file containing SUBJECT filters:
-            <input type="text" value="~/nlp-suite/input"  readonly>
-         </div>
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the 'Lemmatize' checkboxes to produce lemmatized subjects. When SVOs are lemmatized, the algorithm will aggregate the Subjects into WordNet top synset categories (e.g., 'run' into 'motion').
-                    Tick the 'Filter' checkboxes to filter all SVO extracted triplets for Subjects via dictionary filter files.
-                    <!-- Dictionary filter files can be created via WordNet and saved in the \'lib/wordLists\' subfolder.
-                    For instance, you can filter SVO by social actors and social action. In fact, the file \'social-actor-list.csv\', created via WordNet with multiple keywords (act, group, person) and saved in the \'lib/wordLists\' subfolder, will be automatically loaded as the DEFAULT dictionary file (Press ESCape to clear selection); the file \'social-action-list.csv\' is similarly created via WordNet using multiple keywords (change, cognition, communication, contact, emotion, motion, social), saved in the \'lib/wordLists\' subfolder, and automatically loaded as the DEFAULT dictionary file for verbs.
-                    When working on folktales, animals, or even plants, may also act and speak. You may use the animal_list.csv filter file, based on the multiple multiple keywords (act, group, person, animal) or (act, group, person, animal, plants) and saved in the \'lib/wordLists\' subfolder.
-                    You can edit these lists, adding and deleting entries at any time, using any text editor.
-                    WordNet produces thousands of entries for nouns and verbs. For more limited domains, you way want to pair down the number to a few hundred entries.
-                    FILTER FILES BASED ON WordNet MUST CONTAIN LEMMATIZED ENTRIES, SINCE WordNet IS BASED ON LEMMATIZED ENTRIES. -->
-                </span>
-            </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="lemmatize_subjects" name="lemmatize_subjects" checked>Lemmatize</label>
-            <span class="dropdowntext">
-                    When lemmatizing subjects, WordNet will be used to aggregate subjects into top synsets noun categories.
-            </span>
-            </span>
-
-            <span class="dropdown">
-            <label><input type="checkbox" id="filter_subjects" name="filter_subjects" checked>Filter</label>
-            <span class="dropdowntext">
-                    Filter subjects list excluding subjects that are not social actors. When S and V and O filters are selected all conditions must be met. The option for filtering subjects via WordNet for social actors is available only for the English language. Words in MWE, except entitymentions, are _ separated.
-                </span>
-                </span>
-        </div>
-
-         <div class = "form-row">
-            csv file containing VERB filters:
-            <input type="text" value="social-action-list.csv"  readonly>
-
-            </div>
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the 'Lemmatize' checkboxes to produce lemmatized verbs. When SVOs are lemmatized, the algorithm will aggregate the Verbs into WordNet top synset categories (e.g., 'run' into 'motion').
-                    Tick the 'Filter' checkboxes to filter all SVO extracted triplets for Verbs via dictionary filter files.
-                    <!-- Dictionary filter files can be created via WordNet and saved in the \'lib/wordLists\' subfolder.
-                    For instance, you can filter SVO by social actors and social action. In fact, the file \'social-actor-list.csv\', created via WordNet with multiple keywords (act, group, person) and saved in the \'lib/wordLists\' subfolder, will be automatically loaded as the DEFAULT dictionary file (Press ESCape to clear selection); the file \'social-action-list.csv\' is similarly created via WordNet using multiple keywords (change, cognition, communication, contact, emotion, motion, social), saved in the \'lib/wordLists\' subfolder, and automatically loaded as the DEFAULT dictionary file for verbs.
-                    When working on folktales, animals, or even plants, may also act and speak. You may use the animal_list.csv filter file, based on the multiple multiple keywords (act, group, person, animal) or (act, group, person, animal, plants) and saved in the \'lib/wordLists\' subfolder.
-                    You can edit these lists, adding and deleting entries at any time, using any text editor.
-                    WordNet produces thousands of entries for nouns and verbs. For more limited domains, you way want to pair down the number to a few hundred entries.
-                    FILTER FILES BASED ON WordNet MUST CONTAIN LEMMATIZED ENTRIES, SINCE WordNet IS BASED ON LEMMATIZED ENTRIES. -->
-                </span>
-            </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="lemmatize_verbs" name="lemmatize_verbs" checked>Lemmatize</label>
-            <span class="dropdowntext">
-                    When lemmatizing verbs, WordNet will be used to aggregate subjects into top synsets verb categories.
-                </span>
-            </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="filter_verbs" name="filter_verbs" checked>Filter</label>
-            <span class="dropdowntext">
-                    Filter verbs list excluding verbs that are not social actions. When S and V and O filters are selected all conditions must be met. The option for filtering verbs for social actions via WordNet for social actors is available only for the English language. Words in MWE are _ separated.
-                </span>
-                </span>
-        </div>
-
-        <div class = 'form-row'>
-            csv file containing OBJECT filters:
-            <input type="text" value="" readonly>
-        </div>
-                
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the 'Lemmatize' checkboxes to produce lemmatized objects. When SVOs are lemmatized, the algorithm will aggregate the Objects (nouns) into WordNet top synset categories (e.g., 'run' into 'motion').
-                    Tick the 'Filter' checkboxes to filter all SVO extracted triplets for Objects via dictionary filter files.
-                    <!-- Dictionary filter files can be created via WordNet and saved in the \'lib/wordLists\' subfolder.
-                    For instance, you can filter SVO by social actors and social action. In fact, the file \'social-actor-list.csv\', created via WordNet with multiple keywords (act, group, person) and saved in the \'lib/wordLists\' subfolder, will be automatically loaded as the DEFAULT dictionary file (Press ESCape to clear selection); the file \'social-action-list.csv\' is similarly created via WordNet using multiple keywords (change, cognition, communication, contact, emotion, motion, social), saved in the \'lib/wordLists\' subfolder, and automatically loaded as the DEFAULT dictionary file for verbs.
-                    When working on folktales, animals, or even plants, may also act and speak. You may use the animal_list.csv filter file, based on the multiple multiple keywords (act, group, person, animal) or (act, group, person, animal, plants) and saved in the \'lib/wordLists\' subfolder.
-                    You can edit these lists, adding and deleting entries at any time, using any text editor.
-                    WordNet produces thousands of entries for nouns and verbs. For more limited domains, you way want to pair down the number to a few hundred entries.
-                    FILTER FILES BASED ON WordNet MUST CONTAIN LEMMATIZED ENTRIES, SINCE WordNet IS BASED ON LEMMATIZED ENTRIES. -->
-                </span>
-            </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="lemmatize_objects" name="lemmatize_objects" checked>Lemmatize</label>
-            <span class="dropdowntext">
-                    When lemmatizing objects, WordNet will be used to aggregate objects into top synsets object categories.
-                </span>
-                </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="filter_objects" name="filter_objects"  unchecked>Filter</label>
-            <span class="dropdowntext">
-                    Filter objects list excluding objects that are not social actors. When S and V and O filters are selected all conditions must be met. The option for filtering objects for social actors via WordNet for social actors is available only for the English language. Words in MWE, except entitymentions, are _ separated.
-                </span>
-                </span>
-        </div>
-
-        <div class = "form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Please, tick the S & O gender checkbox if you wish to run Stanford CoreNLP neural network gender annotator to extract the gender (female, male) for every Subject and Object extracted by the SVO script.
-                    Tick the S & O quote/speaker checkbox if you wish to run Stanford CoreNLP neural network quote annotator to extract the speaker involved in direct discourse for every Subject and Object extracted by the SVO script.
-                    THE GENDER AND QUOTE/SPEAKER ANNOTATORS ARE AVAILABLE FOR STANFORD CORENLP AND ENGLISH LANGUAGE ONLY.
-                </span>
-            </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="so_gender" name="so_gender" unchecked>S & O gender</label>
-            <span class="dropdowntext">
-                    The neural network gender annotator is available only via Stanford CoreNLP and for the English language only.
-                </span>
-            </span>
-            <span class="dropdown">
-            <label><input type="checkbox" id="so_quote" name="so_quote" unchecked>S & O quote/speaker</label>
-            <span class="dropdowntext">
-                    The neural network quote annotator is available only via Stanford CoreNLP.
-                </span>
-                </span>
-        </div>
-        
-        <div class="form-row">
-            <label>
-                <input type="checkbox" id ="gephi_var" name ="gephi_var" disabled></input>
-                Visualize SVO relations         
-            </label>
-
-            <label>
-                <input type="checkbox" id ="wordcloud_var" name="wordcloud_var"> </input>
-                Visualize SVO relations in wordcloud       
-            </label>
-            
-            <label>
-                <input type="checkbox" id ="google_earth_var" name="google_earth_var"></input>
-                Visualize Where (via Google Earth Pro & Google Maps)
-            </label>
-
-        </div>
-
-        <div class="form-row">
-            <span class="tooltip">
-                <span class="tooltiptext">
-                    Use the next dropdown menu widget to select the type of data transformation to be used for plotting ('No transformation' is the default option'). All charts involving multiple documents are automatically normalized by document size.
-                </span>
-            </span>
-            <label for="dataTransformation">Transformation:</label>
-            <span class="dropdown">
-            <select id="dataTransformation" name="dataTransformation">
-                <option value="No transformation">No transformation</option>
-                <option value="Ln">Ln</option>
-                <option value="Log">Log</option>
-                <option value="Square">Square root</option>
-                <option value="Z score">Z score</option>
-            </select>
-                <span class="dropdowntext">
-                    Select the type of data transformation you wish to apply in plotting charts. All charts involving multiple documents are automatically normalized by document size.
-            </span>
-            </span>
-        </div>
-
-        <!-- Form Buttons -->
-        <div class="buttons-section">
-            <button type="reset" class="reset-button"onclick="window.location.reload();">Reset</button>
-
-            <link rel="stylesheet" href="{% static "css/tipsfile.css" %}">
-
-            <a href="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_SVO%20extraction%20and%20visualization.pdf" target ="_blank" rel="noopener noreferrer"
-            class = "tipsfile-button">
-                <div class = "tipsfile-mask">
-                    <div class = "tipsfile-glow"></div>
+            <div class="field-row">
+                <div class="field field-check">
+                    <label>
+                        <input type="checkbox" id="so_gender" name="so_gender">
+                        S &amp; O gender
+                    </label>
                 </div>
-                Tips File
-            </a>
+                <div class="field field-check">
+                    <label>
+                        <input type="checkbox" id="so_quote" name="so_quote">
+                        S &amp; O quote/speaker
+                    </label>
+                </div>
+            </div>
+            <p class="field-help">Annotate the gender (female, male) and/or the speaker involved in direct discourse for every extracted Subject and Object. Both neural network annotators are available only via Stanford CoreNLP and for the English language only.</p>
+        </fieldset>
 
-            <button type="submit" class="run-button">Run</button>
-        </div>
+        <fieldset class="form-section">
+            <legend>Lemmatize &amp; filter</legend>
+
+            <p class="field-help">Lemmatizing aggregates words into WordNet top synset categories (e.g., 'run' into 'motion'). Filtering keeps only SVO triplets that match dictionary filter files; when S, V, and O filters are all selected, all conditions must be met. WordNet-based filtering is available for the English language only.</p>
+            <details class="field-more">
+                <summary>More about filter files</summary>
+                <div class="more-body">
+                    <p>The widgets below display the currently selected dictionary filter files for Subjects, Verbs, and Objects (Objects share the same file as Subjects and you may wish to change that). The file 'social-actor-list.csv', created via WordNet with the multiple keywords act, group, person and saved in the 'lib/wordLists' subfolder, is automatically set as the DEFAULT filter for subjects; the file 'social-action-list.csv' is similarly created via WordNet (keywords: change, cognition, communication, contact, emotion, motion, social) and automatically loaded as the DEFAULT dictionary file for verbs.</p>
+                    <p>The file widgets are disabled because you are not allowed to tamper with these values.</p>
+                </div>
+            </details>
+
+            <div class="field">
+                <label>Subjects — csv file containing SUBJECT filters</label>
+                <input type="text" value="~/nlp-suite/input" readonly>
+            </div>
+            <div class="field-row sub-option">
+                <div class="field field-check">
+                    <label><input type="checkbox" id="lemmatize_subjects" name="lemmatize_subjects" checked>Lemmatize</label>
+                </div>
+                <div class="field field-check">
+                    <label><input type="checkbox" id="filter_subjects" name="filter_subjects" checked>Filter</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Verbs — csv file containing VERB filters</label>
+                <input type="text" value="social-action-list.csv" readonly>
+            </div>
+            <div class="field-row sub-option">
+                <div class="field field-check">
+                    <label><input type="checkbox" id="lemmatize_verbs" name="lemmatize_verbs" checked>Lemmatize</label>
+                </div>
+                <div class="field field-check">
+                    <label><input type="checkbox" id="filter_verbs" name="filter_verbs" checked>Filter</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Objects — csv file containing OBJECT filters</label>
+                <input type="text" value="" readonly>
+            </div>
+            <div class="field-row sub-option">
+                <div class="field field-check">
+                    <label><input type="checkbox" id="lemmatize_objects" name="lemmatize_objects" checked>Lemmatize</label>
+                </div>
+                <div class="field field-check">
+                    <label><input type="checkbox" id="filter_objects" name="filter_objects">Filter</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+            <legend>Visualization</legend>
+
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="gephi_var" name="gephi_var" disabled>
+                    Visualize SVO relations
+                </label>
+            </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="wordcloud_var" name="wordcloud_var">
+                    Visualize SVO relations in wordcloud
+                </label>
+            </div>
+            <div class="field field-check">
+                <label>
+                    <input type="checkbox" id="google_earth_var" name="google_earth_var">
+                    Visualize Where (via Google Earth Pro &amp; Google Maps)
+                </label>
+            </div>
+
+            {% include "partials/data_transformation.html" %}
+        </fieldset>
+
+        {% include "partials/form_buttons.html" with tips_url="https://github.com/NLP-Suite/NLP-Suite/blob/current-stable/TIPS/TIPS_NLP_SVO%20extraction%20and%20visualization.pdf" %}
     </form>
 </div>
 <script src="{% static 'js/SVO.js' %}"></script>

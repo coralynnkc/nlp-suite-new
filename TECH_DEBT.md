@@ -18,12 +18,12 @@ enough context to pick each one up later.
   `excel_plotly_charts.html` → `/excel_charts`. Wiring them up means converting
   each view in `ui/app/views.py` to the `_proxy_post` helper and making the form
   field names match the endpoint's `Form()` parameters in `agent/src/main.py`.
-- **Python WordCloud backend is a stub.** `run_wordcloud` returns immediately
-  with "wordclouds_util module has been removed" when the (default) Python
-  WordCloud service is selected — the UI offers a tool that produces nothing.
-  The other wordcloud "services" just open external websites, which a headless
-  agent cannot do either. Restore `wordclouds_util` from the desktop NLP-Suite
-  repo or remove the page.
+- **Non-Python wordcloud "services" just open external websites** (TagCrowd,
+  Wordle, etc.), which a headless agent cannot do. The Python WordCloud backend
+  itself was restored June 2026 (`agent/src/analysis/wordclouds_util.py`,
+  ported from the desktop repo). The external-service options in the wordclouds
+  UI dropdown should either be removed or turned into plain links in the
+  template.
 - **Tips File feature removed, not replaced.** The web templates shipped broken
   "Tips File" buttons pointing at `tips_files.js` and `TIPS_*.pdf` assets that
   were never ported from the desktop app. The blocks were deleted (commit
@@ -61,8 +61,9 @@ enough context to pick each one up later.
 ## Performance (flagged, not fixed)
 
 - **NLP models reload on every job.** Each request constructs its pipelines
-  from scratch: `stanza.Pipeline(...)` in `file_search_byWord_util.py:134` and
-  `statistics_txt_util.py` (sentence-complexity path),
+  from scratch: `stanza.Pipeline(...)` in `file_search_byWord_util.py:134`,
+  `statistics_txt_util.py` (sentence-complexity path), and
+  `wordclouds_util.py` (txt-input path, one pipeline per job),
   `SentenceTransformer("all-MiniLM-L6-v2")` in `topic_modeling_bert_util.py:56`.
   Model loads dominate small-corpus job time. A module-level cache keyed by
   (model, processors) would fix it, but lifetime/memory interactions with the

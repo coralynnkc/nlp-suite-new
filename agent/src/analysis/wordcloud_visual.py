@@ -141,5 +141,28 @@ def run_wordcloud(
         ):
             return
     elif visualization_tools == "Python WordCloud":
-        logger.info("Warning: Python WordCloud is not available. The wordclouds_util module has been removed.")
-        return filesToOpen
+        import wordclouds_util
+
+        filesToOpen = wordclouds_util.python_wordCloud(
+            inputFilename,
+            inputDir,
+            outputDir,
+            configFileName="",
+            selectedImage=selectedImage,
+            use_contour_only=use_contour_only,
+            wordcloud_title="",
+            prefer_horizontal=prefer_horizontal,
+            font=font,
+            max_words=max_words,
+            lemmatize=lemmatize,
+            exclude_stopwords=exclude_stopwords,
+            exclude_punctuation=exclude_punctuation,
+            lowercase=lowercase,
+            differentPOS_differentColors=differentPOS_differentColor,
+            differentColumns_differentColors=differentColumns_differentColors,
+            csvField_color_list=csvField_color_list,
+            doNotListIndividualFiles=doNotCreateIntermediateFiles,
+            openOutputFiles=openOutputFiles,
+            collocation=collocation,
+        )
+    return filesToOpen
