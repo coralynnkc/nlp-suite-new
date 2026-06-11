@@ -54,10 +54,7 @@ def get_csv_data(inputFilename, withHeader, inputFileData=""):
         # File extension check
         filename, file_extension = os.path.splitext(inputFilename)
         if filename == "" or file_extension != ".csv":
-            logger.info(
-                "File type error",
-                f"The file\n\n{inputFilename}\n\nis not an expected CSV file. Please, check the file and try again.",
-            )
+            logger.info('File type error %s', f"The file\n\n{inputFilename}\n\nis not an expected CSV file. Please, check the file and try again.")
             return data, headers
 
         # Check for null bytes in the file
@@ -76,10 +73,7 @@ def get_csv_data(inputFilename, withHeader, inputFileData=""):
             data = [row for row in reader]
 
         if len(data) == 0:
-            logger.info(
-                "Empty csv file",
-                f"The CSV file\n\n{inputFilename}\n\nis empty. Please, check the file and try again.",
-            )
+            logger.info('Empty csv file %s', f"The CSV file\n\n{inputFilename}\n\nis empty. Please, check the file and try again.")
 
     return data, headers
 
@@ -111,10 +105,7 @@ def get_csvfile_headers(csvFile, ask_Question=False, inputFileData=""):
         return headers
 
     if ask_Question:
-        logger.info(
-            "File headers",
-            "Does the selected input file\n\n" + csvFile + "\n\nhave headers?",
-        )
+        logger.info('File headers %s', "Does the selected input file\n\n" + csvFile + "\n\nhave headers?")
 
     if csvFile != "" and answer:
         try:
@@ -256,15 +247,7 @@ def GetMaxValueInCSVField(
                 + columnHeader
                 + "' column."
             )
-        logger.info(
-            "csv file error",
-            "The selected csv file\n\n"
-            + inputFilename
-            + "\n\ndoes not contain the column header\n\n"
-            + columnHeader
-            + msg
-            + "\n\nPlease, select a different csv file in input and try again!",
-        )
+        logger.info('csv file error %s', "The selected csv file\n\n" + inputFilename + "\n\ndoes not contain the column header\n\n" + columnHeader + msg + "\n\nPlease, select a different csv file in input and try again!")
         return 0
     maxvalue = column.max()
     if maxvalue == "":  # to avoid an error
@@ -306,14 +289,7 @@ def df_to_csv(
                 )
             break  # exit loop
         except OSError as e:
-            logger.info(
-                "Output file error",
-                "Could not write the file "
-                + outputFilename
-                + "\n\n"
-                + str(e)
-                + "\n\nCLOSE THE FILE TO EXIT LOOP...",
-            )
+            logger.info('Output file error %s', "Could not write the file " + outputFilename + "\n\n" + str(e) + "\n\nCLOSE THE FILE TO EXIT LOOP...")
             if "Permission" not in str(e):
                 outputFilename = ""
                 break  # exit loop; the error is not due to file being open
@@ -351,28 +327,11 @@ def openCSVOutputFile(
             return False
     except OSError as e:
         if "Invalid argument" in str(e):
-            logger.info(
-                "Output file error",
-                "Could not write the file\n\n"
-                + outputCSVFilename
-                + "\n\nThe filename contains an invalid argument. Please, check the filename and try again!",
-            )
+            logger.info('Output file error %s', "Could not write the file\n\n" + outputCSVFilename + "\n\nThe filename contains an invalid argument. Please, check the filename and try again!")
         elif "Permission denied" in str(e):
-            logger.info(
-                "Output file error",
-                "Could not write the file "
-                + outputCSVFilename
-                + "\n\nA file with the same name is already open. Please, close the csv file and try again!",
-            )
+            logger.info('Output file error %s', "Could not write the file " + outputCSVFilename + "\n\nA file with the same name is already open. Please, close the csv file and try again!")
         else:
-            logger.info(
-                "Output file error",
-                "Could not write the file "
-                + outputCSVFilename
-                + "\n\nThe following error occurred while opening the file in output:\n\n"
-                + str(e)
-                + "\n\nPlease, close the csv file and try again!",
-            )
+            logger.info('Output file error %s', "Could not write the file " + outputCSVFilename + "\n\nThe following error occurred while opening the file in output:\n\n" + str(e) + "\n\nPlease, close the csv file and try again!")
         return True
 
 
@@ -485,12 +444,7 @@ def remove_hyperlinks(inputFilename):
 def rename_header(inputFilename, header1, header2):
     headerFound = False
     if not inputFilename.endswith(".csv"):
-        logger.info(
-            "File type error",
-            "The file\n\n"
-            + inputFilename
-            + "\n\\is not an expected csv file with headers.\n\nPlease, check the file and try again.",
-        )
+        logger.info('File type error %s', "The file\n\n" + inputFilename + "\n\\is not an expected csv file with headers.\n\nPlease, check the file and try again.")
         return headerFound
     headers = get_csvfile_headers(inputFilename)
     for header in headers:
@@ -507,16 +461,7 @@ def rename_header(inputFilename, header1, header2):
                 headerFound = True
                 break
     if not headerFound:
-        logger.info(
-            "File type error",
-            "The file\n\n"
-            + inputFilename
-            + "\n\ndoes not contain a header '"
-            + header1
-            + "' to be renamed to '"
-            + header2
-            + "'.\n\nPlease, check the file and try again.",
-        )
+        logger.info('File type error %s', "The file\n\n" + inputFilename + "\n\ndoes not contain a header '" + header1 + "' to be renamed to '" + header2 + "'.\n\nPlease, check the file and try again.")
     return headerFound
 
 
@@ -526,18 +471,10 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
     filename, file_extension = os.path.splitext(inputFilename)
 
     if inputFilename == "" or file_extension != ".csv":
-        logger.info(
-            "File type error",
-            "The file\n\n"
-            + inputFilename
-            + "\n\nis not an expected csv file. Please, check the file and try again.",
-        )
+        logger.info('File type error %s', "The file\n\n" + inputFilename + "\n\nis not an expected csv file. Please, check the file and try again.")
         return
     if column is not None and len(column_list) != 0:
-        logger.info(
-            "Field(s) input error",
-            "Cannot have field and field_list as filter at the same time.\n\nPlease, select one and try again.",
-        )
+        logger.info('Field(s) input error Cannot have field and field_list as filter at the same time.\n\nPlease, select one and try again.')
         return
     if column is None and len(column_list) == 0:
         # reading csv file
@@ -556,13 +493,7 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
     elif len(column_list) == 0:
         df = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
         if column not in df.columns:
-            logger.info(
-                "csv file error",
-                "The selected csv file\n\n"
-                + inputFilename
-                + "\n\ndoes not contain the column header\n\n"
-                + column,
-            )
+            logger.info('csv file error %s', "The selected csv file\n\n" + inputFilename + "\n\ndoes not contain the column header\n\n" + column)
             return
 
         a = list(df[column])
@@ -580,13 +511,7 @@ def export_csv_to_text(inputFilename, outputDir, column=None, column_list=None):
 
         for column in column_list:
             if column not in df.columns:
-                logger.info(
-                    "csv file error",
-                    "The selected csv file\n\n"
-                    + inputFilename
-                    + "\n\ndoes not contain the column header\n\n"
-                    + column,
-                )
+                logger.info('csv file error %s', "The selected csv file\n\n" + inputFilename + "\n\ndoes not contain the column header\n\n" + column)
                 return
 
         text = df[column_list].to_csv(encoding="utf-8", index=False)

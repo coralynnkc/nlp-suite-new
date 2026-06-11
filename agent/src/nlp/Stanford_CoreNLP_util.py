@@ -120,75 +120,43 @@ def check_CoreNLP_annotator_availability(config_filename, annotator, language):
     not_available = False
     if "lemma" in annotator:
         if language != "English":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP LEMMA annotator is only available for English." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP LEMMA annotator is only available for English." + CoreNLP_web)
             not_available = True
     elif "normalized" in annotator:
         if language != "English":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP NORMALIZED NER annotator is only available for English." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP NORMALIZED NER annotator is only available for English." + CoreNLP_web)
             not_available = True
     elif "gender" in annotator:
         if language != "English":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP GENDER annotator is only available for English." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP GENDER annotator is only available for English." + CoreNLP_web)
             not_available = True
     elif "quote" in annotator:
         if language != "English":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP QUOTE annotator is only available for English." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP QUOTE annotator is only available for English." + CoreNLP_web)
             not_available = True
     elif "OpenIE" in annotator:
         if language != "English":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP OPENIE annotator is only available for English." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP OPENIE annotator is only available for English." + CoreNLP_web)
             not_available = True
     elif "sentiment" in annotator:
         if language != "English" and language != "Chinese":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP SENTIMENTT ANALYSIS annotator is only available for Chinese and English."
-                + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP SENTIMENTT ANALYSIS annotator is only available for Chinese and English." + CoreNLP_web)
             not_available = True
     elif "coreference" in annotator:
         if language != "English" and language != "Chinese":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP COREFERENCE RESOLUTION annotator is only available for Chinese and English."
-                + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP COREFERENCE RESOLUTION annotator is only available for Chinese and English." + CoreNLP_web)
             not_available = True
     elif "PCFG" in annotator:
         if language == "English" or language == "German":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP PCFG PARSER is not available for German and Hungarian." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP PCFG PARSER is not available for German and Hungarian." + CoreNLP_web)
             not_available = True
     elif "neural network" in annotator:  # parser
         if language == "Arabic" or language == "Hungarian":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP NEURAL NETWORK PARSER is not available for Arabic and Hungarian." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP NEURAL NETWORK PARSER is not available for Arabic and Hungarian." + CoreNLP_web)
             not_available = True
     elif "SVO" in annotator:  # parser
         if language == "Arabic" or language == "Hungarian":
-            logger.info(
-                str(annotator).upper() + " annotator availability for " + language,
-                "The Stanford CoreNLP SVO annotator is not available for Arabic and Hungarian." + CoreNLP_web,
-            )
+            logger.info('%s %s', str(annotator).upper() + " annotator availability for " + language, "The Stanford CoreNLP SVO annotator is not available for Arabic and Hungarian." + CoreNLP_web)
             not_available = True
     if not_available:
         head, scriptName = os.path.split(os.path.basename(__file__))
@@ -1055,12 +1023,7 @@ def CoreNLP_annotate(
                     CoreNLP_output["sentences"]
                 )  # update the sentenceID of the first sentence of the next split file
             except Exception:
-                logger.info(
-                    "Error processing sentence #: ",
-                    sentenceID_SV + 1,
-                    " in document ",
-                    tail,
-                )
+                logger.info('Error processing sentence #:  %s  in document  %s', sentenceID_SV + 1, tail)
 
     # generate output csv files and write output -----------------------------------------------
 
@@ -1311,20 +1274,7 @@ def language_models(CoreNLPdir, language: str):
         language_file = os.path.join(CoreNLPdir, tail + "-models-" + language.lower() + ".jar")
         CoreNLP_download = "https://stanfordnlp.github.io/CoreNLP/human-languages.html"
         if not os.path.isfile(language_file):
-            logger.info(
-                "Language pack",
-                "You have selected to work with the "
-                + language.upper()
-                + " language. But the language model "
-                + language_file
-                + " was not found in the main directory of Stanford CoreNLP "
-                + CoreNLPdir
-                + "\n\nPlease, download the "
-                + language.upper()
-                + " language pack from the Stanford NLP website "
-                + CoreNLP_download
-                + " and move it to the main Stanford CoreNLP directory.\n\nWould you like to do that now?",
-            )
+            logger.info('Language pack %s', "You have selected to work with the " + language.upper() + " language. But the language model " + language_file + " was not found in the main directory of Stanford CoreNLP " + CoreNLPdir + "\n\nPlease, download the " + language.upper() + " language pack from the Stanford NLP website " + CoreNLP_download + " and move it to the main Stanford CoreNLP directory.\n\nWould you like to do that now?")
             return
         pcfg_model = "edu/stanford/nlp/models/srparser/" + language.lower() + "SR.beam.ser.gz"
         nn_model = "edu/stanford/nlp/models/parser/nndep/UD_" + language + ".gz"

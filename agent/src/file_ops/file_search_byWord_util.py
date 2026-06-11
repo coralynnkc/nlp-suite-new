@@ -802,14 +802,7 @@ def search_sentences_documents(
     if create_subcorpus_var and len(corpus_to_copy) > 0:
         for file in corpus_to_copy:
             shutil.copy(file, subCorpusDir)
-        logger.info(
-            "Warning",
-            ' The search function has created a subcorpus of the files containing the search word(s) "'
-            + str(search_keywords_list)
-            + '" as a subdirectory called "subcorpus_search" of the input directory:\n\n'
-            + subCorpusDir
-            + "\n\nA set of csv files have also been exported to the output  directory.",
-        )
+        logger.info('Warning %s', ' The search function has created a subcorpus of the files containing the search word(s) "' + str(search_keywords_list) + '" as a subdirectory called "subcorpus_search" of the input directory:\n\n' + subCorpusDir + "\n\nA set of csv files have also been exported to the output directory.")
 
     # visualize results for document searches ---------------------------------------------------------------
 
@@ -838,25 +831,14 @@ def search_sentences_documents(
 
     else:
         if not search_keywords_found:
-            logger.info(
-                "Search word(s) not found",
-                "The search keywords:\n\n   "
-                + search_keywords_str
-                + "\n\nwere not found in your input document(s) with the following set of search options:\n\n  "
-                + str("\n  ".join(search_options_list)),
-            )
+            logger.info('Search word(s) not found %s', "The search keywords:\n\n " + search_keywords_str + "\n\nwere not found in your input document(s) with the following set of search options:\n\n " + str("\n ".join(search_options_list)))
 
             outputFilename_csv_word = ""
         else:
             try:
                 df = pd.read_csv(outputFilename_csv_word)
             except UnicodeEncodeError:
-                logger.info(
-                    "Input file error",
-                    "Could not read the file "
-                    + outputFilename_csv_word
-                    + "\n\nThe file is not utf-8",
-                )
+                logger.info('Input file error %s', "Could not read the file " + outputFilename_csv_word + "\n\nThe file is not utf-8")
 
                 df = pd.read_csv(outputFilename_csv_word, encoding="ISO-8859-1")
             unique_words = df["Search Word in Sentence"].unique()

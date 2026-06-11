@@ -108,14 +108,7 @@ def dictionary_annotate(
                 headers, field, dict_file
             )
             if col is None:
-                logger.info(
-                    "Input file error",
-                    "The selected dictionary file\n\n"
-                    + dict_file
-                    + "\n\ndoes not contain the expected header '"
-                    + str(csv_field1_var)
-                    + "'\n\nPlease, select a different dictionary file and try again.",
-                )
+                logger.info('Input file error %s', "The selected dictionary file\n\n" + dict_file + "\n\ndoes not contain the expected header '" + str(csv_field1_var) + "'\n\nPlease, select a different dictionary file and try again.")
                 return
             wordColNum.append(col)
         catColNum = []

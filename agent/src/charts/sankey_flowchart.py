@@ -18,7 +18,7 @@ def _first_csv(path):
                 return os.path.join(path, entry)
         return None
     except Exception as e:
-        logger.info("Error", e, " has occurred")
+        logger.info('Error %s  has occurred', e)
         return None
 
 
@@ -48,10 +48,7 @@ def run_sankey(
     logger.info(f"Length of the list: {len(csv_file_relational_field_list)}")
 
     if len(csv_file_relational_field_list) != 2 and len(csv_file_relational_field_list) != 3:
-        logger.info(
-            "Warning",
-            "You must select 2 or 3 csv fields to be used in the computation of a Sankey chart (e.g., Subject, Verb, Object or Subject, Object).\n\nMAKE SURE TO CLICK ON THE + BUTTON AFTER THE LAST SELECTION. CLICK ON THE SHOW BUTTON TO SEE THE CURRENT SELECTION.",
-        )
+        logger.info('Warning You must select 2 or 3 csv fields to be used in the computation of a Sankey chart (e.g., Subject, Verb, Object or Subject, Object).\n\nMAKE SURE TO CLICK ON THE + BUTTON AFTER THE LAST SELECTION. CLICK ON THE SHOW BUTTON TO SEE THE CURRENT SELECTION.')
         return
 
     if len(csv_file_relational_field_list) == 3:

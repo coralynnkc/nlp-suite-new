@@ -566,7 +566,7 @@ def search_ngrams_csv_file(
                 q = f.read()
             for word in search_keywords_list:
                 q = q.replace(word, "")
-                logger.info(q, word)
+                logger.info('%s %s', q, word)
             with open(NgramsSearchFileName_txt, "w", encoding="utf-8") as f:
                 f.write(q)
 

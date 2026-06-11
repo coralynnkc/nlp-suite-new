@@ -89,7 +89,7 @@ def splitDocument_byLength(
         try:
             os.mkdir(new_splitFiles_folder)
         except Exception as e:
-            logger.info("error: ", e.__doc__)
+            logger.info('error:  %s', e.__doc__)
         splits = [-1]  # start at -1 not 0 because of +1 later in loop
         if inWords:
             i = maxLength - 5
