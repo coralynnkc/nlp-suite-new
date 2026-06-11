@@ -30,6 +30,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from file_manager_main import run_file_manager
 from file_search_byWord_main import run_search_byWord
 from GIS_main import run_GIS
+from html_annotator_gender_main import run as run_gender_analysis
 from knowledge_graphs_WordNet_main import run_kg_wordnet
 from NER_main import run_NER
 from NGrams_CoOccurrences import run_ngrams
@@ -856,6 +857,48 @@ def ner(
             config_filename=config_filename,
             NER_package=NER_package,
             NER_list=ner_list,
+        ),
+    )
+
+
+@app.post("/gender")
+def gender_analysis(
+    inputDirectory: Annotated[str, Form()],
+    inputFilename: Annotated[str, Form()] = "",
+    openOutputFiles: Annotated[bool, Form()] = False,
+    chartPackage: Annotated[str, Form()] = "Excel",
+    dataTransformation: Annotated[str, Form()] = "No transformation",
+    config_filename: Annotated[str, Form()] = "NLP_default_IO_config.csv",
+    CoreNLP_gender_annotator_var: Annotated[bool, Form()] = False,
+    annotator_dictionary_var: Annotated[bool, Form()] = False,
+    annotator_dictionary_file_var: Annotated[str, Form()] = "",
+    personal_pronouns_var: Annotated[bool, Form()] = False,
+) -> PlainTextResponse:
+    input_dir = os.path.expanduser(inputDirectory)
+    dictionary_file = os.path.expanduser(annotator_dictionary_file_var)
+    return dispatch(
+        app,
+        lambda: run_gender_analysis(
+            inputFilename=inputFilename,
+            input_main_dir_path=input_dir,
+            outputDir=OUTPUT_DIR,
+            openOutputFiles=openOutputFiles,
+            chartPackage=chartPackage,
+            dataTransformation=dataTransformation,
+            CoreNLP_gender_annotator_var=CoreNLP_gender_annotator_var,
+            # download/upload of the CoreNLP gender file is a desktop-only
+            # workflow; run() accepts but never reads these
+            CoreNLP_download_gender_file_var=False,
+            CoreNLP_upload_gender_file_var=False,
+            annotator_dictionary_var=annotator_dictionary_var,
+            annotator_dictionary_file_var=dictionary_file,
+            personal_pronouns_var=personal_pronouns_var,
+            # the US SS plot path needs lib/namesGender data not shipped with the agent
+            plot_var=False,
+            year_state_var="",
+            firstName_entry_var="",
+            new_SS_folders=[],
+            config_filename=config_filename,
         ),
     )
 
