@@ -72,9 +72,8 @@ def SVO(request: HttpRequest):
     return _proxy_post(request, "/svo", "SVO.html")
 
 
-def shape_of_stories(_: HttpRequest):
-    template = loader.get_template("../templates/shape_of_stories.html")
-    return HttpResponse(template.render())
+def shape_of_stories(request: HttpRequest):
+    return _proxy_post(request, "/stories", "shape_of_stories.html")
 
 
 def style_analysis(request: HttpRequest):

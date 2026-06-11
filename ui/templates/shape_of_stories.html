@@ -4,7 +4,7 @@
 {% load static %}
 <div class="tool-container">
     <h1>Shape of Stories</h1>
-    <form method="post" class="ngram-CoOcc-form">
+    <form method="post" class="shape-of-stories-form">
         {% csrf_token %}
 
         {% include "partials/io_directories.html" %}
@@ -14,25 +14,19 @@
 
             <div class="field field-check">
                 <label>
-                    <input type="checkbox" id="sentiment_analysis" name="sentiment_analysis" checked>
+                    <input type="checkbox" id="sentiment_analysis" name="sentimentAnalysis" checked>
                     Sentiment Analysis
                 </label>
             </div>
             <div class="field sub-option">
                 <label for="algorithm">Sentiment analysis algorithm</label>
-                <select id="algorithm" name="algorithm">
+                <select id="algorithm" name="sentimentAnalysisMethod">
                     <optgroup label="Neural network approaches:">
-                        <option value="bert_english">BERT (English model)</option>
-                        <option value="bert_multilingual">BERT (Multilingual model)</option>
-                        <option value="spacy">spaCy</option>
-                        <option value="stanford_corenlp">Stanford CoreNLP</option>
-                        <option value="stanza">Stanza</option>
-                    </optgroup>
-                    <optgroup label="Dictionary approaches:">
-                        <option value="anew">ANEW</option>
-                        <option value="hedonometer">hedonometer</option>
-                        <option value="sentiwordnet">SentiWordNet</option>
-                        <option value="vader">VADER</option>
+                        <option value="BERT English">BERT (English model)</option>
+                        <option value="BERT Multilingual">BERT (Multilingual model)</option>
+                        <option value="spaCy">spaCy</option>
+                        <option value="Stanford CoreNLP">Stanford CoreNLP</option>
+                        <option value="Stanza">Stanza</option>
                     </optgroup>
                 </select>
             </div>
@@ -43,35 +37,35 @@
 
             <div class="field field-check">
                 <label>
-                    <input type="checkbox" id="compute-visualize" name="compute-visualize">
+                    <input type="checkbox" id="compute-visualize" name="corpus_analysis">
                     Compute &amp; visualize corpus statistics
                 </label>
             </div>
 
             <div class="field field-check">
                 <label>
-                    <input type="checkbox" id="hierarchical-clustering" name="hierarchical-clustering">
+                    <input type="checkbox" id="hierarchical-clustering" name="hierarchical_clustering">
                     Hierarchical Clustering (HC)
                 </label>
             </div>
 
             <div class="field field-check">
                 <label>
-                    <input type="checkbox" id="singular-value-decomp" name="singular-value-decomp">
+                    <input type="checkbox" id="singular-value-decomp" name="SVD">
                     Singular Value Decomposition (SVD)
                 </label>
             </div>
 
             <div class="field field-check">
                 <label>
-                    <input type="checkbox" id="non-negative-matrix-fact" name="non-negative-matrix-fact">
+                    <input type="checkbox" id="non-negative-matrix-fact" name="NMF">
                     Non-Negative Matrix Factorization (NMF)
                 </label>
             </div>
 
             <div class="field field-check">
                 <label>
-                    <input type="checkbox" id="best-topic-est" name="best-topic-est">
+                    <input type="checkbox" id="best-topic-est" name="best_topic_estimation">
                     Best topic estimation
                 </label>
             </div>
