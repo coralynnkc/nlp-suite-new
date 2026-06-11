@@ -130,9 +130,8 @@ def sankey_flowchart(request: HttpRequest):
     return _proxy_post(request, "/sankey", "sankey_flowchart.html")
 
 
-def boxplot(_: HttpRequest):
-    template = loader.get_template("../templates/boxplot.html")
-    return HttpResponse(template.render())
+def boxplot(request: HttpRequest):
+    return _proxy_post(request, "/boxplot", "boxplot.html")
 
 
 def colormap_chart(request: HttpRequest):
