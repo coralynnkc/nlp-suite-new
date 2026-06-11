@@ -61,7 +61,8 @@ services:
     volumes:
       - ${NLP_SUITE_DIR:-~/nlp-suite}:/app
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
+      # the mallet api only exposes POST /run; use FastAPI's schema route as a liveness probe
+      test: ["CMD", "curl", "-f", "http://localhost:5050/openapi.json"]
       interval: 10s
       timeout: 5s
       retries: 6
