@@ -1,11 +1,11 @@
 import logging
-import os
 
 import config_util
 import CoNLL_table_analyzer_main
 import spaCy_util
 import Stanford_CoreNLP_coreference_util
 import Stanford_CoreNLP_util
+from app_constants import CORENLP_URL
 from pycorenlp import StanfordCoreNLP
 from util import collect
 
@@ -29,8 +29,7 @@ def run_parsers_annotators(
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     logger.info("started: inputFilename=%s parser_var=%s parser_menu_var=%s", inputFilename, parser_var, parser_menu_var)
-    corenlp_url = os.environ.get("CORENLP_URL", "http://corenlp:9000")
-    StanfordCoreNLP(corenlp_url)
+    StanfordCoreNLP(CORENLP_URL)
 
     # Set the config filename
     config_filename = "NLP_default_IO_config.csv"

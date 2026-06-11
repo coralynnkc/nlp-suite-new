@@ -35,19 +35,16 @@ enough context to pick each one up later.
 
 ## Code quality
 
-- **Broken logger calls lose messages.** Several `logger.info(...)` calls in
-  `agent/src/nlp/Stanford_CoreNLP_util.py` (`check_CoreNLP_annotator_availability`)
-  pass multiple positional strings print-style; Python logging treats the extras
-  as %-format args and the messages are dropped with an internal formatting
-  error. Rewrite as single f-strings.
 - **~129 inline TODO/FIXME comments** remain in `agent/src`, inherited from the
   research codebase (`grep -rn TODO agent/src`). They were left in place because
   most document genuine known limitations (chart column-format quirks, CoreNLP
   option handling, geocoding edge cases) rather than stale notes. Densest files:
   `gis/GIS_geocode_util.py`, `nlp/corenlp_json_syntax.py`, `charts/`.
-- **`zip()` without `strict=`** in `core/data_manipulation_util.py:37`. Adding
-  `strict=True` changes behavior on length mismatch (raises instead of
-  truncating); needs a quick check of callers before enabling.
+- **Python 3.9 ceiling.** The agent image (ubuntu:20.04) runs Python 3.9, so
+  3.10+ syntax (`X | None`, `zip(strict=)`, match statements) breaks at runtime.
+  ruff `target-version = "py39"` in pyproject.toml guards lint suggestions, but
+  nothing guards hand-written code; tests run on the host's newer Python and
+  won't catch it. Consider a newer base image when upgrading the ML stack.
 
 ## Security / deployment
 
