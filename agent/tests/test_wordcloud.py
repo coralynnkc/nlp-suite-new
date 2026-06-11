@@ -87,8 +87,19 @@ def test_display_wordCloud_empty_text_returns_none(tmp_path):
 def _write_conll_fixture(path):
     # check_CoNLL requires ID, Form, Lemma headers and exactly 13 or 14 columns
     headers = [
-        "ID", "Form", "Lemma", "POS", "NER", "Head", "DepRel",
-        "Clausal_Tag", "Record_ID", "Sentence_ID", "Document_ID", "Document", "Misc",
+        "ID",
+        "Form",
+        "Lemma",
+        "POS",
+        "NER",
+        "Head",
+        "DepRel",
+        "Clausal_Tag",
+        "Record_ID",
+        "Sentence_ID",
+        "Document_ID",
+        "Document",
+        "Misc",
     ]
     rows = [
         ["1", "Dogs", "dog", "NNS"],
