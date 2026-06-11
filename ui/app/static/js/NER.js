@@ -23,12 +23,15 @@ nerToggle();
 function nerAddTag(){
     var tagsOption = document.getElementById("ner_tags");
     var nerList = document.getElementById("ner_list");
-    var value = tagsOption.options[tagsOption.selectedIndex].value;
+    // aggregate options ("All social actors", ...) carry comma-separated tag lists
+    var values = tagsOption.options[tagsOption.selectedIndex].value.split(",");
     var current = nerList.value ? nerList.value.split(",") : [];
-    if(current.indexOf(value) === -1){
-        current.push(value);
-        nerList.value = current.join(",");
-    }
+    values.forEach(function(value){
+        if(current.indexOf(value) === -1){
+            current.push(value);
+        }
+    });
+    nerList.value = current.join(",");
 }
 document.getElementById("button_id").addEventListener("click", nerAddTag);
 
