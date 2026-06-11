@@ -98,6 +98,17 @@ enough context to pick each one up later.
   either be removed from the template or rendered as greyed-out "coming soon" items
   with a tooltip explaining why. (JS-dependent disabling — e.g. `ner_tags` enabled
   only when Stanford package is selected — is intentional and should stay.)
+  Also: `search-ngram-csv-file` in `NGrams_CoOccurrences.html` (a stub button with
+  no handler) and `selectDictionaryFile` in `word2vec.html` (see next bullet).
+- **`word2vec.js` is entirely dead code.** Every `getElementById` in it targets
+  desktop-era IDs (`wordSenseInduction`, `wordEmbeddingsBERT`, …) that don't exist
+  in `word2vec.html` (real IDs: `WSI_var`, `BERT_var`, …), so the script throws on
+  load and none of its mutual-exclusion enable/disable logic runs. The
+  "Select dictionary file" button on that page does nothing for the same reason.
+  The bottom half of `filesearchword.js` (the `availableGUIs` block) has the same
+  problem — it throws after `listofitems3()` runs, so only the +/− widget works
+  (the `submitbutton2` function survives via hoisting). Fix means rewriting the
+  ID wiring against the current templates.
 
 ## Forks (corenlp/, mallet/) — no code changes by policy
 

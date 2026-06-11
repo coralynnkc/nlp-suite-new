@@ -158,6 +158,13 @@ fieldset.form-section legend {
   cursor: not-allowed;
 }
 
+/* disabled file inputs: grey the text only, not a full-width box */
+.field input[type="file"]:disabled {
+  background: transparent;
+  color: rgba(15, 23, 42, 0.40);
+  cursor: not-allowed;
+}
+
 .field input[type="range"] {
   accent-color: #2563eb;
   vertical-align: middle;
@@ -345,20 +352,23 @@ details.field-more + .field-row {
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   background: #fff;
   color: rgba(15, 23, 42, 0.75);
   border: 1px solid rgba(15, 23, 42, 0.18);
   transition: background 0.15s ease;
+  flex-shrink: 0;
 }
 
 .field button:not(.reset-button):not(.run-button):hover {
   background: rgba(15, 23, 42, 0.05);
 }
 
-/* small +/Reset action buttons beside multi-selects */
+/* small +/−/Reset action buttons beside multi-selects */
 button#button_id,
-button#reset_id {
+button#reset_id,
+.field input[type="button"] {
   height: 32px;
   padding: 0 12px;
   border-radius: 999px;
@@ -372,9 +382,18 @@ button#reset_id {
   flex-shrink: 0;
 }
 
-button#button_id:hover,
-button#reset_id:hover {
+button#button_id:hover:enabled,
+button#reset_id:hover:enabled,
+.field input[type="button"]:hover:enabled {
   background: rgba(37, 99, 235, 0.07);
+}
+
+button#button_id:disabled,
+button#reset_id:disabled,
+.field input[type="button"]:disabled {
+  color: rgba(15, 23, 42, 0.35);
+  border-color: rgba(15, 23, 42, 0.15);
+  cursor: not-allowed;
 }
 
 /* ── Color picker ────────────────────────────────────────────── */
