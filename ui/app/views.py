@@ -100,9 +100,8 @@ def word2vec(request: HttpRequest):
     return _proxy_post(request, "/word2vec", "word2vec.html")
 
 
-def wordnet(_: HttpRequest):
-    template = loader.get_template("../templates/wordnet.html")
-    return HttpResponse(template.render())
+def wordnet(request: HttpRequest):
+    return _proxy_post(request, "/wordnet", "wordnet.html")
 
 
 def filesearchword(request: HttpRequest):

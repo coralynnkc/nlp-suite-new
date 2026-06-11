@@ -885,6 +885,9 @@ def wordnet(
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
     keyword_list = [k.strip() for k in wordNet_keyword_list.split(",") if k.strip()]
+    # the form sends these as text paths (browser file inputs only submit bare filenames)
+    csv_file = os.path.expanduser(csv_file)
+    dict_WordNet_filename_var = os.path.expanduser(dict_WordNet_filename_var)
     return dispatch(
         app,
         lambda: run_kg_wordnet(

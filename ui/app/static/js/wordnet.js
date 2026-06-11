@@ -1,6 +1,5 @@
 function zoomInDownCheckbox() {
     var zoomInDownCheckbox = document.getElementById("zoom-in-related-words");
-    var topLevelSynsetDropdown = document.getElementById("top-level-synset");
     var yourSynsetDropdown = document.getElementById("your-synset");
 
     var annotateCorpusCheckbox = document.getElementById("annotate-corpus-checkbox");
@@ -12,7 +11,6 @@ function zoomInDownCheckbox() {
     var zoomOutSentenceIdCheckbox = document.getElementById("zoom-out-sentenceID"); 
 
     if(zoomInDownCheckbox.checked) {
-        topLevelSynsetDropdown.disabled = false;
         yourSynsetDropdown.disabled = false;
 
         annotateCorpusCheckbox.disabled = true;
@@ -23,7 +21,6 @@ function zoomInDownCheckbox() {
         classifyAggregateInputCheckbox.disabled = true;
         zoomOutSentenceIdCheckbox.disabled = true;
     } else {
-        topLevelSynsetDropdown.disabled = true;
         yourSynsetDropdown.disabled = true;
 
         annotateCorpusCheckbox.disabled = false;
@@ -242,7 +239,10 @@ function zoomOutSentenceID(){
     var classifyAggregateInputCheckbox = document.getElementById("zoom-out-classify-aggregate-input");
     var zoomOutSentenceIdCheckbox = document.getElementById("zoom-out-sentenceID");
 
+    var dictWordNetInput = document.getElementById("wordnet-classified-aggregated-csv");
+
     if(zoomOutSentenceIdCheckbox.checked) {
+        dictWordNetInput.disabled = false;
         zoomInDownCheckbox.disabled = true;
         extractProperNounCheckbox.disabled = true;
         annotateCorpusCheckbox.disabled = true;
@@ -251,6 +251,7 @@ function zoomOutSentenceID(){
         extractImproperNounCheckbox.disabled = true;
         zoomOutUpCheckbox.disabled = true;
     }else{
+        dictWordNetInput.disabled = true;
         zoomInDownCheckbox.disabled = false;
         extractProperNounCheckbox.disabled = false;
         annotateCorpusCheckbox.disabled = false;
