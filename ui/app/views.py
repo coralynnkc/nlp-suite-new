@@ -112,9 +112,8 @@ def gis(request: HttpRequest):
     return _proxy_post(request, "/gis", "gis.html")
 
 
-def genderanalysis(_: HttpRequest):
-    template = loader.get_template("../templates/gender_analysis.html")
-    return HttpResponse(template.render())
+def genderanalysis(request: HttpRequest):
+    return _proxy_post(request, "/gender", "gender_analysis.html")
 
 
 def NER(request: HttpRequest):
