@@ -4,6 +4,7 @@ import re
 
 import IO_user_interface_util
 import Stanford_CoreNLP_util
+from app_constants import CORENLP_URL
 from pycorenlp import StanfordCoreNLP
 
 # Set up logging for tracking errors and processes
@@ -130,7 +131,7 @@ def run(
     manual_Coref,
 ):
 
-    StanfordCoreNLP("http://172.16.0.12:9000")
+    StanfordCoreNLP(CORENLP_URL)
     corefed_files = []
     errorFound = False
 

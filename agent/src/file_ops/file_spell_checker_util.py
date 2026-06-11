@@ -20,6 +20,7 @@ import pandas as pd
 import reminders_util
 import spacy
 import stanza
+from app_constants import CORENLP_URL
 from autocorrect import Speller
 from fuzzywuzzy import fuzz, process
 from IO_files_util import make_directory
@@ -689,7 +690,7 @@ def check_for_typo(
             with open(dir_path, encoding="utf-8", errors="ignore") as src:
                 text = src.read().replace("\n", " ")
                 text = text.replace("%", "percent")
-                NLP = StanfordCoreNLP("http://172.16.0.12:9000")
+                NLP = StanfordCoreNLP(CORENLP_URL)
             from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
             sentences = sentence_split_stanza_text(stanzaPipeLine(text))

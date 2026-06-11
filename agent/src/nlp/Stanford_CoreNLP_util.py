@@ -33,6 +33,7 @@ import IO_user_interface_util
 import pandas as pd
 import parsers_annotators_visualization_util
 import reminders_util
+from app_constants import CORENLP_URL
 from pycorenlp import StanfordCoreNLP
 
 logger = logging.getLogger(__name__)
@@ -824,7 +825,7 @@ def CoreNLP_annotate(
     # DOES NOT WORK Increase and decrease the total amount of words within file and test the performance
     # DOES NOT WORK Test to see if file splitting process influences the performance
 
-    nlp = StanfordCoreNLP("http://172.16.0.12:9000")
+    nlp = StanfordCoreNLP(CORENLP_URL)
 
     # local test
     #     The corpus you have selected is too small for data reduction algorithms. These algorithms require a LARGE number of files.

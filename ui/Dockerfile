@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.8
+FROM --platform=$BUILDPLATFORM python:3.12
 
 EXPOSE 8000
 
