@@ -7,32 +7,48 @@ tags: []
 # Tech Debt
 
 Issues known but deliberately not fixed during the June 2026 overhaul, with
-enough context to pick each one up later.
+enough context to pick each one up later. Entries are tagged by priority:
+**P1** next up, **P2** worth a dedicated PR, **P3** fine to defer indefinitely.
+
+**Next up:**
+1. **[P1] Endpoint test coverage** — sentiment, topic modeling, ngrams first.
+2. **[P2] Package conversion** (flat sys.path → real package), own PR, no other changes.
+3. **[P3] Everything else** — security hardening only matters for a hosted
+   deployment; `iterrows()` vectorization only when an endpoint feels slow.
 
 ## Functional gaps
 
-- **Six UI pages never call their agent endpoints.** The templates render forms
-  but the views are GET-only, while the agent endpoints exist and work:
-  `NER.html` → `/ner`, `boxplot.html` → `/boxplot`, `wordnet.html` → `/wordnet`,
-  `gender_analysis.html` → (gender analysis), `shape_of_stories.html` → `/stories`,
-  `excel_plotly_charts.html` → `/excel_charts`. Wiring them up means converting
-  each view in `ui/app/views.py` to the `_proxy_post` helper and making the form
-  field names match the endpoint's `Form()` parameters in `agent/src/main.py`.
-- **Non-Python wordcloud "services" just open external websites** (TagCrowd,
-  Wordle, etc.), which a headless agent cannot do. The Python WordCloud backend
-  itself was restored June 2026 (`agent/src/analysis/wordclouds_util.py`,
-  ported from the desktop repo). The external-service options in the wordclouds
-  UI dropdown should either be removed or turned into plain links in the
-  template.
-- **Tips File feature removed, not replaced.** The web templates shipped broken
-  "Tips File" buttons pointing at `tips_files.js` and `TIPS_*.pdf` assets that
-  were never ported from the desktop app. The blocks were deleted (commit
-  5de2ebe). The original PDFs live in the upstream NLP-Suite desktop repo if
-  the feature is ever wanted back.
+- **[P3] Gender analysis: US Social Security plot path is coming-soon.** The
+  backend (`html_annotator_gender_main.py`) was ported June 2026 and the
+  CoreNLP + dictionary annotation paths work via `POST /gender`, but the
+  `plot_var` path needs the `lib/namesGender` data files
+  (`SS_yearOfBirth.csv`, `SS_state_yearOfBirth.csv`, CMU/census name lists)
+  that were never copied from the desktop repo. Copy them into `agent/lib/
+  namesGender/` (where `GUI_IO_util.namesGender_libPath` points), re-enable
+  the plot controls in `gender_analysis.html`, and stop hardcoding
+  `plot_var=False` in the endpoint.
+- **[P3] Non-Python wordcloud "services" just open external websites**
+  (TagCrowd, Wordle, etc.), which a headless agent cannot do. The Python
+  WordCloud backend itself was restored June 2026
+  (`agent/src/analysis/wordclouds_util.py`, ported from the desktop repo).
+  The external-service options in the wordclouds UI dropdown should either be
+  removed or turned into plain links in the template.
+- **[P3] Wordcloud image-mask options are coming-soon** (`prepareImage`,
+  `usePNGFile`, `imageContour`, `useColorsForCsvColumns` in
+  `wordclouds.html`): the `/wordcloud` endpoint accepts the params and the
+  backend supports masks, but there is no image-upload workflow in the web UI.
+  Same story for `manualCoreference` in `SVO.html` (needs an interactive
+  split-screen editor) and `csv_file_var` in `NGrams_CoOccurrences.html`
+  (needs a csv-file picker).
+- **[P3] Tips File feature removed, not replaced.** The web templates shipped
+  broken "Tips File" buttons pointing at `tips_files.js` and `TIPS_*.pdf`
+  assets that were never ported from the desktop app. The blocks were deleted
+  (commit 5de2ebe). The original PDFs live in the upstream NLP-Suite desktop
+  repo if the feature is ever wanted back.
 
 ## Architecture
 
-- **Flat sys.path imports.** `agent/src/main.py` adds every `agent/src/*`
+- **[P2] Flat sys.path imports.** `agent/src/main.py` adds every `agent/src/*`
   subdirectory to `sys.path`, and ~105 modules import each other by bare name.
   This defeats IDE navigation/refactoring and caused most of the 84 undefined-
   name bugs fixed in Phase 2. The right fix is converting `agent/src` into a
@@ -41,74 +57,53 @@ enough context to pick each one up later.
   Related constraint: `Stanford_CoreNLP_util.py` imports the `corenlp_json_*`
   modules at its bottom, so those modules must not import it at module level
   (shared helpers live in `corenlp_json_common.py` instead).
-- **Single-job concurrency by design.** The agent holds one `threading.Lock`;
-  concurrent requests get 503. Fine for a single-researcher desktop tool, but
-  any multi-user deployment needs a real job queue.
+- **[P3] Single-job concurrency by design.** The agent holds one
+  `threading.Lock`; concurrent requests get 503. Fine for a single-researcher
+  desktop tool, but any multi-user deployment needs a real job queue.
 
 ## Code quality
 
-- **~129 inline TODO/FIXME comments** remain in `agent/src`, inherited from the
-  research codebase (`grep -rn TODO agent/src`). They were left in place because
-  most document genuine known limitations (chart column-format quirks, CoreNLP
-  option handling, geocoding edge cases) rather than stale notes. Densest files:
-  `gis/GIS_geocode_util.py`, `nlp/corenlp_json_syntax.py`, `charts/`.
-- **Python 3.9 ceiling.** The agent image (ubuntu:20.04) runs Python 3.9, so
-  3.10+ syntax (`X | None`, `zip(strict=)`, match statements) breaks at runtime.
-  ruff `target-version = "py39"` in pyproject.toml guards lint suggestions, but
-  nothing guards hand-written code; tests run on the host's newer Python and
-  won't catch it. Consider a newer base image when upgrading the ML stack.
+- **[P3] ~129 inline TODO/FIXME comments** remain in `agent/src`, inherited
+  from the research codebase (`grep -rn TODO agent/src`). They were left in
+  place because most document genuine known limitations (chart column-format
+  quirks, CoreNLP option handling, geocoding edge cases) rather than stale
+  notes. Densest files: `gis/GIS_geocode_util.py`, `nlp/corenlp_json_syntax.py`,
+  `charts/`.
+- **[P3] Python 3.9 ceiling.** The agent image (ubuntu:20.04) runs Python 3.9,
+  so 3.10+ syntax (`X | None`, `zip(strict=)`, match statements) breaks at
+  runtime. ruff `target-version = "py39"` in pyproject.toml guards lint
+  suggestions, but nothing guards hand-written code; tests run on the host's
+  newer Python and won't catch it. Consider a newer base image when upgrading
+  the ML stack.
 
-## Performance (flagged, not fixed)
+## Performance
 
-- **NLP models reload on every job.** Each request constructs its pipelines
-  from scratch: `stanza.Pipeline(...)` in `file_search_byWord_util.py:134`,
-  `statistics_txt_util.py` (sentence-complexity path), and
-  `wordclouds_util.py` (txt-input path, one pipeline per job),
-  `SentenceTransformer("all-MiniLM-L6-v2")` in `topic_modeling_bert_util.py:56`.
-  Model loads dominate small-corpus job time. A module-level cache keyed by
-  (model, processors) would fix it, but lifetime/memory interactions with the
-  single-job worker need thought (`NGrams_util` already has a homegrown
-  `called` flag cache showing the pattern).
-- **Pervasive `df.iterrows()`/row-append loops** (~31 sites) inherited from the
-  research code. Vectorizing is per-algorithm work; only worth it for the
-  endpoints that feel slow in practice.
+- **Model-load caching: fixed June 2026** via `agent/src/core/model_cache.py`
+  (process-wide dict keyed by model args; stanza/spaCy/SentenceTransformer
+  getters). Residuals not converted: `Stanza_functions_util.py` builds its
+  module-level `stanzaPipeLine` at import time (already once-per-process, but
+  it loads even for jobs that never use it — could become lazy via the cache),
+  and `file_spell_checker_util.py`'s `MultilingualPipeline()` calls.
+- **[P3] Pervasive `df.iterrows()`/row-append loops** (~31 sites) inherited
+  from the research code. Vectorizing is per-algorithm work; only worth it for
+  the endpoints that feel slow in practice.
 
-## Security / deployment
+## Security / deployment (defer until any hosted deployment)
 
-- **Django `SECRET_KEY` is hardcoded** in `ui/config/settings.py` (marked
+- **[P3] Django `SECRET_KEY` is hardcoded** in `ui/config/settings.py` (marked
   `django-insecure-`) and `DEBUG` defaults on. Acceptable for the local
   Docker-only research tool; must be env-injected before any hosted deployment.
-- **CORS is wide open** (`allow_origins=["*"]`) on the agent. Same caveat.
+- **[P3] CORS is wide open** (`allow_origins=["*"]`) on the agent. Same caveat.
 
 ## Testing
 
-- **~20 of 26 agent endpoints have no tests** (covered: core utils, NER,
-  wordnet, boxplot, excel charts, gender analysis*, shape of stories*;
-  \*integration-marked). The biggest gaps: sentiment, topic modeling, parse,
-  word2vec, conll_table, svo, gis, wordcloud, ngrams, statistics.
-
-## UI / UX
-
-- **Permanently disabled controls** are scattered across several pages — they look
-  interactive but can never be clicked. Examples: UTF-8/ASCII encoding checkboxes
-  in `file_manager.html`, image-mask options in `wordclouds.html` (`prepareImage`,
-  `usePNGFile`, `imageContour`, `useColorsForCsvColumns`), `manualCoreference` and
-  `gephi_var` in `SVO.html`, `WordNet_var` in `CoNLL_table_analyzer_main.html`.
-  These are stubs from the desktop app for features not yet ported. They should
-  either be removed from the template or rendered as greyed-out "coming soon" items
-  with a tooltip explaining why. (JS-dependent disabling — e.g. `ner_tags` enabled
-  only when Stanford package is selected — is intentional and should stay.)
-  Also: `search-ngram-csv-file` in `NGrams_CoOccurrences.html` (a stub button with
-  no handler) and `selectDictionaryFile` in `word2vec.html` (see next bullet).
-- **`word2vec.js` is entirely dead code.** Every `getElementById` in it targets
-  desktop-era IDs (`wordSenseInduction`, `wordEmbeddingsBERT`, …) that don't exist
-  in `word2vec.html` (real IDs: `WSI_var`, `BERT_var`, …), so the script throws on
-  load and none of its mutual-exclusion enable/disable logic runs. The
-  "Select dictionary file" button on that page does nothing for the same reason.
-  The bottom half of `filesearchword.js` (the `availableGUIs` block) has the same
-  problem — it throws after `listofitems3()` runs, so only the +/− widget works
-  (the `submitbutton2` function survives via hoisting). Fix means rewriting the
-  ID wiring against the current templates.
+- **[P1] ~20 of 27 agent endpoints have no tests** (covered: core utils,
+  model cache, NER, wordnet, boxplot, excel charts, gender analysis*, shape of
+  stories*; \*integration-marked). The biggest gaps: sentiment, topic
+  modeling, parse, word2vec, conll_table, svo, gis, wordcloud, ngrams,
+  statistics. Note most existing run_* tests skip on the host (heavy deps
+  live in the Docker image) — run them in the agent container, or with
+  integration deps installed locally.
 
 ## Forks (corenlp/, mallet/) — no code changes by policy
 
