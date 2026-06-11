@@ -55,6 +55,7 @@ def run_file_manager(
     # if inputDir == outputDir and list_var ==False:
     # Frontend Implementation
 
+    """List, rename, copy, move, delete, or split corpus files per the selected options."""
     filesToOpen = []
     fileList = []
 

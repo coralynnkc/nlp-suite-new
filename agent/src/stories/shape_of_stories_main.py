@@ -44,6 +44,7 @@ def run(
     best_topic_estimation,
 ):
 
+    """Compute document sentiment arcs and cluster them into story shapes."""
     config_filename = defaultConfigFilename
     nSAscoreFiles = 0
     filesToOpen = []

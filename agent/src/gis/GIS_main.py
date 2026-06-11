@@ -39,6 +39,7 @@ def run_GIS(
     GIS_package2_var,
 ):
 
+    """Geocode locations found in the corpus and produce interactive maps."""
     config_filename = "NLP_default_IO_config.csv"
 
     filesToOpen = []

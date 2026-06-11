@@ -35,6 +35,7 @@ def run_word2vec(
     ngramsDropDown,
 ):
 
+    """Train Word2Vec embeddings on the corpus and visualize them."""
     config_filename = "NLP_default_IO_config.csv"
     scriptName = "word2vec.py"
 

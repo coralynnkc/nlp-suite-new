@@ -30,6 +30,7 @@ def run_style_analysis(
     max_rating_sd,
 ):
 
+    """Run the selected readability/complexity/vocabulary style analyses."""
     openOutputFiles = True
     config_filename = "NLP_default_IO_config.csv"
 

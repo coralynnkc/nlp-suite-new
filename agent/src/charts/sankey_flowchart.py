@@ -31,6 +31,7 @@ def run_sankey(
     Sankey_limit3_var,
 ):
 
+    """Render a Sankey flowchart from categorical csv fields."""
     file = _first_csv(inputDir)
 
     # # @@@ nan values will break the code

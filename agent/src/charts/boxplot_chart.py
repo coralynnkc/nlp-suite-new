@@ -17,6 +17,7 @@ def run(
     inputFileData,
 ):
 
+    """Render a boxplot from a numeric csv field."""
     filesToOpen = []
 
     # if extra_GUIs_var.get()==False and csv_field_visualization_var == '':

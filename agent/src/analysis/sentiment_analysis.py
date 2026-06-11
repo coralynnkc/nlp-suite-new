@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 def run_sentiment_analysis(
     inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, mean_var, median_var, SA_algorithm_var
 ):
+    """Score the corpus with the selected sentiment algorithm and chart results."""
     logger.info('%s %s %s %s %s %s %s %s', inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation, mean_var, median_var, SA_algorithm_var)
     # get the NLP package and language options
     (
