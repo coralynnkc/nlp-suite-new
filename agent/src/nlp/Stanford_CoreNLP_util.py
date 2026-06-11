@@ -20,7 +20,6 @@ WE DO NOT USE ANY OF THESE RECOMMENDATIONS
 
 import logging
 import os
-import string
 import time
 
 import file_splitter_ByLength_util
