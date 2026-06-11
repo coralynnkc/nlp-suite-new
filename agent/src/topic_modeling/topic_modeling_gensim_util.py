@@ -195,7 +195,7 @@ def malletModelling(
     optimal_coherence = float("-inf")
     index = 0
     optimal_index = -1
-    for m, cv in zip(x, coherence_values, strict=False):
+    for m, cv in zip(x, coherence_values):
         coherence_value = round(cv, 4)
         if coherence_value > optimal_coherence:
             optimal_index = index

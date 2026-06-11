@@ -536,7 +536,7 @@ def process_json_openIE(config_filename, documentID, document, sentenceID, json,
                 [
                     sentenceID,
                     complete_sent,
-                    [[x, y] for x, y in zip(location_list, NER_value, strict=False)],
+                    [[x, y] for x, y in zip(location_list, NER_value)],
                 ]
             )
 

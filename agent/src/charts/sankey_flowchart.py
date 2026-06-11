@@ -93,7 +93,7 @@ def main():
 
     rows = [row.split(",") for row in data.split("\n")]
     headers = rows[0]
-    data_list = [dict(zip(headers, row, strict=False)) for row in rows[1:]]
+    data_list = [dict(zip(headers, row)) for row in rows[1:]]
 
     data = json.dumps(data_list)
 
