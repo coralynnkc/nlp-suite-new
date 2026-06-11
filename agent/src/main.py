@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -599,10 +600,18 @@ def wordcloud(
     prepareImage: Annotated[bool, Form()] = False,
     imageContour: Annotated[bool, Form()] = False,
     useColorsForCsvColumns: Annotated[bool, Form()] = False,
-    csvField: Annotated[bool, Form()] = False,
+    csvField: Annotated[str, Form()] = "[]",
     intermediateWordcloudFiles: Annotated[bool, Form()] = False,
 ) -> PlainTextResponse:
     input_dir = os.path.expanduser(inputDirectory)
+    # csvField arrives as a JSON list of column names and colors, e.g.
+    # ["col1", "col2", "(250, 0, 0)", "|"]; an empty/non-JSON value means no selection
+    try:
+        csvField_color_list = json.loads(csvField)
+        if not isinstance(csvField_color_list, list):
+            csvField_color_list = []
+    except (json.JSONDecodeError, TypeError):
+        csvField_color_list = []
     return dispatch(
         app,
         lambda: run_wordcloud(
@@ -623,7 +632,7 @@ def wordcloud(
             selectedImage="",
             use_contour_only=imageContour,
             differentColumns_differentColors=useColorsForCsvColumns,
-            csvField_color_list=csvField,
+            csvField_color_list=csvField_color_list,
             openOutputFiles=False,
             doNotCreateIntermediateFiles=intermediateWordcloudFiles,
         ),
