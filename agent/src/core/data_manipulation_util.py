@@ -149,7 +149,7 @@ def export_csv_to_csv_txt(
     value: str
     header: str
     for sign, value, cond, header, df in zip(
-        sign_var, value_var, and_or, headers, data_files, strict=False
+        sign_var, value_var, and_or, headers, data_files
     ):
         if sign == "''" and value == "''":
             df_list.append(df[[header]])

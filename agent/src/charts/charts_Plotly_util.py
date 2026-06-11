@@ -624,7 +624,7 @@ def bubble_chart(
     df[x] = df[x].astype(str)
     df[y] = df[y].astype(str)
 
-    xy_pairs = list(zip(df[x], df[y], strict=False))
+    xy_pairs = list(zip(df[x], df[y]))
     pair_counts = Counter(xy_pairs)
 
     unique_pairs = list(pair_counts.keys())
@@ -646,7 +646,7 @@ def bubble_chart(
 
     labels = [
         f"{pair[0]}, {pair[1]}\nFreq: {freq}"
-        for pair, freq in zip(unique_pairs, frequencies, strict=False)
+        for pair, freq in zip(unique_pairs, frequencies)
     ]
 
     unique_frequencies = sorted(set(frequencies))

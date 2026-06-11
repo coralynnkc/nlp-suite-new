@@ -117,7 +117,7 @@ def extract_dep_info(sent_info):
 
 def merge_token_infos(first, second, third, forth):
     list_tokens = []
-    for a, b, c, d in zip(first, second, third, forth, strict=False):
+    for a, b, c, d in zip(first, second, third, forth):
         list_tokens.append(a + b + c + d)
     return list_tokens
 

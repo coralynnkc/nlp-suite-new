@@ -421,7 +421,6 @@ def process_ngrams(data, word, minus_K_words_var, plus_K_words_var):
     else:
         filtered_data["Words to the left"], filtered_data["Words to the right"] = zip(
             *filtered_data[column_name].apply(lambda x: extract_context(x, word, minus_K_words_var, plus_K_words_var)),
-            strict=False,
         )
         filtered_data["Search word"] = word
     return initial_filter_data, filtered_data

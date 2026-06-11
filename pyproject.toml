@@ -8,12 +8,14 @@ exclude = [
     "__pycache__",
 ]
 line-length = 120
+# The agent container runs Python 3.9 (ubuntu:20.04); keep UP rules from
+# suggesting 3.10+ syntax like X | None annotations.
+target-version = "py39"
 
 [tool.ruff.lint]
 # E/W = pycodestyle  F = pyflakes  I = isort  UP = pyupgrade  B = bugbear
 select = ["E", "W", "F", "I", "UP", "B"]
 ignore = [
     "E501",   # line too long — reported but not a blocker for research code
-    "UP007",  # X | Y union syntax — requires Python 3.10+
     "E402",   # module import not at top — legacy pattern in research scripts
 ]

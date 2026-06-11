@@ -8,7 +8,6 @@ import os
 
 import charts_util
 import config_util
-from app_constants import CONTINENTS
 import GIS_file_check_util
 import GIS_geocode_util
 import GIS_Google_Maps_util
@@ -21,6 +20,7 @@ import IO_files_util
 import IO_user_interface_util
 import pandas as pd
 import reminders_util
+from app_constants import CONTINENTS
 from util import collect
 
 logger = logging.getLogger(__name__)
