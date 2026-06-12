@@ -1,8 +1,8 @@
-import csv
 import os
-import pathlib
 
 import pytest
+from conftest import output_csvs as _output_csvs
+from conftest import read_rows as _read_rows
 
 # sentiment_analysis imports pandas-dependent helpers at module level; skip on
 # hosts without the agent image's dependencies.
@@ -10,15 +10,6 @@ try:
     from sentiment_analysis import run_sentiment_analysis
 except (ImportError, SystemExit):
     pytest.skip("sentiment_analysis dependencies not available", allow_module_level=True)
-
-
-def _output_csvs(outputDir):
-    return sorted(str(p) for p in pathlib.Path(outputDir).rglob("*.csv"))
-
-
-def _read_rows(csv_path):
-    with open(csv_path, newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
 
 
 def _run(tiny_corpus, tmp_output, algorithm, mean_var=True, median_var=False):
