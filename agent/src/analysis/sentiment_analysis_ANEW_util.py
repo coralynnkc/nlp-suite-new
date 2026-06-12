@@ -194,7 +194,9 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
     """Run ANEW over a single txt file or a directory of txt files."""
     filesToOpen = []
 
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label="sentiment_ANEW", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label="sentiment_ANEW", silent=True
+    )
     if outputDir == "":
         return
 
@@ -262,7 +264,11 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
                 "Dominance score (Median)",
             ]
         elif mode == "median":
-            columns_to_be_plotted_yAxis = ["Sentiment score (Median)", "Arousal score (Median)", "Dominance score (Median)"]
+            columns_to_be_plotted_yAxis = [
+                "Sentiment score (Median)",
+                "Arousal score (Median)",
+                "Dominance score (Median)",
+            ]
         else:
             columns_to_be_plotted_yAxis = ["Sentiment score (Mean)", "Arousal score (Mean)", "Dominance score (Mean)"]
 

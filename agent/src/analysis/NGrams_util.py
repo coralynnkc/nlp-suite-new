@@ -106,6 +106,8 @@ def readandsplit(
         nlp = get_stanza_pipeline(lang="en", processors="tokenize,lemma")
         doc = nlp("".join(out))
         return [token.lemma for sentence in doc.sentences for token in sentence.words]
+
+
 import os
 from collections import Counter
 

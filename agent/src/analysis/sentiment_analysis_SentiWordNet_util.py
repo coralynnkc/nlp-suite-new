@@ -113,14 +113,24 @@ def analyzefile(inputFilename, writer, Document_ID, Document):
         )
 
 
-def main(inputFilename, inputDir, outputDir, configFileName, mode, chartPackage="Excel", dataTransformation="No transformation"):
+def main(
+    inputFilename,
+    inputDir,
+    outputDir,
+    configFileName,
+    mode,
+    chartPackage="Excel",
+    dataTransformation="No transformation",
+):
     """Run SentiWordNet over a single txt file or a directory of txt files."""
     # SentiWordNet computes a single sentiment score per sentence; mode (mean/median) does not apply
     filesToOpen = []
 
     _ensure_nltk_resources()
 
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label="sentiment_sentiWN", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label="sentiment_sentiWN", silent=True
+    )
     if outputDir == "":
         return
 

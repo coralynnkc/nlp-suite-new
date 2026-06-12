@@ -56,7 +56,9 @@ def test_extra_kwargs_part_of_key(fake_stanza):
 def test_spacy_disable_part_of_key(monkeypatch):
     calls = []
     monkeypatch.setitem(
-        sys.modules, "spacy", types.SimpleNamespace(load=lambda name, disable: calls.append((name, tuple(disable))) or object())
+        sys.modules,
+        "spacy",
+        types.SimpleNamespace(load=lambda name, disable: calls.append((name, tuple(disable))) or object()),
     )
     full = model_cache.get_spacy_model("en_core_web_sm")
     partial = model_cache.get_spacy_model("en_core_web_sm", disable=("parser", "ner"))

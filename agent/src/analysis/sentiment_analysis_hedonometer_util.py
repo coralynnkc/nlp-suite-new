@@ -132,7 +132,9 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
     """Run the Hedonometer over a single txt file or a directory of txt files."""
     filesToOpen = []
 
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label="sentiment_hedo", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label="sentiment_hedo", silent=True
+    )
     if outputDir == "":
         return
 
