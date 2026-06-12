@@ -11,7 +11,8 @@ enough context to pick each one up later. Entries are tagged by priority:
 **P1** next up, **P2** worth a dedicated PR, **P3** fine to defer indefinitely.
 
 **Next up:**
-1. **[P1] Endpoint test coverage** — sentiment, topic modeling, ngrams first.
+1. **[P1] Endpoint test coverage** — parse, word2vec, conll_table, svo, gis,
+   statistics next (sentiment, topic modeling, ngrams done June 2026).
 2. **[P2] Package conversion** (flat sys.path → real package), own PR, no other changes.
 3. **[P3] Everything else** — security hardening only matters for a hosted
    deployment; `iterrows()` vectorization only when an endpoint feels slow.
@@ -40,6 +41,18 @@ enough context to pick each one up later. Entries are tagged by priority:
   Same story for `manualCoreference` in `SVO.html` (needs an interactive
   split-screen editor) and `csv_file_var` in `NGrams_CoOccurrences.html`
   (needs a csv-file picker).
+- **[P3] BERT_util is a partial port.** The sentiment backend (ported June
+  2026 after `/sentiment_analysis` was found to crash on missing modules) only
+  includes the upstream sentiment functions. The upstream `NER_tags_BERT`,
+  `doc_summary_BERT`, and `word_embeddings_BERT` depend on packages not in the
+  agent image (`contextualSpellCheck`, `bert-extractive-summarizer`) and were
+  not ported.
+- **[P3] External-software install flow is desktop-era.** Algorithms needing
+  external software (WordNet jars, Google Earth, …) used to launch the
+  `NLP_setup_external_software_main.py` tkinter GUI, which does not exist in
+  the agent; they now log a warning and return. A headless download path into
+  `~/nlp-suite/external_software` would be needed to re-enable, e.g., the
+  WordNet knowledge-graph endpoint (its test skips when the software is absent).
 - **[P3] Tips File feature removed, not replaced.** The web templates shipped
   broken "Tips File" buttons pointing at `tips_files.js` and `TIPS_*.pdf`
   assets that were never ported from the desktop app. The blocks were deleted
@@ -97,13 +110,18 @@ enough context to pick each one up later. Entries are tagged by priority:
 
 ## Testing
 
-- **[P1] ~20 of 27 agent endpoints have no tests** (covered: core utils,
-  model cache, NER, wordnet, boxplot, excel charts, gender analysis*, shape of
-  stories*; \*integration-marked). The biggest gaps: sentiment, topic
-  modeling, parse, word2vec, conll_table, svo, gis, wordcloud, ngrams,
-  statistics. Note most existing run_* tests skip on the host (heavy deps
-  live in the Docker image) — run them in the agent container, or with
-  integration deps installed locally.
+- **[P1] ~16 of 27 agent endpoints have no tests** (covered: core utils,
+  model cache, NER, wordnet*, boxplot, excel charts, wordcloud, sentiment,
+  topic modeling (Gensim), ngrams, gender analysis*, shape of stories*;
+  \*integration- or external-software-gated). The biggest remaining gaps:
+  parse, word2vec, conll_table, svo, gis, statistics. Tests skip on the host
+  (heavy deps live in the Docker image); run them in the agent container:
+  `docker run --rm -v "$PWD/agent:/work" -w /work nlp-suite-agent python3.9 -m pytest tests/`
+- **[P3] MALLET topic modeling has no hermetic test.** The mallet service
+  reads its own mounted `/app/input` (the live `~/nlp-suite/input`), so a
+  test would touch real user data. The BERTopic path and roBERTa sentiment
+  are testable but gated behind `NLP_SUITE_TEST_BERT=1` (large HuggingFace
+  model downloads on first run).
 
 ## Forks (corenlp/, mallet/) — no code changes by policy
 

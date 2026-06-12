@@ -1,3 +1,6 @@
+import glob
+import os
+
 import pytest
 
 try:
@@ -6,6 +9,12 @@ except (ImportError, SystemExit):
     pytest.skip("knowledge_graphs_WordNet_main dependencies not available", allow_module_level=True)
 
 
+def _wordnet_installed():
+    external = os.path.join(os.path.expanduser("~"), "nlp-suite", "external_software")
+    return bool(glob.glob(os.path.join(external, "*[Ww]ord[Nn]et*")))
+
+
+@pytest.mark.skipif(not _wordnet_installed(), reason="WordNet external software not in ~/nlp-suite/external_software")
 def test_wordnet_noun_extraction(fixture_txt, tmp_output):
     run_kg_wordnet(
         inputFilename=str(fixture_txt),

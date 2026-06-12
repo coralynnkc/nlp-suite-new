@@ -25,6 +25,12 @@ def fixture_csv():
 
 
 @pytest.fixture
+def tiny_corpus():
+    """Directory of 8 short txt files (cooking and space themes)."""
+    return _FIXTURES / "tiny_corpus"
+
+
+@pytest.fixture
 def tmp_output(tmp_path):
     return tmp_path
 
