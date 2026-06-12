@@ -1,9 +1,9 @@
 import csv
+import glob
 import logging
 import os
 import subprocess
 import webbrowser
-from subprocess import call
 from sys import platform
 
 import GUI_IO_util
@@ -220,7 +220,9 @@ def check_java_installation(script):
 
 # the function checks that a called Java or Python file is available in the src subdirectory
 def check_inputPythonJavaProgramFile(programName, subdirectory="src"):
-    if not os.path.isfile(GUI_IO_util.NLPPath + os.sep + subdirectory + os.sep + programName):
+    base = GUI_IO_util.NLPPath + os.sep + subdirectory
+    # src is organized into subpackages (analysis/, nlp/, ...), so search recursively
+    if not glob.glob(os.path.join(base, "**", programName), recursive=True):
         logger.info(
             "Input file error %s",
             "The required file "
@@ -930,28 +932,18 @@ def display_download_installation_messages(
         if (software_dir == "" or software_dir is None) and (
             "NLP_menu" not in calling_script and "NLP_setup_external_software" not in calling_script
         ):
+            # the desktop app opened the NLP_setup_external_software_main.py GUI here;
+            # the headless agent can only report that the software is missing
             opening_message = (
                 "The script "
                 + calling_script.upper()
                 + " requires the external software "
                 + software_name.upper()
-                + " to run. The software needs to downloaded/installed."
-                "\n\nFor your convenience, the download function can automatically open the NLP_setup_external_software_main.py GUI "
-                "where you can download and install this and any other required external software."
-                "\n\nDO YOU WANT TO OPEN THE GUI?"
+                + " to run. The software needs to be downloaded into ~/nlp-suite/external_software."
             )
             if not silent:
-                logger.info("%s %s", software_name + " installation", opening_message)
+                logger.warning("%s installation: %s", software_name, opening_message)
                 download_message = ""
-                call("python NLP_setup_external_software_main.py", shell=False)
-                # must get software_dir in case it was changed in the NLP_setup_external_software_main GUI
-                software_dir, software_url, missing_software, error_found = get_external_software_dir(
-                    calling_script,
-                    software_name,
-                    silent=True,
-                    only_check_missing=True,
-                    install_download="install",
-                )
                 return (
                     software_dir,
                     title,

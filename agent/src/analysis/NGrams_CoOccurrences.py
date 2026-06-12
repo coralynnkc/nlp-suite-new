@@ -391,3 +391,6 @@ def run_ngrams(
             collect(filesToOpen, outputFiles)
 
         return filesToOpen
+
+    # compute-only runs (no viewer) collect their outputs above
+    return filesToOpen
