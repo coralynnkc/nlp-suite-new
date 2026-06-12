@@ -45,3 +45,7 @@ ui/static/
 # Input & output
 input/
 output/
+
+# Agent runtime artifacts
+agent/reminders/
+agent/.pytest_cache/
