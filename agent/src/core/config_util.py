@@ -543,11 +543,13 @@ def get_date_options(config_filename, config_input_output_numeric_options):
             # date options saved: date format, date characters separator, date position in filename
             # =4 when date options are available (path + sort order + 3 date options), otherwise =1
             # @@@RF
-            if config_input_output_alphabetic_options[index][4] != "":  # check date format field
+            # rows from a missing config file are 5-element templates with no date fields
+            row = config_input_output_alphabetic_options[index]
+            if len(row) > 5 and row[4] != "":  # check date format field
                 filename_embeds_date_var = 1
-                date_format_var = config_input_output_alphabetic_options[index][4]
-                items_separator_var = config_input_output_alphabetic_options[index][3]
-                date_position_var = int(config_input_output_alphabetic_options[index][5])
+                date_format_var = row[4]
+                items_separator_var = row[3]
+                date_position_var = int(row[5])
             index = index + 1
     return (
         filename_embeds_date_var,

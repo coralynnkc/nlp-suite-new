@@ -50,15 +50,16 @@ def run_sentiment_analysis(
         logger.info("Warning No option has been selected.\n\nPlease, select a Sentiment analysis option and try again.")
         return
 
-    mode = "both"
+    # the per-algorithm gates below require mean_var or median_var; default to
+    # mean when neither was ticked so a bare algorithm selection still runs
     if not mean_var and not median_var:
-        mode = "mean"
-    elif mean_var and not median_var:
-        mode = "mean"
-    elif not mean_var and median_var:
-        mode = "median"
-    elif mean_var and median_var:
+        mean_var = True
+    if mean_var and median_var:
         mode = "both"
+    elif median_var:
+        mode = "median"
+    else:
+        mode = "mean"
 
     BERT_var = 0
     SentiWordNet_var = 0
@@ -224,9 +225,10 @@ def run_sentiment_analysis(
     # DICTIONARY APPROACHES -------------------------------------------------------------------
 
     # ANEW _______________________________________________________
-    import sentiment_analysis_ANEW_util
 
     if anew_var == 1 and (mean_var or median_var):
+        import sentiment_analysis_ANEW_util
+
         if language == "English":
             if not lib_util.checklibFile(
                 GUI_IO_util.sentiment_libPath + os.sep + "EnglishShortenedANEW.csv", "sentiment_analysis_ANEW"
@@ -246,9 +248,10 @@ def run_sentiment_analysis(
             )
 
     # HEDONOMETER _______________________________________________________
-    import sentiment_analysis_hedonometer_util
 
     if SA_algorithm_var == "*" or hedonometer_var == 1 and (mean_var or median_var):
+        import sentiment_analysis_hedonometer_util
+
         if not lib_util.checklibFile(
             GUI_IO_util.sentiment_libPath + os.sep + "hedonometer.json", "sentiment_analysis_hedonometer_util.py"
         ):
@@ -268,9 +271,10 @@ def run_sentiment_analysis(
             )
 
     # SentiWordNet _______________________________________________________
-    import sentiment_analysis_SentiWordNet_util
 
     if SA_algorithm_var == "*" or SentiWordNet_var == 1 and (mean_var or median_var):
+        import sentiment_analysis_SentiWordNet_util
+
         if language == "English":
             if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_SentiWordNet_util.py"):
                 return
@@ -288,9 +292,10 @@ def run_sentiment_analysis(
             )
 
     # VADER _______________________________________________________
-    import sentiment_analysis_VADER_util
 
     if SA_algorithm_var == "*" or vader_var == 1 and (mean_var or median_var):
+        import sentiment_analysis_VADER_util
+
         if language == "English":
             if not lib_util.checklibFile(
                 GUI_IO_util.sentiment_libPath + os.sep + "vader_lexicon.txt", "sentiment_analysis_VADER_util.py"

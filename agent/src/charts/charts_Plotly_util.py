@@ -44,7 +44,11 @@ def create_Plotly_chart(
         X_axis_var = []
     if csv_field_Y_axis_list is None:
         csv_field_Y_axis_list = []
-    if inputFileData:
+    # inputFileData may be a csv string (the agent endpoints) or an already-read DataFrame
+    if isinstance(inputFileData, pd.DataFrame):
+        data = inputFileData.copy()
+        inputFilename = None  # No need to refer to a file when using inputFileData
+    elif inputFileData:
         try:
             # Convert inputFileData to a DataFrame
             data = pd.read_csv(io.StringIO(inputFileData), encoding="utf-8", on_bad_lines="skip")
@@ -126,7 +130,7 @@ def create_Plotly_chart(
                 for chart_name in lst:
                     df2 = df2_fn(chart_name) if df2_fn else None
                     fig = fig_fn(df2, chart_name)
-                    chart_html = fig.to_html(full_html=False, include_Plotlyjs="cdn")
+                    chart_html = fig.to_html(full_html=False, include_plotlyjs="cdn")
                     chart_htmls.append(f'<div class="chart">{chart_html}</div>')
                 final_html = _html_template.format(charts="".join(chart_htmls))
                 with open(outputDir + os.sep + types + "chart of the " + x_cols + ".html", "w") as file:

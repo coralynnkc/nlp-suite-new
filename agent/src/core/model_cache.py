@@ -47,3 +47,10 @@ def get_sentence_transformer(name="all-MiniLM-L6-v2"):
 
     key = ("sentence_transformer", name)
     return _get_or_create(key, lambda: SentenceTransformer(name))
+
+
+def get_hf_pipeline(task, model_name, **kwargs):
+    from transformers import pipeline
+
+    key = ("hf_pipeline", task, model_name, tuple(sorted(kwargs.items())))
+    return _get_or_create(key, lambda: pipeline(task, model=model_name, tokenizer=model_name, **kwargs))
