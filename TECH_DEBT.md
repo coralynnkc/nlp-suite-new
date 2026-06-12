@@ -11,8 +11,9 @@ enough context to pick each one up later. Entries are tagged by priority:
 **P1** next up, **P2** worth a dedicated PR, **P3** fine to defer indefinitely.
 
 **Next up:**
-1. **[P1] Endpoint test coverage** — parse, word2vec, conll_table, svo, gis,
-   statistics next (sentiment, topic modeling, ngrams done June 2026).
+1. **[P2] Port the /word2vec backends** (`word2vec_Gensim_util`, `WSI_*`) from
+   the desktop repo — the endpoint never worked (see Functional gaps below);
+   tests now document the breakage.
 2. **[P2] Package conversion** (flat sys.path → real package), own PR, no other changes.
 3. **[P3] Everything else** — security hardening only matters for a hosted
    deployment; `iterrows()` vectorization only when an endpoint feels slow.
@@ -41,6 +42,37 @@ enough context to pick each one up later. Entries are tagged by priority:
   Same story for `manualCoreference` in `SVO.html` (needs an interactive
   split-screen editor) and `csv_file_var` in `NGrams_CoOccurrences.html`
   (needs a csv-file picker).
+- **[P2] /word2vec backends were never ported — every real option crashes.**
+  Discovered June 2026 while writing endpoint tests: `word2vec.py` imports
+  `word2vec_Gensim_util` and `WSI_util`/`WSI_keyterms`/`WSI_viz` (missing from
+  `agent/src`, ModuleNotFoundError) and calls `BERT_util.word_embeddings_BERT`
+  (never ported, AttributeError). `tests/test_word2vec.py` pins down each
+  failure mode. Port from the upstream desktop repo
+  (`gh api repos/NLP-Suite/NLP-Suite/contents/src/<file>?ref=current-stable`),
+  Gensim path first — it has no heavy new dependencies.
+- **[P2] CoNLL table "all analyses" modules were never ported.** The seven
+  `CoNLL_*_analysis_util` modules (clause, noun, adjective, ratio, adverb,
+  verb, function-words) are imported inside `run_CoNLL_table_analyzer` but
+  missing from `agent/src/nlp`, so `all_analyses_var=True` always raises
+  ModuleNotFoundError (documented by `tests/test_conll_table.py`). The search,
+  compute-sentence, and k-sentences paths work and are tested.
+- **[P3] /gis csv-file input silently does nothing.** `GIS_main.py` passes the
+  placeholder string `NER_StanfordCoreNLP_output` to `GIS_pipeline` instead of
+  the selected csv file whenever `NER_extractor` is off, so the pipeline bails
+  out on a nonexistent file (documented by `tests/test_gis.py`). The pipeline
+  itself works when handed a real locations csv (that's how SVO calls it, and
+  how the mocked-geocoder test exercises it). Related bugs found in the same
+  sweep: `GIS_geocode_util.geocode:688` hits UnboundLocalError on `date` when
+  the input has no Date column — confirmed against live CoreNLP + Nominatim,
+  this breaks the *entire* `/gis` NER path for corpora without filename dates
+  (the network-gated test in `tests/test_gis.py` is xfail-marked on it); and
+  `GIS_main.py:88` calls `area_var.set(...)` (a tkinter remnant) on a plain
+  string when the area value is malformed.
+- **[P3] CoNLL k-sentences crashes on short documents.**
+  `CoNLL_k_sentences_util.k_sent:181` truth-tests a pandas Series whenever a
+  document has <= 2*K sentences (`ValueError: truth value of a Series is
+  ambiguous`); fine for K=1 on real documents, but any short document kills
+  the whole run (documented by `tests/test_conll_table.py`).
 - **[P3] BERT_util is a partial port.** The sentiment backend (ported June
   2026 after `/sentiment_analysis` was found to crash on missing modules) only
   includes the upstream sentiment functions. The upstream `NER_tags_BERT`,
@@ -110,13 +142,18 @@ enough context to pick each one up later. Entries are tagged by priority:
 
 ## Testing
 
-- **[P1] ~16 of 27 agent endpoints have no tests** (covered: core utils,
-  model cache, NER, wordnet*, boxplot, excel charts, wordcloud, sentiment,
-  topic modeling (Gensim), ngrams, gender analysis*, shape of stories*;
-  \*integration- or external-software-gated). The biggest remaining gaps:
-  parse, word2vec, conll_table, svo, gis, statistics. Tests skip on the host
-  (heavy deps live in the Docker image); run them in the agent container:
+- **[P3] ~10 of 24 agent endpoints still have no tests** (covered as of June
+  2026: core utils, model cache, NER, wordnet*, boxplot, excel charts,
+  wordcloud, sentiment, topic modeling (Gensim), ngrams, gender analysis*,
+  shape of stories*, parse*, word2vec, conll_table, svo*, gis*, statistics;
+  \*some paths integration-, network-, or external-software-gated). Remaining:
+  file_manager, style_analysis, sunburst, colormap, sankey, file_search,
+  sentence_analysis, settings — all small enough to defer. Tests skip on the
+  host (heavy deps live in the Docker image); run them in the agent container:
   `docker run --rm -v "$PWD/agent:/work" -w /work nlp-suite-agent python3.9 -m pytest tests/`
+  For CoreNLP-gated tests, run on the compose network with
+  `--network nlp-suite_nlp-suite-network -e CORENLP_URL=http://corenlp:9000`
+  and `-m integration`; Nominatim-gated GIS tests need `NLP_SUITE_TEST_NETWORK=1`.
 - **[P3] MALLET topic modeling has no hermetic test.** The mallet service
   reads its own mounted `/app/input` (the live `~/nlp-suite/input`), so a
   test would touch real user data. The BERTopic path and roBERTa sentiment
