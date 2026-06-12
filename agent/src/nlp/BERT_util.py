@@ -70,7 +70,9 @@ def sentiment_main(
         logger.warning("No input specified. Please, provide either a single txt file or a directory of txt files.")
         return
 
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label="sentiment_BERT", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label="sentiment_BERT", silent=True
+    )
     if outputDir == "":
         return
 

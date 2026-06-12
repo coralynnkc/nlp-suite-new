@@ -96,7 +96,9 @@ def main(inputFilename, inputDir, outputDir, mode, chartPackage="Excel", dataTra
     # VADER computes a single compound score per sentence; mode (mean/median) does not apply
     filesToOpen = []
 
-    outputDir = IO_files_util.make_output_subdirectory(inputFilename, inputDir, outputDir, label="sentiment_VADER", silent=True)
+    outputDir = IO_files_util.make_output_subdirectory(
+        inputFilename, inputDir, outputDir, label="sentiment_VADER", silent=True
+    )
     if outputDir == "":
         return
 
