@@ -18,6 +18,25 @@ AGENT_SERVER_URL = os.getenv("AGENT_SERVER_URL", "http://172.16.0.11:3000")
 AGENT_TIMEOUT_SECONDS = 30
 
 
+def _fetch_agent_settings() -> dict:
+    try:
+        resp = requests.get(f"{AGENT_SERVER_URL}/settings", timeout=5)
+        if resp.ok:
+            return resp.json()
+    except (requests.RequestException, ValueError):
+        pass
+    return {}
+
+
+def _io_defaults_context() -> dict:
+    settings = _fetch_agent_settings()
+    return {
+        "default_input_dir": settings.get("default_input_dir", "~/nlp-suite/input"),
+        "default_output_dir": settings.get("default_output_dir", "~/nlp-suite/output"),
+        "default_csv_input_dir": settings.get("default_csv_input_dir", "~/nlp-suite/csvInput"),
+    }
+
+
 def _proxy_post(request: HttpRequest, path: str, template_name: str):
     """Forward a POST form body to the agent and redirect to /status.
 
@@ -37,7 +56,7 @@ def _proxy_post(request: HttpRequest, path: str, template_name: str):
             if response.ok:
                 return HttpResponseRedirect("/status")
             messages.add_message(request, messages.ERROR, response.content.decode())
-    return render(request, template_name)
+    return render(request, template_name, _io_defaults_context())
 
 
 def index(_: HttpRequest):
@@ -172,11 +191,5 @@ def settings(request: HttpRequest):
             else:
                 messages.add_message(request, messages.ERROR, response.content.decode())
         return HttpResponseRedirect("/settings")
-    current = {}
-    try:
-        resp = requests.get(f"{AGENT_SERVER_URL}/settings", timeout=5)
-        if resp.ok:
-            current = resp.json()
-    except requests.RequestException:
-        pass
+    current = _fetch_agent_settings()
     return render(request, "settings.html", {"current": current})

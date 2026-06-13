@@ -32,6 +32,33 @@
             </div>
         </fieldset>
 
+        <fieldset class="form-section">
+            <legend>Default I/O directories</legend>
+
+            <div class="field">
+                <label for="default_input_dir">Default input directory</label>
+                <input type="text" name="default_input_dir" id="default_input_dir"
+                       value="{{ current.default_input_dir|default:'~/nlp-suite/input' }}">
+                <p class="field-help">Default folder offered for TXT input across all tools.</p>
+            </div>
+
+            <div class="field">
+                <label for="default_csv_input_dir">Default CSV input directory</label>
+                <input type="text" name="default_csv_input_dir" id="default_csv_input_dir"
+                       value="{{ current.default_csv_input_dir|default:'~/nlp-suite/csvInput' }}">
+                <p class="field-help">Default folder offered for CSV input across all tools.</p>
+            </div>
+
+            <div class="field">
+                <label for="default_output_dir">Default output directory</label>
+                <input type="text" name="default_output_dir" id="default_output_dir"
+                       value="{{ current.default_output_dir|default:'~/nlp-suite/output' }}">
+                <p class="field-help">Default folder where job results are written.</p>
+            </div>
+
+            <p class="field-help">Paths must live under the host folder mounted as <code>NLP_SUITE_DIR</code> (default <code>~/nlp-suite</code>). Inside the container, <code>~</code> resolves to <code>/root</code>.</p>
+        </fieldset>
+
         <div class="buttons-section">
             <button type="submit" class="run-button">Save</button>
         </div>

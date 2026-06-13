@@ -69,19 +69,30 @@ _load_env_file()
 
 GOOGLE_MAPS_API_KEY: str = os.environ.get("GOOGLE_MAPS_API_KEY", "")
 NYT_API_KEY: str = os.environ.get("NYT_API_KEY", "")
+DEFAULT_INPUT_DIR: str = os.environ.get("DEFAULT_INPUT_DIR", "~/nlp-suite/input")
+DEFAULT_OUTPUT_DIR: str = os.environ.get("DEFAULT_OUTPUT_DIR", "~/nlp-suite/output")
+DEFAULT_CSV_INPUT_DIR: str = os.environ.get("DEFAULT_CSV_INPUT_DIR", "~/nlp-suite/csvInput")
+
+_MANAGED_ENV_KEYS = (
+    "GOOGLE_MAPS_API_KEY",
+    "NYT_API_KEY",
+    "DEFAULT_INPUT_DIR",
+    "DEFAULT_OUTPUT_DIR",
+    "DEFAULT_CSV_INPUT_DIR",
+)
 
 
-def _write_env_file(google_maps_api_key: str, nyt_api_key: str):
+def _write_env_file(values: dict[str, str]):
     os.makedirs(os.path.dirname(_ENV_PATH), exist_ok=True)
     lines: list[str] = []
     if os.path.exists(_ENV_PATH):
         with open(_ENV_PATH) as f:
             for line in f:
                 k = line.split("=")[0].strip()
-                if k not in ("GOOGLE_MAPS_API_KEY", "NYT_API_KEY"):
+                if k not in _MANAGED_ENV_KEYS:
                     lines.append(line.rstrip("\n"))
-    lines.append(f"GOOGLE_MAPS_API_KEY={google_maps_api_key}")
-    lines.append(f"NYT_API_KEY={nyt_api_key}")
+    for k in _MANAGED_ENV_KEYS:
+        lines.append(f"{k}={values.get(k, '')}")
     with open(_ENV_PATH, "w") as f:
         f.write("\n".join(lines) + "\n")
 
@@ -1063,6 +1074,9 @@ def get_settings() -> JSONResponse:
         {
             "google_maps_api_key": mask(GOOGLE_MAPS_API_KEY),
             "nyt_api_key": mask(NYT_API_KEY),
+            "default_input_dir": DEFAULT_INPUT_DIR,
+            "default_output_dir": DEFAULT_OUTPUT_DIR,
+            "default_csv_input_dir": DEFAULT_CSV_INPUT_DIR,
         }
     )
 
@@ -1071,13 +1085,26 @@ def get_settings() -> JSONResponse:
 def save_settings(
     google_maps_api_key: Annotated[str, Form()] = "",
     nyt_api_key: Annotated[str, Form()] = "",
+    default_input_dir: Annotated[str, Form()] = "~/nlp-suite/input",
+    default_output_dir: Annotated[str, Form()] = "~/nlp-suite/output",
+    default_csv_input_dir: Annotated[str, Form()] = "~/nlp-suite/csvInput",
 ) -> PlainTextResponse:
-    global GOOGLE_MAPS_API_KEY, NYT_API_KEY
+    global GOOGLE_MAPS_API_KEY, NYT_API_KEY, DEFAULT_INPUT_DIR, DEFAULT_OUTPUT_DIR, DEFAULT_CSV_INPUT_DIR
     GOOGLE_MAPS_API_KEY = google_maps_api_key
     NYT_API_KEY = nyt_api_key
-    os.environ["GOOGLE_MAPS_API_KEY"] = google_maps_api_key
-    os.environ["NYT_API_KEY"] = nyt_api_key
-    _write_env_file(google_maps_api_key, nyt_api_key)
+    DEFAULT_INPUT_DIR = default_input_dir
+    DEFAULT_OUTPUT_DIR = default_output_dir
+    DEFAULT_CSV_INPUT_DIR = default_csv_input_dir
+    values = {
+        "GOOGLE_MAPS_API_KEY": google_maps_api_key,
+        "NYT_API_KEY": nyt_api_key,
+        "DEFAULT_INPUT_DIR": default_input_dir,
+        "DEFAULT_OUTPUT_DIR": default_output_dir,
+        "DEFAULT_CSV_INPUT_DIR": default_csv_input_dir,
+    }
+    for k, v in values.items():
+        os.environ[k] = v
+    _write_env_file(values)
     return PlainTextResponse("", status_code=200)
 
 
