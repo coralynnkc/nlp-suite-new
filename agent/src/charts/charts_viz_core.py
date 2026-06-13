@@ -536,15 +536,15 @@ def run_all(
         df = pd.DataFrame(data[1:], columns=data[0])
         df.to_csv(csv_file_path, index=False)
 
+    if data_to_be_plotted is None:
+        logger.info("Data to be plotted was none!")
+        return
+
     if isinstance(data_to_be_plotted[0], list):
         list_of_lists_to_csv(data_to_be_plotted[0], "temptemp2.csv")
         df = statistics_csv_util.data_transformation("temptemp2.csv", dataTransformation)
         os.remove("temptemp2.csv")
         data_to_be_plotted = [[df.columns.tolist()] + df.values.tolist()]
-
-    if data_to_be_plotted is None:
-        logger.info("Data to be plotted was none!")
-        return
 
     transform_list = []
     # the following is deciding which type of data is returned from prepare_data_to_be_plotted_inExcel

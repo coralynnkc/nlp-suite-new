@@ -183,6 +183,9 @@ def compute_corpus_statistics(
         inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
     )
 
+    if not inputDocs:
+        raise FileNotFoundError(f"No .txt files found in {inputDir}. Place input documents there and try again.")
+
     Ndocs = str(len(inputDocs))
     fieldnames = [
         "Number of documents in corpus",
@@ -691,7 +694,6 @@ def get_ngramlist(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-
     files = IO_files_util.getFileList(inputFilename, inputDir, ".txt", silent=False, configFileName=configFileName)
 
     import hashfile
@@ -901,6 +903,9 @@ def yule(inputFilename, inputDir, outputDir, configFileName, hideMessage=False):
         inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
     )
 
+    if not inputDocs:
+        raise FileNotFoundError(f"No .txt files found in {inputDir}. Place input documents there and try again.")
+
     Ndocs = str(len(inputDocs))
     outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, ".csv", "Yule K")
     Yule_value_list.insert(0, headers)
@@ -1022,6 +1027,9 @@ def process_words(
     inputDocs = IO_files_util.getFileList(
         inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
     )
+
+    if not inputDocs:
+        raise FileNotFoundError(f"No .txt files found in {inputDir}. Place input documents there and try again.")
 
     Ndocs = str(len(inputDocs))
     if Ndocs == 0:
