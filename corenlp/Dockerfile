@@ -31,8 +31,6 @@ RUN apk update && apk add openjdk8-jre-base py3-pip curl && \
 WORKDIR /opt/corenlp
 COPY --from=builder /opt/corenlp .
 
-ADD test_api.py .
-
 ENV JAVA_XMX 4g
 ENV TIMEOUT_MILLISECONDS 999999
 ENV PORT 9000
