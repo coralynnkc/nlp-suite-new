@@ -12,10 +12,9 @@ Template file should be located in the lib folder
 
 import os
 
-import GIS_geocode_util
-import GIS_pipeline_util
-import GUI_IO_util
-import reminders_util
+from ..core import reminders_util
+from ..io import GUI_IO_util
+from . import GIS_geocode_util, GIS_pipeline_util
 
 logger = logging.getLogger(__name__)
 

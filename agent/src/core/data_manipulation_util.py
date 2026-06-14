@@ -2,9 +2,10 @@ import logging
 import os.path
 from typing import Optional
 
-import IO_files_util
 import pandas as pd
-from util import safe_read_csv
+
+from ..io import IO_files_util
+from .util import safe_read_csv
 
 logger = logging.getLogger(__name__)
 

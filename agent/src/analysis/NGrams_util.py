@@ -2,12 +2,12 @@ import logging
 import string
 from pathlib import Path
 
-import IO_csv_util
+from ..io import IO_csv_util
 
 _WORD_LISTS_DIR = Path(__file__).parent.parent.parent / "lib" / "wordLists"
 
 punctuation = string.punctuation
-from model_cache import get_stanza_pipeline
+from ..core.model_cache import get_stanza_pipeline
 
 #     if frequency==1: # hapax
 

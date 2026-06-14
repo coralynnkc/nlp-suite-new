@@ -10,9 +10,7 @@ import os
 import re
 from csv import reader
 
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
+from ..io import IO_csv_util, IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 

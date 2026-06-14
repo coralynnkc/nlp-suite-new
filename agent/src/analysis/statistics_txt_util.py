@@ -7,7 +7,7 @@ import re
 import string
 from collections import Counter
 
-import IO_libraries_util
+from ..io import IO_libraries_util
 
 logger = logging.getLogger(__name__)
 import stanza
@@ -34,7 +34,7 @@ if not os.path.exists(EN_MODEL_PATH):
         logger.info("Download complete!")
     except Exception:
         # Handle no internet / failed download````
-        import IO_internet_util
+        from ..io import IO_internet_util
 
         IO_internet_util.check_internet_availability_warning("statistics_txt_util.py (stanza.download('en'))")
 else:
@@ -56,10 +56,11 @@ from itertools import groupby
 
 import nltk
 import pandas as pd
-import sentence_complexity_node_util as Node
-import tree
 from nltk.draw import TreeView
 from nltk.tree import Tree
+
+from ..nlp import sentence_complexity_node_util as Node
+from ..nlp import tree
 
 # For objectivity/subjectivity
 
@@ -71,16 +72,14 @@ from nltk.tree import Tree
 # check punkt
 IO_libraries_util.import_nltk_resource("tokenizers/punkt", "punkt")
 
-import charts_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
-import reminders_util
-import statistics_csv_util
 import textstat
-from model_cache import get_spacy_model, get_stanza_pipeline
 from nltk.corpus import wordnet
+
+from ..charts import charts_util
+from ..core import reminders_util
+from ..core.model_cache import get_spacy_model, get_stanza_pipeline
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_user_interface_util
+from . import statistics_csv_util
 
 # https://github.com/nltk/nltk/wiki/Frequently-Asked-Questions-(Stackoverflow-Edition)
 # to compute bigrams, 3-grams, ...
@@ -117,7 +116,7 @@ def lemmatizing(word):  # edited by Claude Hu 08/2020
     for _p in pos:
         # if lemmatization with any postag gives different result from the word itself
         # that lemmatization is returned as result
-        from Stanza_functions_util import lemmatize_stanza, stanzaPipeLine
+        from ..nlp.Stanza_functions_util import lemmatize_stanza, stanzaPipeLine
 
         lemma = lemmatize_stanza(stanzaPipeLine(word))
         if lemma != word:
@@ -138,7 +137,7 @@ def word_count(text):
 
 
 def excludeStopWords_list(words):
-    from app_constants import WORD_LISTS_DIR
+    from ..core.app_constants import WORD_LISTS_DIR
 
     fin = open(WORD_LISTS_DIR / "stopwords.txt")
     stop_words = set(fin.read().splitlines())
@@ -259,7 +258,7 @@ def compute_corpus_statistics(
 
             Nsyllables = textstat.syllable_count(docText, lang="en_US")
 
-            from Stanza_functions_util import (
+            from ..nlp.Stanza_functions_util import (
                 lemmatize_stanza,
                 stanzaPipeLine,
                 word_tokenize_stanza,
@@ -274,7 +273,7 @@ def compute_corpus_statistics(
                 text_vocab = []
                 for w in words:
                     if w.isalpha():
-                        from Stanza_functions_util import (
+                        from ..nlp.Stanza_functions_util import (
                             lemmatize_stanza,
                             stanzaPipeLine,
                             word_tokenize_stanza,
@@ -408,7 +407,7 @@ def compute_sentence_length(inputFilename, inputDir, outputDir, configFileName, 
             logger.info("Processing file " + str(fileID) + "/" + str(Ndocs) + " " + tail)
             with open(doc, encoding="utf-8", errors="ignore") as inputFile:
                 text = inputFile.read().replace("\n", " ")
-                from Stanza_functions_util import (
+                from ..nlp.Stanza_functions_util import (
                     sent_tokenize_stanza,
                     stanzaPipeLine,
                     word_tokenize_stanza,
@@ -509,7 +508,7 @@ def compute_line_length(
                     # continue
                 while line:
                     lineID += 1
-                    from Stanza_functions_util import (
+                    from ..nlp.Stanza_functions_util import (
                         stanzaPipeLine,
                         word_tokenize_stanza,
                     )
@@ -669,8 +668,8 @@ def process_punctuation(inputFilename, inputDir, excludePunctuation, ngrams_list
     return ngrams_list
 
 
-import NGrams_util
-from util import collect
+from ..core.util import collect
+from . import NGrams_util
 
 # hapax_words is True when the user selevcts too export ONLY words, False when hapax will also include numebrs, symbiols, etc.
 
@@ -696,7 +695,7 @@ def get_ngramlist(
 ):
     files = IO_files_util.getFileList(inputFilename, inputDir, ".txt", silent=False, configFileName=configFileName)
 
-    import hashfile
+    from . import hashfile
 
     o2 = (
         os.path.dirname(outputDir)
@@ -1136,7 +1135,7 @@ def process_words(
 
         fullText = open(doc, encoding="utf-8", errors="ignore").read()
         fullText = fullText.replace("\n", " ")
-        from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
+        from ..nlp.Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine, word_tokenize_stanza
 
         sentences = sent_tokenize_stanza(stanzaPipeLine(fullText))
 
@@ -1152,7 +1151,7 @@ def process_words(
             sentenceID = sentenceID + 1
             s.count(" ") + 1
 
-            from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
+            from ..nlp.Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
 
             words = word_tokenize_stanza(stanzaPipeLine(s))
             words_with_stop = [word for word in words if word.isalpha()]
@@ -1583,7 +1582,7 @@ def convert_txt_file(inputFilename, inputDir, outputDir, openOutputFiles, exclud
 
             textstat.syllable_count(fullText, lang="en_US")
 
-            from Stanza_functions_util import (
+            from ..nlp.Stanza_functions_util import (
                 lemmatize_stanza,
                 stanzaPipeLine,
                 word_tokenize_stanza,
@@ -1595,7 +1594,7 @@ def convert_txt_file(inputFilename, inputDir, outputDir, openOutputFiles, exclud
                 words = excludeStopWords_list(words)
 
             if lemmatizeWords:
-                from Stanza_functions_util import (
+                from ..nlp.Stanza_functions_util import (
                     lemmatize_stanza,
                     stanzaPipeLine,
                     word_tokenize_stanza,
@@ -1737,7 +1736,7 @@ def compute_sentence_text_readability(
             # write csv files ____________________________________________
 
             # split into sentences
-            from Stanza_functions_util import (
+            from ..nlp.Stanza_functions_util import (
                 sent_tokenize_stanza,
                 stanzaPipeLine,
             )

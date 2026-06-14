@@ -8,7 +8,7 @@ Created on Fri Aug 20 22:35:13 2021
 import json
 import os
 
-import GUI_IO_util
+from ..io import GUI_IO_util
 
 
 def SVO_enhanced_dependencies_sent_data_reorg(sentence):  # reorganize the dependencies output of stanford corenlp

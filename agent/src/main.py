@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import sys
 import traceback
 from collections.abc import Callable
 from threading import Lock, Thread
@@ -11,41 +10,34 @@ from typing import Annotated
 # basicConfig call wins, and INFO is where job validation warnings surface.
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(name)s : %(message)s", level=logging.INFO)
 
-# Add all src subdirectories to sys.path so flat imports in util files work
-# regardless of which subdirectory the module lives in.
-_src_dir = os.path.dirname(os.path.abspath(__file__))
-for _d in os.listdir(_src_dir):
-    _dp = os.path.join(_src_dir, _d)
-    if os.path.isdir(_dp) and not _d.startswith("."):
-        sys.path.insert(0, _dp)
-
 import uvicorn
-from boxplot_chart import run as run_boxplot
-from colormap_chart import run_colormap
-from CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
-from excel_plotly_charts import run_excel_plotly_charts
 from fastapi import FastAPI, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
-from file_manager_main import run_file_manager
-from file_search_byWord_main import run_search_byWord
-from GIS_main import run_GIS
-from html_annotator_gender_main import run as run_gender_analysis
-from knowledge_graphs_WordNet_main import run_kg_wordnet
-from NER_main import run_NER
-from NGrams_CoOccurrences import run_ngrams
-from parsers_annotators import run_parsers_annotators
-from sankey_flowchart import run_sankey
-from sentence_analysis import run_sentence_analysis
-from sentiment_analysis import run_sentiment_analysis
-from shape_of_stories_main import run as run_shape_of_stories
-from statistics_txt_main import run_statistics
-from style_analysis import run_style_analysis
-from sunburst_charts import run_sun_burst
-from SVO import run_svo
-from topic_modeling import run_topic_modeling
-from word2vec import run_word2vec
-from wordcloud_visual import run_wordcloud
+
+from .analysis.knowledge_graphs_WordNet_main import run_kg_wordnet
+from .analysis.NGrams_CoOccurrences import run_ngrams
+from .analysis.sentiment_analysis import run_sentiment_analysis
+from .analysis.statistics_txt_main import run_statistics
+from .analysis.style_analysis import run_style_analysis
+from .analysis.word2vec import run_word2vec
+from .analysis.wordcloud_visual import run_wordcloud
+from .charts.boxplot_chart import run as run_boxplot
+from .charts.colormap_chart import run_colormap
+from .charts.excel_plotly_charts import run_excel_plotly_charts
+from .charts.sankey_flowchart import run_sankey
+from .charts.sunburst_charts import run_sun_burst
+from .file_ops.file_manager_main import run_file_manager
+from .file_ops.file_search_byWord_main import run_search_byWord
+from .gis.GIS_main import run_GIS
+from .nlp.CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
+from .nlp.html_annotator_gender_main import run as run_gender_analysis
+from .nlp.NER_main import run_NER
+from .nlp.parsers_annotators import run_parsers_annotators
+from .nlp.sentence_analysis import run_sentence_analysis
+from .nlp.SVO import run_svo
+from .stories.shape_of_stories_main import run as run_shape_of_stories
+from .topic_modeling.topic_modeling import run_topic_modeling
 
 _ENV_PATH = os.path.join(os.path.expanduser("~"), "nlp-suite", ".env")
 OUTPUT_DIR = os.path.join(os.path.expanduser("~"), "nlp-suite", "output")

@@ -1,17 +1,16 @@
 import logging
 import os
 
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
 import pandas as pd
-import Stanford_CoreNLP_util
+
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util
+from . import Stanford_CoreNLP_util
 
 logger = logging.getLogger(__name__)
 
 
 def text_generate(inputFilename, inputDir):
-    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
+    from .Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
     articles = []
     if inputFilename == "":
@@ -49,7 +48,7 @@ def dictionary_annotate(
     dictionary_file,
     personal_pronouns_var,
 ):
-    from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+    from .Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
     document_length_var = 90000
     limit_sentence_length_var = 100

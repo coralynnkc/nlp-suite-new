@@ -1,7 +1,7 @@
-import charts_util
-import IO_csv_util
-import reminders_util
-from util import collect
+from ..charts import charts_util
+from ..core import reminders_util
+from ..core.util import collect
+from ..io import IO_csv_util
 
 
 # outputFilename is actually the file containing fields to be charted
@@ -17,7 +17,6 @@ def parsers_annotators_visualization(
     dataTransformation,
     openFiles=True,
 ):
-
     # generate visualization output ----------------------------------------------------------------
     # Lemma ________________________________________________________________
     import os
@@ -319,7 +318,7 @@ def parsers_annotators_visualization(
         Sankey_limit3_var = None
 
         output_label = "sankey"
-        import IO_files_util
+        from ..io import IO_files_util
 
         outputFilename_sankey = IO_files_util.generate_output_file_name(
             outputFilename, inputDir, outputDir, ".html", output_label
@@ -415,7 +414,7 @@ def parsers_annotators_visualization(
         # create an SVO-unfiltered subdirectory of the main output directory
         import os
 
-        import IO_files_util
+        from ..io import IO_files_util
 
         head, tail = os.path.split(outputDir)
         outputSVOUnFilterDir = head + os.sep + "SVO-form"
@@ -591,7 +590,7 @@ def parsers_annotators_visualization(
             Sankey_limit3_var = None
 
             output_label = "sankey"
-            import IO_files_util
+            from ..io import IO_files_util
 
             outputFilename_sankey = IO_files_util.generate_output_file_name(
                 outputFilename, inputDir, outputDir, ".html", output_label
@@ -616,7 +615,7 @@ def parsers_annotators_visualization(
 
 # the gender annotator displays results in an html file
 def visualize_html_file(inputFilename, inputDir, outputDir, configFileName, dictFilename, genderCol=None, wordCol=None):
-    import html_annotator_dictionary_util
+    from . import html_annotator_dictionary_util
 
     if wordCol is None:
         wordCol = []

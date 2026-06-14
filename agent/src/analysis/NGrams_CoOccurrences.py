@@ -3,12 +3,12 @@ import glob
 import logging
 import os
 
-import config_util
-import IO_csv_util
-import IO_files_util
-import NGrams_CoOccurrences_util
 import pandas as pd
-from util import collect
+
+from ..core import config_util
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util
+from . import NGrams_CoOccurrences_util
 
 logger = logging.getLogger(__name__)
 
@@ -164,7 +164,7 @@ def run_ngrams(
             return
 
         if ngrams_word_var or bySentenceIndex_word_var:
-            import statistics_txt_util
+            from . import statistics_txt_util
 
             if ngrams_word_var or bySentenceIndex_word_var:
                 hapax_words = True  # set it temporarily to True since we default to compute it every time
@@ -191,7 +191,7 @@ def run_ngrams(
                     dataTransformation,
                     bySentenceID,
                 )
-                import statistics_csv_util
+                from . import statistics_csv_util
 
                 for file in outputFiles:
                     if "csv" in file:

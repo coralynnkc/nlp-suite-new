@@ -6,12 +6,11 @@ import subprocess
 import webbrowser
 from sys import platform
 
-import GUI_IO_util
-import IO_internet_util
-import IO_user_interface_util
-import reminders_util
 import requests
 from psutil import virtual_memory
+
+from ..core import reminders_util
+from . import GUI_IO_util, IO_internet_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -292,7 +291,6 @@ def check_CoreNLPVersion(CoreNLPdir, calling_script="", silent=False):
 
 
 def check_inputExternalProgramFile(calling_script, software_dir, programName, readingConfig=True, silent=False):
-
     message = ""
     fileList = []
     if "Java" not in programName:  #!='Java (JDK)' Java (JDK)'
@@ -1300,7 +1298,6 @@ def display_download_installation_messages(
 # # if 'SENNA' in software_download_var.get(): NO LONGER USED
 # if 'WordNet' in software_download_var.get():
 def external_software_download(calling_script, software_name, existing_software_config, silent=False):
-
     # get the software_dir and software_url for the selected software_name
     software_dir, software_url, missing_software, error_found = get_external_software_dir(
         calling_script,

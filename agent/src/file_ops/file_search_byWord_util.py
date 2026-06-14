@@ -15,11 +15,10 @@ import csv
 import os
 import shutil  # for copy of files
 
-import charts_util
-import IO_csv_util
-import IO_files_util
-from model_cache import get_stanza_pipeline
-from util import collect
+from ..charts import charts_util
+from ..core.model_cache import get_stanza_pipeline
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util
 
 logger = logging.getLogger(__name__)
 
@@ -101,10 +100,9 @@ def get_words_minus_K_plus_K(
     form_lemma_pair,
     lang,
 ):
-
     # convert string to list
     if isinstance(docText, str):
-        from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+        from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
         words_ = tokenize_stanza_text(stanzaPipeLine(docText))
     a = []
@@ -154,7 +152,7 @@ def search_in_document(
 
     all_found_csv_sentences_records_oneDoc = []
 
-    from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+    from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
     # SIMON cache
 
@@ -167,7 +165,7 @@ def search_in_document(
     # if exact_word_match:
 
     for keyword in search_keywords_list:
-        import NGrams_CoOccurrences_util
+        from ..analysis import NGrams_CoOccurrences_util
 
         frequency_keyword = NGrams_CoOccurrences_util.get_search_word_from_text(
             docText, keyword, lemmatize, case_sensitive, exact_word_match
@@ -219,7 +217,7 @@ def search_in_all_sentences_oneDoc(
 
     isFirstOcc = True
 
-    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
+    from ..nlp.Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
     sentences = sentence_split_stanza_text(stanzaPipeLine(docText))
     num_sentences = len(sentences)
@@ -233,7 +231,7 @@ def search_in_all_sentences_oneDoc(
 
     for sentence_index, sentence in enumerate(sentences):
         sentence_index += 1  # to avoid having a sentence_index as 0
-        import NGrams_CoOccurrences_util
+        from ..analysis import NGrams_CoOccurrences_util
 
         if isinstance(search_keywords_list, str):
             # convert string to list
@@ -352,7 +350,6 @@ def search_sentences_documents(
     chartPackage,
     dataTransformation,
 ):
-
     import pandas as pd
 
     filesToOpen = []
@@ -454,7 +451,7 @@ def search_sentences_documents(
 
     # when lemmatizing, the search words also need to be lemmatized
     if lemmatize:
-        import NGrams_CoOccurrences_util
+        from ..analysis import NGrams_CoOccurrences_util
 
         lemmatized_search_keywords_list, lemmatized_search_word_str = NGrams_CoOccurrences_util.lemmatize_search_words(
             search_keywords_str
@@ -474,7 +471,7 @@ def search_sentences_documents(
         f_doc = open(file, encoding="utf-8", errors="ignore")
         docText = f_doc.read()
         f_doc.close()
-        import NGrams_CoOccurrences_util
+        from ..analysis import NGrams_CoOccurrences_util
 
         docText = NGrams_CoOccurrences_util.prepare_text_with_options(
             docText, case_sensitive, exact_word_match, lemmatize, lang

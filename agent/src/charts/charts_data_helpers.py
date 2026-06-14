@@ -6,9 +6,9 @@ import logging
 import os
 from collections import Counter
 
-import IO_csv_util
-import IO_user_interface_util
 import pandas as pd
+
+from ..io import IO_csv_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -271,7 +271,7 @@ def process_sentenceID_record(
 # output is a csv file
 # TODO Samir very slow
 def add_missing_IDs(input, outputFilename):
-    from Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
+    from ..nlp.Stanza_functions_util import sent_tokenize_stanza, stanzaPipeLine
 
     # TODO temporary to measure process time
     startTime = IO_user_interface_util.timed_alert(

@@ -1,51 +1,42 @@
 import logging
 import time
 
-import IO_files_util
 import pandas as pd
 
 # Visualization
 import plotly.express as px
 from sklearn.manifold import TSNE
 
+from ..io import IO_files_util
+
 logger = logging.getLogger(__name__)
 
 
-def run_word2vec_plot(inputFilename, inputDir, outputDir,
-                        word_vector_list,
-                        filtered_words,
-                        vis_menu_var,
-                        dim_menu_var):
-
+def run_word2vec_plot(inputFilename, inputDir, outputDir, word_vector_list, filtered_words, vis_menu_var, dim_menu_var):
     filesToOpen = []
 
-    logger.info(f'Started preparing charts via t-SNE for {len(filtered_words)} distinct words at {time.asctime(time.localtime(time.time()))}')
+    logger.info(
+        f"Started preparing charts via t-SNE for {len(filtered_words)} distinct words at {time.asctime(time.localtime(time.time()))}"
+    )
 
-    if vis_menu_var == 'Plot word vectors':
-
-        if dim_menu_var == '2D':
+    if vis_menu_var == "Plot word vectors":
+        if dim_menu_var == "2D":
             tsne = TSNE(n_components=2)
             xys = tsne.fit_transform(word_vector_list)
-            tsne_df = pd.DataFrame({
-                'Word': list(filtered_words.keys()),
-                'x': xys[:, 0],
-                'y': xys[:, 1]
-            })
+            tsne_df = pd.DataFrame({"Word": list(filtered_words.keys()), "x": xys[:, 0], "y": xys[:, 1]})
             fig = px.scatter(tsne_df, x="x", y="y", text="Word", hover_name="Word")
 
         else:  # 3D
             tsne = TSNE(n_components=3)
             xyzs = tsne.fit_transform(word_vector_list)
-            tsne_df = pd.DataFrame({
-                'Word': list(filtered_words.keys()),
-                'x': xyzs[:, 0],
-                'y': xyzs[:, 1],
-                'z': xyzs[:, 2]
-            })
+            tsne_df = pd.DataFrame(
+                {"Word": list(filtered_words.keys()), "x": xyzs[:, 0], "y": xyzs[:, 1], "z": xyzs[:, 2]}
+            )
             fig = px.scatter_3d(tsne_df, x="x", y="y", z="z", text="Word", hover_name="Word")
 
-    outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.html',
-                                                             'Word2Vec_vector_ALL_words')
+    outputFilename = IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".html", "Word2Vec_vector_ALL_words"
+    )
 
     fig.write_html(outputFilename)
     filesToOpen.append(outputFilename)

@@ -6,15 +6,13 @@ import os
 import statistics
 import sys
 
-import charts_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
-import lib_util
 import pandas as pd
-from app_constants import WORD_LISTS_DIR
-from util import collect
+
+from ..charts import charts_util
+from ..core import lib_util
+from ..core.app_constants import WORD_LISTS_DIR
+from ..core.util import collect
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 fin = open(WORD_LISTS_DIR / "stopwords.txt")
@@ -47,7 +45,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
     :return:
     """
 
-    from Stanza_functions_util import (
+    from ..nlp.Stanza_functions_util import (
         lemmatize_stanza_word,
         sentence_split_stanza_text,
         stanzaPipeLine,

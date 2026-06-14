@@ -1,11 +1,8 @@
 import logging
 import os
 
-import config_util
-import GUI_IO_util
-import IO_files_util
-import IO_libraries_util
-import lib_util
+from ..core import config_util, lib_util
+from ..io import GUI_IO_util, IO_files_util, IO_libraries_util
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +115,7 @@ def run_sentiment_analysis(
     # BERT ---------------------------------------------------------
 
     if BERT_var == 1:
-        import BERT_util
+        from ..nlp import BERT_util
 
         if "Multilingual" in SA_algorithm_var:
             model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"  # multilingual model
@@ -132,7 +129,7 @@ def run_sentiment_analysis(
 
     if SA_algorithm_var == "*" or spaCy_var == 1 and (mean_var or median_var):
         # check internet connection
-        import IO_internet_util
+        from ..io import IO_internet_util
 
         if not IO_internet_util.check_internet_availability_warning("spaCy Sentiment Analysis"):
             return
@@ -142,7 +139,7 @@ def run_sentiment_analysis(
         annotator = ["sentiment"]
         document_length_var = 1
         limit_sentence_length_var = 1000
-        import spaCy_util
+        from ..nlp import spaCy_util
 
         spaCy_util.spaCy_annotate(
             GUI_IO_util.config_filename,
@@ -168,8 +165,8 @@ def run_sentiment_analysis(
 
     if SA_algorithm_var == "*" or CoreNLP_var == 1 and (mean_var or median_var):
         # check internet connection
-        import IO_internet_util
-        import Stanford_CoreNLP_util
+        from ..io import IO_internet_util
+        from ..nlp import Stanford_CoreNLP_util
 
         if not IO_internet_util.check_internet_availability_warning("Stanford CoreNLP Sentiment Analysis"):
             return
@@ -192,7 +189,7 @@ def run_sentiment_analysis(
 
     if SA_algorithm_var == "*" or Stanza_var == 1 and (mean_var or median_var):
         # check internet connection
-        import IO_internet_util
+        from ..io import IO_internet_util
 
         if not IO_internet_util.check_internet_availability_warning("Stanza Sentiment Analysis"):
             return
@@ -200,7 +197,7 @@ def run_sentiment_analysis(
         annotator = "sentiment"
         document_length_var = 1
         limit_sentence_length_var = 1000
-        import Stanza_util
+        from ..nlp import Stanza_util
 
         Stanza_util.Stanza_annotate(
             GUI_IO_util.config_filename,
@@ -227,7 +224,7 @@ def run_sentiment_analysis(
     # ANEW _______________________________________________________
 
     if anew_var == 1 and (mean_var or median_var):
-        import sentiment_analysis_ANEW_util
+        from . import sentiment_analysis_ANEW_util
 
         if language == "English":
             if not lib_util.checklibFile(
@@ -250,7 +247,7 @@ def run_sentiment_analysis(
     # HEDONOMETER _______________________________________________________
 
     if SA_algorithm_var == "*" or hedonometer_var == 1 and (mean_var or median_var):
-        import sentiment_analysis_hedonometer_util
+        from . import sentiment_analysis_hedonometer_util
 
         if not lib_util.checklibFile(
             GUI_IO_util.sentiment_libPath + os.sep + "hedonometer.json", "sentiment_analysis_hedonometer_util.py"
@@ -273,7 +270,7 @@ def run_sentiment_analysis(
     # SentiWordNet _______________________________________________________
 
     if SA_algorithm_var == "*" or SentiWordNet_var == 1 and (mean_var or median_var):
-        import sentiment_analysis_SentiWordNet_util
+        from . import sentiment_analysis_SentiWordNet_util
 
         if language == "English":
             if not IO_libraries_util.check_inputPythonJavaProgramFile("sentiment_analysis_SentiWordNet_util.py"):
@@ -294,7 +291,7 @@ def run_sentiment_analysis(
     # VADER _______________________________________________________
 
     if SA_algorithm_var == "*" or vader_var == 1 and (mean_var or median_var):
-        import sentiment_analysis_VADER_util
+        from . import sentiment_analysis_VADER_util
 
         if language == "English":
             if not lib_util.checklibFile(

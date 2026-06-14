@@ -4,16 +4,15 @@ import logging
 import os
 from collections import Counter
 
-import charts_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from scipy import stats
 from scipy.stats import zscore
-from util import collect
+
+from ..charts import charts_util
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +81,7 @@ def data_transformation(infile, arg):
 # Return a list of n elements and their counts.
 # When n is omitted or None, most_common() returns all elements in the counter.
 def compute_statistics_CoreNLP_CoNLL_tag(data_list, column_to_be_counted, column_name, CoreNLP_tag):
-    import Stanford_CoreNLP_tags_util
+    from ..nlp import Stanford_CoreNLP_tags_util
 
     column_list = []
     column_stats = []
@@ -892,7 +891,7 @@ def compute_csv_column_frequencies(
         return
 
     df = data
-    import statistics_csv_util
+    from . import statistics_csv_util
 
     if tracked:  # if the byDoc holds, we proceed, otherwise we skip by using this bool
         statistics_csv_util.data_transformation(outputFilename, dataTransformation).to_csv(

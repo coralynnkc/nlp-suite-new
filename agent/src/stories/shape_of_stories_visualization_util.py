@@ -5,9 +5,10 @@ import os.path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import shape_of_stories_clustering_util as cl
-import shape_of_stories_vectorizer_util as ve
 from sklearn.decomposition import PCA
+
+from . import shape_of_stories_clustering_util as cl
+from . import shape_of_stories_vectorizer_util as ve
 
 logger = logging.getLogger(__name__)
 

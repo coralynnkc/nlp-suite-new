@@ -1,8 +1,8 @@
 import sys
 import types
 
-import model_cache
 import pytest
+from src.core import model_cache
 
 
 @pytest.fixture(autouse=True)

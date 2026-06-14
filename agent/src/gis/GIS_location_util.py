@@ -1,8 +1,9 @@
 import logging
 
-import CoNLL_util
-import IO_csv_util
 import pandas as pd
+
+from ..io import IO_csv_util
+from ..nlp import CoNLL_util
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,6 @@ MULTI_WORD_LOCATION_PREFIX = {
 # the function matches the records of the location file, with sentences, and the geocoded data with lat and long
 # TODO MINO GIS convert this function to pandas
 def extract_index(inputFilename, InputCodedCsvFile, encodingValue, location_var_name):
-
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'GIS extract_index ', 'Started running extract_index algorithm at',
     # 											   True, '', True, '', silent=True)
 

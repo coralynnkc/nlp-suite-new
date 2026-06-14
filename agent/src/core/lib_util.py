@@ -8,7 +8,7 @@ author: Roberto Franzosi, May 2019
 import os
 import subprocess
 
-import GUI_IO_util
+from ..io import GUI_IO_util
 
 logger = logging.getLogger(__name__)
 

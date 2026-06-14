@@ -4,8 +4,9 @@ import csv
 import logging
 import os
 
-import GUI_IO_util
 import pandas as pd
+
+from ..io import GUI_IO_util
 
 logger = logging.getLogger(__name__)
 
@@ -441,7 +442,7 @@ def getReminders_list(scriptName, silent=False):
                 + str(e)
                 + ".\n\nError encountered with the checkReminder function in reminders_util.\n\nPlease, let the NLP Suite development team know the problem so it can be fixed."
             )
-            import IO_user_interface_util
+            from ..io import IO_user_interface_util
 
             IO_user_interface_util.timed_alert("", 2000, "Reminders error", message, False, "", True, "", False)
         return None
@@ -464,7 +465,6 @@ def getReminders_list(scriptName, silent=False):
 # when displaying messages the message field is '' since the actual message is not known until the csv file is read
 # def displayReminder(df,row_num, title, message, event, currentStatus, question, seeMsgAgain=False) -> object:
 def displayReminder(df, row_num, title, message, currentStatus, question, seeMsgAgain=False) -> object:
-
     try:
         message = title.replace("title_options_", "message_")
         message = df.at[row_num, "Message"].replace("\\n", os.linesep)
@@ -523,7 +523,7 @@ def checkReminder(scriptName, title_options=None, message="", triggered_by_GUI_e
                 + str(e)
                 + ".\n\nError encountered with the checkReminder function in reminders_util.\n\nPlease, let the NLP Suite development team know the problem so it can be fixed."
             )
-            import IO_user_interface_util
+            from ..io import IO_user_interface_util
 
             IO_user_interface_util.timed_alert("", 2000, "Reminders error", message, False, "", True, "", False)
             return None  # open_message
@@ -617,7 +617,6 @@ def resetReminder(scriptName, title):
 # status: "Yes"/"No" old way of saving reminders; now ON/OFF
 # def saveReminder(df,row_num, message, event, status):
 def saveReminder(df, row_num, message, status):
-
     remindersFile = os.path.join(GUI_IO_util.remindersPath, "reminders.csv")
     df.at[row_num, "Message"] = message  # change it to yes or no
     df.at[row_num, "Status"] = status  # change it to yes or no

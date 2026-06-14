@@ -1,17 +1,15 @@
 import logging
 
+import pandas as pd
+
 # Written by Roberto Franzosi
 # Modified by Cynthia Dong (Fall 2019-Spring 2020)
 # Wordnet_bySentenceID and get_case_initial_row written by Yi Wang (April 2020)
-import config_util
-import CoNLL_util
-import html_annotator_dictionary_util
-import IO_files_util
-import IO_libraries_util
-import knowledge_graphs_WordNet_util
-import pandas as pd
-import Stanford_CoreNLP_util
-from util import collect
+from ..core import config_util
+from ..core.util import collect
+from ..io import IO_files_util, IO_libraries_util
+from ..nlp import CoNLL_util, Stanford_CoreNLP_util, html_annotator_dictionary_util
+from . import knowledge_graphs_WordNet_util
 
 logger = logging.getLogger(__name__)
 
@@ -109,7 +107,7 @@ def run_kg_wordnet(
         ):  # Check if the scrit is here
             return
         else:
-            import IO_csv_util
+            from ..io import IO_csv_util
 
             if csv_file != "":
                 headers = IO_csv_util.get_csvfile_headers(csv_file)
@@ -154,7 +152,7 @@ def run_kg_wordnet(
         )
 
     if extract_proper_nouns == 1 or extract_improper_nouns == 1:
-        import IO_csv_util
+        from ..io import IO_csv_util
 
         if csv_file != "":
             headers = IO_csv_util.get_csvfile_headers(csv_file)

@@ -3,8 +3,9 @@ import logging
 import os
 
 from bertopic import BERTopic
-from model_cache import get_sentence_transformer
 from sklearn.feature_extraction.text import CountVectorizer
+
+from ..core.model_cache import get_sentence_transformer
 
 logger = logging.getLogger(__name__)
 

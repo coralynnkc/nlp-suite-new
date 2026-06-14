@@ -3,16 +3,17 @@ import logging
 import os.path
 import re  # ANGEL
 
-import IO_csv_util
 import numpy as np
-import shape_of_stories_vectorizer_util as vec
-import shape_of_stories_visualization_util as viz
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 from scipy.linalg import svd as sp_svd
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.decomposition import NMF
 from tqdm import tqdm
+
+from ..io import IO_csv_util
+from . import shape_of_stories_vectorizer_util as vec
+from . import shape_of_stories_visualization_util as viz
 
 logger = logging.getLogger(__name__)
 

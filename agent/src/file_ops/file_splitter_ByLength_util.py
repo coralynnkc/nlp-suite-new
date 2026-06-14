@@ -10,8 +10,8 @@ import os
 import shutil
 import sys
 
-import IO_user_interface_util
-import reminders_util
+from ..core import reminders_util
+from ..io import IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -141,7 +141,7 @@ def splitDocument_byLength(config_filename, filename_path, output_path="", maxLe
 #   making the split_files subdirectory, for this function
 #   the creation of the directory is carried out in the calling script
 def split_byLength(input_path, filename, output_path, maxLength, inSentence=False):
-    from Stanza_functions_util import (
+    from ..nlp.Stanza_functions_util import (
         sent_tokenize_stanza,
         stanzaPipeLine,
         word_tokenize_stanza,

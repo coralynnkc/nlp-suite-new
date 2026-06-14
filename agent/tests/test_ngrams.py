@@ -3,7 +3,7 @@ import pathlib
 import pytest
 
 try:
-    from NGrams_CoOccurrences import run_ngrams
+    from src.analysis.NGrams_CoOccurrences import run_ngrams
 except (ImportError, SystemExit):
     pytest.skip("NGrams_CoOccurrences dependencies not available", allow_module_level=True)
 

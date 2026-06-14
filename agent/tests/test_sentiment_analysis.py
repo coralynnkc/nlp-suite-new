@@ -7,7 +7,7 @@ from conftest import read_rows as _read_rows
 # sentiment_analysis imports pandas-dependent helpers at module level; skip on
 # hosts without the agent image's dependencies.
 try:
-    from sentiment_analysis import run_sentiment_analysis
+    from src.analysis.sentiment_analysis import run_sentiment_analysis
 except (ImportError, SystemExit):
     pytest.skip("sentiment_analysis dependencies not available", allow_module_level=True)
 

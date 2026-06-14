@@ -1,9 +1,10 @@
 import logging
 
-import CoNLL_util
-import IO_csv_util
 import numpy as np
 import pandas as pd
+
+from ..io import IO_csv_util
+from ..nlp import CoNLL_util
 
 logger = logging.getLogger(__name__)
 

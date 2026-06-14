@@ -1,12 +1,9 @@
 import logging
 import os
 
-import CoNLL_k_sentences_util
-import CoNLL_table_search_util
-import CoNLL_util
-import IO_csv_util
-import IO_files_util
-from get_first_csv import first_csv
+from ..core.get_first_csv import first_csv
+from ..io import IO_csv_util, IO_files_util
+from . import CoNLL_k_sentences_util, CoNLL_table_search_util, CoNLL_util
 
 logger = logging.getLogger(__name__)
 
@@ -392,7 +389,7 @@ def run_CoNLL_table_analyzer(
 
         # the WordNet installation directory is now checked in aggregate_GoingUP
         WordNetDir = ""
-        import knowledge_graphs_WordNet_util
+        from ..analysis import knowledge_graphs_WordNet_util
 
         output = knowledge_graphs_WordNet_util.aggregate_GoingUP(
             WordNetDir,

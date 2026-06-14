@@ -1,8 +1,9 @@
 import logging
 
+from ..core.util import collect
+
 # written by Roberto Franzosi October 2019, edited Spring 2020
-import file_search_byWord_util
-from util import collect
+from . import file_search_byWord_util
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ def run_search_byWord(
 
     if search_by_dictionary or search_by_keyword:
         if coOccurring_keywords_var:
-            import NGrams_CoOccurrences_util
+            from ..analysis import NGrams_CoOccurrences_util
 
             outputFiles = NGrams_CoOccurrences_util.NGrams_coOccurrences_VIEWER(
                 inputDir,

@@ -7,10 +7,7 @@ import os
 import re
 import string
 
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +216,6 @@ def remove_typeseting_hyphenation(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-
     startTime = IO_user_interface_util.timed_alert(
         2000,
         "Analysis start",
@@ -328,7 +324,6 @@ def remove_hard_carriage_returns(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-
     startTime = IO_user_interface_util.timed_alert(
         2000,
         "Analysis start",
@@ -442,7 +437,6 @@ def add_missing_blank_after_punctuation(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-
     startTime = IO_user_interface_util.timed_alert(
         2000,
         "Analysis start",
@@ -527,7 +521,6 @@ def remove_characters_between_characters(
     startCharacter="",
     endCharacter="",
 ):
-
     startTime = IO_user_interface_util.timed_alert(
         2000,
         "Analysis start",
@@ -793,7 +786,6 @@ def remove_blank_lines(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-
     startTime = IO_user_interface_util.timed_alert(
         2000,
         "Analysis start",
@@ -908,7 +900,7 @@ def newspaper_titles(
     chartPackage,
     dataTransformation,
 ):
-    from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+    from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
     if inputDir == "" and inputFilename != "":
         NUM_DOCUMENT = 1
@@ -1097,7 +1089,7 @@ def newspaper_titles(
 # Needs special handling https://stackoverflow.com/questions/6067673/urldecoder-illegal-hex-characters-in-escape-pattern-for-input-string
 # https://stackoverflow.com/questions/7395789/replacing-a-weird-single-quote-with-blank-string-in-python
 def convert_2_ASCII(window, inputFilename, inputDir, outputDir, configFileName):
-    import file_filename_util
+    from . import file_filename_util
 
     result = file_filename_util.backup_files(
         inputFilename, inputDir, "Convert non-ASCII quotes", ".txt", configFileName
@@ -1218,7 +1210,7 @@ def find_replace_string(
 ):
     # edited by Claude Hu 02/2021
     # string_IN=[],string_OUT=[], in the form as list so that running this function can finish replacement of multiple strings without open one file repetitively
-    import file_filename_util
+    from . import file_filename_util
 
     if string_OUT is None:
         string_OUT = []

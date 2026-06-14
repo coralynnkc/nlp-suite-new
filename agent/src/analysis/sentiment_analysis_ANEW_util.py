@@ -20,11 +20,10 @@ import csv
 import logging
 import os
 
-import charts_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
 import numpy as np
+
+from ..charts import charts_util
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +103,7 @@ def analyzefile(inputFilename, writer, mode, Document_ID, Document):
         logger.warning("Empty file %s", inputFilename)
         return
 
-    from Stanza_functions_util import (
+    from ..nlp.Stanza_functions_util import (
         lemmatize_stanza_word,
         sentence_split_stanza_text,
         stanzaPipeLine,

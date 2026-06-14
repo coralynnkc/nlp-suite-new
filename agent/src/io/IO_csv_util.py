@@ -3,9 +3,9 @@ import io
 import logging
 import os
 
-import IO_files_util
-import IO_user_interface_util
 import pandas as pd
+
+from . import IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -343,7 +343,7 @@ def openCSVOutputFile(outputCSVFilename, IO="w", encoding="utf-8", errors="ignor
 
 
 def extract_from_csv(inputFilename, outputDir, data_files, columns_to_export=None):
-    import IO_files_util
+    from . import IO_files_util
 
     # TODO must check for data_files passed
     outputFilename = IO_files_util.generate_output_file_name(

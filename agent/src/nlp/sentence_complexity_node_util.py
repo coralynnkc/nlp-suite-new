@@ -1,6 +1,6 @@
 # written by Mino Cha, March 2022
 
-import tree as tr
+from . import tree as tr
 
 
 class Node:

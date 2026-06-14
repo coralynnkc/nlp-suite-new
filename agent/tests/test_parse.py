@@ -4,8 +4,8 @@ import pytest
 from conftest import output_csvs, read_rows
 
 try:
-    import spaCy_util
-    from parsers_annotators import run_parsers_annotators
+    from src.nlp import spaCy_util
+    from src.nlp.parsers_annotators import run_parsers_annotators
 except (ImportError, SystemExit):
     pytest.skip("parser dependencies not available", allow_module_level=True)
 

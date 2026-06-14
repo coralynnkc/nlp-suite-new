@@ -2,10 +2,11 @@ import difflib as df
 import logging
 import re
 
-import IO_user_interface_util
-import Stanford_CoreNLP_util
-from app_constants import CORENLP_URL
 from pycorenlp import StanfordCoreNLP
+
+from ..core.app_constants import CORENLP_URL
+from ..io import IO_user_interface_util
+from . import Stanford_CoreNLP_util
 
 # Set up logging for tracking errors and processes
 logger = logging.getLogger(__name__)
@@ -130,7 +131,6 @@ def run(
     export_json_var,
     manual_Coref,
 ):
-
     StanfordCoreNLP(CORENLP_URL)
     corefed_files = []
     errorFound = False

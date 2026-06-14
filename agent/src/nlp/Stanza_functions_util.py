@@ -4,7 +4,7 @@ Written by Mino Cha February 2022
 Examples of Usage:
 
 1. Instantiation
-    from Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
+    from .Stanza_functions_util import stanzaPipeLine, word_tokenize_stanza, sent_tokenize_stanza, lemmatize_stanza
 
 2. sent_tokenize_stanza
     sentences = sent_tokenize_stanza(stanzaPipeLine(text))
@@ -21,11 +21,11 @@ import stanza
 try:
     stanza.download("en")
 except Exception:
-    import IO_internet_util
+    from ..io import IO_internet_util
 
     IO_internet_util.check_internet_availability_warning("Stanza_functions_util.py (stanza.download(en))")
 
-import IO_internet_util
+from ..io import IO_internet_util
 
 # check internet connection
 if IO_internet_util.check_internet_availability_warning("Stanza_functions_util.py"):

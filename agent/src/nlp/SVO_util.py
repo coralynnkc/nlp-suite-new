@@ -1,13 +1,12 @@
 import logging
 import os
 
-import charts_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 import numpy as np
 import pandas as pd
-from util import collect
+
+from ..charts import charts_util
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -338,7 +337,7 @@ def lemmatize_filter_svo(
     dataTransformation="No transformation",
 ):
     filesToOpen = []
-    from Stanza_functions_util import (
+    from .Stanza_functions_util import (
         lemmatize_stanza_word,
         stanzaPipeLine,
     )

@@ -2,8 +2,8 @@ import pytest
 from conftest import output_csvs, read_rows
 
 try:
-    import spaCy_util
-    from SVO import run_svo
+    from src.nlp import spaCy_util
+    from src.nlp.SVO import run_svo
 except (ImportError, SystemExit):
     pytest.skip("SVO dependencies not available", allow_module_level=True)
 

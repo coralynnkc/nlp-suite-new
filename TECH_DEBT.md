@@ -11,13 +11,11 @@ enough context to pick each one up later. Entries are tagged by priority:
 **P1** next up, **P2** worth a dedicated PR, **P3** fine to defer indefinitely.
 
 **Next up:**
-1. **[P2] Package conversion** (flat sys.path → real package), own PR, no other changes.
+1. **[P2] Pyright type-checking** — wire pyright to resolve the `src` package
+   (execution environment rooted at `agent/`, or `extraPaths: ["agent"]`) and fix
+   the pre-commit hook's `rev: v1.1.x` tag to a concrete version. See Architecture.
 2. **[P3] Everything else** — security hardening only matters for a hosted
    deployment; `iterrows()` vectorization only when an endpoint feels slow.
-
-(The /word2vec backends — Gensim, WSI, and BERT word embeddings — were ported
-from the desktop repo in June 2026; the endpoint now works. See the Testing
-section for how the gated backend tests are run.)
 
 ## UI/UX
 
@@ -53,8 +51,8 @@ section for how the gated backend tests are run.)
   CoreNLP + dictionary annotation paths work via `POST /gender`, but the
   `plot_var` path needs the `lib/namesGender` data files
   (`SS_yearOfBirth.csv`, `SS_state_yearOfBirth.csv`, CMU/census name lists)
-  that were never copied from the desktop repo. Copy them into `agent/lib/
-  namesGender/` (where `GUI_IO_util.namesGender_libPath` points), re-enable
+  that were never copied from the desktop repo. Copy them into
+  `agent/lib/namesGender/` (where `GUI_IO_util.namesGender_libPath` points), re-enable
   the plot controls in `gender_analysis.html`, and stop hardcoding
   `plot_var=False` in the endpoint.
 - **[P3] Non-Python wordcloud "services" just open external websites**
@@ -113,15 +111,17 @@ section for how the gated backend tests are run.)
 
 ## Architecture
 
-- **[P2] Flat sys.path imports.** `agent/src/main.py` adds every `agent/src/*`
-  subdirectory to `sys.path`, and ~105 modules import each other by bare name.
-  This defeats IDE navigation/refactoring and caused most of the 84 undefined-
-  name bugs fixed in Phase 2. The right fix is converting `agent/src` into a
-  real package with relative imports — large, mechanical, easy to get wrong;
-  do it in one dedicated PR with no other changes.
-  Related constraint: `Stanford_CoreNLP_util.py` imports the `corenlp_json_*`
-  modules at its bottom, so those modules must not import it at module level
-  (shared helpers live in `corenlp_json_common.py` instead).
+- **[P2] Pyright type-checking (next up).** Running pyright on the agent used to
+  flood the output with false "import could not be resolved" errors because it
+  resolves imports by package/path, not the old runtime `sys.path` munging. Now
+  that `agent/src` is a real `src` package (relative imports throughout, run via
+  `python -m src.main`), point pyright at it via an execution environment rooted
+  at `agent/` (or `extraPaths: ["agent"]`) so `src.*` resolves. The pre-commit
+  hook pinned to `rev: v1.1.x` won't install — pyright-python needs a concrete
+  version (e.g. `v1.1.390`); fix the tag at the same time.
+- **[P3] Import-cycle constraint.** `Stanford_CoreNLP_util.py` imports the
+  `corenlp_json_*` modules at its bottom, so those modules must not import it at
+  module level (shared helpers live in `corenlp_json_common.py` instead).
 - **[P3] Single-job concurrency by design.** The agent holds one
   `threading.Lock`; concurrent requests get 503. Fine for a single-researcher
   desktop tool, but any multi-user deployment needs a real job queue.
@@ -166,7 +166,7 @@ section for how the gated backend tests are run.)
   2026: core utils, model cache, NER, wordnet*, boxplot, excel charts,
   wordcloud, sentiment, topic modeling (Gensim), ngrams, gender analysis*,
   shape of stories*, parse*, word2vec*, conll_table, svo*, gis*, statistics;
-  \*some paths integration-, network-, or external-software-gated). Remaining:
+  *some paths integration-, network-, or external-software-gated). Remaining:
   file_manager, style_analysis, sunburst, colormap, sankey, file_search,
   sentence_analysis, settings — all small enough to defer. Tests skip on the
   host (heavy deps live in the Docker image); run them in the agent container:

@@ -7,32 +7,29 @@ import re
 import subprocess
 import time
 
-import charts_util
-import constants_util
-import file_cleaner_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
-import IO_user_interface_util
 import nltk
 import pandas
 import pandas as pd
-import reminders_util
 import stanza
-from app_constants import CORENLP_URL
 from autocorrect import Speller
 from fuzzywuzzy import fuzz, process
-from IO_files_util import make_directory
 from langdetect import detect_langs
 from langid.langid import LanguageIdentifier, model
-from model_cache import get_spacy_model
 from pandas import DataFrame
 from pycorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from spellchecker import SpellChecker
 from textblob import Word
-from util import collect
+
+from ..charts import charts_util
+from ..core import constants_util, reminders_util
+from ..core.app_constants import CORENLP_URL
+from ..core.model_cache import get_spacy_model
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util, IO_libraries_util, IO_user_interface_util
+from ..io.IO_files_util import make_directory
+from . import file_cleaner_util
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +41,7 @@ def lemmatizing(word):  # edited by Claude Hu 08/2020
     for _p in pos:
         # if lemmatization with any postag gives different result from the word itself
         # that lemmatization is returned as result
-        from Stanza_functions_util import lemmatize_stanza_word, stanzaPipeLine
+        from ..nlp.Stanza_functions_util import lemmatize_stanza_word, stanzaPipeLine
 
         lemma = lemmatize_stanza_word(stanzaPipeLine(word))
         if lemma != word:
@@ -62,12 +59,11 @@ def nltk_unusual_words(
     chartPackage="Excel",
     dataTransformation="No transformation",
 ):
-
     import nltk
 
     nltk.download("words")
 
-    from Stanza_functions_util import (
+    from ..nlp.Stanza_functions_util import (
         lemmatize_stanza_doc,
         lemmatize_stanza_word,
         stanzaPipeLine,
@@ -106,7 +102,7 @@ def nltk_unusual_words(
     # already shown in NLP.py
 
     # https://stackoverflow.com/questions/28339622/is-there-a-corpus-of-english-words-in-nltk
-    import GUI_IO_util
+    from ..io import GUI_IO_util
 
     NLTK_corpus_lemmatized = GUI_IO_util.wordLists_libPath + os.sep + "NLTK_corpus_lemmatized.csv"
     filesToOpen.append(NLTK_corpus_lemmatized)
@@ -402,7 +398,6 @@ def check_for_typo(
     similarity_value,
     by_all_tokens_var,
 ):
-
     def find_similar_words(word, true_spellings, threshold=95):
         exact_match = [w for w in true_spellings if w.lower() == word.lower()]
         if exact_match:
@@ -640,7 +635,7 @@ def check_for_typo(
                 text = src.read().replace("\n", " ")
                 text = text.replace("%", "percent")
                 NLP = StanfordCoreNLP(CORENLP_URL)
-            from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
+            from ..nlp.Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
             sentences = sentence_split_stanza_text(stanzaPipeLine(text))
             documents.append([sentences, filename, dir_path])
@@ -1047,7 +1042,7 @@ def spellchecking_autocorrect(text: str, inputFilename) -> (str, DataFrame):
     new_str_list = []
     speller = Speller()
     # for word in nltk.word_tokenize(text):
-    from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+    from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
     for word in tokenize_stanza_text(stanzaPipeLine(text)):
         if word.isalnum():
@@ -1079,7 +1074,7 @@ def spellchecking_pyspellchecker(text: str, inputFilename) -> (str, DataFrame):
     #                                    'Started running PYSPELLCHECKER spelling checker on ' + inputFilename + ' at',
     #                                              True, '', True, '', True)
 
-    from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+    from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
     # :: pyspellchecker seems to remove punctuations.
     new_str_list = []
@@ -1111,7 +1106,7 @@ def spellchecking_text_blob(text: str, inputFilename) -> (str, DataFrame):
     original_str_list = []
     treebank = nltk.tokenize.treebank.TreebankWordDetokenizer()
     # for word in nltk.word_tokenize(text):
-    from Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
+    from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
     for word in tokenize_stanza_text(stanzaPipeLine(text)):
         if word.isalnum():
@@ -1238,7 +1233,6 @@ def language_detection(
     chartPackage,
     dataTransformation,
 ):
-
     fileID = 0
     filesToOpen = []
 
