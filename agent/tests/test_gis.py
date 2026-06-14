@@ -10,11 +10,7 @@ try:
     from src.gis.GIS_main import run_GIS
     from src.io import IO_internet_util
 except (ImportError, SystemExit):
-    # pytest.skip is NoReturn, but the gate's pyright venv has no pytest stubs to
-    # know that; the explicit raise proves the block never falls through so the
-    # imports above aren't seen as possibly-unbound.
     pytest.skip("GIS dependencies not available", allow_module_level=True)
-    raise
 
 
 class _StubLocation:

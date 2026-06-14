@@ -11,3 +11,7 @@ repos:
       - id: pyright
         files: ^agent/  # gate only changed agent files on commit (ui/ is excluded in pyrightconfig);
         # drives gradual per-file cleanup of the legacy backlog. Full sweep: `pre-commit run pyright --all-files`.
+        # pytest in the isolated hook venv so pyright sees pytest.skip as NoReturn (otherwise the
+        # try/except import guard in every test_*.py reads as possibly-unbound). Keep this minimal:
+        # do NOT add pandas-stubs etc., which would make the gate stricter than the per-file backlog expects.
+        additional_dependencies: [pytest]
