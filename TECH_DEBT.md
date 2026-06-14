@@ -11,10 +11,6 @@ Fix one entry per PR (see CLAUDE.md). Tags: **P1** do next, **P2** after the P1s
 
 ## Active queue (user-visible bugs — work in order)
 
-- **[P2] CoNLL k-sentences crashes on short documents.**
-  `CoNLL_k_sentences_util.k_sent:181` truth-tests a pandas Series when a doc has
-  <= 2\*K sentences (`ValueError: truth value of a Series is ambiguous`); fine for
-  K=1 on real docs (`tests/test_conll_table.py`).
 - **[P2] Dead branch in `gis/GIS_pipeline_util.py:54`** — `answer = print(...)`
   then `if answer:`; `print` returns `None` so the branch never runs (it also
   points at the removed Tips File). Drop it or restore a real prompt.
