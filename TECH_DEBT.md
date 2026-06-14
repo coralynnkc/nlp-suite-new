@@ -76,6 +76,11 @@ none`: `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
   (shared helpers live in `corenlp_json_common.py`).
 - **[P3] Single-job concurrency by design.** One `threading.Lock`; concurrent
   requests get 503. Multi-user deployment would need a real job queue.
+- **[P3] Service-URL config drift.** In `core/app_constants.py`, `CORENLP_URL`
+  uses the `corenlp` hostname + env override, but `MALLET_URL` is a raw
+  `172.16.0.13` IP with no override; `ui/app/views.py:14` likewise defaults
+  `AGENT_SERVER_URL` to a hardcoded `172.16.0.11`. Give MALLET and the agent the
+  same hostname + env treatment (CLAUDE.md: never hardcode `172.16.0.x`).
 
 ## Code quality
 
@@ -85,6 +90,30 @@ none`: `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
 - **[P3] Python 3.9 ceiling.** Agent image (ubuntu:20.04) runs 3.9, so 3.10+
   syntax breaks at runtime. ruff `target-version = "py39"` guards lint but not
   hand-written code; host tests won't catch it. Revisit with a newer base image.
+- **[P2] ~16 error-swallowing `except Exception: pass`/`continue`** in `agent/src`
+  hide real failures — e.g. `core/reminders_util.py:471`,
+  `analysis/statistics_csv_util.py:190`, `charts/charts_Plotly_util.py:98`,
+  `io/IO_files_util.py:319`, `stories/shape_of_stories_vectorizer_util.py`. Narrow
+  the except clause or log at warning so failures are diagnosable.
+- **[P3] Dead branch in `gis/GIS_pipeline_util.py:54`** — `answer = print(...)`
+  then `if answer:`; `print` returns `None` so the branch never runs (it also
+  points at the removed Tips File). Drop it or restore a real prompt.
+
+## Duplication
+
+- **[P3] `safe_read_csv` barely adopted.** ~120 raw `.read_csv(...)` calls in
+  `agent/src` vs only 4 using the `core/util.safe_read_csv` wrapper that
+  standardizes encoding / `on_bad_lines` / missing-file handling. Adopt
+  incrementally (boy-scout cleanup).
+- **[P3] `date_get_tense` / `date_get_info` duplicated verbatim** in
+  `nlp/corenlp_json_ner.py` (:34, :170) and
+  `nlp/Stanford_CoreNLP_SVO_enhanced_dependencies_util.py` (:679, :655). Extract
+  one shared helper.
+- **[P3] `create_output_directory` reimplemented** with divergent signatures in
+  `nlp/Stanford_CoreNLP_util.py:58`, `nlp/Stanza_util.py:796`,
+  `nlp/spaCy_util.py:650`.
+- **[P3] `WSI_classes.py` `get_batches` near-duplicate** (~40 lines) across the
+  Clusterer/Matcher classes (`:30`, `:202`), differing only by a `test` parameter.
 
 ## Performance
 
@@ -112,6 +141,23 @@ integration`; Nominatim GIS tests need `NLP_SUITE_TEST_NETWORK=1`; /word2vec +
   BERTopic/roBERTa tests need `NLP_SUITE_TEST_BERT=1` (model downloads).
 - **[P3] MALLET no hermetic test.** The mallet service reads the live
   `~/nlp-suite/input`, so a test would touch real user data.
+- **[P3] Assertion-light tests.** Several only check that `run_*` returns or is
+  truthy — guarding against import/crash regressions but not output correctness:
+  `test_boxplot.py`, `test_ner.py`, `test_excel_plotly_charts.py`,
+  `test_wordnet.py`, `test_gender_analysis.py`, `test_shape_of_stories.py`, plus
+  weak asserts in `test_word2vec.py`, `test_topic_modeling.py`, `test_parse.py`.
+- **[P3] Duplicated test fixtures.** `_no_spacy_download` monkeypatch is copied in
+  `test_parse.py:14` and `test_svo.py:12`; `_write_conll_fixture`
+  (`test_wordcloud.py:87`) duplicates conftest `fixture_conll`. Move to
+  `conftest.py`.
+- **[P3] Fragile assertion** at `test_parse.py:139` checks exact column order
+  (`assert header == [...]`); breaks on a harmless CSV reorder. Assert column
+  presence instead.
+- **[P3] No dependency vulnerability scan run.** `pip-audit` isn't installed and
+  the pinned sets (`agent/requirements.txt`, `ui/requirements.txt`) have never
+  been CVE-scanned. After `pip install pip-audit`, run
+  `pip-audit -r agent/requirements.txt -r ui/requirements.txt` (or inside the
+  agent image — the authoritative env; a host conda env audits the wrong deps).
 
 ## Forks (corenlp/, mallet/) — no code changes by policy
 
