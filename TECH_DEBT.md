@@ -1,8 +1,6 @@
 # Tech Debt
 
-Issues deliberately deferred during the June 2026 overhaul. Tags: **P1** next up,
-**P2** worth a dedicated PR, **P3** fine to defer indefinitely. Fix one entry per
-PR (see CLAUDE.md).
+Issues deliberately deferred during the June 2026 overhaul. Tags: **P1** next up, **P2** worth a dedicated PR, **P3** fine to defer indefinitely. Fix one entry per PR (see CLAUDE.md).
 
 **Next up:** **[P3] Everything else** — security hardening only matters for a
 hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
@@ -51,7 +49,7 @@ hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
   string when the area is malformed. Pipeline works with a real locations csv.
 - **[P3] CoNLL k-sentences crashes on short documents.**
   `CoNLL_k_sentences_util.k_sent:181` truth-tests a pandas Series when a doc has
-  <= 2*K sentences (`ValueError: truth value of a Series is ambiguous`); fine for
+  <= 2\*K sentences (`ValueError: truth value of a Series is ambiguous`); fine for
   K=1 on real docs (`tests/test_conll_table.py`).
 - **[P3] BERT_util partial port.** Sentiment + `word_embeddings_BERT` ported.
   `NER_tags_BERT` and `doc_summary_BERT` need packages not in the image
@@ -76,7 +74,7 @@ hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
   need `ui/.venv` or stubs via a second `executionEnvironments` root /
   `venvPath`); 11 unresolved-`django.*` errors.
 - **[P3] 3 stray bare lazy-imports** hidden by pyright `reportMissingImports:
-  none`: `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
+none`: `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
   `file_ops/file_search_byWord_util.py:368`), `import GIS_folium_map_util`
   (`gis/GIS_pipeline_util.py:551`). Convert to relative imports (CLAUDE.md).
 - **[P3] Import-cycle constraint.** `Stanford_CoreNLP_util.py` imports
@@ -114,9 +112,9 @@ hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
 - **[P3] ~10 of 24 endpoints untested.** Remaining: file_manager, style_analysis,
   sunburst, colormap, sankey, file_search, sentence_analysis, settings (all
   small). Run tests in the agent container: `docker run --rm -v "$PWD/agent:/work"
-  -w /work nlp-suite-agent python3.9 -m pytest tests/`. CoreNLP-gated: add
+-w /work nlp-suite-agent python3.9 -m pytest tests/`. CoreNLP-gated: add
   `--network nlp-suite_nlp-suite-network -e CORENLP_URL=http://corenlp:9000 -m
-  integration`; Nominatim GIS tests need `NLP_SUITE_TEST_NETWORK=1`; /word2vec +
+integration`; Nominatim GIS tests need `NLP_SUITE_TEST_NETWORK=1`; /word2vec +
   BERTopic/roBERTa tests need `NLP_SUITE_TEST_BERT=1` (model downloads).
 - **[P3] MALLET no hermetic test.** The mallet service reads the live
   `~/nlp-suite/input`, so a test would touch real user data.
