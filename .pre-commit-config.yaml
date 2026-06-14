@@ -9,4 +9,5 @@ repos:
     rev: v1.1.410
     hooks:
       - id: pyright
-        stages: [manual]  # Run manually via `pre-commit run pyright --all-files`, not on commit
+        files: ^agent/  # gate only changed agent files on commit (ui/ is excluded in pyrightconfig);
+        # drives gradual per-file cleanup of the legacy backlog. Full sweep: `pre-commit run pyright --all-files`.
