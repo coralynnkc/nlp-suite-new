@@ -3,7 +3,7 @@ import pathlib
 import pytest
 
 try:
-    from topic_modeling import run_topic_modeling
+    from src.topic_modeling.topic_modeling import run_topic_modeling
 except (ImportError, SystemExit):
     pytest.skip("topic_modeling dependencies not available", allow_module_level=True)
 

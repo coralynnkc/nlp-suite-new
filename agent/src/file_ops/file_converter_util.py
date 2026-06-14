@@ -13,8 +13,9 @@ import os
 # pip install pdfminer.six --user (since it may ask for permission) rather than pip install pdfminer
 from os.path import splitext
 
-import IO_files_util
 from striprtf.striprtf import rtf_to_text
+
+from ..io import IO_files_util
 
 logger = logging.getLogger(__name__)
 

@@ -8,11 +8,12 @@ edited by Naman Sahni 9/23.2022
 
 import string
 
-import charts_util
-import IO_files_util
 import pandas as pd
-import statistics_txt_util
-from util import collect
+
+from ..analysis import statistics_txt_util
+from ..charts import charts_util
+from ..core.util import collect
+from ..io import IO_files_util
 
 
 def k_sent(
@@ -89,7 +90,7 @@ def k_sent(
             else:
                 txt += " " + token
 
-        from Stanza_functions_util import (
+        from .Stanza_functions_util import (
             sentence_split_stanza_text,
             stanzaPipeLine,
             tokenize_stanza_text,

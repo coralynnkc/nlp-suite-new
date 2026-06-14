@@ -4,8 +4,8 @@ from conftest import output_csvs, read_rows
 # statistics_txt_main pulls in the chart/stanza stack at call time; the module
 # itself only needs core utils, but skip on hosts without the agent image deps.
 try:
-    import statistics_txt_util
-    from statistics_txt_main import run_statistics
+    from src.analysis import statistics_txt_util
+    from src.analysis.statistics_txt_main import run_statistics
 except (ImportError, SystemExit):
     pytest.skip("statistics dependencies not available", allow_module_level=True)
 

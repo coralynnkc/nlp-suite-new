@@ -7,7 +7,7 @@ import logging
 import os
 import string
 
-import reminders_util
+from ..core import reminders_util
 
 logger = logging.getLogger(__name__)
 

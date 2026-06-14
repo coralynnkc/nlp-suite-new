@@ -15,15 +15,13 @@ import os
 import subprocess
 import warnings
 
-import constants_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 import pandas as pd
-import parsers_annotators_visualization_util
-import reminders_util
-from model_cache import get_spacy_model
-from util import collect
+
+from ..core import constants_util, reminders_util
+from ..core.model_cache import get_spacy_model
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util, IO_user_interface_util
+from . import parsers_annotators_visualization_util
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +46,7 @@ def open_spaCy_website(message, lang_list):
         + Stanza_web
         + "\n\nWould you like to open the spaCy website for annotator availability for the various languages supported by spaCy?"
     )
-    import IO_libraries_util
+    from ..io import IO_libraries_util
 
     IO_libraries_util.open_url(
         website_name,
@@ -95,7 +93,6 @@ def spaCy_annotate(
     print_json=True,
     **kwargs,
 ):
-
     # instantiate variables for input/output handling settings
     language_encoding = "utf-8"
     filesToOpen = []
@@ -361,7 +358,6 @@ def get_mwe(out_df):
 
 # Convert spaCy doc to pandas dataframe
 def convertSpacyDoctoDf(spacy_doc, inputFilename, inputDir, tail, docID, annotator_params, language):
-
     # output dataframe
     out_df = pd.DataFrame()
 

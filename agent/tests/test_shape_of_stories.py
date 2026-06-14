@@ -1,7 +1,7 @@
 import pytest
 
 try:
-    from shape_of_stories_main import run as run_shape_of_stories
+    from src.stories.shape_of_stories_main import run as run_shape_of_stories
 except (ImportError, SystemExit):
     pytest.skip("shape_of_stories_main dependencies not available", allow_module_level=True)
 

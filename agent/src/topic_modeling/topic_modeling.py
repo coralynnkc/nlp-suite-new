@@ -1,10 +1,7 @@
 import logging
 
-import IO_files_util
-import IO_internet_util
-import topic_modeling_bert_util
-import topic_modeling_gensim_util
-import topic_modeling_mallet_util
+from ..io import IO_files_util, IO_internet_util
+from . import topic_modeling_bert_util, topic_modeling_gensim_util, topic_modeling_mallet_util
 
 logger = logging.getLogger(__name__)
 

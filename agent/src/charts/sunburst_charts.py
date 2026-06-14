@@ -1,9 +1,9 @@
 import json
 import logging
 
-import charts_util
-import IO_files_util
-from get_first_csv import first_csv
+from ..core.get_first_csv import first_csv
+from ..io import IO_files_util
+from . import charts_util
 
 logger = logging.getLogger(__name__)
 

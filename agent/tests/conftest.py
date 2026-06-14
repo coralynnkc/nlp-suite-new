@@ -8,12 +8,11 @@ import urllib.parse
 
 import pytest
 
-# Make agent/src importable when running pytest from agent/
-_src = pathlib.Path(__file__).parent.parent / "src"
-sys.path.insert(0, str(_src))
-for _d in _src.iterdir():
-    if _d.is_dir() and not _d.name.startswith("."):
-        sys.path.insert(0, str(_d))
+# Make the `src` package importable (as `src.*`) when running pytest from agent/.
+# agent/ is the parent of src/, so adding it to sys.path lets `import src.nlp...`
+# resolve against the real package layout.
+_agent_dir = pathlib.Path(__file__).parent.parent
+sys.path.insert(0, str(_agent_dir))
 
 _FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 

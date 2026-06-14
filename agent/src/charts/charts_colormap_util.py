@@ -7,11 +7,12 @@ import logging
 import os
 import re
 
-import IO_csv_util
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from charts_types import process_and_aggregate_data, transform_data, visualize_data
+
+from ..io import IO_csv_util
+from .charts_types import process_and_aggregate_data, transform_data, visualize_data
 
 
 def extract_file_name(link_string):
@@ -165,7 +166,7 @@ def main_colormap(inputFilename, outputDir, csv_file_categorical_field_list, par
         cmap = cmaps(eval(params[1]), eval(params[2]))
     except (ValueError, TypeError):
         cmap = cmaps((135, 207, 236), (0, 0, 255))
-    import IO_files_util
+    from ..io import IO_files_util
 
     outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".colormetric")
     visualize_data(
@@ -373,7 +374,7 @@ def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, 
         cmap = cmaps(eval(params[1]), eval(params[2]))
     except (ValueError, TypeError):
         cmap = cmaps((135, 207, 236), (0, 0, 255))
-    import IO_files_util
+    from ..io import IO_files_util
 
     outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".colormetric")
 

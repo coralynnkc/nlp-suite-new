@@ -3,10 +3,11 @@ import csv
 import logging
 import os
 
-import IO_csv_util  # Angel
 import numpy as np
 import pandas as pd  # Angel
 from sklearn.decomposition import PCA
+
+from ..io import IO_csv_util  # Angel
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +124,6 @@ class Vectorizer:
         return min(doclengths), max(doclengths), np.mean(np.array(doclengths)), len(doclengths)
 
     def parse_input_data(self):
-
         if os.path.isfile(self.data_folder):
             narrative_fps = [self.data_folder]
         else:

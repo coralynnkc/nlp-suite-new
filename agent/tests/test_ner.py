@@ -1,7 +1,7 @@
 import pytest
 
 try:
-    from NER_main import run_NER
+    from src.nlp.NER_main import run_NER
 except (ImportError, SystemExit):
     pytest.skip("NER_main dependencies not available", allow_module_level=True)
 

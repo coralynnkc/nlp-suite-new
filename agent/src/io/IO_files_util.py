@@ -12,10 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from subprocess import call
 
-import GUI_IO_util
-import IO_csv_util
-import IO_libraries_util
-import reminders_util
+from ..core import reminders_util
+from . import GUI_IO_util, IO_csv_util, IO_libraries_util
 
 # There are 3 methods and a 2 constants present:
 # abspath returns absolute path of a path
@@ -353,7 +351,6 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
 
 # returns date, dateStr
 def getDateFromFileName(file_name, date_format="mm-dd-yyyy", sep="_", date_field_position=2, errMsg=True):
-
     # configFile_basename is the filename w/o the full path
     file_name = ntpath.basename(file_name)
     x = file_name
@@ -510,7 +507,6 @@ def getFileExtension(inputFilename):
 
 
 def getFilename(passed_string):
-
     # when X-axis values contain a document dressed for hyperlink and with full path
     #   undressed the hyperlink and only display the tail of the document
     tail = passed_string
@@ -788,7 +784,7 @@ def runScript_fromMenu_option(
     if len(script_to_run) == 0:
         return filesToOpen
     if script_to_run == "Gender guesser":
-        import IO_internet_util
+        from . import IO_internet_util
 
         # check internet connection
         if not IO_internet_util.check_internet_availability_warning("Gender guesser"):

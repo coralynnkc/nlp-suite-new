@@ -2,7 +2,7 @@ import pytest
 
 try:
     import pandas as pd
-    from excel_plotly_charts import run_excel_plotly_charts
+    from src.charts.excel_plotly_charts import run_excel_plotly_charts
 except (ImportError, SystemExit):
     pytest.skip("excel_plotly_charts dependencies not available", allow_module_level=True)
 

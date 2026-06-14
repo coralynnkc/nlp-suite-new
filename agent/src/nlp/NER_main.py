@@ -2,11 +2,9 @@ import logging
 
 # Roberto Franzosi September 2020
 # IBM https://ibm.github.io/zshot/ "pip install zshot"
-import config_util
-import spaCy_util
-import Stanford_CoreNLP_util
-import Stanza_util
-from util import collect
+from ..core import config_util
+from ..core.util import collect
+from . import Stanford_CoreNLP_util, Stanza_util, spaCy_util
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +75,7 @@ def run_NER(
                 + "\n\nYou can change the selected language using the Setup dropdown menu at the bottom of this GUI, select the 'Setup NLP package and corpus language' to open the GUI where you can change the language option."
             )
             return
-        import BERT_util
+        from . import BERT_util
 
         NER_list = BERT_util.NER_dict
         outputFiles = BERT_util.NER_tags_BERT(

@@ -6,11 +6,9 @@ import pytest
 from conftest import output_csvs, read_rows
 
 try:
-    import GIS_geocode_util
-    import GIS_location_util
-    import GIS_pipeline_util
-    import IO_internet_util
-    from GIS_main import run_GIS
+    from src.gis import GIS_geocode_util, GIS_location_util, GIS_pipeline_util
+    from src.gis.GIS_main import run_GIS
+    from src.io import IO_internet_util
 except (ImportError, SystemExit):
     pytest.skip("GIS dependencies not available", allow_module_level=True)
 

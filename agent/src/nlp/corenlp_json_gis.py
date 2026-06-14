@@ -22,16 +22,15 @@ import csv
 import logging
 import os
 
-import charts_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 import nltk
 
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
 import pandas as pd
-import reminders_util
-from util import collect
+
+from ..charts import charts_util
+from ..core import reminders_util
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 

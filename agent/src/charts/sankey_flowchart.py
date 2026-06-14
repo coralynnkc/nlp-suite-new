@@ -4,9 +4,9 @@ import json
 import logging
 import os
 
-import charts_util
-import IO_files_util
-from util import collect
+from ..core.util import collect
+from ..io import IO_files_util
+from . import charts_util
 
 logger = logging.getLogger(__name__)
 

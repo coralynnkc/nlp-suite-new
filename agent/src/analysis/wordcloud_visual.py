@@ -3,9 +3,8 @@ import logging
 # written by Roberto Franzosi November 2019
 import os
 
-import config_util
-import IO_internet_util
-import IO_libraries_util
+from ..core import config_util
+from ..io import IO_internet_util, IO_libraries_util
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +84,7 @@ def run_wordcloud(
         return
 
     if inputFilename[-4:] == ".csv":
-        import CoNLL_util
+        from ..nlp import CoNLL_util
 
         if not CoNLL_util.check_CoNLL(inputFilename, True):
             if not differentColumns_differentColors:
@@ -141,7 +140,7 @@ def run_wordcloud(
         ):
             return
     elif visualization_tools == "Python WordCloud":
-        import wordclouds_util
+        from . import wordclouds_util
 
         filesToOpen = wordclouds_util.python_wordCloud(
             inputFilename,

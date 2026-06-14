@@ -5,7 +5,7 @@ import stanza
 try:
     stanza.download("en")
 except Exception:
-    import IO_internet_util
+    from ..io import IO_internet_util
 
     IO_internet_util.check_internet_availability_warning(
         "Stanza_functions_util.py", "stanza", "json", "re", "tkinter", "warnings"
@@ -15,15 +15,13 @@ import os
 import re
 import warnings
 
-import constants_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_user_interface_util
 import pandas as pd
-import parsers_annotators_visualization_util
-from model_cache import get_stanza_pipeline
 from stanza.pipeline.multilingual import MultilingualPipeline
+
+from ..core import constants_util
+from ..core.model_cache import get_stanza_pipeline
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_user_interface_util
+from . import parsers_annotators_visualization_util
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -58,7 +56,7 @@ def open_Stanza_website(message, lang_list):
         + Stanza_web
         + "\n\nWould you like to open the Stanza website for annotator availability for the various languages supported by Stanza?"
     )
-    import IO_libraries_util
+    from ..io import IO_libraries_util
 
     IO_libraries_util.open_url(website_name, url, ask_to_open=True, message_title=message_title, message=message)
 
@@ -137,7 +135,6 @@ def Stanza_annotate(
     print_json=True,
     **kwargs,
 ):
-
     language_encoding = "utf-8"
     filesToOpen = []
 
@@ -422,7 +419,6 @@ def Stanza_annotate(
 
 # Convert Stanza doc to pandas Dataframe
 def convertStanzaDoctoDf(stanza_doc, inputFilename, inputDir, tail, docID, annotator_params, language):
-
     # output dataframe
     out_df = pd.DataFrame()
 
@@ -816,7 +812,8 @@ lang_dict_rev = {}
 # lang_dict_rev will use alias, instead of lang_name, as found in resources.json
 # e.g., stanza.download(Stanza_util.lang_dict_rev['en'])
 import stanza.resources.common
-from util import collect
+
+from ..core.util import collect
 
 logger = logging.getLogger(__name__)
 

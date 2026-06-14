@@ -1,8 +1,8 @@
 import json
 import logging
 
-import charts_util
-from util import collect
+from ..core.util import collect
+from . import charts_util
 
 logger = logging.getLogger(__name__)
 

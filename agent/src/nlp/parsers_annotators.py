@@ -1,13 +1,11 @@
 import logging
 
-import config_util
-import CoNLL_table_analyzer_main
-import spaCy_util
-import Stanford_CoreNLP_coreference_util
-import Stanford_CoreNLP_util
-from app_constants import CORENLP_URL
 from pycorenlp import StanfordCoreNLP
-from util import collect
+
+from ..core import config_util
+from ..core.app_constants import CORENLP_URL
+from ..core.util import collect
+from . import CoNLL_table_analyzer_main, Stanford_CoreNLP_coreference_util, Stanford_CoreNLP_util, spaCy_util
 
 
 def run_parsers_annotators(
@@ -255,7 +253,7 @@ def run_parsers_annotators(
                     raise ValueError(
                         f'The selected option "{annotators_menu_var}" is not available in Stanza. Please select another annotator and try again.'
                     )
-            from Stanza_util import Stanza_annotate
+            from .Stanza_util import Stanza_annotate
 
             # Run Stanza annotate
             outputFiles = Stanza_annotate(

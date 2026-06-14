@@ -19,12 +19,11 @@ import os
 import re
 import time
 
-import charts_util
-import IO_csv_util
-import IO_files_util
-import IO_internet_util
 import pandas as pd
-from model_cache import get_hf_pipeline, get_sentence_transformer
+
+from ..charts import charts_util
+from ..core.model_cache import get_hf_pipeline, get_sentence_transformer
+from ..io import IO_csv_util, IO_files_util, IO_internet_util
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +45,7 @@ def sentiment_analysis_BERT(sentiment_task, inputFilename, writer, Document_ID, 
         logger.warning("Empty file %s", inputFilename)
         return
 
-    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
+    from .Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
     sentences = sentence_split_stanza_text(stanzaPipeLine(fulltext))
 
@@ -193,12 +192,12 @@ def split_into_sentences(text):
     text = re.sub(" " + alphabets + "[.]", " \\1<prd>", text)
     if "”" in text:
         text = text.replace(".”", "”.")
-    if "\"" in text:
-        text = text.replace(".\"", "\".")
+    if '"' in text:
+        text = text.replace('."', '".')
     if "!" in text:
-        text = text.replace("!\"", "\"!")
+        text = text.replace('!"', '"!')
     if "?" in text:
-        text = text.replace("?\"", "\"?")
+        text = text.replace('?"', '"?')
     text = text.replace(".", ".<stop>")
     text = text.replace("?", "?<stop>")
     text = text.replace("!", "!<stop>")
@@ -209,21 +208,33 @@ def split_into_sentences(text):
     return sentences
 
 
-def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, chartPackage, dataTransformation,
-            vis_menu_var, dim_menu_var, compute_distances_var, top_words_var, keywords_var, lemmatize_var,
-            remove_stopwords_var, configFileName):
+def word_embeddings_BERT(
+    inputFilename,
+    inputDir,
+    outputDir,
+    openOutputFiles,
+    chartPackage,
+    dataTransformation,
+    vis_menu_var,
+    dim_menu_var,
+    compute_distances_var,
+    top_words_var,
+    keywords_var,
+    lemmatize_var,
+    remove_stopwords_var,
+    configFileName,
+):
     """Compute SentenceTransformer (distilroberta) word embeddings over a corpus.
 
     Ported from the upstream desktop BERT_util.word_embeddings_BERT; the leading
     tkinter `window` argument was dropped and the heavy word2vec helpers are
     imported lazily so the sentiment path does not pay their import cost.
     """
-    import statistics_txt_util
-    import word2vec_distances_util
-    import word2vec_tsne_plot_util
-    from model_cache import get_stanza_pipeline
     from sklearn.manifold import TSNE
-    from Stanza_functions_util import tokenize_stanza_text
+
+    from ..analysis import statistics_txt_util, word2vec_distances_util, word2vec_tsne_plot_util
+    from ..core.model_cache import get_stanza_pipeline
+    from .Stanza_functions_util import tokenize_stanza_text
 
     if not IO_internet_util.check_internet_availability_warning("BERT_util.py (Function word_embeddings_BERT)"):
         return []
@@ -231,15 +242,26 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
     filesToOpen = []
 
     # compute only distances if inputFile is a previously-saved vector csv
-    if inputFilename.endswith('csv'):
+    if inputFilename.endswith("csv"):
         outputFiles = word2vec_distances_util.compute_word2vec_distances(
-            inputFilename, inputDir, outputDir, chartPackage, dataTransformation,
-            None, None, keywords_var, compute_distances_var, top_words_var)
+            inputFilename,
+            inputDir,
+            outputDir,
+            chartPackage,
+            dataTransformation,
+            None,
+            None,
+            keywords_var,
+            compute_distances_var,
+            top_words_var,
+        )
         filesToOpen.extend(outputFiles)
         return filesToOpen
 
-    model = get_sentence_transformer('sentence-transformers/all-distilroberta-v1')
-    inputDocs = IO_files_util.getFileList(inputFilename, inputDir, fileType='.txt', silent=False, configFileName=configFileName)
+    model = get_sentence_transformer("sentence-transformers/all-distilroberta-v1")
+    inputDocs = IO_files_util.getFileList(
+        inputFilename, inputDir, fileType=".txt", silent=False, configFileName=configFileName
+    )
     Ndocs = str(len(inputDocs))
     header = ["Word", "Vector", "Sentence ID", "Sentence", "Document ID", "Document"]
     csv_result = []
@@ -248,11 +270,11 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
     tsne_df = None
 
     if lemmatize_var:
-        stanzaPipeLine = get_stanza_pipeline(lang='en', processors='tokenize, lemma')
-        logger.info('Tokenizing and Lemmatizing...')
+        stanzaPipeLine = get_stanza_pipeline(lang="en", processors="tokenize, lemma")
+        logger.info("Tokenizing and Lemmatizing...")
     else:
-        stanzaPipeLine = get_stanza_pipeline(lang='en', processors='tokenize')
-        logger.info('Tokenizing...')
+        stanzaPipeLine = get_stanza_pipeline(lang="en", processors="tokenize")
+        logger.info("Tokenizing...")
 
     for doc in inputDocs:
         head, tail = os.path.split(doc)
@@ -260,7 +282,7 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
         logger.info("Processing file " + str(documentID) + "/" + Ndocs + " " + tail)
 
         with open(doc, encoding="utf-8", errors="ignore") as f:
-            fullText = f.read().replace('\n', ' ')
+            fullText = f.read().replace("\n", " ")
 
         # split into sentences so the word's context can be reported in the csv
         sentences = split_into_sentences(fullText)
@@ -272,40 +294,50 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
     else:
         words_to_embed = all_words
 
-    logger.info(f'Started running BERT Word2Vec model on {len(words_to_embed)} words at {time.asctime(time.localtime(time.time()))}')
+    logger.info(
+        f"Started running BERT Word2Vec model on {len(words_to_embed)} words at {time.asctime(time.localtime(time.time()))}"
+    )
     word_vectors = model.encode(words_to_embed)
 
     word_embeddings = {}
     for w, e in zip(words_to_embed, word_vectors):
         word_embeddings[w] = e
 
-    logger.info(f'Finished running BERT Word2Vec model exporting {len(word_embeddings)} non-distinct words at {time.asctime(time.localtime(time.time()))}')
+    logger.info(
+        f"Finished running BERT Word2Vec model exporting {len(word_embeddings)} non-distinct words at {time.asctime(time.localtime(time.time()))}"
+    )
 
     # visualization
-    if 'Do not plot' not in vis_menu_var:
-        logger.info(f'Started preparing charts via t-SNE for {len(word_embeddings)} non-distinct words at {time.asctime(time.localtime(time.time()))}')
-        if dim_menu_var == '2D':
+    if "Do not plot" not in vis_menu_var:
+        logger.info(
+            f"Started preparing charts via t-SNE for {len(word_embeddings)} non-distinct words at {time.asctime(time.localtime(time.time()))}"
+        )
+        if dim_menu_var == "2D":
             tsne = TSNE(n_components=2)
             xys = tsne.fit_transform(word_vectors)
-            tsne_df = pd.DataFrame({'Word': words_to_embed, 'x': xys[:, 0], 'y': xys[:, 1]})
+            tsne_df = pd.DataFrame({"Word": words_to_embed, "x": xys[:, 0], "y": xys[:, 1]})
             fig = word2vec_tsne_plot_util.plot_interactive_graph(tsne_df)
             fig_words = word2vec_tsne_plot_util.plot_interactive_graph_words(tsne_df)
         else:
             tsne = TSNE(n_components=3)
             xyzs = tsne.fit_transform(word_vectors)
-            tsne_df = pd.DataFrame({'Word': words_to_embed, 'x': xyzs[:, 0], 'y': xyzs[:, 1], 'z': xyzs[:, 2]})
+            tsne_df = pd.DataFrame({"Word": words_to_embed, "x": xyzs[:, 0], "y": xyzs[:, 1], "z": xyzs[:, 2]})
             fig = word2vec_tsne_plot_util.plot_interactive_3D_graph(tsne_df)
             fig_words = word2vec_tsne_plot_util.plot_interactive_3D_graph_words(tsne_df)
 
-        words_outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '_words.html', 'Word2Vec_vector_ALL_words')
+        words_outputFilename = IO_files_util.generate_output_file_name(
+            inputFilename, inputDir, outputDir, "_words.html", "Word2Vec_vector_ALL_words"
+        )
         fig_words.write_html(words_outputFilename)
         filesToOpen.append(words_outputFilename)
 
-        outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.html', 'Word2Vec_vector_ALL_words')
+        outputFilename = IO_files_util.generate_output_file_name(
+            inputFilename, inputDir, outputDir, ".html", "Word2Vec_vector_ALL_words"
+        )
         fig.write_html(outputFilename)
         filesToOpen.append(outputFilename)
 
-    logger.info(f'Started preparing the csv vector file at {time.asctime(time.localtime(time.time()))}')
+    logger.info(f"Started preparing the csv vector file at {time.asctime(time.localtime(time.time()))}")
 
     documentID = 0
     for doc in inputDocs:
@@ -313,7 +345,7 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
         documentID += 1
 
         with open(doc, encoding="utf-8", errors="ignore") as f:
-            fullText = f.read().replace('\n', ' ')
+            fullText = f.read().replace("\n", " ")
 
         sentences = split_into_sentences(fullText)
         sentenceID = 0
@@ -324,24 +356,45 @@ def word_embeddings_BERT(inputFilename, inputDir, outputDir, openOutputFiles, ch
                 words = statistics_txt_util.excludeStopWords_list(words)
             for w in words:
                 if w in word_embeddings:
-                    csv_result.append([w, word_embeddings[w], sentenceID, s, documentID, IO_csv_util.dressFilenameForCSVHyperlink(doc)])
+                    csv_result.append(
+                        [
+                            w,
+                            word_embeddings[w],
+                            sentenceID,
+                            s,
+                            documentID,
+                            IO_csv_util.dressFilenameForCSVHyperlink(doc),
+                        ]
+                    )
 
     result_df = pd.DataFrame(csv_result, columns=header)
 
-    outputFilename = IO_files_util.generate_output_file_name(inputFilename, inputDir, outputDir, '.csv', 'Word2Vec_vector_ALL_words')
-    result_df.to_csv(outputFilename, encoding='utf-8', index=False)
+    outputFilename = IO_files_util.generate_output_file_name(
+        inputFilename, inputDir, outputDir, ".csv", "Word2Vec_vector_ALL_words"
+    )
+    result_df.to_csv(outputFilename, encoding="utf-8", index=False)
     filesToOpen.append(outputFilename)
 
     if compute_distances_var:
         outputFiles = word2vec_distances_util.compute_word2vec_distances(
-            inputFilename, inputDir, outputDir, chartPackage, dataTransformation,
-            word_vectors, result_df, keywords_var, compute_distances_var, top_words_var, BERT=True)
+            inputFilename,
+            inputDir,
+            outputDir,
+            chartPackage,
+            dataTransformation,
+            word_vectors,
+            result_df,
+            keywords_var,
+            compute_distances_var,
+            top_words_var,
+            BERT=True,
+        )
         if outputFiles is not None:
             if isinstance(outputFiles, str):
                 filesToOpen.append(outputFiles)
             else:
                 filesToOpen.extend(outputFiles)
 
-    logger.info('Finished running BERT word embeddings')
+    logger.info("Finished running BERT word embeddings")
 
     return filesToOpen

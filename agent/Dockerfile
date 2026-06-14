@@ -21,6 +21,7 @@ COPY . .
 
 
 
-WORKDIR /nlp-suite/src
+WORKDIR /nlp-suite
 EXPOSE 3000
-CMD ["python3.9", "main.py"]
+# Run as a package module so `src` is importable and relative imports resolve.
+CMD ["python3.9", "-m", "src.main"]

@@ -23,17 +23,19 @@ import logging
 import os
 import string
 
-import IO_csv_util
-
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
 import pandas as pd
-import Stanford_CoreNLP_clause_util
-import Stanford_CoreNLP_SVO_enhanced_dependencies_util  # Enhanced++ dependencies
-from corenlp_json_common import check_sentence_length
-from corenlp_json_discourse import process_json_gender, process_json_quote
-from corenlp_json_gis import similar_string_floor_filter, visualize_GIS_maps
-from corenlp_json_ner import check_NER_tokenBegin_tokenEnd
-from IO_files_util import date_in_filename
+
+from ..io import IO_csv_util
+from ..io.IO_files_util import date_in_filename
+from . import (
+    Stanford_CoreNLP_clause_util,
+    Stanford_CoreNLP_SVO_enhanced_dependencies_util,  # Enhanced++ dependencies
+)
+from .corenlp_json_common import check_sentence_length
+from .corenlp_json_discourse import process_json_gender, process_json_quote
+from .corenlp_json_gis import similar_string_floor_filter, visualize_GIS_maps
+from .corenlp_json_ner import check_NER_tokenBegin_tokenEnd
 
 logger = logging.getLogger(__name__)
 

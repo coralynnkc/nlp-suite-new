@@ -1,8 +1,8 @@
 import logging
 
-import charts_util
-import IO_csv_util
-from util import collect
+from ..core.util import collect
+from ..io import IO_csv_util
+from . import charts_util
 
 logger = logging.getLogger(__name__)
 

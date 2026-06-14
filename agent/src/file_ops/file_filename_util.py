@@ -10,8 +10,7 @@ import sys
 import time
 from datetime import datetime
 
-import IO_csv_util
-import IO_files_util
+from ..io import IO_csv_util, IO_files_util
 
 logger = logging.getLogger(__name__)
 
@@ -196,7 +195,6 @@ def writeOutput(
     dateStr,
     split_string,
 ):
-
     if not os.path.isdir(os.path.join(inputPath, inputFilenamename)):
         printLine = {}
         with open(outputPath + os.sep + outputFilename, "a", errors="ignore", newline="") as csvfile:

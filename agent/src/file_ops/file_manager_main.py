@@ -5,7 +5,7 @@ import csv
 import logging
 import os
 
-import file_filename_util
+from . import file_filename_util
 
 logger = logging.getLogger(__name__)
 
@@ -434,7 +434,7 @@ def run_file_manager(
                         if fileFound:
                             i = i + 1
 
-    import charts_util
+    from ..charts import charts_util
 
     columns_to_be_plotted_xAxis = []
     columns_to_be_plotted_yAxis = ["File_Type"]

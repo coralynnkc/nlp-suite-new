@@ -6,22 +6,16 @@ import csv
 import logging
 import os
 
-import charts_util
-import config_util
-import GIS_file_check_util
-import GIS_geocode_util
-import GIS_Google_Maps_util
-import GIS_location_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
+import pandas as pd
+
+from ..charts import charts_util
+from ..core import config_util, reminders_util
+from ..core.app_constants import CONTINENTS
+from ..core.util import collect
 
 # The script is used by SVO_main and by Google_Earth_main to run a csv file that 1. needs geocoding; 2. mapping geocoded location onto Google Earth Pro.
-import IO_user_interface_util
-import pandas as pd
-import reminders_util
-from app_constants import CONTINENTS
-from util import collect
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_user_interface_util
+from . import GIS_file_check_util, GIS_geocode_util, GIS_Google_Maps_util, GIS_location_util
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +107,6 @@ def GIS_pipeline(
     description_var_list=None,
     description_csv_field_var_list=None,
 ):
-
     if description_csv_field_var_list is None:
         description_csv_field_var_list = []
     if description_var_list is None:

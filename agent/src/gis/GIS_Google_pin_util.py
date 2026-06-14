@@ -2,9 +2,10 @@ import logging
 import os
 import sys
 
-import IO_csv_util
 import pandas as pd
 import simplekml
+
+from ..io import IO_csv_util
 
 logger = logging.getLogger(__name__)
 

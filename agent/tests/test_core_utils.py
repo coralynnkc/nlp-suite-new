@@ -7,7 +7,7 @@ import pytest
 # ---------------------------------------------------------------------------
 
 try:
-    import constants_util
+    from src.core import constants_util
 
     _constants_available = True
 except ImportError:
@@ -51,7 +51,7 @@ def test_dbpedia_ontology_menu_is_sequence():
 # ---------------------------------------------------------------------------
 
 try:
-    import data_manipulation_util
+    from src.core import data_manipulation_util
 
     _dmu_available = True
 except ImportError:
