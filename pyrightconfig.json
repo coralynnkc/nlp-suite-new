@@ -1,0 +1,11 @@
+{
+  "include": ["agent/src", "agent/tests"],
+  "exclude": ["**/node_modules", "**/__pycache__", "**/.venv", "**/venv", "ui"],
+  "executionEnvironments": [
+    { "root": "agent" }
+  ],
+  "typeCheckingMode": "standard",
+  "pythonVersion": "3.9",
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none"
+}
