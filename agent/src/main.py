@@ -112,9 +112,9 @@ _LOCK_EXEMPT_PATHS = {"/settings", "/status"}
 
 
 def run(app, method):
+    _job_state["last_error"] = None
     try:
         method()
-        _job_state["last_error"] = None
     except Exception as exc:
         _job_state["last_error"] = f"{type(exc).__name__}: {exc}"
         logger.error("Background job failed:\n%s", traceback.format_exc())
@@ -123,7 +123,7 @@ def run(app, method):
         _worker_lock.release()
 
 
-def dispatch(app, fn: Callable[[], None]) -> PlainTextResponse:
+def dispatch(app, fn: Callable[[], object]) -> PlainTextResponse:
     Thread(target=lambda: run(app, fn)).start()
     return PlainTextResponse("", status_code=200)
 
@@ -499,8 +499,8 @@ def colormap_chart(
     max_number_of_rows: Annotated[int, Form()],
     less_freq_color_picker: Annotated[str, Form()],
     csv_file_categorical_field_list_front: Annotated[str, Form()] = "[]",
-    more_freq_color_picker: Annotated[str, Form()] = False,
-    normalize: Annotated[str, Form()] = False,
+    more_freq_color_picker: Annotated[str, Form()] = "",
+    normalize: Annotated[str, Form()] = "",
     file_data: Annotated[str, Form()] = "",
 ) -> PlainTextResponse:
     return dispatch(
