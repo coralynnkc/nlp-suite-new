@@ -11,12 +11,40 @@ enough context to pick each one up later. Entries are tagged by priority:
 **P1** next up, **P2** worth a dedicated PR, **P3** fine to defer indefinitely.
 
 **Next up:**
-1. **[P2] Port the /word2vec backends** (`word2vec_Gensim_util`, `WSI_*`) from
-   the desktop repo — the endpoint never worked (see Functional gaps below);
-   tests now document the breakage.
-2. **[P2] Package conversion** (flat sys.path → real package), own PR, no other changes.
-3. **[P3] Everything else** — security hardening only matters for a hosted
+1. **[P2] Package conversion** (flat sys.path → real package), own PR, no other changes.
+2. **[P3] Everything else** — security hardening only matters for a hosted
    deployment; `iterrows()` vectorization only when an endpoint feels slow.
+
+(The /word2vec backends — Gensim, WSI, and BERT word embeddings — were ported
+from the desktop repo in June 2026; the endpoint now works. See the Testing
+section for how the gated backend tests are run.)
+
+## UI/UX
+
+- **[P2] Status page refresh gets stuck after a failed job.** `last_error` on
+  the agent persists between jobs. A fresh visit to `/status` (e.g., after
+  hitting browser refresh, or navigating back and resubmitting) polls once,
+  sees `busy=false, last_error=<stale>`, and immediately renders the error
+  banner — even though no new job has run. Two-part fix: (1) clear `last_error`
+  at the start of the background thread in `agent/src/main.py` (before the job
+  runs), so stale errors don't survive into the next request; (2) add a "Run
+  another job" / back link to the `#failed` state in `ui/templates/status.html`
+  so users aren't stranded without a navigation path.
+- **[P2] Error messages are surfaced but rough.** Agent errors appear in two
+  places: as a Django flash message on the form page (for 4xx/5xx or connection
+  failures in `_proxy_post`) and in `#error-detail` on the status page (for
+  background-job failures via `last_error`). Neither is styled prominently — the
+  flash message blends into the page and `last_error` text is raw Python
+  tracebacks. Improvement: dedicate a visible `.error-banner` component in the
+  base template and truncate/format tracebacks on the status page (show the
+  final exception line; add a "show full trace" toggle).
+- **[P3] No progress bars.** All jobs run opaquely — the spinner runs until
+  the agent reports `busy=false`. Adding per-job progress requires the backends
+  to emit intermediate events (a `progress` field on `/status`, written by each
+  `run_*` function at key checkpoints) and the status page to render a progress
+  bar. This is meaningful scope because most `run_*` functions are single
+  synchronous calls into utility modules with no natural checkpoint to hook.
+  Worth revisiting if job runtimes become a UX pain point.
 
 ## Functional gaps
 
@@ -42,14 +70,6 @@ enough context to pick each one up later. Entries are tagged by priority:
   Same story for `manualCoreference` in `SVO.html` (needs an interactive
   split-screen editor) and `csv_file_var` in `NGrams_CoOccurrences.html`
   (needs a csv-file picker).
-- **[P2] /word2vec backends were never ported — every real option crashes.**
-  Discovered June 2026 while writing endpoint tests: `word2vec.py` imports
-  `word2vec_Gensim_util` and `WSI_util`/`WSI_keyterms`/`WSI_viz` (missing from
-  `agent/src`, ModuleNotFoundError) and calls `BERT_util.word_embeddings_BERT`
-  (never ported, AttributeError). `tests/test_word2vec.py` pins down each
-  failure mode. Port from the upstream desktop repo
-  (`gh api repos/NLP-Suite/NLP-Suite/contents/src/<file>?ref=current-stable`),
-  Gensim path first — it has no heavy new dependencies.
 - **[P2] CoNLL table "all analyses" modules were never ported.** The seven
   `CoNLL_*_analysis_util` modules (clause, noun, adjective, ratio, adverb,
   verb, function-words) are imported inside `run_CoNLL_table_analyzer` but
@@ -73,12 +93,12 @@ enough context to pick each one up later. Entries are tagged by priority:
   document has <= 2*K sentences (`ValueError: truth value of a Series is
   ambiguous`); fine for K=1 on real documents, but any short document kills
   the whole run (documented by `tests/test_conll_table.py`).
-- **[P3] BERT_util is a partial port.** The sentiment backend (ported June
-  2026 after `/sentiment_analysis` was found to crash on missing modules) only
-  includes the upstream sentiment functions. The upstream `NER_tags_BERT`,
-  `doc_summary_BERT`, and `word_embeddings_BERT` depend on packages not in the
-  agent image (`contextualSpellCheck`, `bert-extractive-summarizer`) and were
-  not ported.
+- **[P3] BERT_util is a partial port.** `BERT_util.py` now includes the upstream
+  sentiment functions (ported June 2026) and `word_embeddings_BERT` (ported with
+  the /word2vec backends — it only needs sentence-transformers/stanza/sklearn,
+  already in the image). The upstream `NER_tags_BERT` and `doc_summary_BERT`
+  depend on packages not in the agent image (`contextualSpellCheck`,
+  `bert-extractive-summarizer`) and were not ported.
 - **[P3] External-software install flow is desktop-era.** Algorithms needing
   external software (WordNet jars, Google Earth, …) used to launch the
   `NLP_setup_external_software_main.py` tkinter GUI, which does not exist in
@@ -145,7 +165,7 @@ enough context to pick each one up later. Entries are tagged by priority:
 - **[P3] ~10 of 24 agent endpoints still have no tests** (covered as of June
   2026: core utils, model cache, NER, wordnet*, boxplot, excel charts,
   wordcloud, sentiment, topic modeling (Gensim), ngrams, gender analysis*,
-  shape of stories*, parse*, word2vec, conll_table, svo*, gis*, statistics;
+  shape of stories*, parse*, word2vec*, conll_table, svo*, gis*, statistics;
   \*some paths integration-, network-, or external-software-gated). Remaining:
   file_manager, style_analysis, sunburst, colormap, sankey, file_search,
   sentence_analysis, settings — all small enough to defer. Tests skip on the
@@ -154,6 +174,9 @@ enough context to pick each one up later. Entries are tagged by priority:
   For CoreNLP-gated tests, run on the compose network with
   `--network nlp-suite_nlp-suite-network -e CORENLP_URL=http://corenlp:9000`
   and `-m integration`; Nominatim-gated GIS tests need `NLP_SUITE_TEST_NETWORK=1`.
+  The three /word2vec backend tests (Gensim, WSI, BERT) download models on first
+  run and are gated behind `NLP_SUITE_TEST_BERT=1`; the guard-path tests run
+  unconditionally.
 - **[P3] MALLET topic modeling has no hermetic test.** The mallet service
   reads its own mounted `/app/input` (the live `~/nlp-suite/input`), so a
   test would touch real user data. The BERTopic path and roBERTa sentiment

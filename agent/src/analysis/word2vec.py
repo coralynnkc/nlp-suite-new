@@ -136,7 +136,8 @@ def run_word2vec(
             remove_stopwords_var,
             config_filename,
         )
-        filesToOpen.append(BERT_output)
+        if BERT_output:
+            filesToOpen.extend(BERT_output)
 
     if Gensim_var:
         # reminders_util.checkReminder(scriptName,
@@ -164,6 +165,7 @@ def run_word2vec(
             vis_menu_var,
             dim_menu_var,
         )
-        filesToOpen.append(Gensim_output)
+        if Gensim_output:
+            filesToOpen.extend(Gensim_output)
 
     return filesToOpen
