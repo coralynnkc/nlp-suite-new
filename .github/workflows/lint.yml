@@ -19,13 +19,9 @@ jobs:
       # Pin to the same ruff as .pre-commit-config.yaml so CI and the local hook
       # agree (newer ruff versions format/lint slightly differently).
       - name: Install ruff
-        run: pip install ruff==0.11.13
+        run: pip install ruff==0.15.16
       - name: ruff check
         run: ruff check --output-format=github .
 
-      # NOTE: `ruff format --check .` is intentionally not gated yet. ~32 files
-      # predate the ruff-format pre-commit hook and would fail today. Enable it
-      # after a one-time repo-wide `ruff format` sweep — best done once the
-      # package-conversion PR has merged, to avoid reformat/import conflicts.
-      # - name: ruff format --check
-      #   run: ruff format --check .
+      - name: ruff format --check
+        run: ruff format --check .
