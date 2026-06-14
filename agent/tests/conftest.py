@@ -62,6 +62,14 @@ def tiny_corpus():
 
 
 @pytest.fixture
+def wsi_corpus():
+    """Directory of 2 txt files where the polysemous word 'spring' recurs in
+    12 sentences across three senses (season / water source / metal coil) —
+    enough occurrences for word-sense-induction KMeans clustering."""
+    return _FIXTURES / "wsi_corpus"
+
+
+@pytest.fixture
 def tmp_output(tmp_path):
     return tmp_path
 
