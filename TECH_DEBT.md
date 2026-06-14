@@ -84,6 +84,17 @@ none`: `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
 
 ## Code quality
 
+- **[P3] ruff `PL` (pylint-port) findings suppressed as a baseline.** `pyproject.toml`
+  enables ruff's `PL` family but ignores every code currently firing on legacy code:
+  design metrics (`PLR09xx`, `PLR2004`), intentional patterns (`PLC0415` lazy imports,
+  `PLW0603` globals), a few real low-count smells (`PLW0127` self-assign, `PLW0406`
+  import-self, `PLW1510` subprocess-without-`check`, `PLW0128`), and ~113 auto-fixable
+  simplifications (`PLR5501` ×79, `PLR1736` ×25, …). Clear the auto-fixable group with
+  `ruff check --fix`, then drop those ignores so the rules gate new code; fix or
+  knowingly keep the `PLW` smells. (Pylint proper was evaluated and declined: ~90%
+  overlap with ruff+pyright, far slower, and its unique design/duplicate-code checks are
+  exactly the noise this code already suppresses — ruff `PL` covers the useful slice at
+  ruff speed, already in CI.)
 - **[P3] ~129 inline TODO/FIXME** in `agent/src` (`grep -rn TODO agent/src`),
   mostly genuine limitations. Densest: `gis/GIS_geocode_util.py`,
   `nlp/corenlp_json_syntax.py`, `charts/`.
