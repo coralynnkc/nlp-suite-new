@@ -2,9 +2,9 @@
 # Written by Yuhang Feng November 2019-April 2020
 # Edited by Roberto Franzosi, Tony May 2022
 # Edited by Samir Kaddoura, March 2023
+from collections import Counter
 import logging
 import os
-from collections import Counter
 
 import pandas as pd
 
@@ -14,14 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 def build_timed_alert_message(chart_type, withHeader_var, count_var):
-    if withHeader_var == 1:
-        withHeader_msg = "WITH HEADERS"
-    else:
-        withHeader_msg = "WITHOUT HEADERS"
-    if count_var == 1:
-        count_msg = "WITH COUNTS"
-    else:
-        count_msg = "WITHOUT COUNTS"
+    withHeader_msg = "WITH HEADERS" if withHeader_var == 1 else "WITHOUT HEADERS"
+    count_msg = "WITH COUNTS" if count_var == 1 else "WITHOUT COUNTS"
     return withHeader_msg, count_msg
 
 

@@ -1,14 +1,14 @@
 import csv
+from datetime import datetime  # TODO MINO GIS date option
 import logging
 import os  # TODO MINO GIS create kml record
-from datetime import datetime  # TODO MINO GIS date option
 
 import dateutil
-import pandas as pd
-import simplekml  # TODO MINO GIS create kml record
 from geopy import Nominatim
 from geopy.exc import GeocoderTimedOut
 from geopy.geocoders import GoogleV3
+import pandas as pd
+import simplekml  # TODO MINO GIS create kml record
 
 from ..io import (
     GUI_IO_util,
@@ -209,20 +209,11 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
         if "Date" in headers:
             date = row["Date"]
 
-        if "Document" in headers:
-            document = row["Document"]
-        else:
-            document = ""
+        document = row["Document"] if "Document" in headers else ""
 
-        if "Summary" in headers:
-            summary = row["Summary"]
-        else:
-            summary = ""
+        summary = row["Summary"] if "Summary" in headers else ""
 
-        if "Sentence" in headers:
-            sentence = row["Sentence"]
-        else:
-            sentence = ""
+        sentence = row["Sentence"] if "Sentence" in headers else ""
 
         # TODO MINO GIS create kml record
         logger.info(
@@ -298,10 +289,7 @@ def geocode(
     notGeocodedFull = []
     locationsNotFound = 0
 
-    if "Google" in geocoder:
-        Google_API = GIS_pipeline_util.getGoogleAPIkey("Google-geocode-API_config.csv")
-    else:
-        Google_API = ""
+    Google_API = GIS_pipeline_util.getGoogleAPIkey("Google-geocode-API_config.csv") if "Google" in geocoder else ""
 
     geolocator = get_geolocator(geocoder, Google_API)
     kml = simplekml.Kml()

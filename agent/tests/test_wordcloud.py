@@ -1,7 +1,7 @@
+from collections import defaultdict
 import importlib.util
 import io
 import os
-from collections import defaultdict
 
 import pytest
 
@@ -55,7 +55,7 @@ def test_process_color_list():
     assert "skip" not in currenttext
 
 
-def test_display_wordCloud_writes_png(tmp_path):
+def test_display_wordcloud_writes_png(tmp_path):
     text = "research corpus words appear research corpus words research corpus research"
     (tmp_path / "sample.txt").write_text(text, encoding="utf-8")
     output = display_wordCloud(
@@ -80,7 +80,7 @@ def test_display_wordCloud_writes_png(tmp_path):
     assert os.path.getsize(output) > 0
 
 
-def test_display_wordCloud_empty_text_returns_none(tmp_path):
+def test_display_wordcloud_empty_text_returns_none(tmp_path):
     assert display_wordCloud("f.txt", "", str(tmp_path), "", True, [], "", False, "", 0.9) is None
 
 
@@ -115,7 +115,7 @@ def _write_conll_fixture(path):
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def test_python_wordCloud_conll_csv(tmp_path):
+def test_python_wordcloud_conll_csv(tmp_path):
     conll_csv = tmp_path / "conll.csv"
     _write_conll_fixture(conll_csv)
     files = python_wordCloud(
@@ -147,7 +147,7 @@ def test_python_wordCloud_conll_csv(tmp_path):
 
 @pytest.mark.integration
 @pytest.mark.skipif(importlib.util.find_spec("stanza") is None, reason="stanza not installed")
-def test_python_wordCloud_txt_stanza(tmp_path, fixture_txt):
+def test_python_wordcloud_txt_stanza(tmp_path, fixture_txt):
     files = python_wordCloud(
         str(fixture_txt),
         "",

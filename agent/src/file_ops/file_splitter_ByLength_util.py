@@ -87,17 +87,11 @@ def splitDocument_byLength(config_filename, filename_path, output_path="", maxLe
         except Exception as e:
             logger.info("error:  %s", e.__doc__)
         splits = [-1]  # start at -1 not 0 because of +1 later in loop
-        if inWords:
-            i = maxLength - 5
-        else:
-            i = maxLength - 2
+        i = maxLength - 5 if inWords else maxLength - 2
         while i < length:
             i = splitAt(text, i)
             splits.append(i)
-            if inWords:
-                i = i + maxLength - 5
-            else:
-                i = i + maxLength - 2
+            i = i + maxLength - 5 if inWords else i + maxLength - 2
         splits.append(length - 1)
         for i in range(1, len(splits)):
             # write output file

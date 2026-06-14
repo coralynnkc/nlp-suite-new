@@ -1,8 +1,7 @@
 import os
 
+from conftest import output_csvs as _output_csvs, read_rows as _read_rows
 import pytest
-from conftest import output_csvs as _output_csvs
-from conftest import read_rows as _read_rows
 
 # sentiment_analysis imports pandas-dependent helpers at module level; skip on
 # hosts without the agent image's dependencies.

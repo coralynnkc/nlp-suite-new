@@ -1,6 +1,6 @@
 import logging
-import string
 from pathlib import Path
+import string
 
 from ..io import IO_csv_util
 
@@ -13,10 +13,7 @@ from ..core.model_cache import get_stanza_pipeline
 
 
 def process_hapax(ngramsList, frequency, excludePunctuation):
-    if excludePunctuation:
-        freq_col = 1
-    else:
-        freq_col = 2
+    freq_col = 1 if excludePunctuation else 2
     if frequency == 1:  # hapax
         # for hapax legomena keep rows with frequency=1 only; exclude items with frequency>1, i.e. i[1] > 1
         ngramsList_new = list(filter(lambda a: a[freq_col] == 1, ngramsList))
@@ -108,8 +105,8 @@ def readandsplit(
         return [token.lemma for sentence in doc.sentences for token in sentence.words]
 
 
-import os
 from collections import Counter
+import os
 
 
 def find_ngrams(words, n):

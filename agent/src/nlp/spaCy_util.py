@@ -62,11 +62,10 @@ def check_spaCy_available_languages(language):
     lang_list = []
     language_list = list_all_languages()  # language_list available in spaCy as long names: English, Chinese, ...
     for short, long in constants_util.languages:
-        if long == language[0]:
-            if long in language_list:
-                available_language = True
-                lang_list.append(short)
-                break
+        if long == language[0] and long in language_list:
+            available_language = True
+            lang_list.append(short)
+            break
     if not available_language:
         open_spaCy_website(
             "The " + str(language[0]) + " language is not available for NLP processing in spaCy.",
@@ -201,10 +200,7 @@ def spaCy_annotate(
         )
     else:
         # TODO annotator_params is always passed as a string rather than a list
-        if "depparse" in annotator_params:
-            annotator_label = "CoNLL"
-        else:
-            annotator_label = annotator
+        annotator_label = "CoNLL" if "depparse" in annotator_params else annotator
         outputFilename = IO_files_util.generate_output_file_name(
             inputFilename, inputDir, outputDir, ".csv", annotator_label + "_SpaCy"
         )
@@ -327,9 +323,12 @@ def get_mwe(out_df):
                 tmp = out_df.at[tmp_idx, "Multi-Word Expression"]
                 tmp_idx += 1
             # if the tag of the next token is B or if it's a single tag with one B, MWE is itself
-            if i == max_idx and out_df.at[i, "Multi-Word Expression"] == "B":
-                out_df.at[i, "Multi-Word Expression"] = out_df.at[i, "Form"]
-            elif tmp_idx == i + 2 or (i <= max_idx and out_df.at[i + 1, "Multi-Word Expression"] == "B"):
+            if (
+                i == max_idx
+                and out_df.at[i, "Multi-Word Expression"] == "B"
+                or tmp_idx == i + 2
+                or (i <= max_idx and out_df.at[i + 1, "Multi-Word Expression"] == "B")
+            ):
                 out_df.at[i, "Multi-Word Expression"] = out_df.at[i, "Form"]
             else:
                 # iterate reversely from the last tag to the first tag, and update the MWE

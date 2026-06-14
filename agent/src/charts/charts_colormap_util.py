@@ -61,7 +61,7 @@ def read_filename_color(inputFilename):
 
 def get_transformation_choice(choice=5):
     transformations = {1: "min-max", 2: "square-root", 3: "log", 4: "z-score", 5: None}
-    return transformations.get(choice, None)
+    return transformations.get(choice)
 
 
 def further_group(df, major_parm, small_prm):
@@ -152,10 +152,7 @@ def cmaps(start_color, end_color):
 
 
 def main_colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=""):
-    if inputFileData:
-        dataFrame = pd.read_csv(io.StringIO(inputFileData))
-    else:
-        dataFrame = read_filename_color(inputFilename)
+    dataFrame = pd.read_csv(io.StringIO(inputFileData)) if inputFileData else read_filename_color(inputFilename)
     WHERE, GROUPBY, SELECT = sql_commands(csv_file_categorical_field_list, dataFrame)
     step1 = process_and_aggregate_data(dataFrame, where_column=WHERE, groupby_column=GROUPBY, select_column=SELECT)
     step2 = transform_data(step1)  # There needs to be a GUI to allow transformation, but...
@@ -252,10 +249,7 @@ def Sunburst_Treemap(
     import io
 
     logger.info("%s %s %s %s", fixed_param_var, rate_param_var, base_param_var, filter_options_var)
-    if file_data != "":
-        data = pd.read_csv(io.StringIO(file_data))
-    else:
-        data = pd.read_csv(inputFileName)
+    data = pd.read_csv(io.StringIO(file_data)) if file_data != "" else pd.read_csv(inputFileName)
     WHERE, GROUPBY = special_sql_commands(csv_file_categorical_field_list, data)
     data = where_data(data, where_column=WHERE)
     select_and_count = [GROUPBY]
@@ -334,10 +328,7 @@ def visualize_colormap_data(
 
 def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, inputFileData=""):
     filesToOpen = []
-    if inputFileData:
-        dataFrame = pd.read_csv(io.StringIO(inputFileData))
-    else:
-        dataFrame = read_filename_color(inputFilename)
+    dataFrame = pd.read_csv(io.StringIO(inputFileData)) if inputFileData else read_filename_color(inputFilename)
 
     WHERE, GROUPBY, SELECT = sql_commands(csv_file_categorical_field_list, dataFrame)
     # step1 is a dataframe
@@ -353,12 +344,11 @@ def colormap(inputFilename, outputDir, csv_file_categorical_field_list, params, 
     colormap_dataframe_csv_filename = outputDir + os.sep + "colormap_dataframe.csv"
     filesToOpen.append(colormap_dataframe_csv_filename)
     # add headers to dataframe
-    if GROUPBY == "Document":
-        if len(WHERE) == 0:
-            for i in range(len(list(step1.columns.values))):
-                header = list(step1.columns.values)[i]
-                head, tail = os.path.split(header)
-                step1 = step1.rename(columns={header: "Frequency in: " + tail})
+    if GROUPBY == "Document" and len(WHERE) == 0:
+        for i in range(len(list(step1.columns.values))):
+            header = list(step1.columns.values)[i]
+            head, tail = os.path.split(header)
+            step1 = step1.rename(columns={header: "Frequency in: " + tail})
     step1.to_csv(colormap_dataframe_csv_filename, index=True)
 
     step2 = transform_data(step1)  # There needs to be a GUI to allow transformation, but...

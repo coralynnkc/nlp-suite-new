@@ -4,12 +4,12 @@
 # modified by Chen gong (December 2021)
 # ALL SEARCHES OCCUR WITHIN SENTENCES.
 import builtins
-import logging
-import os
 
 # if IO_libraries_util.install_all_Python_packages(GUI_util.window, "CoNLL table_search_util",
 #                                           ['os', 'tkinter', 'enum', 'typing']) == False:
 from enum import Enum
+import logging
+import os
 
 import pandas as pd
 
@@ -39,10 +39,7 @@ def find_children(sentence_children, ind_keyword, searchedCoNLLField):
         if head_num == ind_keyword:
             token_index = int(tok[0])
 
-            if searchedCoNLLField == "FORM":
-                token_form = tok[1]
-            else:
-                token_form = tok[2]
+            token_form = tok[1] if searchedCoNLLField == "FORM" else tok[2]
             token_postag = tok[3]
             token_deprel = tok[6]
             list_children.append((token_form, token_postag, token_deprel))
@@ -487,10 +484,7 @@ def search_CoNLL_table(
             tok_deprel = row[6]
             tok_Sentence_ID = row[10]
             tok_Document_ID = row[11]
-            if "hyperlink" not in row[12]:
-                tok_Document = IO_csv_util.dressFilenameForCSVHyperlink(row[12])
-            else:
-                tok_Document = row[12]
+            tok_Document = IO_csv_util.dressFilenameForCSVHyperlink(row[12]) if "hyperlink" not in row[12] else row[12]
             str(tok_Document_ID)[:-2] + str("-" + tok_Sentence_ID)
             searched_keyword = keyword[compare_term]
             list_queried.append(

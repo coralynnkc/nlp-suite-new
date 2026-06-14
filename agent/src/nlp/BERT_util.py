@@ -289,10 +289,7 @@ def word_embeddings_BERT(
         for s in sentences:
             all_words.extend(tokenize_stanza_text(stanzaPipeLine(s)))
 
-    if remove_stopwords_var:
-        words_to_embed = statistics_txt_util.excludeStopWords_list(all_words)
-    else:
-        words_to_embed = all_words
+    words_to_embed = statistics_txt_util.excludeStopWords_list(all_words) if remove_stopwords_var else all_words
 
     logger.info(
         f"Started running BERT Word2Vec model on {len(words_to_embed)} words at {time.asctime(time.localtime(time.time()))}"

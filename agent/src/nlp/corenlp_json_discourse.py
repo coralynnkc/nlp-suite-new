@@ -110,9 +110,8 @@ def process_json_coref(config_filename, documentID, document, sentenceID, json, 
                     if "'s" not in output_word and output_word not in pronouns:
                         output_word += "'s"  # add the possessive morpheme
                 output_word += token["after"]
-                if output_word == ". ":
-                    if result[-1] == ".":
-                        continue
+                if output_word == ". " and result[-1] == ".":
+                    continue
                 result = result + output_word
             check_sentence_length(len(sentence["tokens"]), sentenceID, config_filename)
 
@@ -249,7 +248,7 @@ def process_json_quote(config_filename, documentID, document, sentenceID, json, 
         sentenceIDs = list(range(quote["beginSentence"], quote["endSentence"] + 1))
         for sent in sentenceIDs:
             quoted_sentences[sent] = quoted_sentences.get(sent, 0) + 1
-            if sent in speakers.keys():
+            if sent in speakers:
                 speakers[sent].append(quote["speaker"])
             else:
                 speakers[sent] = [quote["speaker"]]

@@ -10,12 +10,12 @@
 #
 import csv
 import datetime
+from datetime import date
 import itertools
 import logging
 import os
 import random
 import traceback
-from datetime import date
 
 from lxml import etree
 
@@ -167,7 +167,7 @@ class Graph:
         return self._nodes[str(id)]
 
     def nodeExists(self, id):
-        if id in self._nodes.keys():
+        if id in self._nodes:
             return 1
         else:
             return 0
@@ -372,7 +372,7 @@ class Attributes(dict):
         copied from the declared attributes, thus any attribute has to be declared first
         """
         if attClass in self.attClass_choices:
-            if id in self[attClass].keys():
+            if id in self[attClass]:
                 att = {"id": id}
                 att["value"] = value if value else self[attClass][id]["defaultValue"]
                 if self[attClass][id]["mode"] == "dynamic" and start or end:
@@ -428,14 +428,14 @@ class Attributes(dict):
                 attValueXML = etree.SubElement(attValuesXML, "attvalue")
                 attValueXML.set("for", str(att["id"]))
                 attValueXML.set("value", att["value"])
-                if "start" in att.keys() and not att["start"] == "":
+                if "start" in att and att["start"] != "":
                     attValueXML.set(
-                        ("start" if "startopen" not in att.keys() or not att["startopen"] else "startopen"),
+                        ("start" if "startopen" not in att or not att["startopen"] else "startopen"),
                         att["start"],
                     )
-                if "end" in att.keys() and not att["end"] == "":
+                if "end" in att and att["end"] != "":
                     attValueXML.set(
-                        ("end" if "endopen" not in att.keys() or not att["endopen"] else "endopen"),
+                        ("end" if "endopen" not in att or not att["endopen"] else "endopen"),
                         att["end"],
                     )
             return attValuesXML
@@ -531,9 +531,9 @@ class Spells:
         spellsXML = etree.Element("spells")
         for spell in self._list:
             spellXML = etree.SubElement(spellsXML, "spell")
-            if "start" in spell.keys():
+            if "start" in spell:
                 spellXML.set("start", spell["start"])
-            if "end" in spell.keys():
+            if "end" in spell:
                 spellXML.set("end", spell["end"])
         return spellsXML
 
@@ -575,9 +575,8 @@ class Node:
         # spells expecting format = [{start:"",end:""},...]
         self.spells = spells
 
-        if not self.pid == "":
-            if not self._graph.nodeExists(self.pid):
-                raise Exception("pid " + self.pid + " node unknown, add nodes to graph first")
+        if not self.pid == "" and not self._graph.nodeExists(self.pid):
+            raise Exception("pid " + self.pid + " node unknown, add nodes to graph first")
 
         self._attributes = []
         self.attributes = self._attributes
@@ -592,11 +591,11 @@ class Node:
         # return lxml etree element
         try:
             nodeXML = etree.Element("node", id=str(self.id), label=self.label)
-            if not self.start == "":
+            if self.start != "":
                 nodeXML.set("start" if not self.startopen else "startopen", self.start)
-            if not self.end == "":
+            if self.end != "":
                 nodeXML.set("end" if not self.endopen else "endopen", self.end)
-            if not self.pid == "":
+            if self.pid != "":
                 nodeXML.set("pid", self.pid)
 
             # attributes
@@ -608,14 +607,14 @@ class Node:
                 # edit
                 nodeXML.append(Spells(self.spells).getXML())
 
-            if not self.r == "" and not self.g == "" and not self.b == "":
+            if self.r != "" and self.g != "" and self.b != "":
                 # color : <viz:color r="239" g="173" b="66"/>
                 colorXML = etree.SubElement(nodeXML, "{http://www.gexf.net/1.1draft/viz}color")
                 colorXML.set("r", str(self.r))
                 colorXML.set("g", str(self.g))
                 colorXML.set("b", str(self.b))
 
-            if not self.size == "":
+            if self.size != "":
                 sizeXML = etree.SubElement(nodeXML, "{http://www.gexf.net/1.1draft/viz}size")
                 sizeXML.set("value", self.size)
 
@@ -776,13 +775,13 @@ class Edge:
                 source=str(self._source),
                 target=str(self._target),
             )
-            if not self.start == "":
+            if self.start != "":
                 edgeXML.set("start" if not self.startopen else "startopen", self.start)
-            if not self.end == "":
+            if self.end != "":
                 edgeXML.set("end" if not self.endopen else "endopen", self.end)
-            if not self.weight == "":
+            if self.weight != "":
                 edgeXML.set("weight", str(self.weight))
-            if not self.label == "":
+            if self.label != "":
                 edgeXML.set("label", self.label)
 
             # attributes
@@ -794,7 +793,7 @@ class Edge:
                 edgeXML.append(Spells(self.spells).getXML())
 
             # COLOR on edges is supported in GEXF since 1.2
-            if not self.r == "" and not self.g == "" and not self.b == "":
+            if self.r != "" and self.g != "" and self.b != "":
                 # color : <viz:color r="239" g="173" b="66"/>
                 colorXML = etree.SubElement(edgeXML, "{http://www.gexf.net/1.2draft/viz}color")
                 colorXML.set("r", str(self.r))

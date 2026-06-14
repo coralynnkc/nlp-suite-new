@@ -118,9 +118,9 @@ def run_kg_wordnet(
                 return
             sel_col = ""
             # Word is the term used by other scripts; but the WordNet script uses Term; just in case we change that...
-            if "Term" == headers[0]:
+            if headers[0] == "Term":
                 sel_col = "Term"
-            elif "Word" == headers[0]:
+            elif headers[0] == "Word":
                 sel_col = "Word"
             else:
                 logger.info(
@@ -163,9 +163,9 @@ def run_kg_wordnet(
             return
         sel_col = ""
         # Word is the term used by other scripts; but the WordNet script uses Term; just in case we change that...
-        if "Term" == headers[0]:
+        if headers[0] == "Term":
             sel_col = "Term"
-        elif "Word" == headers[0]:
+        elif headers[0] == "Word":
             sel_col = "Word"
         else:
             logger.info(

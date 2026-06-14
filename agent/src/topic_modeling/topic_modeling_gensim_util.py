@@ -3,12 +3,13 @@ import logging
 import os
 
 # necessary to avoid having to do Ctrl+C to kill pyLDAvis to continue running the code
-from pprint import pprint
 from sys import platform
 
 # Gensim
 import gensim
 import gensim.corpora as corpora
+from gensim.models import CoherenceModel
+from gensim.utils import simple_preprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -18,8 +19,6 @@ import pyLDAvis.gensim
 
 # spacy for lemmatization
 import spacy
-from gensim.models import CoherenceModel
-from gensim.utils import simple_preprocess
 
 from ..core.model_cache import get_spacy_model
 from ..io import IO_libraries_util
@@ -139,12 +138,8 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
         return
 
     # Show Topics
-    pprint(ldamallet.show_topics(formatted=False))
 
-    if num_topics > 40:
-        limit = 40
-    else:
-        limit = num_topics
+    limit = 40 if num_topics > 40 else num_topics
 
     # Compute Coherence value
     coherence_model_ldamallet = CoherenceModel(
@@ -193,7 +188,6 @@ def malletModelling(MalletDir, outputDir, corpus, num_topics, id2word, data_lemm
 
     optimal_model = model_list[optimal_index]
     optimal_model.show_topics(formatted=False)
-    pprint(optimal_model.print_topics(num_words=10))
 
     # When you include a corpus that has \n symbol, the \n symbol, as stated by the csv standard, is treated as a "start a new row" symbol.
     # As a result, the corpus text takes up many rows and corrupts the csv file.
@@ -464,10 +458,7 @@ def run_Gensim(
         return texts_out
 
     # Remove Stop Words
-    if remove_stopwords_var:
-        data_words_nostops = remove_stopwords(data_words)
-    else:
-        data_words_nostops = data_words
+    data_words_nostops = remove_stopwords(data_words) if remove_stopwords_var else data_words
 
     # Form Bigrams
     data_words_bigrams = make_bigrams(data_words_nostops)
@@ -532,7 +523,6 @@ def run_Gensim(
     # TODO visualize most relevant topics in Excel bar charts, with hover over of the words in each topic
     # step 13 of website
 
-    pprint(lda_model.print_topics())
     lda_model[corpus]
     # visualize and generate html
     # step 15 in website

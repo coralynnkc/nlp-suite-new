@@ -579,10 +579,7 @@ def header_check(inputFile):
     docID_pos = ""
     docName_pos = ""
 
-    if isinstance(inputFile, pd.DataFrame):
-        header = list(inputFile.columns)
-    else:
-        header = get_csvfile_headers(inputFile)
+    header = list(inputFile.columns) if isinstance(inputFile, pd.DataFrame) else get_csvfile_headers(inputFile)
     if "Sentence ID" in header:
         sentenceID_pos = header.index("Sentence ID")
     else:
@@ -601,10 +598,7 @@ def header_check(inputFile):
 
 
 def sort_by_column(input, column):
-    if isinstance(input, pd.DataFrame):
-        df = input
-    else:
-        df = pd.read_csv(input, encoding="utf-8", on_bad_lines="skip")
+    df = input if isinstance(input, pd.DataFrame) else pd.read_csv(input, encoding="utf-8", on_bad_lines="skip")
     col_list = set(df[column].tolist())
     df_list = [df[df[column] == value] for value in col_list]
     return df_list

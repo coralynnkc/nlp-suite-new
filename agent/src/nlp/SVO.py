@@ -151,10 +151,7 @@ def run_svo(
     )
     # the outputDir folder inside the main output folder will contain subdir SVO, gender, GIS, quote, etc.
 
-    if package_var == "OpenIE":
-        outputSVOSVODir = outputSVODir + os.sep + package_var
-    else:
-        outputSVOSVODir = outputSVODir + os.sep + "SVO"
+    outputSVOSVODir = outputSVODir + os.sep + package_var if package_var == "OpenIE" else outputSVODir + os.sep + "SVO"
 
     # CoRef _____________________________________________________
 
@@ -302,9 +299,8 @@ def run_svo(
 
             # TODO MINO: create normalize_date subdir and outputs
             nDateOutput = SVO_util.normalize_date_svo(SVO_filename, outputSVODir, chartPackage, dataTransformation)
-            if nDateOutput is not None:
-                if len(nDateOutput) > 0:
-                    filesToOpen.extend(nDateOutput)
+            if nDateOutput is not None and len(nDateOutput) > 0:
+                filesToOpen.extend(nDateOutput)
 
     # Stanford CoreNLP OpenIE _____________________________________________________
     if "OpenIE" in package_var and inputFilename[-4:] != ".csv":

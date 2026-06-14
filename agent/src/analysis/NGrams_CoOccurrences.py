@@ -232,10 +232,7 @@ def run_ngrams(
             pass
         else:
             pass
-        if "within sentence" in str(viewer_options_list):
-            within_sentence_co_occurrence_search_var = True
-        else:
-            within_sentence_co_occurrence_search_var = False
+        within_sentence_co_occurrence_search_var = "within sentence" in str(viewer_options_list)
 
     # Search N-grams csv file ____________________________________________________________________________________________
 

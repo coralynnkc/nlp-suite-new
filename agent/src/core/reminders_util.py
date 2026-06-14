@@ -478,10 +478,7 @@ def displayReminder(df, row_num, title, message, currentStatus, question, seeMsg
 
     answer = answer.capitalize()  # Yes/No
     if seeMsgAgain:
-        if answer == "No":
-            status = "OFF"
-        else:
-            status = "ON"
+        status = "OFF" if answer == "No" else "ON"
     else:
         if answer == "Yes":
             if currentStatus == "No" or currentStatus == "OFF":  # 'No' the old way of saving reminders

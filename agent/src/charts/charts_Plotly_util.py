@@ -1,5 +1,6 @@
 # Written by Tony Chen Gu in Feb 2022
 # https://plotly.com/python/
+import contextlib
 import io
 import logging
 import math
@@ -93,10 +94,8 @@ def create_Plotly_chart(
         def do(x):
             return os.path.split(x)[1].replace('")', "")
 
-        try:
+        with contextlib.suppress(Exception):
             data["Document"] = data["Document"].apply(do)
-        except Exception:
-            pass
         if not csv_field_Y_axis_list:
             x_cols = headers[cols_to_plot[j][0]]
             y_cols = headers[cols_to_plot[j][1]]
@@ -408,10 +407,7 @@ def plot_multi_line_chart_w_slider_px(fileName, chart_title, col_to_be_ploted, s
     default_series_name = series_label_list is None
     # overlay subplots
     for i in range(0, len(col_to_be_ploted)):
-        if default_series_name:
-            series_label = col_name[col_to_be_ploted[i][1]]
-        else:
-            series_label = series_label_list[i]
+        series_label = col_name[col_to_be_ploted[i][1]] if default_series_name else series_label_list[i]
         trace = go.Scatter(
             x=data[col_name[col_to_be_ploted[i][0]]],
             y=data[col_name[col_to_be_ploted[i][1]]],
@@ -528,7 +524,7 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
                     label=str(category),
                     method="update",
                     args=[
-                        {"visible": [True if x == category else False for x in df[cat]]},
+                        {"visible": [x == category for x in df[cat]]},
                         {"title": f"{x_axis} vs {y_axis} - {category}"},
                     ],
                 )
@@ -571,18 +567,15 @@ def plot_graph_bubble_chart(fileName, xAxis, yAxis, category):
 
 
 def bubble_chart(inputFilename, outputFilename, x, y, color, show_labels=True, inputFileData=""):
-    import random
     from collections import Counter
+    import random
 
     import mpld3
-    import numpy as np
     from mpld3 import plugins
+    import numpy as np
 
     logger.info(f"\nCHART PARAMETERS: {x} (X-axis) vs. {y} (Y-axis)")
-    if inputFileData:
-        df = pd.read_csv(io.StringIO(inputFileData))
-    else:
-        df = pd.read_csv(inputFilename)
+    df = pd.read_csv(io.StringIO(inputFileData)) if inputFileData else pd.read_csv(inputFilename)
 
     df = df[(df[x] != "None") & (df[y] != "None")]
 

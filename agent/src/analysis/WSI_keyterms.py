@@ -66,9 +66,7 @@ def sense_keywords(d, o_path, re_pattern="[^a-zA-Z'\\-’ ]", mf_prop=1, topn=10
             already_in = set()
             filtered_keywords = []
             for kw in keywords:
-                if len(kw.split()) < ngram_range[1] and kw in all_ngrams:
-                    continue
-                elif len(set(kw.split())) < len(kw.split()):
+                if len(kw.split()) < ngram_range[1] and kw in all_ngrams or len(set(kw.split())) < len(kw.split()):
                     continue
                 else:
                     if kw not in already_in and kw != w:

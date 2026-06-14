@@ -416,21 +416,20 @@ def lemmatize_filter_svo(
             if row["Subject (S)"].count(" ") == 0:
                 row["Subject (S)"] = lemmatize_stanza_word(stanzaPipeLine(row["Subject (S)"]))
             else:
-                if filter_s:
-                    if "@#" not in row["Subject (S)"]:
-                        # WordNet multi-word expressions are all _ separated (e.g., Christopher_Columbus)
-                        # convert string to list
-                        temp_list = row["Subject (S)"].split(" ")
-                        temp_lemma = ""
-                        for i in range(len(temp_list)):
-                            if temp_lemma == "":
-                                temp_lemma = lemmatize_stanza_word(stanzaPipeLine(temp_list[i]))
-                            else:
-                                temp_lemma = temp_lemma + " " + lemmatize_stanza_word(stanzaPipeLine(temp_list[i]))
-                        row["Subject (S)"] = temp_lemma.replace(
-                            "  ", " "
-                        )  # temp_lemma will have 2 blanks when lemmatizing a blank token
-                        row["Subject (S)"] = temp_lemma.replace(" ", "_")
+                if filter_s and "@#" not in row["Subject (S)"]:
+                    # WordNet multi-word expressions are all _ separated (e.g., Christopher_Columbus)
+                    # convert string to list
+                    temp_list = row["Subject (S)"].split(" ")
+                    temp_lemma = ""
+                    for i in range(len(temp_list)):
+                        if temp_lemma == "":
+                            temp_lemma = lemmatize_stanza_word(stanzaPipeLine(temp_list[i]))
+                        else:
+                            temp_lemma = temp_lemma + " " + lemmatize_stanza_word(stanzaPipeLine(temp_list[i]))
+                    row["Subject (S)"] = temp_lemma.replace(
+                        "  ", " "
+                    )  # temp_lemma will have 2 blanks when lemmatizing a blank token
+                    row["Subject (S)"] = temp_lemma.replace(" ", "_")
         if lemmatize_v:
             if row["Verb (V)"].count(" ") == 0:
                 row["Verb (V)"] = lemmatize_stanza_word(stanzaPipeLine(row["Verb (V)"]))
@@ -523,9 +522,8 @@ def lemmatize_filter_svo(
         # V filter ONLY NO S & O -----------------------------------------------------------------------------------
         # When multiple filters are applied (for S, V, and O) all conditions must be met
 
-        if filter_v and not filter_s and not filter_o:
-            if row["Verb (V)"].lower() in v_filtered_set:
-                keep_record = True
+        if filter_v and not filter_s and not filter_o and row["Verb (V)"].lower() in v_filtered_set:
+            keep_record = True
 
         # O filter ONLY NO S & V -------------------------------------------------------------------------------
         # When multiple filters are applied (for S, V, and O) all conditions must be met

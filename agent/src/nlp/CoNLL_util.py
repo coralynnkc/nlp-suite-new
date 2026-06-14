@@ -60,10 +60,7 @@ def check_CoNLL(filename, skipWarning=False):
             + ").\n\nPlease, select a CoNLL file and try again."
         )
         raise Exception("Input file error")
-    if wrongFile:
-        return False
-    else:
-        return True
+    return not wrongFile
 
 
 # The function builds a double list of all records in the CoNLL table
@@ -304,10 +301,7 @@ def compute_sentence(CoNLL_table, recordID, sentenceID, documentID):
         if (
             sentenceID == row[sentenceID_position] and documentID == row[documentID_position]
         ):  # Build the sentence if we are on the same document and sentence
-            if row[6] == "punct":
-                sent_str = sent_str + str(row[1])
-            else:
-                sent_str = sent_str + " " + str(row[1])
+            sent_str = sent_str + str(row[1]) if row[6] == "punct" else sent_str + " " + str(row[1])
         else:
             if row[sentenceID_position] > sentenceID or row[documentID_position] > documentID:
                 break
@@ -340,10 +334,7 @@ def compute_sentence_table(CoNLL_table, output_path):
         if (
             sent_index == row[sentenceID_position] and doc_id == row[documentID_position]
         ):  # Build the sentence if we are on the same document and sentence
-            if row[6] == "punct":
-                sent_str = sent_str + str(row[1])
-            else:
-                sent_str = sent_str + " " + str(row[1])
+            sent_str = sent_str + str(row[1]) if row[6] == "punct" else sent_str + " " + str(row[1])
         else:  # End the sentence, add it to the array and move onto the next one
             arr = [
                 len(sent_str.split(" ")),

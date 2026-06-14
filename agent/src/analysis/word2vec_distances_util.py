@@ -4,8 +4,8 @@ import math
 import time
 
 import numpy as np
-import pandas as pd
 from numpy.linalg import norm
+import pandas as pd
 
 from ..charts import charts_util
 from ..io import IO_files_util

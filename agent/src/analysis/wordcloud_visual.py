@@ -96,16 +96,15 @@ def run_wordcloud(
     if differentColumns_differentColors:
         visualization_tools = "Python WordCloud"
 
-    if "Python" in visualization_tools:
-        if prepare_image_var:
-            # check internet connection
-            # if not IO_internet_util.check_internet_availability_warning(visualization_tools):
-            # https://www.adobe.com/express/feature/image/remove-background
-            # https://express.adobe.com/tools/remove-background
-            # https://www.slazzer.com/upload
-            url = "https://www.remove.bg/"
-            if not IO_libraries_util.open_url("remove.bg", url):
-                return
+    if "Python" in visualization_tools and prepare_image_var:
+        # check internet connection
+        # if not IO_internet_util.check_internet_availability_warning(visualization_tools):
+        # https://www.adobe.com/express/feature/image/remove-background
+        # https://express.adobe.com/tools/remove-background
+        # https://www.slazzer.com/upload
+        url = "https://www.remove.bg/"
+        if not IO_libraries_util.open_url("remove.bg", url):
+            return
 
     if (
         visualization_tools == "TagCrowd"

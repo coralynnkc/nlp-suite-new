@@ -40,9 +40,8 @@ def run_excel_plotly_charts(
         # TODO: implement warnings in frontend
         if X_axis_var == "" and len(csv_file_field_Y_axis_list) < 1:
             return
-    if "scatter" in charts_type_options.lower():
-        if len(csv_file_field_Y_axis_list) < 1:
-            return
+    if "scatter" in charts_type_options.lower() and len(csv_file_field_Y_axis_list) < 1:
+        return
     if "bubble" in charts_type_options.lower() or "radar" in charts_type_options.lower():
         if len(csv_file_field_Y_axis_list) < 3:
             # print(title='Warning',message='A '+str(GUI_util.charts_type_options_widget.get().lower()+' chart requires at least THREE Y-axis variables.\n\nPlease, select the expected number of variables and try again.'))

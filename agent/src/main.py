@@ -1,19 +1,19 @@
+from collections.abc import Callable
 import json
 import logging
 import os
-import traceback
-from collections.abc import Callable
 from threading import Lock, Thread
+import traceback
 from typing import Annotated
 
 # Configure logging before any processing module is imported: the first
 # basicConfig call wins, and INFO is where job validation warnings surface.
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(name)s : %(message)s", level=logging.INFO)
 
-import uvicorn
 from fastapi import FastAPI, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
+import uvicorn
 
 from .analysis.knowledge_graphs_WordNet_main import run_kg_wordnet
 from .analysis.NGrams_CoOccurrences import run_ngrams

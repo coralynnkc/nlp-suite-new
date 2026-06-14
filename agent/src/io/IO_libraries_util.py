@@ -3,11 +3,11 @@ import glob
 import logging
 import os
 import subprocess
-import webbrowser
 from sys import platform
+import webbrowser
 
-import requests
 from psutil import virtual_memory
+import requests
 
 from ..core import reminders_util
 from . import GUI_IO_util, IO_internet_util, IO_user_interface_util
@@ -348,10 +348,9 @@ def check_inputExternalProgramFile(calling_script, software_dir, programName, re
 
         message = ""
 
-        if software_dir == "":
-            if not silent:
-                logger.info("Warning %s", installation_message)
-                return False
+        if software_dir == "" and not silent:
+            logger.info("Warning %s", installation_message)
+            return False
         if not os.path.isdir(software_dir):
             if "setup_external_software" in calling_script:
                 reinstall_string = (
@@ -696,12 +695,15 @@ def get_external_software_dir(
         if software_name_checked.lower() != "" and (software_name_checked.lower() != software_name.lower()):
             continue
 
-        if software_name_checked.lower() != "" and (
-            (software_name_checked.lower() == software_name.lower())
-            or ("Java" in software_name_checked and "Java" in software_name)
+        if (
+            software_name_checked.lower() != ""
+            and (
+                (software_name_checked.lower() == software_name.lower())
+                or ("Java" in software_name_checked and "Java" in software_name)
+            )
+            and software_dir == ""
         ):
-            if software_dir == "":
-                errorFound = True
+            errorFound = True
 
         # software_dir does NOT exist (the path cell is blank in the config file NLP_setup_external_software_config.csv)
         #         if software_dir == None or software_dir == '':
@@ -740,12 +742,11 @@ def get_external_software_dir(
 def ask_download_installation_questions(download_install, software_name, software_dir, message, silent=False):
     cancel_download_install = False
     if software_dir is not None and software_dir != "":  # and software_name.lower() in software_name.lower():
-        if software_name != "":
-            if not silent:
-                if download_install == "install":
-                    logger.info(software_name + " installation: " + message)
-                else:
-                    logger.info(software_name + " download: " + message)
+        if software_name != "" and not silent:
+            if download_install == "install":
+                logger.info(software_name + " installation: " + message)
+            else:
+                logger.info(software_name + " download: " + message)
     return cancel_download_install
 
 
@@ -753,9 +754,7 @@ def ask_download_installation_questions(download_install, software_name, softwar
 
 
 def check_program_Mac_Applications(programName):
-    if (programName + ".app") in os.listdir("/Applications"):
-        return True
-    return False
+    return programName + ".app" in os.listdir("/Applications")
 
 
 def process_Mac_Applications(software_name, software_extension):
@@ -878,10 +877,7 @@ def display_download_installation_messages(
     elif software_extension == ".dmg" or software_extension == ".exe":
         executing_unzipping_label = "extract"
 
-    if "download" in download_install:
-        software_location_label = "MOVE"
-    else:
-        software_location_label = "INSTALL"
+    software_location_label = "MOVE" if "download" in download_install else "INSTALL"
 
     if software_name == "WordNet":
         WordNet_Chrome_message = (

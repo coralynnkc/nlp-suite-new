@@ -7,8 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.decomposition import PCA
 
-from . import shape_of_stories_clustering_util as cl
-from . import shape_of_stories_vectorizer_util as ve
+from . import shape_of_stories_clustering_util as cl, shape_of_stories_vectorizer_util as ve
 
 logger = logging.getLogger(__name__)
 
@@ -52,10 +51,7 @@ class Visualizer:
         for i in range(len(grouped_vectors)):
             if titles[i] != "empty":
                 cluster_arr = grouped_vectors[i]
-                if modes is not None:
-                    mode = modes[i]
-                else:
-                    mode = None
+                mode = modes[i] if modes is not None else None
                 self.generate_plot(cluster_arr, titles[i], file_names[i], mode)
                 if "SVD" in method_short:
                     continue

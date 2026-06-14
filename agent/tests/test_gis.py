@@ -2,8 +2,8 @@ import os
 import pathlib
 import shutil
 
-import pytest
 from conftest import output_csvs, read_rows
+import pytest
 
 try:
     from src.gis import GIS_geocode_util, GIS_location_util, GIS_pipeline_util

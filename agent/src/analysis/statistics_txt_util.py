@@ -1,17 +1,17 @@
 # Written by Roberto Franzosi November 2019
 # Edited by Josh Karol
 import collections
+from collections import Counter
 import logging
 import os
 import re
 import string
-from collections import Counter
 
 from ..io import IO_libraries_util
 
 logger = logging.getLogger(__name__)
-import stanza
 from nltk.stem.porter import PorterStemmer
+import stanza
 
 # Docker Directories
 STANZA_RESOURCES_DIR = os.environ.get(
@@ -55,12 +55,11 @@ import csv
 from itertools import groupby
 
 import nltk
-import pandas as pd
 from nltk.draw import TreeView
 from nltk.tree import Tree
+import pandas as pd
 
-from ..nlp import sentence_complexity_node_util as Node
-from ..nlp import tree
+from ..nlp import sentence_complexity_node_util as Node, tree
 
 # For objectivity/subjectivity
 
@@ -72,8 +71,8 @@ from ..nlp import tree
 # check punkt
 IO_libraries_util.import_nltk_resource("tokenizers/punkt", "punkt")
 
-import textstat
 from nltk.corpus import wordnet
+import textstat
 
 from ..charts import charts_util
 from ..core import reminders_util
@@ -618,10 +617,7 @@ def compute_character_word_ngrams(
 
     if bySentenceID is None:
         result = 0
-        if result:
-            bySentenceID = 1
-        else:
-            bySentenceID = 0
+        bySentenceID = 1 if result else 0
 
     outputFiles = get_ngramlist(
         inputFilename,
@@ -706,10 +702,7 @@ def get_ngramlist(
         + "stp"
         + str(excludeStopWords)
     )
-    if hashfile.checkOut(o2):
-        hashmap = hashfile.getcache(o2)
-    else:
-        hashmap = {}
+    hashmap = hashfile.getcache(o2) if hashfile.checkOut(o2) else {}
     documents = []
     for index, file in enumerate(files):
         if hashfile.calculate_checksum(file) in hashmap:
@@ -960,10 +953,7 @@ def yule(inputFilename, inputDir, outputDir, configFileName, hideMessage=False):
 def print_results(
     words, class_word_list, header, inputFilename, outputDir, excludestowords, fileLabel, hideMessage, filesToOpen
 ):
-    if excludestowords:
-        stopMsg = "(excluding stopwords)"
-    else:
-        stopMsg = "(including stopwords)"
+    stopMsg = "(excluding stopwords)" if excludestowords else "(including stopwords)"
     # if IO_error:
 
     if not hideMessage:
@@ -1157,10 +1147,9 @@ def process_words(
             words_with_stop = [word for word in words if word.isalpha()]
             # don't process stopwords
             filtered_words = words
-            if processType != "" and "punctuation" not in processType.lower():
-                if excludeStopWords:
-                    words = excludeStopWords_list(words)
-                    filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
+            if processType != "" and "punctuation" not in processType.lower() and excludeStopWords:
+                words = excludeStopWords_list(words)
+                filtered_words = [word for word in words if word.isalpha()]  # strip out words with punctuation
             # for wordID, word in enumerate(filtered_words):
 
             # SUBJECTIVITY/OBJECTIVITY PER SENTENCE---------------------------------------------------------------------------------------------

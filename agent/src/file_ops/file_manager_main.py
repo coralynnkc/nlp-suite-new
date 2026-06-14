@@ -148,10 +148,9 @@ def run_file_manager(
         # frontend implementation
         fieldnames = fieldnames + ["Author"]
 
-    if by_embedded_items_var:
-        if number_of_items_var > 0:
-            fieldnames = fieldnames + ["Embedded items count (" + embedded_item_character_value_var + ")"]
-            fieldnames = fieldnames + ["Count by document"]
+    if by_embedded_items_var and number_of_items_var > 0:
+        fieldnames = fieldnames + ["Embedded items count (" + embedded_item_character_value_var + ")"]
+        fieldnames = fieldnames + ["Count by document"]
     if fileName_embeds_date:
         fieldnames = fieldnames + ["Date"]
 
@@ -377,13 +376,7 @@ def run_file_manager(
             for filename in os.listdir(inputDir):
                 if not os.path.isdir(os.path.join(inputDir, filename)):
                     logger.info(f"Processing file: {filename}")
-                    if selectedCsvFile_var != "":
-                        if filename in fileList:
-                            processFile = True
-                        else:
-                            processFile = False
-                    else:
-                        processFile = True
+                    processFile = (filename in fileList) if selectedCsvFile_var != "" else True
                     if processFile:
                         (
                             fileFound,

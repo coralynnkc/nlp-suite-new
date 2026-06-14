@@ -6,9 +6,9 @@ by Jack Hester
 rewritten by Roberto Franzosi, Zhangyi Pan April 2020, Brett Landau October 2020
 """
 
+from csv import reader
 import os
 import re
-from csv import reader
 
 from ..io import IO_csv_util, IO_files_util, IO_user_interface_util
 

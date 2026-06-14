@@ -13,18 +13,9 @@ def convert_time(time):
     minutes = int((time - hours * 3600) / 60)
     seconds = int(time - hours * 3600 - minutes * 60)
     message = ""
-    if seconds == 1:
-        second_label = " second"
-    else:
-        second_label = " seconds"
-    if minutes == 1:
-        minute_label = " minute"
-    else:
-        minute_label = " minutes"
-    if hours == 1:
-        hour_label = " hour"
-    else:
-        hour_label = " hours"
+    second_label = " second" if seconds == 1 else " seconds"
+    minute_label = " minute" if minutes == 1 else " minutes"
+    hour_label = " hour" if hours == 1 else " hours"
 
     # compose message
     if hours > 0:

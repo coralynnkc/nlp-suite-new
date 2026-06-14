@@ -12,8 +12,8 @@ first run and are gated behind NLP_SUITE_TEST_BERT. Run them in the agent image:
 import os
 import pathlib
 
-import pytest
 from conftest import output_csvs
+import pytest
 
 try:
     from src.analysis.word2vec import run_word2vec
@@ -27,10 +27,10 @@ requires_models = pytest.mark.skipif(
 )
 
 
-def _run(inputDir, tmp_output, **kwargs):
+def _run(inputdir, tmp_output, **kwargs):
     args = dict(
         inputFilename="",
-        inputDir=str(inputDir),
+        inputDir=str(inputdir),
         outputDir=str(tmp_output),
         chartPackage="No charts",
         dataTransformation="No transformation",
@@ -58,8 +58,8 @@ def _run(inputDir, tmp_output, **kwargs):
     return run_word2vec(**args)
 
 
-def _output_files(outputDir, suffix):
-    return sorted(str(p) for p in pathlib.Path(outputDir).rglob(f"*{suffix}"))
+def _output_files(outputdir, suffix):
+    return sorted(str(p) for p in pathlib.Path(outputdir).rglob(f"*{suffix}"))
 
 
 # --- guard paths (no heavy deps) -------------------------------------------

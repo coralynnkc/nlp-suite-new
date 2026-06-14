@@ -809,10 +809,7 @@ def NGrams_coOccurrences_VIEWER(
                 "", inputDir, outputDir, label="N-grams VIEWER", silent=False
             )
         elif CoOcc_Viewer:
-            if within_sentence_co_occurrence_search_var:
-                label = "Co-occ_sent_VIEWER"
-            else:
-                label = "Co-occ_doc_VIEWER"
+            label = "Co-occ_sent_VIEWER" if within_sentence_co_occurrence_search_var else "Co-occ_doc_VIEWER"
             outputDir = IO_files_util.make_output_subdirectory("", inputDir, outputDir, label=label, silent=False)
         if outputDir == "":
             return
@@ -962,10 +959,7 @@ def NGrams_coOccurrences_VIEWER(
         if byQuarter:
             ngram_results = quarter_ngram_results
 
-        if "group" in temporal_aggregation:
-            label = "group_" + str(byNumberOfYears)
-        else:
-            label = temporal_aggregation
+        label = "group_" + str(byNumberOfYears) if "group" in temporal_aggregation else temporal_aggregation
         NgramsFileName = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".csv", "N-grams_" + label)
         filesToOpen = save_ngrams(NgramsFileName, ngram_results, aggregateBy, temporal_aggregation)
 
@@ -997,10 +991,7 @@ def NGrams_coOccurrences_VIEWER(
     # Co-occurrences VIEWER -------------------------------------------------------------------------------
 
     if CoOcc_Viewer:
-        if within_sentence_co_occurrence_search_var:
-            label = "_sent"
-        else:
-            label = "_doc"
+        label = "_sent" if within_sentence_co_occurrence_search_var else "_doc"
         coOccFileName = IO_files_util.generate_output_file_name("", inputDir, outputDir, ".csv", "Co-Occ" + label)
 
         # save the Co-occurrence output files ------------------------------------------------------------------------------
@@ -1027,10 +1018,7 @@ def NGrams_coOccurrences_VIEWER(
             else:
                 chart_title = "Frequency Distribution of Co-Occurrences in Document"  # + search_keywords_list
                 columns_to_be_plotted_yAxis = (["Co-Occurrence in Document"],)
-            if dateOption == 0:
-                xAxis = "Document"
-            else:
-                xAxis = temporal_aggregation
+            xAxis = "Document" if dateOption == 0 else temporal_aggregation
             hover_label = []
 
             count_var = 1
