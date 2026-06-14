@@ -1,9 +1,3 @@
----
-id: TECH_DEBT
-aliases: []
-tags: []
----
-
 # Tech Debt
 
 Issues known but deliberately not fixed during the June 2026 overhaul, with
