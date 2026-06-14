@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SEED = 0
 batch_size = 32
@@ -20,14 +20,12 @@ bert_dim = 768
 
 
 class Clusterer:
-
     def __init__(self, tokenizer, model_name):
 
         self.tokenizer = tokenizer
         self.model = model_name
         self.model.eval()
         self.model.to(device)
-
 
     def get_batches(self, sentences, max_batch):
 
@@ -40,13 +38,13 @@ class Clusterer:
             marked_text = sentence[1]
             tokenized_text_all = self.tokenizer.tokenize(marked_text)
             for i in range(0, len(tokenized_text_all), 510):
-                tokenized_text = tokenized_text_all[i:i+510]
+                tokenized_text = tokenized_text_all[i : i + 510]
                 indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
                 indexed_tokens = self.tokenizer.build_inputs_with_special_tokens(indexed_tokens)
                 all_data.append(indexed_tokens)
                 all_words.append(tokenized_text)
                 all_masks.append(list(np.ones(len(indexed_tokens))))
-                all_users.append('<sep>'.join([str(sentence[0]), sentence[-1]]))
+                all_users.append("<sep>".join([str(sentence[0]), sentence[-1]]))
 
         lengths = np.array([len(x) for x in all_data])
         ordering = np.argsort(lengths)
@@ -68,10 +66,10 @@ class Clusterer:
         i = 0
         current_batch = max_batch
         while i < len(ordered_data):
-            batch_data = ordered_data[i:i+current_batch]
-            batch_words = ordered_words[i:i+current_batch]
-            batch_mask = ordered_masks[i:i+current_batch]
-            batch_users = ordered_users[i:i+current_batch]
+            batch_data = ordered_data[i : i + current_batch]
+            batch_words = ordered_words[i : i + current_batch]
+            batch_mask = ordered_masks[i : i + current_batch]
+            batch_users = ordered_users[i : i + current_batch]
 
             max_len = max([len(sent) for sent in batch_data])
             for j in range(len(batch_data)):
@@ -91,7 +89,6 @@ class Clusterer:
 
         return batched_data, batched_words, batched_masks, batched_users
 
-
     def get_embeddings(self, batched_data, batched_words, batched_masks, batched_users, word):
 
         word = word.lower()
@@ -104,16 +101,16 @@ class Clusterer:
             words = batched_words[b]
             with torch.no_grad():
                 o = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
-                encoded_layers = o['hidden_states']
+                encoded_layers = o["hidden_states"]
             for sent_i in range(len(words)):
                 for token_i in range(len(words[sent_i])):
                     if batched_masks[b][sent_i][token_i] == 0:
                         continue
                     w = words[sent_i][token_i]
-                    next_w = ''
+                    next_w = ""
                     if (token_i + 1) < len(words[sent_i]):
-                        next_w = words[sent_i][token_i+1]
-                    if w != word and '##' not in w and '##' not in next_w:
+                        next_w = words[sent_i][token_i + 1]
+                    if w != word and "##" not in w and "##" not in next_w:
                         continue
                     if w == word:
                         do_wordpiece = False
@@ -122,20 +119,18 @@ class Clusterer:
                         vec = encoded_layers[-layer_i][sent_i][token_i]
                         hidden_layers.append(vec)
                     # concatenate last four layers
-                    rep = torch.cat((hidden_layers[0], hidden_layers[1],
-                                hidden_layers[2], hidden_layers[3]), 0)
+                    rep = torch.cat((hidden_layers[0], hidden_layers[1], hidden_layers[2], hidden_layers[3]), 0)
                     ret.append((w, rep.cpu().numpy().reshape(1, -1)[0]))
 
         return (ret, do_wordpiece)
 
-
     def group_wordpiece(self, embeddings, word, do_wordpiece):
-        '''
+        """
         - puts together wordpiece vectors
         - only piece them together if embeddings does not
         contain the vocab word of interest
         - filters vectors so we only have vectors for the word of interest
-        '''
+        """
         word = word.lower()
         data = []
         prev_w = (None, None)
@@ -146,26 +141,27 @@ class Clusterer:
                 if tup[0] == word:
                     data.append(tup[1])
             else:
-                if tup[0].startswith('##'):
-                    if not prev_w[0].startswith('##'):
+                if tup[0].startswith("##"):
+                    if not prev_w[0].startswith("##"):
                         ongoing_word.append(prev_w[0])
                         ongoing_rep.append(prev_w[1])
                     ongoing_word.append(tup[0][2:])
                     ongoing_rep.append(tup[1])
                 else:
-                    if ''.join(ongoing_word) == word:
+                    if "".join(ongoing_word) == word:
                         data.append(np.mean(ongoing_rep, axis=0).flatten())
                     ongoing_word = []
                     ongoing_rep = []
             prev_w = tup
-        if ''.join(ongoing_word) == word:
+        if "".join(ongoing_word) == word:
             data.append(np.mean(ongoing_rep, axis=0).flatten())
         np.random.shuffle(data)
 
         return np.array(data)
 
-
-    def cluster_embeddings(self, data, k_range, w, ID=None, dim_reduct=None, rs=SEED, lamb=10000, finetuned=False, a_s=None):
+    def cluster_embeddings(
+        self, data, k_range, w, ID=None, dim_reduct=None, rs=SEED, lamb=10000, finetuned=False, a_s=None
+    ):
 
         if a_s is None:
             ks = range(k_range[0], k_range[1])
@@ -182,25 +178,26 @@ class Clusterer:
             except ValueError as e:
                 s = str(e)[10:]
                 freq = s.split(" ", 1)[0]
-                if 'should be >=' in str(e):
-                    logger.error(f'The frequency of "{w}" ({str(freq)}) in your dataset is less than the number of sense clusters ({k}) to be produced.\n\nPlease try to either lower the range of sense clusters to be produced or choose more frequent words to analyse and try again.\n\nAlso consider the possibility that your dataset is too small to use word sense induction on.')
+                if "should be >=" in str(e):
+                    logger.error(
+                        f'The frequency of "{w}" ({str(freq)}) in your dataset is less than the number of sense clusters ({k}) to be produced.\n\nPlease try to either lower the range of sense clusters to be produced or choose more frequent words to analyse and try again.\n\nAlso consider the possibility that your dataset is too small to use word sense induction on.'
+                    )
                     raise
         best_k = np.argmax(scores)
 
         return centroids[ks[best_k]]
 
+
 ####
 
 
 class Matcher:
-
     def __init__(self, tokenizer, model_name):
 
         self.tokenizer = tokenizer
         self.model = model_name
         self.model.eval()
         self.model.to(device)
-
 
     def get_batches(self, sentences, max_batch, test=False):
 
@@ -213,13 +210,13 @@ class Matcher:
             marked_text = sentence[1]
             tokenized_text_all = self.tokenizer.tokenize(marked_text)
             for i in range(0, len(tokenized_text_all), 510):
-                tokenized_text = tokenized_text_all[i:i+510]
+                tokenized_text = tokenized_text_all[i : i + 510]
                 indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
                 indexed_tokens = self.tokenizer.build_inputs_with_special_tokens(indexed_tokens)
                 all_data.append(indexed_tokens)
                 all_words.append(tokenized_text)
                 all_masks.append(list(np.ones(len(indexed_tokens))))
-                all_users.append('<sep>'.join([str(sentence[0]), sentence[-1]]))
+                all_users.append("<sep>".join([str(sentence[0]), sentence[-1]]))
 
         lengths = np.array([len(x) for x in all_data])
         ordering = np.argsort(lengths)
@@ -241,10 +238,10 @@ class Matcher:
         i = 0
         current_batch = max_batch
         while i < len(ordered_data):
-            batch_data = ordered_data[i:i+current_batch]
-            batch_words = ordered_words[i:i+current_batch]
-            batch_mask = ordered_masks[i:i+current_batch]
-            batch_users = ordered_users[i:i+current_batch]
+            batch_data = ordered_data[i : i + current_batch]
+            batch_words = ordered_words[i : i + current_batch]
+            batch_mask = ordered_masks[i : i + current_batch]
+            batch_users = ordered_users[i : i + current_batch]
 
             max_len = max([len(sent) for sent in batch_data])
             for j in range(len(batch_data)):
@@ -264,22 +261,20 @@ class Matcher:
 
         return batched_data, batched_words, batched_masks, batched_users
 
-
     def load_centroids(self, vocab, path, added_centroids=None, rs=SEED):
 
         if added_centroids is None:
-            centroids_folder = f'{path}/centroids'
+            centroids_folder = f"{path}/centroids"
         else:
-            centroids_folder = f'{path}/added_centroids_{added_centroids[0]}_{added_centroids[1]}'
+            centroids_folder = f"{path}/added_centroids_{added_centroids[0]}_{added_centroids[1]}"
         centroids_d = {}
         for w in sorted(vocab):
-            if f'{w}.npy' not in os.listdir(centroids_folder):
+            if f"{w}.npy" not in os.listdir(centroids_folder):
                 continue
-            centroids = np.load(f'{centroids_folder}/{w}.npy', allow_pickle=True)
+            centroids = np.load(f"{centroids_folder}/{w}.npy", allow_pickle=True)
             centroids_d[w] = centroids
 
         return centroids_d
-
 
     def batch_match(self, outfile, centroids_d, data_dict):
 
@@ -296,22 +291,23 @@ class Matcher:
             sims = cosine_similarity(reps, centroids)  # IDs x n_centroids
             labels = np.argmax(sims, axis=1)
             for i, _ in enumerate(IDs):
-                outfile.write(str(IDs[i]) + '\t' + tok + '\t' + str(labels[i]) + '\n')
+                outfile.write(str(IDs[i]) + "\t" + tok + "\t" + str(labels[i]) + "\n")
 
-
-    def get_embeddings_and_match(self, batched_data, batched_words, batched_masks, batched_users, centroids_d, o_path, added_centroids=None):
+    def get_embeddings_and_match(
+        self, batched_data, batched_words, batched_masks, batched_users, centroids_d, o_path, added_centroids=None
+    ):
 
         if added_centroids is None:
-            outfile = open(f'{o_path}/senses', 'w')
+            outfile = open(f"{o_path}/senses", "w")
         else:
-            outfile = open(f'{o_path}/added_senses_{added_centroids[0]}_{added_centroids[1]}', 'w')
+            outfile = open(f"{o_path}/added_senses_{added_centroids[0]}_{added_centroids[1]}", "w")
         vocab = set(centroids_d.keys())
         # variables for grouping wordpiece vectors
         prev_w = (None, None, None)
         ongoing_word = []
         ongoing_rep = []
         data_dict = defaultdict(list)  # { word : [(user, rep)] }
-        for b, _ in enumerate(tqdm(batched_data, desc='Matching...')):
+        for b, _ in enumerate(tqdm(batched_data, desc="Matching...")):
             # each item in these lists/tensors is a sentence
             tokens_tensor = batched_data[b].to(device)
             atten_tensor = batched_masks[b].to(device)
@@ -319,16 +315,16 @@ class Matcher:
             users = batched_users[b]
             with torch.no_grad():
                 o = self.model(tokens_tensor, attention_mask=atten_tensor, token_type_ids=None)
-                encoded_layers = o['hidden_states']
+                encoded_layers = o["hidden_states"]
             for sent_i in range(len(words)):
                 for token_i in range(len(words[sent_i])):
                     if batched_masks[b][sent_i][token_i] == 0:
                         continue
                     w = words[sent_i][token_i]
-                    next_w = ''
+                    next_w = ""
                     if (token_i + 1) < len(words[sent_i]):
-                        next_w = words[sent_i][token_i+1]
-                    if w not in vocab and '##' not in w and '##' not in next_w:
+                        next_w = words[sent_i][token_i + 1]
+                    if w not in vocab and "##" not in w and "##" not in next_w:
                         continue
                     # get vector
                     hidden_layers = []
@@ -336,19 +332,18 @@ class Matcher:
                         vec = encoded_layers[-layer_i][sent_i][token_i]
                         hidden_layers.append(vec)
                     # concatenate last four layers
-                    vector = torch.cat((hidden_layers[0], hidden_layers[1],
-                                hidden_layers[2], hidden_layers[3]), 0)
+                    vector = torch.cat((hidden_layers[0], hidden_layers[1], hidden_layers[2], hidden_layers[3]), 0)
                     vector = vector.cpu().numpy().reshape(1, -1)[0]
                     # piece together wordpiece vectors if necessary
-                    if not w.startswith('##'):
+                    if not w.startswith("##"):
                         if len(ongoing_word) == 0 and prev_w[0] is not None:
                             data_dict[prev_w[0]].append((prev_w[1], prev_w[2]))
                         elif prev_w[0] is not None:
                             rep = np.array(ongoing_rep)
                             rep = np.mean(rep, axis=0).flatten()
-                            tok = ''
+                            tok = ""
                             for t in ongoing_word:
-                                if t.startswith('##'):
+                                if t.startswith("##"):
                                     t = t[2:]
                                 tok += t
                             if tok in vocab:
@@ -372,9 +367,9 @@ class Matcher:
         elif prev_w[0] is not None:
             rep = np.array(ongoing_rep)
             rep = np.mean(rep, axis=0).flatten()
-            tok = ''
+            tok = ""
             for t in ongoing_word:
-                if t.startswith('##'):
+                if t.startswith("##"):
                     t = t[2:]
                 tok += t
             if tok in vocab:
