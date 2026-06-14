@@ -426,7 +426,8 @@ def remove_hyperlinks(inputFilename):
     for i in document:
         try:
             new_document.append(IO_files_util.getFilename(i)[2])  # 0 for tail; 2 for full path
-        except Exception:
+        except Exception as e:
+            logger.debug("skipping document path %r: %s", i, e)
             continue
     data["Document"] = new_document
     no_hyperlink_filename = (

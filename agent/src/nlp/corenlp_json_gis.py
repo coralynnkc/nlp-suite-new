@@ -241,7 +241,8 @@ def check_pronouns(
                     # some pronouns extracted by CoreNLP coref as such may not be in the list
                     #   e.g., "we both" leading to error
                     pronouns_count[row["Pronoun"].lower()] += 1
-                except Exception:
+                except KeyError as e:
+                    logger.debug("pronoun %r not in count list: %s", row["Pronoun"], e)
                     continue
         else:
             logger.info("Wrong Option value!")

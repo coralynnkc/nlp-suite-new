@@ -224,7 +224,8 @@ def processCluster(
             # cluster_file may not include all sequential indices
             try:
                 documents = cluster_file[i]
-            except Exception:
+            except (KeyError, IndexError) as e:
+                logger.debug("skipping missing cluster index %r: %s", i, e)
                 continue
             for each in documents:  # each: (narratiefile, sentiment_vector)
                 # ===============ANGEL==============

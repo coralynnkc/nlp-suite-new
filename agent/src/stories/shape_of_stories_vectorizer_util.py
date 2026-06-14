@@ -181,11 +181,12 @@ class Vectorizer:
                     if i + 1 < len(df):
                         window.append(float(df.iloc[i + 1]["Sentiment score"]))
                         del window[0]
+                mod = None
                 try:
                     # Divides left hand operand by right hand operand and returns remainder
                     mod = i % addIndex  # decides which bucket the row goes into
-                except Exception:
-                    pass
+                except (TypeError, ZeroDivisionError) as e:
+                    logger.warning("could not compute bucket index for row %s: %s", i, e)
                 if mod == 0 and bucket > 0:
                     bucket -= 1  # go to the next bucket
                     sentimentVector.append(sum(window) / len(window))

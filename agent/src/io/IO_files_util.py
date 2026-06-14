@@ -316,8 +316,8 @@ def getFileList(inputFile, inputDir, fileType=".*", silent=False, configFileName
             aa = float(sort_order)
             aa = int(aa)
             sort_order = str(aa)
-        except Exception:
-            pass
+        except (ValueError, TypeError) as e:
+            logger.warning("non-numeric sort order %r left unchanged: %s", sort_order, e)
 
         try:
             separator = a["Item separator character(s)"][0]  # changed to 0 from 1

@@ -113,7 +113,8 @@ def compute_word2vec_distances(
                             B = list(map(float, " ".join(B.strip("][").split()).split()))
                             sim_score = _cosine_sim_vectors(A, B)
                             rows.append({"Word_1": a, "Word_2": b, "Cosine similarity": sim_score})
-                    except (KeyError, ValueError):
+                    except (KeyError, ValueError) as e:
+                        logger.debug("skipping keyword pair (%s, %s): %s", a, b, e)
                         continue
 
                 keyword_df = pd.DataFrame(rows)
@@ -198,7 +199,8 @@ def compute_word2vec_distances(
                     cos_rows.append(
                         {"Word_1": w1, "Word_2": w2, "Word_1_2": w1 + "_" + w2, "Cosine similarity": sim_score}
                     )
-                except KeyError:
+                except KeyError as e:
+                    logger.debug("skipping word pair (%s, %s): %s", w1, w2, e)
                     continue
 
         cos_sim_df = pd.DataFrame(cos_rows)
@@ -232,7 +234,8 @@ def compute_word2vec_distances(
                 try:
                     sim_score = _compute_similarity(a, b, word_vectors, result_df, BERT)
                     kw_rows.append({"Word_1": a, "Word_2": b, "Word_1_2": a + "_" + b, "Cosine similarity": sim_score})
-                except KeyError:
+                except KeyError as e:
+                    logger.debug("skipping keyword pair (%s, %s): %s", a, b, e)
                     continue
 
             keyword_df = pd.DataFrame(kw_rows)

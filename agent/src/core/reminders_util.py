@@ -468,8 +468,8 @@ def displayReminder(df, row_num, title, message, currentStatus, question, seeMsg
     try:
         message = title.replace("title_options_", "message_")
         message = df.at[row_num, "Message"].replace("\\n", os.linesep)
-    except Exception:
-        pass
+    except (KeyError, AttributeError) as e:
+        logger.warning("could not read reminder message for row %s: %s", row_num, e)
     if message == "":  # there is no message to be displayed
         return
     else:
