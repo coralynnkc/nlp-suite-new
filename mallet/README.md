@@ -1,36 +1,46 @@
-## How to Update GHCR ##
-Updating the GHCR will allow the nlp-suite-runner to pull the latest version of the repository you're currently working on, allowing testing and execution of frontend and backend together.
+# Dockerized MALLET
 
-## 1. Save Local Changes ##
-Make sure you are **navigated to the correct directory** with the Dockerfile (in this case you must be in the nlp-suite-agent). The image will be created based on the current local version, so there is no need to push to GitHub during testing phases.
+This directory builds a Docker image that wraps [MALLET](https://mimno.github.io/Mallet/) (the Java-based topic-modeling toolkit) behind a small HTTP API. It removes the need to install Java + MALLET locally.
 
-## 2. Create Local Docker Image ##
-Create an image
-```bash
-docker build -t ghcr.io/nlp-suite/mallet-docker:main .
-```
-This command uses the Dockefile instructions to create an image of your local repository. This image will be tagged as `ghcr.io/nlp-suite/mallet-docker:main`. It will be stored in the local Docker registry on your machine.
+The container is built on Amazon Corretto 17 and installs MALLET 2.0.8. A thin FastAPI app (`api.py`) exposes a single endpoint that runs `mallet <command>` with the given arguments.
 
-## 3. Login to your account on the GHCR with Docker ##
-A) Create a personal access token for your GitHub account. You can do this on GitHub by navigating to Settings>Developer Settings>Tokens(Classic)
-Make sure your token has **full control of private repos, full control of projects, write:packages,** and **delete:packages**
+## Run it
 
-B) Export this person access token to your system's environment variables. You can this by this command:
-```bash
-export GHCR_TOKEN={insert your token here}
-```
-C) Login to the GHCR
-```bash
-echo $GHCR_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
-```
-Replacing USERNAME with your GitHub username. It should return the statement "Login Succeeded"
+From the repository root:
 
-## 4. Push the image to GHCR
 ```bash
-docker push ghcr.io/nlp-suite/mallet-docker:main
+docker compose -f docker-compose.corenlp-mallet.yml up -d mallet
 ```
-## 5. Check if update is successful
-Run the executable file from the nlp-suite-runner. If your container is cached and not pulling the latest image, run the command
+
+The API will be available at `http://localhost:8081`.
+
+## API
+
+`POST /run` accepts JSON of the form:
+
+```json
+{
+  "command": "import-dir",
+  "args": {
+    "input": "/app/my-corpus",
+    "output": "/app/out.mallet",
+    "keep-sequence": true
+  }
+}
+```
+
+This runs `mallet import-dir --input /app/my-corpus --output /app/out.mallet --keep-sequence`. Boolean `true` becomes a flag; other values become `--key value` pairs.
+
+The container expects the corpus to live inside `/app` (mount your data with `-v $PWD:/app` if running standalone). The full Docker-compose setup in [PR #2](../README.md) wires this volume mount automatically.
+
+## Test it
+
 ```bash
-docker pull ghcr.io/nlp-suite/mallet-docker:main
+curl -s http://localhost:8081/openapi.json | head -c 200
 ```
+
+You should see the FastAPI schema document.
+
+## Why this is useful
+
+Topic-modeling tools in NLP-Suite require a working MALLET install, which is a frequent source of setup failures. This container packages MALLET and a uniform HTTP interface. The container is consumed by the web UI (see [PR #2](../README.md)).
