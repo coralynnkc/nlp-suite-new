@@ -315,20 +315,19 @@ def pin_customizer(
             )
 
             sys.exit()
-        if group_var == 1:
-            if len(group_labels[j]) < 1:
-                logger.info(
-                    "No group labels specified for Group No. "
-                    + str(j + 1)
-                    + "There is no group label specified for Group No."
-                    + str(j + 1)
-                    + '.\n\nThe program will automatically set a group label for this group as "Group '
-                    + str(j + 1)
-                    + "."
-                )
+        if group_var == 1 and len(group_labels[j]) < 1:
+            logger.info(
+                "No group labels specified for Group No. "
+                + str(j + 1)
+                + "There is no group label specified for Group No."
+                + str(j + 1)
+                + '.\n\nThe program will automatically set a group label for this group as "Group '
+                + str(j + 1)
+                + "."
+            )
 
-                new_label = "Group " + str(j + 1)
-                group_labels[j] = new_label
+            new_label = "Group " + str(j + 1)
+            group_labels[j] = new_label
 
         pnt = pin_description(
             inputFilename,
@@ -426,7 +425,7 @@ def pin_description(
         names = []
         description = []
         for a in range(len(headers)):
-            if "Document" == headers[a]:
+            if headers[a] == "Document":
                 pass
             if description_csv_field_var == headers[a]:  # description_csv_field_var is typically set to sentence
                 pass
@@ -807,10 +806,7 @@ def pin_name(
     pnt.name = names[geo_index - 1]
     pnt.style.labelstyle.scale = scale_var
 
-    if int(color_var) == 1:
-        color_code = color_style_var
-    else:
-        color_code = "(255, 255, 255)"
+    color_code = color_style_var if int(color_var) == 1 else "(255, 255, 255)"
     rgb_value = color_code.split(", ")
     r = rgb_value[0].split("(")
     r_value = r[1]

@@ -367,10 +367,7 @@ def search_sentences_documents(
 
     import IO_string_util
 
-    if "insensitive" in str(search_options_list):
-        case_sensitive = False
-    else:
-        case_sensitive = True
+    case_sensitive = "insensitive" not in str(search_options_list)
     # when processing an input csv file must create the search_keywords_list
     if search_by_dictionary:
         df = pd.read_csv(selectedCsvFile)
@@ -550,10 +547,7 @@ def search_sentences_documents(
 
     # write all output files -----------------------------------------------------------------
     # write csv file headers -------------------------------------------------------------------
-    if search_within_sentence:
-        label = "_sent"
-    else:
-        label = "_doc"
+    label = "_sent" if search_within_sentence else "_doc"
 
     # both within documents and within sentences searches produce outputFilename_csv_word
     outputFilename_csv_word = IO_files_util.generate_output_file_name(

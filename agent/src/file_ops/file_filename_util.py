@@ -1,6 +1,7 @@
 # Written by Roberto Franzosi December 2019
 # edited July 2020
 import csv
+from datetime import datetime
 import logging
 import os
 import os.path
@@ -8,7 +9,6 @@ import platform
 import shutil
 import sys
 import time
-from datetime import datetime
 
 from ..io import IO_csv_util, IO_files_util
 
@@ -161,9 +161,8 @@ def purge_partial_matches(window, inputFilename, outputDir, openOutputFiles, nam
                     if row != pdfdict.get(name):
                         # This file is not in the dictionary, so we should delete it! Add it to the list.
                         deleteList.append([row[filenameColNum]])
-                elif os.path.splitext(fName)[1].lower() == ".docx":
-                    if row != docxdict.get(name):
-                        deleteList.append([row[filenameColNum]])
+                elif os.path.splitext(fName)[1].lower() == ".docx" and row != docxdict.get(name):
+                    deleteList.append([row[filenameColNum]])
 
     # Now, we can call list_to_csv so that we can generate a new CSV with the list of files to be deleted
     [outputDir + os.sep + "files_to_delete.csv"]
@@ -296,10 +295,7 @@ def processFile(
         characterCount = 0
 
     if by_prefix_var == 1:
-        if filename.startswith(string_entry_var):
-            fileFound = True
-        else:
-            fileFound = False
+        fileFound = bool(filename.startswith(string_entry_var))
 
     if len(file_type_menu_var) > 0:
         if file_type_menu_var == "*":
@@ -307,19 +303,13 @@ def processFile(
         else:
             ext = IO_files_util.getFileExtension(os.path.join(inputPath, filename))
 
-            if ext == "." + file_type_menu_var:
-                fileFound = True
-            else:
-                fileFound = False
+            fileFound = ext == "." + file_type_menu_var
 
     # endswith would not distinguish between, for instance, .doc and .docx or .xls and .xlsx
     # if filename.endswith('.'+by_file_type_var):
 
     if by_substring_var == 1:
-        if string_entry_var in filename:
-            fileFound = True
-        else:
-            fileFound = False
+        fileFound = string_entry_var in filename
 
     if list_var == 1 and fileFound:
         if utf8_var == 1:
@@ -338,10 +328,7 @@ def processFile(
         # get_author works for docx files only
         if by_author_var == 1:
             ext = IO_files_util.getFileExtension(os.path.join(inputPath, filename))
-            if ext == ".docx" or ext == "docx":
-                author = get_author(os.path.join(inputPath, filename))
-            else:
-                author = ""
+            author = get_author(os.path.join(inputPath, filename)) if ext == ".docx" or ext == "docx" else ""
 
         if fileName_embeds_date == 1:
             date, dateStr, month, day, year = IO_files_util.getDateFromFileName(
@@ -470,10 +457,7 @@ def processFile(
         filename = filename[:-4]  # remove file extension
         filename_items = filename.split(embedded_item_character_value)
         for item in filename_items:
-            if split_string == "":
-                split_string = item
-            else:
-                split_string = split_string + "," + item
+            split_string = item if split_string == "" else split_string + "," + item
 
     if fileFound:
         writeOutput(
@@ -664,9 +648,8 @@ def get_spec_num_files(filename, comparator, number_of_items_var, embedded_item_
     elif comparator == ">=":
         if itemCount >= number_of_items_var:
             result = filename
-    elif comparator == "<=":
-        if itemCount <= number_of_items_var:
-            result = filename
+    elif comparator == "<=" and itemCount <= number_of_items_var:
+        result = filename
     return result, itemCount
 
 

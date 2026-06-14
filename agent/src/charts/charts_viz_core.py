@@ -498,10 +498,7 @@ def run_all(
         # TODO Samir
         inputFilename = add_missing_IDs(pd.read_csv(StringIO(inputFileData)), inputFilename)
     if use_Plotly:
-        if "static" in chartPackage.lower():
-            static_flag = True
-        else:
-            static_flag = False
+        static_flag = "static" in chartPackage.lower()
         # TODO Tony when plotting bar charts with documents in the X-axis we need to remove the path and just keep the tail
         #   or the display is too messy; it works well with Excel
         if "Kurtosis" in chart_title:

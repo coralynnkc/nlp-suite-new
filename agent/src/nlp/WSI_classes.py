@@ -1,12 +1,12 @@
+from collections import defaultdict
 import logging
 import os
-from collections import defaultdict
 
 import numpy as np
-import torch
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.metrics.pairwise import cosine_similarity
+import torch
 from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
@@ -163,10 +163,7 @@ class Clusterer:
         self, data, k_range, w, ID=None, dim_reduct=None, rs=SEED, lamb=10000, finetuned=False, a_s=None
     ):
 
-        if a_s is None:
-            ks = range(k_range[0], k_range[1])
-        else:
-            ks = range(a_s[0], a_s[1])
+        ks = range(k_range[0], k_range[1]) if a_s is None else range(a_s[0], a_s[1])
         centroids = {}
         scores = np.zeros(len(ks))
         for i, k in enumerate(ks):

@@ -39,10 +39,7 @@ language_encoding = "utf-8"
 
 def similar_string_floor_filter(str1, str2):
     dist = nltk.edit_distance(str1, str2)
-    if dist <= 5:
-        return True
-    else:
-        return False
+    return dist <= 5
 
 
 # From Tony Chen Gu to Everyone 10:03 PM

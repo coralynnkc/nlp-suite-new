@@ -93,10 +93,7 @@ def analyzefile(inputFilename, outputDir, outputFilename, documentID, documentNa
         if len(score_list) > 0:
             conc_median = round(float(statistics.median(score_list)), 2)
             conc_mean = round(float(statistics.mean(score_list)), 2)
-            if len(score_list) == 1:
-                conc_sd = 0
-            else:
-                conc_sd = round(float(statistics.stdev(score_list)), 2)
+            conc_sd = 0 if len(score_list) == 1 else round(float(statistics.stdev(score_list)), 2)
             # should sort by Document ID and Sentence ID
             if conc_median != 0 and conc_mean != 0:
                 writer.writerow(

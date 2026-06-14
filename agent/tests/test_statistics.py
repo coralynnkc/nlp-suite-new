@@ -1,5 +1,5 @@
-import pytest
 from conftest import output_csvs, read_rows
+import pytest
 
 # statistics_txt_main pulls in the chart/stanza stack at call time; the module
 # itself only needs core utils, but skip on hosts without the agent image deps.

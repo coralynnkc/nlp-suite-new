@@ -249,9 +249,8 @@ def run_GIS(
             [1],
         )  # bold_var_list, italic_var_list)
 
-        if outputFiles is not None:
-            if len(outputFiles) > 0:
-                filesToOpen.extend(outputFiles)
+        if outputFiles is not None and len(outputFiles) > 0:
+            filesToOpen.extend(outputFiles)
 
         if len(filesToOpen) > 0:
             return filesToOpen

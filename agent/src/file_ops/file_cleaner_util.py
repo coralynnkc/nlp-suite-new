@@ -101,9 +101,8 @@ def add_full_stop_to_paragraph(
             with open(outfile, "w", encoding="utf-8", errors="ignore") as out:
                 for paragraph in paragraphs:
                     check_index = -1
-                    if paragraph and paragraph[-1] in ["'", '"']:
-                        if len(paragraph) >= 2:
-                            check_index = -2
+                    if paragraph and paragraph[-1] in ["'", '"'] and len(paragraph) >= 2:
+                        check_index = -2
                     # check for enf of paragraph punctuation, quotation and single quotation first, then check for .!?
                     if paragraph and paragraph[check_index] not in [".", "!", "?"]:
                         out.write(paragraph + ".\n")
@@ -178,9 +177,8 @@ def check_typesetting_hyphenation(
             for line in source.readlines():
                 line = line.rstrip("\n")
                 if line.endswith("-"):
-                    if len(line) >= 2:
-                        if line[-2] == " ":
-                            continue
+                    if len(line) >= 2 and line[-2] == " ":
+                        continue
                     hyphenated_lines += 1
                     lin, _, e = line.rpartition(" ")
                     lines.append(line)
@@ -278,9 +276,8 @@ def remove_typeseting_hyphenation(
             for line in source.readlines():
                 line = line.rstrip("\n")
                 if line.endswith("-"):
-                    if len(line) >= 2:
-                        if line[-2] == " ":  # do not convert - preceded by a space
-                            continue
+                    if len(line) >= 2 and line[-2] == " ":  # do not convert - preceded by a space
+                        continue
                     removed_hyphens += 1
                     lin, _, e = line.rpartition(" ")
                 else:
@@ -702,39 +699,38 @@ def remove_characters_between_characters(
                         + inputDir
                     )
 
-    if inputDir != "":
-        if No_files_edited > 0:
-            logger.info(
-                "Warning"
-                + str(No_files_edited)
-                + " files were edited removing ALL substrings contained between "
-                + startCharacter
-                + " "
-                + endCharacter
-                + ".\n\nThe edits were saved to files in a subdirectory of the input directory\n\n"
-                + head
-                + "\n\nList of edited files:\n\n"
-                + str(edited_files_list)
-            )
-            logger.info(
-                str(No_files_edited)
-                + " files edited removing ALL substrings between "
-                + startCharacter
-                + " "
-                + endCharacter
-                + ".\n"
-                + str(edited_files_list)
-            )
-            header = [
-                "Original file",
-                "Edited file",
-                "Original file size in bytes",
-                "Edited file size in bytes",
-                "Difference in bytes (should be >0)",
-            ]
-            file_sizes.insert(0, header)
-            IO_csv_util.list_to_csv(window, file_sizes, outputDir + os.sep + "file_sizes.csv")
-            IO_files_util.openFile(window, outputDir + os.sep + "file_sizes.csv")
+    if inputDir != "" and No_files_edited > 0:
+        logger.info(
+            "Warning"
+            + str(No_files_edited)
+            + " files were edited removing ALL substrings contained between "
+            + startCharacter
+            + " "
+            + endCharacter
+            + ".\n\nThe edits were saved to files in a subdirectory of the input directory\n\n"
+            + head
+            + "\n\nList of edited files:\n\n"
+            + str(edited_files_list)
+        )
+        logger.info(
+            str(No_files_edited)
+            + " files edited removing ALL substrings between "
+            + startCharacter
+            + " "
+            + endCharacter
+            + ".\n"
+            + str(edited_files_list)
+        )
+        header = [
+            "Original file",
+            "Edited file",
+            "Original file size in bytes",
+            "Edited file size in bytes",
+            "Difference in bytes (should be >0)",
+        ]
+        file_sizes.insert(0, header)
+        IO_csv_util.list_to_csv(window, file_sizes, outputDir + os.sep + "file_sizes.csv")
+        IO_files_util.openFile(window, outputDir + os.sep + "file_sizes.csv")
 
     if No_odd_pairs > 0:
         logger.info(
@@ -881,9 +877,8 @@ def remove_blank_lines(
 # Check whether a sentence is title
 # criteria for title are no puntuation and a shorter (user determined) sentence
 def isTitle(sentence, Title_length_limit):
-    if sentence[-1] not in string.punctuation:
-        if len(sentence) < Title_length_limit:
-            return True
+    if sentence[-1] not in string.punctuation and len(sentence) < Title_length_limit:
+        return True
     if sentence.isupper():
         return True
     if sentence.istitle():
@@ -902,10 +897,7 @@ def newspaper_titles(
 ):
     from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
-    if inputDir == "" and inputFilename != "":
-        NUM_DOCUMENT = 1
-    else:
-        NUM_DOCUMENT = len(glob.glob(os.path.join(inputDir, "*.txt")))
+    NUM_DOCUMENT = 1 if inputDir == "" and inputFilename != "" else len(glob.glob(os.path.join(inputDir, "*.txt")))
     if NUM_DOCUMENT == 0:
         return
     Title_length_limit = 100

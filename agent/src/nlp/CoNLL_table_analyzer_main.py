@@ -314,7 +314,7 @@ def run_CoNLL_table_analyzer(
             if (
                 (not os.path.isfile(inputFilename.strip()))
                 and ("CoNLL" not in inputFilename)
-                and (not inputFilename.strip()[-4:] == ".csv")
+                and (inputFilename.strip()[-4:] != ".csv")
             ):
                 logger.info(
                     "INPUT File Path Error, Please, check INPUT FILE PATH and try again. The file must be a CoNLL table (extension .conll with Stanford CoreNLP no clausal tags, extension .csv with Stanford CoreNLP with clausal tags)"

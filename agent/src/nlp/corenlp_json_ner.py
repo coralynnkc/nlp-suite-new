@@ -126,10 +126,7 @@ def process_json_normalized_date(config_filename, documentID, document, sentence
                         info = date_get_tense(norm_date)
                     words = word + words
                 else:
-                    if word in string.punctuation:
-                        words = words + word
-                    else:
-                        words = words + " " + word
+                    words = words + word if word in string.punctuation else words + " " + word
             else:
                 if words != "" or norm_date != "":
                     if filename_embeds_date_var:
@@ -236,10 +233,7 @@ def check_NER_tokenBegin_tokenEnd(NER):
                 )
             )
         ):
-            if currNERtag != "":
-                currNERtag = currNERtag + " " + str(NER[index][0])
-            else:
-                currNERtag = str(NER[index][0])
+            currNERtag = currNERtag + " " + str(NER[index][0]) if currNERtag != "" else str(NER[index][0])
             if beginToken_nextRow is None:
                 NER[index][0] = currNERtag
                 NER[index][2] = beginToken_currenRow
@@ -247,10 +241,7 @@ def check_NER_tokenBegin_tokenEnd(NER):
             index = index + 1
             continue
         else:
-            if currNERtag != "":
-                currNERtag = currNERtag + " " + str(NER[index][0])
-            else:
-                currNERtag = str(NER[index][0])
+            currNERtag = currNERtag + " " + str(NER[index][0]) if currNERtag != "" else str(NER[index][0])
             NER[index][0] = currNERtag
             new_NER.append(NER[index])
             beginToken_currenRow = -1
@@ -359,10 +350,7 @@ def process_json_sentiment(config_filename, documentID, document, sentenceID, js
             if token["originalText"] in string.punctuation:
                 text = text + token["originalText"]
             else:
-                if token["index"] == 1:
-                    text = text + token["originalText"]
-                else:
-                    text = text + " " + token["originalText"]
+                text = text + token["originalText"] if token["index"] == 1 else text + " " + token["originalText"]
 
         check_sentence_length(len(sentence["tokens"]), sentenceID, config_filename)
 

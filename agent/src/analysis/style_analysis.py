@@ -104,7 +104,7 @@ def run_style_analysis(
             )
             return
 
-        if "*" == vocabulary_analysis_menu_var:
+        if vocabulary_analysis_menu_var == "*":
             outputDir_style = IO_files_util.make_output_subdirectory(
                 inputFilename, inputDir, outputDir, label="style", silent=True
             )
@@ -286,7 +286,7 @@ def run_style_analysis(
             if outputFiles is not None:
                 collect(filesToOpen, outputFiles)
 
-        if "*" == vocabulary_analysis_menu_var or "NLTK" in vocabulary_analysis_menu_var:
+        if vocabulary_analysis_menu_var == "*" or "NLTK" in vocabulary_analysis_menu_var:
             # TODO: file_spell_checker_util.py warning line 186
             outputFiles = file_spell_checker_util.nltk_unusual_words(
                 inputFilename, inputDir, outputDir_style, config_filename, chartPackage, dataTransformation
@@ -294,7 +294,7 @@ def run_style_analysis(
             if outputFiles is not None:
                 collect(filesToOpen, outputFiles)
 
-        if "*" == vocabulary_analysis_menu_var or "Abstract" in vocabulary_analysis_menu_var:
+        if vocabulary_analysis_menu_var == "*" or "Abstract" in vocabulary_analysis_menu_var:
             if language == "English":
                 outputFiles = style_analysis_abstract_concreteness_analysis_util.main(
                     inputFilename,
@@ -308,12 +308,12 @@ def run_style_analysis(
                 if outputFiles is not None:
                     collect(filesToOpen, outputFiles)
             else:
-                if not "*" == vocabulary_analysis_menu_var:
+                if vocabulary_analysis_menu_var != "*":
                     logger.info(
                         "Warning, The Abstract/concrete vocabulary analysis algorithm is only available for the English language."
                     )
 
-        if "*" == vocabulary_analysis_menu_var or "Iconic" in vocabulary_analysis_menu_var:
+        if vocabulary_analysis_menu_var == "*" or "Iconic" in vocabulary_analysis_menu_var:
             if language == "English":
                 import style_analysis_iconicity_analysis_util
 
@@ -331,10 +331,10 @@ def run_style_analysis(
                 if outputFiles is not None:
                     collect(filesToOpen, outputFiles)
             else:
-                if not "*" == vocabulary_analysis_menu_var:
+                if vocabulary_analysis_menu_var != "*":
                     logger.info("Warning, The Iconicity analysis algorithm is only available for the English language.")
 
-        if "*" == vocabulary_analysis_menu_var or "Yule" in vocabulary_analysis_menu_var:
+        if vocabulary_analysis_menu_var == "*" or "Yule" in vocabulary_analysis_menu_var:
             outputFiles = statistics_txt_util.yule(inputFilename, inputDir, outputDir, config_filename)
             if outputFiles is not None:
                 collect(filesToOpen, outputFiles)

@@ -470,10 +470,7 @@ def process_and_aggregate_data(data, **kwargs):
     agg_column = kwargs.get("groupby_column")  # GROUP BY column
     select_columns = kwargs.get("select_column", [])  # SELECT columns
     for col, value in conditions.items():
-        if isinstance(value, (list, tuple)):
-            data = data[data[col].isin(value)]
-        else:
-            data = data[data[col] == value]
+        data = data[data[col].isin(value)] if isinstance(value, (list, tuple)) else data[data[col] == value]
 
     if not select_columns:
         select_columns = [col for col in data.columns if col != agg_column]

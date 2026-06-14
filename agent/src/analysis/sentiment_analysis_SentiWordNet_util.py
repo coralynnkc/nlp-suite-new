@@ -52,8 +52,7 @@ def penn_to_wn(tag):
 def analyzefile(inputFilename, writer, Document_ID, Document):
     """Score each sentence of inputFilename with SentiWordNet and write rows to the csv writer."""
     from nltk import pos_tag, word_tokenize
-    from nltk.corpus import sentiwordnet as swn
-    from nltk.corpus import wordnet as wn
+    from nltk.corpus import sentiwordnet as swn, wordnet as wn
 
     with open(inputFilename, encoding="utf-8", errors="ignore") as myfile:
         fulltext = myfile.read()

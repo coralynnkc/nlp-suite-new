@@ -1,7 +1,7 @@
 import csv
 
-import pytest
 from conftest import output_csvs, read_rows
+import pytest
 
 try:
     from src.nlp import spaCy_util

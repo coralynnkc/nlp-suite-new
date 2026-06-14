@@ -1,9 +1,9 @@
+from collections import Counter
 import logging
 import os
 import pickle
 import random
 import re
-from collections import Counter
 
 import numpy as np
 from tqdm import tqdm

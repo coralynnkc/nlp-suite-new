@@ -33,17 +33,11 @@ def geocoded_checker(numColumns, minColumns, headers, locationColumnValue, input
     check1 = True
     check2 = True
     for x in dt[latitude_name]:
-        if not isinstance(x, float):
-            check1 = False
-            break
-        elif x > 90 or x < -90:
+        if not isinstance(x, float) or x > 90 or x < -90:
             check1 = False
             break
     for y in dt[longitude_name]:
-        if not isinstance(y, float):
-            check2 = False
-            break
-        elif y > 180 or y < -180:
+        if not isinstance(y, float) or y > 180 or y < -180:
             check2 = False
             break
 
@@ -109,10 +103,9 @@ def restrictions_checker(inputFilename, inputIsCoNLL, withHeader, headers, locat
                 return False
 
     else:
-        if len(locationColumnValue) == 0:
-            if not inputIsCoNLL:
-                logger.info("option selection error, no location column value")
-                return False
+        if len(locationColumnValue) == 0 and not inputIsCoNLL:
+            logger.info("option selection error, no location column value")
+            return False
 
     # set default values --------------------------------------------------------------------------------------------------
     numColumns = len(headers)
@@ -149,14 +142,8 @@ def CoNLL_checker(inputFilename):
     else:
         inputIsCoNLL = False
     headers = IO_csv_util.get_csvfile_headers(inputFilename, False)
-    if "Date" in headers:
-        datePresent = True
-    else:
-        datePresent = False
-    if "Latitude" in headers and "Longitude" in headers:
-        inputIsGeocoded = True
-    else:
-        inputIsGeocoded = False
+    datePresent = "Date" in headers
+    inputIsGeocoded = bool("Latitude" in headers and "Longitude" in headers)
     withHeader = True
     filenamePositionInCoNLLTable = 11
 

@@ -3,8 +3,8 @@ import logging
 import os.path
 import re  # ANGEL
 
-import numpy as np
 from matplotlib import pyplot as plt
+import numpy as np
 from scipy.cluster.hierarchy import dendrogram
 from scipy.linalg import svd as sp_svd
 from sklearn.cluster import AgglomerativeClustering
@@ -12,8 +12,7 @@ from sklearn.decomposition import NMF
 from tqdm import tqdm
 
 from ..io import IO_csv_util
-from . import shape_of_stories_vectorizer_util as vec
-from . import shape_of_stories_visualization_util as viz
+from . import shape_of_stories_vectorizer_util as vec, shape_of_stories_visualization_util as viz
 
 logger = logging.getLogger(__name__)
 
@@ -126,10 +125,10 @@ class Clustering:
             c1W = 1
             c2Dist = 0
             c2W = 1
-            if childs[0] in distCache.keys():
+            if childs[0] in distCache:
                 c1Dist = distCache[childs[0]]
                 c1W = weightCache[childs[0]]
-            if childs[1] in distCache.keys():
+            if childs[1] in distCache:
                 c2Dist = distCache[childs[1]]
                 c2W = weightCache[childs[1]]
             d = np.linalg.norm(c1 - c2)
@@ -221,7 +220,7 @@ def processCluster(
         fieldnames = ["Cluster ID", "Sentiment Score File Name", "Original File Name"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
-        for i in cluster_file.keys():
+        for i in cluster_file:
             # cluster_file may not include all sequential indices
             try:
                 documents = cluster_file[i]
@@ -230,10 +229,7 @@ def processCluster(
             for each in documents:  # each: (narratiefile, sentiment_vector)
                 # ===============ANGEL==============
                 match = re.search("^=hyperlink", each[0])
-                if match:
-                    orgFile = IO_csv_util.undressFilenameForCSVHyperlink(each[0])
-                else:
-                    orgFile = each[0]
+                orgFile = IO_csv_util.undressFilenameForCSVHyperlink(each[0]) if match else each[0]
                 scFile = scoresFile_list[str(each[0])]
                 writer.writerow(
                     {

@@ -1,16 +1,16 @@
 # Written by Roberto Franzosi Fall 2020
 import argparse
+from datetime import datetime
 import functools
 import logging
 import math
 import ntpath  # to split the path from filename
 import os
+from pathlib import Path
 import re
 import shutil
-import sys
-from datetime import datetime
-from pathlib import Path
 from subprocess import call
+import sys
 
 from ..core import reminders_util
 from . import GUI_IO_util, IO_csv_util, IO_libraries_util
@@ -378,10 +378,7 @@ def getDateFromFileName(file_name, date_format="mm-dd-yyyy", sep="_", date_field
         end = x.find(sep, startSearch + 1)
         if end == -1:
             end = x.find(altSeparator, startSearch + 1)
-        if date_field_position == 1:
-            raw_date = x[startSearch:end]
-        else:
-            raw_date = x[startSearch + 1 : end]
+        raw_date = x[startSearch:end] if date_field_position == 1 else x[startSearch + 1 : end]
         # https://docs.python.org/2/library/datetime.html#strftime-strptime-behavior
         # the strptime command (strptime(date_string, format) takes date_string and formats it according to format where format has the following values:
         # %m 09 %-m 9 (does not work on all platforms); %d 07 %-d 7 (does not work on all platforms);
@@ -484,7 +481,7 @@ def checkFile(inputFilename, extension=None, silent=False):
                 + " could not be found.\n\nPlease, check the INPUT FILE PATH and try again.",
             )
         return False
-    if extension is not None and not "." + inputFilename.rsplit(".", 1)[1] == extension:
+    if extension is not None and "." + inputFilename.rsplit(".", 1)[1] != extension:
         if not silent:
             logger.info("File has the wrong extension.")
             logger.info(
@@ -593,26 +590,22 @@ def generate_output_file_name(
         )
     default_outputFilename_str = default_outputFilename_str + outputExtension
     # checking if file with that name exists, if so adding _ and integer to end
-    if not disable_suffix:
-        if os.path.isfile(default_outputFilename_str):
-            for i in range(
-                1, 1000
-            ):  # can't (and shouldn't) have more than 999 of the same title or last will overwrite
-                default_outputFilename_str = default_outputFilename_str.split(".cs")[0]
-                default_outputFilename_str = default_outputFilename_str + "_" + str(i)
-                if os.path.isfile(default_outputFilename_str + outputExtension):
-                    # clearing that end integer so it can increment
-                    default_outputFilename_str = default_outputFilename_str.split("_" + str(i))[0]
-                    continue
-                else:
-                    default_outputFilename_str = default_outputFilename_str + outputExtension
-                    break  # file name found, end loop
+    if not disable_suffix and os.path.isfile(default_outputFilename_str):
+        for i in range(1, 1000):  # can't (and shouldn't) have more than 999 of the same title or last will overwrite
+            default_outputFilename_str = default_outputFilename_str.split(".cs")[0]
+            default_outputFilename_str = default_outputFilename_str + "_" + str(i)
+            if os.path.isfile(default_outputFilename_str + outputExtension):
+                # clearing that end integer so it can increment
+                default_outputFilename_str = default_outputFilename_str.split("_" + str(i))[0]
+                continue
+            else:
+                default_outputFilename_str = default_outputFilename_str + outputExtension
+                break  # file name found, end loop
     outFilename = os.path.join(outputDir, default_outputFilename_str)
 
     # rename a filename coreferenced by CoreNLP to obtain better filename; NLP_CoreNLP_coref should only be once n the filename
-    if "NLP_CoreNLP_coref" in outFilename:
-        if outFilename.count("NLP_CoreNLP_coref") > 1:
-            outFilename = outFilename.replace("NLP_CoreNLP_coref", "coref")
+    if "NLP_CoreNLP_coref" in outFilename and outFilename.count("NLP_CoreNLP_coref") > 1:
+        outFilename = outFilename.replace("NLP_CoreNLP_coref", "coref")
     if "CoreNLP_SENNA_SVO_coref" in outFilename:
         outFilename = outFilename.replace("CoreNLP_SENNA_SVO_coref", "_coref")
 
@@ -739,9 +732,8 @@ def getScript(pydict, script):
     # 	all py cases have their own GUI where IO requirements are checked
     # RF return
     # IO_values is 0 when an internet program is used; do not check software in the software dir
-    if IO_values != 0:
-        if not IO_libraries_util.check_inputPythonJavaProgramFile(scriptName):
-            return script_to_run, IO_values
+    if IO_values != 0 and not IO_libraries_util.check_inputPythonJavaProgramFile(scriptName):
+        return script_to_run, IO_values
     # passed to NLP.py
     script_to_run = val[0]
 
@@ -873,10 +865,7 @@ def gatherCLAs():
     if len(sys.argv) != 3:
         return False
     else:
-        if args.openFiles == "True":
-            openOut = True
-        else:
-            openOut = False
+        openOut = args.openFiles == "True"
         return args.inputFile, args.outputDir, openOut
 
 

@@ -314,10 +314,7 @@ def CoreNLP_annotate(
             single_quote_var = value
 
     global language_encoding
-    if language == "English":
-        language_encoding = "utf-8"
-    else:
-        language_encoding = "utf-8-sig"
+    language_encoding = "utf-8" if language == "English" else "utf-8-sig"
 
     # more annotators may be added to SVO later depending upon the annotators_params passed to SVO
     #   you do not want to add coref, quote, gender, unless required
@@ -757,10 +754,7 @@ def CoreNLP_annotate(
             for param in annotators_:
                 if param not in param_string:  # the needed annotator property is not containted in the string
                     param_number += 1
-                    if param_string == "":
-                        param_string = param
-                    else:
-                        param_string = param_string + ", " + param
+                    param_string = param if param_string == "" else param_string + ", " + param
             # when multiple annotators are selected (e.g., quote, gender, normalized-date)
             #   output must go to the appropriate subdirectory and added to routine_list
             output_dir, outputJsonDir = create_output_directory(
@@ -1145,10 +1139,7 @@ def CoreNLP_annotate(
                     "CoreNLP_NER_" + outputFilename_tag,
                 )
             elif "parser" in annotator_chosen:
-                if "pcfg" in annotator_chosen:
-                    parser_label = "PCFG"
-                else:
-                    parser_label = "nn"
+                parser_label = "PCFG" if "pcfg" in annotator_chosen else "nn"
                 outputFilename = IO_files_util.generate_output_file_name(
                     inputFilename,
                     inputDir,

@@ -83,11 +83,10 @@ def check_Stanza_available_languages(language):
     # language_list available in Stanza as long names: English, Chinese, ...
     language_list = list_all_languages()
     for short, long in constants_util.languages:
-        if long == language[0]:
-            if long in language_list:
-                available_language = True
-                lang_list.append(short)
-                break
+        if long == language[0] and long in language_list:
+            available_language = True
+            lang_list.append(short)
+            break
     available_language = True
     if not available_language:
         open_Stanza_website(str(lang_list) + " language is not available for NLP processing in Stanza.", lang_list)
@@ -199,10 +198,7 @@ def Stanza_annotate(
                 processors = "tokenize,mwt,pos,lemma,depparse"  # add NER when parser option selected
             else:
                 processors = "tokenize,mwt,pos,ner,lemma,depparse"  # add NER when parser option selected
-            if "SVO" in annotator_params:
-                annotator = "SVO"
-            else:
-                annotator = "depparse"
+            annotator = "SVO" if "SVO" in annotator_params else "depparse"
         elif "sentiment" in annotator_params:
             annotator = "sentiment"
             processors = "tokenize,sentiment"
@@ -225,10 +221,7 @@ def Stanza_annotate(
         if "SVO" in annotator:
             NER_available = check_Stanza_annotator_availability(["NER"], short_lang, long_lang, silent=True)
         # create the appropriate subdirectory to better organize output files
-        if annotator == "depparse":
-            file_label = "parser (dep)"
-        else:
-            file_label = annotator
+        file_label = "parser (dep)" if annotator == "depparse" else annotator
         outputDir = IO_files_util.make_output_subdirectory(
             inputFilename, inputDir, outputDir, label=annotator + "_Stanza", silent=True
         )
@@ -629,15 +622,13 @@ def extractSVO(doc, docID, inputFilename, inputDir, tail, filename_embeds_date_v
                 svo_df.at[c, "Subject (S)"] = word.text
                 S_found = True
                 O_found = False
-            if word.pos == "VERB":
-                if S_found:
-                    svo_df.at[c, "Verb (V)"] = word.text
-                    V_found = True
+            if word.pos == "VERB" and S_found:
+                svo_df.at[c, "Verb (V)"] = word.text
+                V_found = True
             # if word.deprel in OBJECT_DEPS or tmp_head in OBJECT_DEPS:
-            if word.deprel in OBJECT_DEPS:
-                if S_found:
-                    svo_df.at[c, "Object (O)"] = word.text
-                    O_found = True
+            if word.deprel in OBJECT_DEPS and S_found:
+                svo_df.at[c, "Object (O)"] = word.text
+                O_found = True
             # extract NER values
             if (SVO_found or NER_found) and NER_available:
                 token = sent_dict[w]

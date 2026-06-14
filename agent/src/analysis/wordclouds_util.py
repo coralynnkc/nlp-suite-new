@@ -3,10 +3,10 @@
 # ported to the headless web agent June 2026: tkinter/GUI dependencies removed,
 #   stanza models are pre-downloaded in the Docker image (see agent/Dockerfile)
 
+from collections import Counter, defaultdict
 import csv
 import logging
 import os
-from collections import Counter, defaultdict
 
 import matplotlib
 
@@ -578,10 +578,7 @@ def python_wordCloud(
     # https://www.geeksforgeeks.org/generating-word-cloud-python/
     filesToOpen = []
 
-    if differentColumns_differentColors or inputFilename[-3:] == "csv":
-        fileType = ".csv"
-    else:
-        fileType = ".txt"
+    fileType = ".csv" if differentColumns_differentColors or inputFilename[-3:] == "csv" else ".txt"
 
     inputDocs = IO_files_util.getFileList(
         inputFilename, inputDir, fileType, silent=False, configFileName=configFileName
@@ -603,10 +600,7 @@ def python_wordCloud(
 
     use_contour_only = not use_contour_only
 
-    if prefer_horizontal == 0:
-        prefer_horizontal = 0.9
-    else:
-        prefer_horizontal = 1
+    prefer_horizontal = 0.9 if prefer_horizontal == 0 else 1
 
     img = None
 
@@ -782,18 +776,15 @@ def python_wordCloud(
                                     word_str = word.text
                             else:
                                 word_str = word.text
-                            if exclude_stopwords:
-                                if (
-                                    word_str.lower() in stopwords
-                                ):  # STOPWORDS are all lowercase, so any exclusion will have to be converted
-                                    continue  # do not process stopwords & punctuation marks
+                            if exclude_stopwords and (
+                                word_str.lower() in stopwords
+                            ):  # STOPWORDS are all lowercase, so any exclusion will have to be converted
+                                continue  # do not process stopwords & punctuation marks
                             # convert to lower case for same improper words that may appear after a full stop
-                            if lowercase:
-                                if word_str is not None:
-                                    word_str = word_str.lower()
-                            if exclude_punctuation:
-                                if word.pos == "PUNCT":
-                                    continue  # do not process punctuation marks
+                            if lowercase and word_str is not None:
+                                word_str = word_str.lower()
+                            if exclude_punctuation and word.pos == "PUNCT":
+                                continue  # do not process punctuation marks
                             if word.pos == "NOUN" or word.pos == "PROPN":
                                 color_to_words[red_code].append(word_str)
                             elif word.pos == "VERB":
@@ -802,15 +793,14 @@ def python_wordCloud(
                                 color_to_words[green_code].append(word_str)
                             elif word.pos == "ADV":
                                 color_to_words[grey_code].append(word_str)
-                            if differentPOS_differentColors:
-                                if (
-                                    word.pos != "NOUN"
-                                    and word.pos != "PROPN"
-                                    and word.pos != "VERB"
-                                    and word.pos != "ADJ"
-                                    and word.pos != "ADV"
-                                ):
-                                    continue
+                            if differentPOS_differentColors and (
+                                word.pos != "NOUN"
+                                and word.pos != "PROPN"
+                                and word.pos != "VERB"
+                                and word.pos != "ADJ"
+                                and word.pos != "ADV"
+                            ):
+                                continue
 
                             if word_str is not None:
                                 textToProcess = textToProcess + " " + word_str

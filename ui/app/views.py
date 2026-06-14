@@ -1,6 +1,5 @@
 import os
 
-import requests
 from django.contrib import messages
 from django.http import (
     HttpRequest,
@@ -10,6 +9,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.template import loader
+import requests
 
 AGENT_SERVER_URL = os.getenv("AGENT_SERVER_URL", "http://172.16.0.11:3000")
 

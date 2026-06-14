@@ -11,9 +11,11 @@ from ..analysis import statistics_txt_util
 from ..core import config_util
 from ..io import IO_csv_util, IO_files_util, IO_libraries_util, IO_user_interface_util
 from ..nlp import Stanford_CoreNLP_util, Stanza_util, spaCy_util
-from . import shape_of_stories_clustering_util as cl
-from . import shape_of_stories_vectorizer_util as vec
-from . import shape_of_stories_visualization_util as viz
+from . import (
+    shape_of_stories_clustering_util as cl,
+    shape_of_stories_vectorizer_util as vec,
+    shape_of_stories_visualization_util as viz,
+)
 
 logger = logging.getLogger(__name__)
 

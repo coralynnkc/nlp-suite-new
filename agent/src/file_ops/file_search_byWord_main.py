@@ -69,10 +69,7 @@ def run_search_byWord(
         if "Search within sentence (default)" not in search_options_list:
             search_options_list.append("Search within sentence (default)")
 
-    if "Lemmatize" in str(search_options_list):
-        useLemma = True
-    else:
-        useLemma = False
+    useLemma = "Lemmatize" in str(search_options_list)
 
     if search_by_dictionary:
         "SEARCH word(s) by values in dictionary file: " + selectedCsvFile

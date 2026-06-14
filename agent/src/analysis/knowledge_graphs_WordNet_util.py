@@ -361,10 +361,7 @@ def Wordnet_bySentenceID(
         False,
     )
 
-    if noun_verb == "NOUN":
-        checklist = ["NN", "NNP", "NNPS", "NNS"]
-    else:
-        checklist = ["VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
+    checklist = ["NN", "NNP", "NNPS", "NNS"] if noun_verb == "NOUN" else ["VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
     # read in the CoreNLP CoNLL table
     connl = pd.read_csv(ConnlTable, encoding="utf-8", on_bad_lines="skip")
     # read in the dictionary file to be used to filter CoNLL values
@@ -485,17 +482,11 @@ def Wordnet_bySentenceID(
 
 
 def get_case_initial_row(inputFilename, outputDir, check_column, firstLetterCapitalized=True):
-    if firstLetterCapitalized:
-        str = "Upper"
-    else:
-        str = "Lower"
+    str = "Upper" if firstLetterCapitalized else "Lower"
     outputFilename = IO_files_util.generate_output_file_name(inputFilename, "", outputDir, ".csv", "filter_" + str)
     filesToOpen.append(outputFilename)
     data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
-    if firstLetterCapitalized:
-        regex = "^[A-Z].*"
-    else:
-        regex = "^[a-z].*"
+    regex = "^[A-Z].*" if firstLetterCapitalized else "^[a-z].*"
     data = data[data[check_column].str.contains(regex, regex=True, na=False)]  # select by regular expression
     data.to_csv(outputFilename, encoding="utf-8", index=False)
     return filesToOpen

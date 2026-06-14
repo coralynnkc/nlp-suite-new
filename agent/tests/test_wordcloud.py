@@ -1,7 +1,7 @@
+from collections import defaultdict
 import importlib.util
 import io
 import os
-from collections import defaultdict
 
 import pytest
 

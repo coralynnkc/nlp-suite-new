@@ -1,8 +1,9 @@
 # written by Roberto Franzosi October 2019
+from collections import Counter
+import contextlib
 import csv
 import logging
 import os
-from collections import Counter
 
 import numpy as np
 import pandas as pd
@@ -68,10 +69,9 @@ def data_transformation(infile, arg):
                             axis=1,
                         )
     for col in df.columns:
-        if "Document" not in col and is_numeric_dtype(df[col]):
-            if "Frequencies" in col or "Frequency" in col:
-                df[col] = apply_transformation(df[col], arg)
-                df = df.rename(columns={col: col + "_" + arg})
+        if "Document" not in col and is_numeric_dtype(df[col]) and ("Frequencies" in col or "Frequency" in col):
+            df[col] = apply_transformation(df[col], arg)
+            df = df.rename(columns={col: col + "_" + arg})
     return df
 
 
@@ -100,10 +100,9 @@ def compute_statistics_CoreNLP_CoNLL_tag(data_list, column_to_be_counted, column
                 if value in Stanford_CoreNLP_tags_util.dict_DEPREL:
                     description = Stanford_CoreNLP_tags_util.dict_DEPREL[value]
                     column_stats.append([value + " - " + description, count])
-            elif CoreNLP_tag == "CLAUSALTAG":
-                if value in Stanford_CoreNLP_tags_util.dict_CLAUSALTAG:
-                    description = Stanford_CoreNLP_tags_util.dict_CLAUSALTAG[value]
-                    column_stats.append([value + " - " + description, count])
+            elif CoreNLP_tag == "CLAUSALTAG" and value in Stanford_CoreNLP_tags_util.dict_CLAUSALTAG:
+                description = Stanford_CoreNLP_tags_util.dict_CLAUSALTAG[value]
+                column_stats.append([value + " - " + description, count])
     return column_stats
 
 
@@ -576,10 +575,8 @@ def compute_csv_column_frequencies(
     data.to_csv(inputFilename, encoding="utf-8", index=False)
 
     if "Document" in headers:
-        try:
+        with contextlib.suppress(Exception):
             removed_hyperlinks, inputFilename = IO_csv_util.remove_hyperlinks(inputFilename)
-        except Exception:
-            pass
     data = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
     # TODO check if data is empty exit
     # outputFilename = IO_files_util.generate_output_file_name(inputFilename, '', outputDir,
@@ -712,7 +709,7 @@ def compute_csv_column_frequencies(
             # Calculate the first selected column (Lemma) frequency within each group
             grouped = data.groupby(group_cols + plot_colss).size().reset_index(name="Frequency_Document ID")
 
-            if "Document" == group_cols[0]:
+            if group_cols[0] == "Document":
                 # Create a dictionary to map each document to its index
                 document_id_map = {document: i + 1 for i, document in enumerate(grouped["Document"].unique())}
 
@@ -944,10 +941,7 @@ def compute_csv_column_frequencies(
                 hover_info_column_list=hover_over_header,
             )
         else:
-            if len(group_cols) > 0:
-                column_xAxis_label_var = group_cols[0]
-            else:
-                column_xAxis_label_var = plot_cols[0]
+            column_xAxis_label_var = group_cols[0] if len(group_cols) > 0 else plot_cols[0]
             # see note above about the order of items in columns_to_be_plotted list
             #   the group_cols item must always be the last item in the columns_to_be_plotted list
             headers = IO_csv_util.get_csvfile_headers(outputFilename)

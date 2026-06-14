@@ -198,10 +198,7 @@ def create_excel_chart(
                 True,
             )
 
-    if len(hover_info_column_list) > 0:
-        outputExtension = ".xlsm"
-    else:
-        outputExtension = ".xlsx"
+    outputExtension = ".xlsm" if len(hover_info_column_list) > 0 else ".xlsx"
 
     if "NLP" in scriptType and "_" + scriptType + "_" in inputFilename:  # do not repeat the same name
         scriptType = ""
@@ -234,10 +231,7 @@ def create_excel_chart(
     lengths = [
         len(x) for x in data_to_be_plotted
     ]  # create a list of length for each list inside in the list data_to_be_plotted(a list contain several lists, each list is a row of output we write in excel)
-    if len(lengths) > 3:
-        insertLines = "\n\n\n"
-    else:
-        insertLines = "\n\n"
+    insertLines = "\n\n\n" if len(lengths) > 3 else "\n\n"
 
     # https://stackoverflow.com/questions/51140466/openpyxl-set-color-of-bar-in-bar-chart
     # for color in bar charts depending upon value

@@ -1,5 +1,5 @@
-import pytest
 from conftest import output_csvs, read_rows
+import pytest
 
 try:
     from src.nlp.CoNLL_table_analyzer_main import run_CoNLL_table_analyzer

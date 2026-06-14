@@ -95,10 +95,7 @@ def lemmatize_stanza_word(text_to_process, return_empty_string=True):
 # for text_to_process.sentences to work, the calling function must first have
 # must be called as lemmatize_stanza_doc(stanzaPipeLine(text))
 def lemmatize_stanza_doc(text_to_process, return_string=False, exact_word_match=True):
-    if return_string:
-        lemmatized_text_to_process = ""
-    else:
-        lemmatized_text_to_process = []
+    lemmatized_text_to_process = "" if return_string else []
     punctuation_set = ",;.?!"
     # for text_to_process.sentences to work, the calling function must first have
     # must be called as lemmatize_stanza_doc(stanzaPipeLine(text))

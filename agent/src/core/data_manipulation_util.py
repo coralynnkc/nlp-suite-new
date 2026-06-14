@@ -185,10 +185,7 @@ def export_csv_to_csv_txt(
                 sign = "=="
             if sign == "<>":
                 sign = "!="
-            if queryStr == "":
-                queryStr = header + sign + value
-            else:
-                queryStr = queryStr + " " + cond + " " + header + sign + value
+            queryStr = header + sign + value if queryStr == "" else queryStr + " " + cond + " " + header + sign + value
     result = df.query(queryStr, engine="python")
     df_list.append(result)
     df_extract = df_list[0]

@@ -7,19 +7,19 @@ import re
 import subprocess
 import time
 
-import nltk
-import pandas
-import pandas as pd
-import stanza
 from autocorrect import Speller
 from fuzzywuzzy import fuzz, process
 from langdetect import detect_langs
 from langid.langid import LanguageIdentifier, model
+import nltk
+import pandas
+import pandas as pd
 from pandas import DataFrame
 from pycorenlp import StanfordCoreNLP  # python wrapper for Stanford CoreNLP
 from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from spellchecker import SpellChecker
+import stanza
 from textblob import Word
 
 from ..charts import charts_util
@@ -487,10 +487,7 @@ def check_for_typo(
         if any(re.search(pattern, lower_sentence) for pattern in spell_patterns):
             return True
 
-        if lower_word in true_spellings:
-            return True
-
-        return False
+        return lower_word in true_spellings
 
     import csv
 

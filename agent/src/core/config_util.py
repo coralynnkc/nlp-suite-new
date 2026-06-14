@@ -33,26 +33,25 @@ def checkConfigFileExists(config_filename, fileName, IO):
         )
         fileName = ""
     else:
-        if fileName != "":
-            if not os.path.isfile(fileName):
-                # must pass the right config filename in case there is only the default config
-                if not os.path.isfile(config_filename) and os.path.isfile(
-                    os.path.join(GUI_IO_util.configPath, defaultConfigFilename)
-                ):
-                    config_filename = defaultConfigFilename
-                logger.info(
-                    "File error %s",
-                    "The "
-                    + IO
-                    + " file saved in "
-                    + config_filename
-                    + "\n\n"
-                    + fileName
-                    + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new "
-                    + IO
-                    + " file and try again!",
-                )
-                fileName = ""
+        if fileName != "" and not os.path.isfile(fileName):
+            # must pass the right config filename in case there is only the default config
+            if not os.path.isfile(config_filename) and os.path.isfile(
+                os.path.join(GUI_IO_util.configPath, defaultConfigFilename)
+            ):
+                config_filename = defaultConfigFilename
+            logger.info(
+                "File error %s",
+                "The "
+                + IO
+                + " file saved in "
+                + config_filename
+                + "\n\n"
+                + fileName
+                + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new "
+                + IO
+                + " file and try again!",
+            )
+            fileName = ""
     return error, fileName
 
 
@@ -72,26 +71,25 @@ def checkConfigDirExists(config_filename, dirName, IO):
 
         dirName = ""
     else:
-        if dirName != "":
-            if not os.path.isdir(dirName):
-                # must pass the right config filename in case there is only the default config
-                if not os.path.isfile(config_filename) and os.path.isfile(
-                    os.path.join(GUI_IO_util.configPath, defaultConfigFilename)
-                ):
-                    config_filename = defaultConfigFilename
-                logger.info(
-                    "Directory error %s",
-                    "The "
-                    + IO
-                    + " directory saved in "
-                    + config_filename
-                    + "\n\n"
-                    + dirName
-                    + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new "
-                    + IO
-                    + " directory and try again!",
-                )
-                dirName = ""
+        if dirName != "" and not os.path.isdir(dirName):
+            # must pass the right config filename in case there is only the default config
+            if not os.path.isfile(config_filename) and os.path.isfile(
+                os.path.join(GUI_IO_util.configPath, defaultConfigFilename)
+            ):
+                config_filename = defaultConfigFilename
+            logger.info(
+                "Directory error %s",
+                "The "
+                + IO
+                + " directory saved in "
+                + config_filename
+                + "\n\n"
+                + dirName
+                + "\n\nno longer exists. It must have been deleted or moved.\n\nPlease, select a new "
+                + IO
+                + " directory and try again!",
+            )
+            dirName = ""
     return error, dirName
 
 
@@ -437,14 +435,7 @@ def get_missing_IO_values(config_input_output_numeric_options, config_input_outp
                 if config_input_output_alphabetic_options[0][1] == "":  # check input filename
                     config_label = str(config_input_output_alphabetic_options[index][0])
                     missing_IO = missing_IO + config_label + "\n"
-        elif index == 2:  # Input files secondary dir
-            if (
-                config_input_output_numeric_options[index] > 0
-                and config_input_output_alphabetic_options[index][1] == ""
-            ):
-                config_label = str(config_input_output_alphabetic_options[index][0])
-                missing_IO = missing_IO + config_label + "\n"
-        elif index == 3:  # outputDir
+        elif index == 2 or index == 3:  # Input files secondary dir
             if (
                 config_input_output_numeric_options[index] > 0
                 and config_input_output_alphabetic_options[index][1] == ""
@@ -461,10 +452,7 @@ def check_missing_IO(config_filename, scriptName, IO_setup_display_brief, missin
     if config_filename == "NLP_config.csv" or "NLP_menu_main" in scriptName:
         config_filename = "NLP_default_IO_config.csv"
     Run_Button_Off = False
-    if Run_Button_Off:
-        run_button_state = "disabled"
-    else:
-        run_button_state = "normal"
+    run_button_state = "disabled" if Run_Button_Off else "normal"
     return run_button_state, False
 
 
@@ -567,10 +555,7 @@ def Google_API_Config_Save(Google_config, Google_API_key):
         # if not os.path.isfile(GoogleConfigFilename):
         with open(GoogleConfigFilename, "w+", newline="", encoding="utf-8", errors="ignore") as file1:
             file1.write(Google_API_key)
-            if "Maps" in Google_config:
-                msg = "Maps"
-            else:
-                msg = "geocoder"
+            msg = "Maps" if "Maps" in Google_config else "geocoder"
             IO_user_interface_util.timed_alert(
                 2000,
                 "Warning",

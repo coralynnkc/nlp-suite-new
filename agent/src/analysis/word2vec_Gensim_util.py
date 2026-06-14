@@ -160,10 +160,7 @@ def run_Gensim_word2vec(
 
     out_df = pd.DataFrame(all_rows)
 
-    if sg_menu_var == "CBOW":
-        sg_var = 0
-    else:
-        sg_var = 1
+    sg_var = 0 if sg_menu_var == "CBOW" else 1
 
     logger.info("Learning architecture: " + str(sg_menu_var))
 

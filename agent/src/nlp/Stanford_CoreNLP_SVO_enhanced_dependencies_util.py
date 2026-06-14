@@ -46,7 +46,7 @@ def dep_dict(idx, dependencies):
             dep_rel = dep["dep"]  # find the target token's dep
         if dep["governor"] == idx:  # find token whose syntactical head is target token
             # add index of the token whose syntactical head (governor) is the target token
-            if dep["dep"] in dep_govern.keys():
+            if dep["dep"] in dep_govern:
                 if isinstance(dep_govern[dep["dep"]], list):
                     dep_govern[dep["dep"]].append(dep["dependent"])
                 else:
@@ -71,7 +71,7 @@ def conj_string(subjects, sent_data):  # connect multiple conjugates into a sing
     result = sent_data[subj]["word"]
     start_result = result
     subj_gov = sent_data[subj]["govern_dict"]
-    for key in subj_gov.keys():
+    for key in subj_gov:
         if "conj" in key:
             conj = key[5:]  # extract the conjunction word (and, or, etc.)
             if isinstance(subj_gov[key], list):
@@ -111,13 +111,13 @@ def verb_index_conj(key, token, gov_dict, sent_data):
     verb_list.append(key)
     dep = ""
     # extract the conjunct word (and, or, nor) from the dep
-    if "conj:or" in gov_dict.keys():
+    if "conj:or" in gov_dict:
         dep = "conj:or"
         conj_word = "or"
-    elif "conj:and" in gov_dict.keys():
+    elif "conj:and" in gov_dict:
         dep = "conj:and"
         conj_word = "and"
-    elif "conj:nor" in gov_dict.keys():
+    elif "conj:nor" in gov_dict:
         dep = "conj:nor"
         conj_word = "nor"
     if dep != "" and isinstance(gov_dict[dep], list):
@@ -133,31 +133,28 @@ def verb_obj_obl(token, sent_data, v_obj_obl_json):  # check if one verb is a pa
     gov_dict = token["govern_dict"]
     verb_lemma = token["lemma"]
     if (
-        verb_lemma not in v_obj_obl_json.keys()
+        verb_lemma not in v_obj_obl_json
     ):  # the case when that verb has no list of preposition collocation stored in lib file
         return "", "", ""
     obj = s_o_formation(gov_dict["obj"], sent_data)[0]  # extract the sudo objective
     for conb in v_obj_obl_json[verb_lemma]:  # traverse the current LVCs stored in the file
         if conb["obj"] == obj.lower():
-            if "obl" in conb.keys():
+            if "obl" in conb:
                 obl_key = "obl"
             # sometimes the dep of the object start with "nmod"
-            elif "nmod" in conb.keys():
+            elif "nmod" in conb:
                 obl_key = "nmod"
             obl_prep = obl_key + ":" + conb[obl_key]
             start_index = token["index"]
-            if isinstance(gov_dict["obj"], list):
-                end_index = gov_dict["obj"][0]
-            else:
-                end_index = gov_dict["obj"]
+            end_index = gov_dict["obj"][0] if isinstance(gov_dict["obj"], list) else gov_dict["obj"]
             new_v = ""
             for i in range(start_index, end_index + 1):
                 new_v += sent_data[i]["word"] + " "
             new_v += conb[obl_key]
-            if obl_prep in gov_dict.keys():
+            if obl_prep in gov_dict:
                 new_o = s_o_formation(gov_dict[obl_prep], sent_data)[0]
                 return new_v, new_o, obl_prep
-            elif "downwards" in conb.keys():
+            elif "downwards" in conb:
                 # sometimes the syntactical head of the real object is not the verb
                 # but a token that's governed by the verb
                 # if "downwards" is in the key
@@ -165,7 +162,7 @@ def verb_obj_obl(token, sent_data, v_obj_obl_json):  # check if one verb is a pa
                 downwards_key = conb["downwards"]
                 downwards_token = sent_data[gov_dict[downwards_key]]
                 new_gov_dict = downwards_token["govern_dict"]
-                if obl_prep in new_gov_dict.keys():
+                if obl_prep in new_gov_dict:
                     new_o = s_o_formation(new_gov_dict[obl_prep], sent_data)[0]
                     return new_v, new_o, downwards_key
     return "", "", ""
@@ -204,7 +201,7 @@ def advcl_extraction(token, sent_data, p_s, p_o, v_obj_obl_json, v_prep_json):
     result = []
     negation_result = []
     gov_dict = token["govern_dict"]
-    for dep in gov_dict.keys():
+    for dep in gov_dict:
         if "advcl" in dep or "xcomp" in dep or dep == "dep":  # find clausal modifers of a verb
             advcl_svo, advcl_negation = advcl_building(token, sent_data, dep, p_s, p_o, v_obj_obl_json, v_prep_json)
             result.extend(advcl_svo)
@@ -228,20 +225,20 @@ def verb_root_svo_building(
     negation = negation_detect(verb_token, sent_data)
     # form the verb
     #'compound:prt' is the compound part of the verb, usually a preposition that follows the the verb
-    if "compound:prt" in vgd.keys():
+    if "compound:prt" in vgd:
         v_string = v_string + " " + token_connect(vgd["compound:prt"], sent_data)
 
     # extract subject
     s_dep = ""
-    if "nsubj" in vgd.keys():
+    if "nsubj" in vgd:
         s, s_idx = s_o_formation(vgd["nsubj"], sent_data)
         s_dep = "nsubj"
 
-    elif "obl:agent" in vgd.keys():  # subject in passive sentence
+    elif "obl:agent" in vgd:  # subject in passive sentence
         s, s_idx = s_o_formation(vgd["obl:agent"], sent_data)
         s_dep = "obl:agent"
 
-    elif "nsubj:xsubj" in vgd.keys():
+    elif "nsubj:xsubj" in vgd:
         s, s_idx = s_o_formation(vgd["nsubj:xsubj"], sent_data)
         s_dep = "nsubj:xsubj"
 
@@ -250,14 +247,14 @@ def verb_root_svo_building(
 
     # extract object
     o_dep = ""
-    if "nsubj:pass" in vgd.keys():  # object in passive sentence (example: "He" in "He was hit by a car")
+    if "nsubj:pass" in vgd:  # object in passive sentence (example: "He" in "He was hit by a car")
         o_dep = "nsubj:pass"
         o, o_idx = s_o_formation(vgd["nsubj:pass"], sent_data)  # sent_data[gov_dict['nsubj:pass']]['word']
 
-    elif "iobj" in vgd.keys():  # indirect objects (example: He asked me a question; me)
+    elif "iobj" in vgd:  # indirect objects (example: He asked me a question; me)
         o_dep = "iobj"
         o, o_idx = s_o_formation(vgd["iobj"], sent_data)
-    elif "obj" in vgd.keys():  # direct object
+    elif "obj" in vgd:  # direct object
         # extract LVCs (take care of, take advantage of, etc.)
         new_v, new_o, new_o_dep = verb_obj_obl(verb_token, sent_data, v_obj_obl_json)
         if new_v != "":  # the verb is a part of a LVC
@@ -270,10 +267,9 @@ def verb_root_svo_building(
 
     else:  # object follows a preposition
         obl_preps = []
-        for gov_key in vgd.keys():  # collecting potential objects
-            if "obl" in gov_key:
-                if gov_key[4:] != "tmod" and gov_key[4:] != "agent":
-                    obl_preps.append(gov_key)
+        for gov_key in vgd:  # collecting potential objects
+            if "obl" in gov_key and gov_key[4:] != "tmod" and gov_key[4:] != "agent":
+                obl_preps.append(gov_key)
 
         if len(obl_preps) == 1:
             o_dep = obl_preps[0]
@@ -282,12 +278,11 @@ def verb_root_svo_building(
         elif len(obl_preps) > 1:  # multiple potential objects that needs selecting
             for oblp in obl_preps:
                 prep = oblp[4:]
-                if prep in v_prep_json.keys():
-                    if v_lemma.lower() in v_prep_json[prep]:
-                        o_dep = oblp
-                        o, o_idx = s_o_formation(vgd[oblp], sent_data)
-                        v_string = v_string + " " + prep
-                        break
+                if prep in v_prep_json and v_lemma.lower() in v_prep_json[prep]:
+                    o_dep = oblp
+                    o, o_idx = s_o_formation(vgd[oblp], sent_data)
+                    v_string = v_string + " " + prep
+                    break
             # check for double prepositions,
             # example: "people who sit next to each other" (the dep of "other" is "obl:next_to")
             for oblp in obl_preps:
@@ -329,9 +324,8 @@ def verb_root(
         s, v, o, negation, o_idx = verb_root_svo_building(verb, sent_data, v_obj_obl_json, v_prep_json)
         if verb > o_share_idx:  # default object needs resetting if it's not following the verb.
             o_set = False
-        if len(negation_list) > 0:
-            if negation_list[0] and conj_word == "or":
-                negation = True
+        if len(negation_list) > 0 and negation_list[0] and conj_word == "or":
+            negation = True
 
         if not s_set and s != "inferred_subject_passive":  # setting potential subject
             s_set = True
@@ -365,18 +359,18 @@ def pred_root(token, gov_dict, sent_data):  # returns one triplet of subject-lin
     v = ""
     o = ""
     negation = negation_detect(token, sent_data)
-    if "nsubj" in gov_dict.keys():
+    if "nsubj" in gov_dict:
         s = s_o_formation(gov_dict["nsubj"], sent_data)[0]
         negation = negation or content_negation(gov_dict["nsubj"], sent_data)
-    if "cop" in gov_dict.keys():
+    if "cop" in gov_dict:
         # if v != "":
         v = token_connect(gov_dict["cop"], sent_data) + " " + v
         negation = negation or content_negation(gov_dict["cop"], sent_data)
-    if "aux" in gov_dict.keys() and v != "":
+    if "aux" in gov_dict and v != "":
         v = token_connect(gov_dict["aux"], sent_data) + " " + v
         negation = negation or content_negation(gov_dict["aux"], sent_data)
     o = token["word"]
-    if "case" in gov_dict.keys() and v != "":
+    if "case" in gov_dict and v != "":
         v = v + " " + token_connect(gov_dict["case"], sent_data)
 
     return s, v, o, negation
@@ -410,7 +404,7 @@ def negation_detect(token, sent_data):  # detect if there's negation associated 
         # 1.: check if the dep of any token governed by the garget token is in the list
         # 2. check if they are negation words, if yes return
         # 3. if not, go through their govern dictionary, repeat 1
-        if dep in gov_dict.keys():
+        if dep in gov_dict:
             if isinstance(gov_dict[dep], list):
                 for idx in gov_dict[dep]:
                     word = sent_data[idx]["word"]
@@ -443,12 +437,12 @@ def link_verb_LVC_extraction(token, gov_dict, sent_data):
         link_verb_LVC_json = json.load(link_verb_LVC_doc)
 
     if (
-        token["lemma"] in link_verb_LVC_json.keys()
+        token["lemma"] in link_verb_LVC_json
     ):  # that token is the dependency ROOT (the syntactical head of other tokens in that LVC) of that LVC
         for conb in link_verb_LVC_json[token["lemma"]]:
             start_index = token["index"]
             end_index = token["index"]
-            for key in conb.keys():
+            for key in conb:
                 if key != "prep":  # check that token is the syntactical head of other tokens in the LVC
                     dep = conb[key]
                     if dep not in gov_dict:
@@ -465,13 +459,13 @@ def link_verb_LVC_extraction(token, gov_dict, sent_data):
                         end_index = current_token["index"]
                 else:  # check if that ROOT token is the syntactical head of the real object
                     for prep_dep in conb["prep"]:
-                        if prep_dep in gov_dict.keys():  # LVC extracted
+                        if prep_dep in gov_dict:  # LVC extracted
                             for i in range(start_index, end_index + 1):
                                 v += sent_data[i]["word"] + " "
                             v += prep_dep.split(":")[1]
                             o = s_o_formation(gov_dict[prep_dep], sent_data)[0]
                             negation = negation or content_negation(gov_dict[prep_dep], sent_data)
-                            if "nsubj" in gov_dict.keys():
+                            if "nsubj" in gov_dict:
                                 s = s_o_formation(gov_dict["nsubj"], sent_data)[0]
                                 negation = negation or content_negation(gov_dict["nsubj"], sent_data)
                             return s, v, o, negation
@@ -534,7 +528,7 @@ def SVO_extraction(sent_data, entitymentions):  # returns columns of the final o
                 org_NER_value.append([item["text"], item["ner"], item["tokenBegin"], item["tokenEnd"]])
 
     GUI_IO_util.CoreNLP_enhanced_dependencies_libPath + os.sep + "verb_obj_obl_json.txt"
-    for key in sent_data.keys():  # traverse each token in that sentence
+    for key in sent_data:  # traverse each token in that sentence
         negation = False
         token = sent_data[key]
 
@@ -602,18 +596,14 @@ def SVO_extraction(sent_data, entitymentions):  # returns columns of the final o
 
         acl_key = ""  # detect if there's clausal modifier whose syntactical head is the current token
         # find the dep of the clausal modifier (acl or acl:relcl)
-        if "acl" in gov_dict.keys():
+        if "acl" in gov_dict:
             acl_key = "acl"
-        elif "acl:relcl" in gov_dict.keys():
+        elif "acl:relcl" in gov_dict:
             acl_key = "acl:relcl"
-        elif "dep" in gov_dict.keys():
+        elif "dep" in gov_dict:
             acl_key = "dep"
         if acl_key != "":
-            if isinstance(gov_dict[acl_key], list):
-                id_list = gov_dict[acl_key]
-
-            else:
-                id_list = [gov_dict[acl_key]]
+            id_list = gov_dict[acl_key] if isinstance(gov_dict[acl_key], list) else [gov_dict[acl_key]]
             for v_id in id_list:
                 v_token = sent_data[v_id]
                 if "VB" in v_token["pos"]:
