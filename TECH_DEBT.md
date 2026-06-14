@@ -11,13 +11,6 @@ Fix one entry per PR (see CLAUDE.md). Tags: **P1** do next, **P2** after the P1s
 
 ## Active queue (user-visible bugs — work in order)
 
-- **[P1] `/gis` is broken on two real paths.** (1) csv-file input does nothing:
-  `GIS_main.py` passes placeholder `NER_StanfordCoreNLP_output` to `GIS_pipeline` when
-  `NER_extractor` is off, so it bails on a nonexistent file (`tests/test_gis.py`).
-  (2) `GIS_geocode_util.geocode:688` raises `UnboundLocalError` on `date` when there's no
-  Date column, breaking the whole `/gis` NER path for corpora without filename dates
-  (xfail-marked). Also `GIS_main.py:88` calls tkinter remnant `area_var.set(...)` on a
-  string when the area is malformed. Pipeline works with a real locations csv.
 - **[P2] CoNLL k-sentences crashes on short documents.**
   `CoNLL_k_sentences_util.k_sent:181` truth-tests a pandas Series when a doc has
   <= 2\*K sentences (`ValueError: truth value of a Series is ambiguous`); fine for

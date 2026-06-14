@@ -85,7 +85,6 @@ def run_GIS(
             logger.info(
                 "Warning, The area variable is not set correctly. The expected value should be something like this: (34.98527, -85.59790), (30.770444, -81.521974)\n\nThe two sets of values refer to the upper left-hand and lower right-hand corner latitude and longitude coordinates of the area to wich you wish to restrict geocoding.\n\nPlease, enter the correct value and try again."
             )
-            area_var.set("(34.98527, -85.59790), (30.770444, -81.521974)")
             return
         box_tuple = area_var
 
@@ -202,7 +201,9 @@ def run_GIS(
         locationColumnName = "Location"
 
     else:
-        NER_outputFilename = "NER_StanfordCoreNLP_output"
+        # csv input is fed straight to the pipeline (inputFilename was set to
+        # csv_file above); the placeholder name only marks the no-input case
+        NER_outputFilename = inputFilename if csv_file != "" else "NER_StanfordCoreNLP_output"
         locationColumnName = location_menu  # RF
 
     # ----------------------------------------------------------------------------------------------------------------------------------------------
