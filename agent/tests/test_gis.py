@@ -52,6 +52,7 @@ def test_extract_ner_locations_from_conll(fixture_conll):
 
 def test_extract_csvfile_locations(fixture_locations_csv):
     locs = GIS_location_util.extract_csvFile_locations(str(fixture_locations_csv), True, 0, "utf-8", False, -1)
+    assert locs is not None
     # Rome and Paris are CITY rows; the PERSON row must be filtered out
     assert [item[0] for item in locs] == ["Rome", "Paris"]
 
@@ -145,15 +146,27 @@ def test_run_gis_no_package_returns_none(tiny_corpus, tmp_output):
     assert output_csvs(tmp_output) == []
 
 
-def test_run_gis_csv_input_path_is_broken(locations_input, tmp_output, mocked_geocoder):
-    # run_GIS passes the placeholder string 'NER_StanfordCoreNLP_output' to
-    # GIS_pipeline instead of the csv file, so the csv input path silently does
-    # nothing even with a working geocoder; see TECH_DEBT.md
+def test_run_gis_malformed_area_returns_none(tiny_corpus, tmp_output):
+    # a malformed bounding box used to hit a tkinter remnant (area_var.set) and
+    # raise AttributeError; it should now log a warning and return cleanly
+    assert _run_gis(tmp_output, inputDir=str(tiny_corpus), area_var="(1,2)") is None
+    assert output_csvs(tmp_output) == []
+
+
+def test_run_gis_csv_input_geocodes(locations_input, tmp_output, mocked_geocoder):
+    # run_GIS now feeds the csv file straight to GIS_pipeline (previously it
+    # passed the placeholder 'NER_StanfordCoreNLP_output'); see TECH_DEBT.md
     out = tmp_output / "run_gis_out"
     out.mkdir()
     result = _run_gis(out, csv_file=str(locations_input), GIS_package_var="Google Earth Pro")
-    assert result is None
-    assert [f for f in output_csvs(out) if "geo-Nom" in f] == []
+    assert result, "expected the csv input path to produce GIS output files"
+    geocoded = [f for f in output_csvs(out) if "geo-Nom" in f and "not-found" not in f.lower()]
+    assert len(geocoded) == 1
+    rows = read_rows(geocoded[0])
+    assert [r["Location"] for r in rows] == ["Rome", "Paris"]
+    for r in rows:
+        assert float(r["Latitude"]) == pytest.approx(41.9)
+        assert float(r["Longitude"]) == pytest.approx(12.5)
 
 
 # integration -----------------------------------------------------------------
@@ -163,11 +176,6 @@ def test_run_gis_csv_input_path_is_broken(locations_input, tmp_output, mocked_ge
 @pytest.mark.skipif(
     not os.environ.get("NLP_SUITE_TEST_NETWORK"),
     reason="geocodes via the live Nominatim service; set NLP_SUITE_TEST_NETWORK=1 to run",
-)
-@pytest.mark.xfail(
-    reason="GIS_geocode_util.geocode:688 raises UnboundLocalError on 'date' when the "
-    "input has no Date column, breaking the whole no-date /gis NER path; see TECH_DEBT.md",
-    raises=UnboundLocalError,
 )
 def test_run_gis_ner_extractor_nominatim(locations_txt, tmp_output, corenlp_running):
     files = _run_gis(

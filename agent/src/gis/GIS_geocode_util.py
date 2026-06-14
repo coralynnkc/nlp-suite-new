@@ -139,12 +139,14 @@ def nominatim_geocode(
     except Exception as e:
         logger.info("%s %s", f"Nominatim TIMEOUT: {e}", timeout)
         if timeout < 20:
+            # retry with a longer timeout against the already-processed inputs;
+            # do NOT recurse into nominatim_geocode, which would re-process them
             try:
-                return nominatim_geocode(
-                    geolocator,
-                    loc=loc,
+                return geolocator.geocode(
+                    loc,
+                    language="en",
                     country_codes=country_bias,
-                    box_tuple=box_tuple,
+                    viewbox=box_tuple,
                     bounded=restrict,
                     timeout=timeout + 2,
                     featuretype=featuretype,
@@ -197,9 +199,11 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
         datePresent,
         filenamePositionInCoNLLTable,
     ) = GIS_file_check_util.CoNLL_checker(inputFilename)
+    headers = list(headers) if headers else []
     input_df = pd.read_csv(inputFilename, encoding=encodingValue, on_bad_lines="skip")
     input_df = input_df.reset_index()
-    for index, row in input_df.iterrows():
+    for index, (_, row) in enumerate(input_df.iterrows()):
+        date = ""
         location = row["Location"]
         lat = row["Latitude"]
         lng = row["Longitude"]
@@ -241,7 +245,7 @@ def process_geocoded_data_for_kml(locations, inputFilename, outputDir, locationC
                 description = description + "\n" + "<i><b>Sentence</b></i>: " + sentence + "<br/><br/>"
             pnt.description = description
         except (IndexError, KeyError):
-            logger.info(f"No sentence available for description field for location: {location.upper()}")
+            logger.info(f"No sentence available for description field for location: {str(location).upper()}")
         if datePresent:
             try:
                 GEPdateFormat = convertToGEP(date)
@@ -377,8 +381,19 @@ def geocode(
             locations = GIS_location_util.extract_NER_locations(inputFilename, encodingValue, datePresent)
         else:
             # locations is a list of names of locations
+            locationColumnNumber = IO_csv_util.get_columnNumber_from_headerValue(
+                headers, locationColumnName, inputFilename
+            )
+            dateColumnNumber = (
+                IO_csv_util.get_columnNumber_from_headerValue(headers, "Date", inputFilename) if datePresent else -1
+            )
             locations = GIS_location_util.extract_csvFile_locations(
-                inputFilename, withHeader, locationColumnName, encodingValue
+                inputFilename,
+                withHeader,
+                locationColumnNumber,
+                encodingValue,
+                datePresent,
+                dateColumnNumber,
             )
 
         if locations is None or len(locations) == 0:
@@ -483,6 +498,15 @@ def geocode(
     index_locations = 0
     for item in locations:
         index_locations += 1  # items in locations are NOT DISTINCT
+        # default the per-record fields so date-less / non-CoNLL corpora don't
+        # leave them unbound when written or formatted into the kml below
+        date = ""
+        address = ""
+        country_geocoder = ""
+        sentenceID = ""
+        document = ""
+        documentID = ""
+        sentence = ""
         if skipNext:
             continue
         if not pd.isna(item[0]) and str(item[0]) != "":
@@ -574,35 +598,20 @@ def geocode(
                     )
                 else:
                     location = google_geocode(geolocator, itemToGeocode, country_bias)
-                # location is None when not found
-                if geocoder == "Nominatim":
-                    try:
-                        lat, lng, address = (
-                            location.latitude,
-                            location.longitude,
-                            location.address,
-                        )
-                    except AttributeError:
-                        lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
-                        locationsNotFound = locationsNotFound + 1
-                        geowriterNotFound.writerow([itemToGeocode, NER_Tag])
-                        notGeocodedList.append(itemToGeocode)
-                        notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        logger.info("%s %s %s", currRecord, " LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
-                else:  # Google
-                    try:  # use a try/except in case requests do not give results
-                        lat, lng, address = (
-                            location.latitude,
-                            location.longitude,
-                            location.address,
-                        )  # extracting lat from the request results
-                    except AttributeError:
-                        lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
-                        locationsNotFound = locationsNotFound + 1
-                        geowriterNotFound.writerow([itemToGeocode, NER_Tag])
-                        notGeocodedList.append(itemToGeocode)
-                        notGeocodedFull.append((itemToGeocode, NER_Tag))
-                        logger.info("%s %s %s", currRecord, " LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
+                # location is None when not found (both Nominatim and Google)
+                if location is not None:
+                    lat, lng, address = (
+                        location.latitude,
+                        location.longitude,
+                        location.address,
+                    )
+                else:
+                    lat, lng, address = 0, 0, " LOCATION NOT FOUND BY " + geocoder
+                    locationsNotFound = locationsNotFound + 1
+                    geowriterNotFound.writerow([itemToGeocode, NER_Tag])
+                    notGeocodedList.append(itemToGeocode)
+                    notGeocodedFull.append((itemToGeocode, NER_Tag))
+                    logger.info("%s %s %s", currRecord, " LOCATION NOT FOUND BY " + geocoder, itemToGeocode)
                 if lat != 0 and lng != 0:
                     distinctGeocodedLocations[itemToGeocode] = (lat, lng, address)
                     lat = distinctGeocodedLocations[itemToGeocode][0]
@@ -748,7 +757,7 @@ def geocode(
         + str(index_locations)
         + ". The list will be displayed as a csv file.\n\nPlease, check your locations and try again.\n\nA Google Earth Pro kml map file will now be produced for all successfully geocoded locations.",
         True,
-        startTime,
+        startTime,  # pyright: ignore[reportArgumentType]  # timed_alert's startTime default "" mis-infers str; it accepts the float from time.time()
         True,
     )
     return (
@@ -806,6 +815,7 @@ def convertToGEP(date):
             "%b-%Y",
             "%b-%y",
         )
+        fmt = ""
         for e in date.splitlines():
             for fmt in fmts:
                 try:
@@ -813,14 +823,16 @@ def convertToGEP(date):
                     break
                 except ValueError:
                     pass
+        currentDateFormat = None
         try:
             currentDateFormat = dateutil.parser.parse(date)
         except (ValueError, OverflowError):
             logger.info(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
         # years before 1900 cannot be used
         # pre 1900 dates may give a problem in Windows: ValueError: format %y requires year >= 1900 on Windows
-        try:
-            GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
-        except (ValueError, AttributeError):
-            logger.info(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
+        if currentDateFormat is not None:
+            try:
+                GEPdateFormat = currentDateFormat.strftime("%Y-%m-%d")
+            except ValueError:
+                logger.info(f"Date error: There was an error in processing the date '{date}' with format '{fmt}'.")
         return GEPdateFormat
