@@ -7,11 +7,6 @@ hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
 
 ## UI/UX
 
-- **[P2] Status page stuck after a failed job.** `last_error` persists between
-  jobs, so a fresh `/status` visit polls once and renders the error banner with
-  no job run. Fix: clear `last_error` at the start of the background thread in
-  `agent/src/main.py`; add a "Run another job" link to `#failed` in
-  `ui/templates/status.html`.
 - **[P2] Error messages rough.** Agent errors show as a Django flash (form page,
   via `_proxy_post`) and as raw tracebacks in `#error-detail` (status page, via
   `last_error`); neither is styled. Add an `.error-banner` to the base template;
