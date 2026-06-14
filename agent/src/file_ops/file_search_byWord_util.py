@@ -631,7 +631,8 @@ def search_sentences_documents(
                         # document search works for newspaper articles
                         # document search works for Jiang Li
                         # document search works for CGWR
-                    except Exception:
+                    except Exception as e:
+                        logger.debug("skipping unwritable record [%d][%d]: %s", i, j, e)
                         continue
         f_csv.close()
 
@@ -695,7 +696,8 @@ def search_sentences_documents(
                     for j in range(len(all_found_csv_words_minusK_plusK_records_allDocs[i])):
                         try:
                             writer.writerow(all_found_csv_words_minusK_plusK_records_allDocs[i][j])
-                        except Exception:
+                        except Exception as e:
+                            logger.debug("skipping unwritable record [%d][%d]: %s", i, j, e)
                             continue
             else:
                 writer.writerow(header)  # write out all the csv file records found
@@ -704,7 +706,8 @@ def search_sentences_documents(
                         try:
                             # [i][j] works for Jiang Li (len 1, 13), newspaper articles (2, 1), CGWR (50, 19)
                             writer.writerow(all_found_csv_sentences_records_allDocs[i][j])
-                        except Exception:
+                        except Exception as e:
+                            logger.debug("skipping unwritable record [%d][%d]: %s", i, j, e)
                             continue
             f_csv.close()
 

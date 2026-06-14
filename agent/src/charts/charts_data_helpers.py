@@ -35,7 +35,8 @@ def get_dataRange(columns_to_be_plotted, data):
             try:
                 rowValues = list(row[w] for w in columns_to_be_plotted[i])
                 dataRange.append(rowValues)
-            except IndexError:
+            except IndexError as e:
+                logger.debug("skipping row for column group %d: %s", i, e)
                 continue
     dataRange = [dataRange[i : i + len(data)] for i in range(0, len(dataRange), len(data))]
     return dataRange
@@ -81,7 +82,8 @@ def get_data_to_be_plotted_with_counts(
                 #  TODO the datalist is like [['NN','NN'], ...] so the code produces bad results
                 #       when multiple series side-by-side (e.g., form and lemma values) need to be plotted
                 column_list = [i[1] for i in data_list[k]]
-            except IndexError:
+            except IndexError as e:
+                logger.debug("skipping column group %d: %s", k, e)
                 continue
             counts = list(Counter(column_list).most_common())
             if len(headers) > 0:
@@ -187,10 +189,8 @@ def header_check(inputFile):
         try:
             for i in range(0, len(result)):
                 frequency_pos.append(header.index(result[i]))
-        except Exception:
-            pass
-    else:
-        pass
+        except ValueError as e:
+            logger.warning("could not locate frequency column in header: %s", e)
     return sentenceID_pos, docCol_pos, docName_pos, frequency_pos, header
 
 

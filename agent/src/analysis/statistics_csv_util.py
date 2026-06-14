@@ -591,8 +591,8 @@ def compute_csv_column_frequencies(
             try:
                 if data["Document"].nunique() <= 1:
                     tracked = False  # if we find a non byDoc , exit immediately
-            except Exception:
-                pass
+            except KeyError as e:
+                logger.warning("Document column missing while computing file label: %s", e)
         else:
             file_label = "by" + group_cols[0]  # add only the first element
 

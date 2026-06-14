@@ -266,8 +266,8 @@ def run_ngrams(
                     try:
                         date_text = ""
                         date_text = filename.split(items_separator_var)[date_position_var - 1]
-                    except Exception:  # if a file in the folder has no date it will break the code
-                        pass
+                    except IndexError as e:  # if a file in the folder has no date it will break the code
+                        logger.debug("no date segment in filename %r: %s", filename, e)
                     try:
                         datetime.datetime.strptime(date_text, new_date_format)
                     except ValueError:

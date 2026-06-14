@@ -195,7 +195,8 @@ def dictionary_annotate(
                     try:
                         if re.search(r"\b" + term + r"\b", text) is None:
                             continue
-                    except Exception:
+                    except re.error as e:
+                        logger.debug("skipping term %r (invalid regex): %s", term, e)
                         continue
                     for term1 in reserved_dictionary:
                         if term1 in terms:
@@ -211,7 +212,8 @@ def dictionary_annotate(
                     # use regular expression replace to check for distinct words (e.g., he not tagging he in held)
                     try:
                         text = re.sub(rf"\b(?=\w){term}\b(?!\w)", tagString, text)
-                    except Exception:
+                    except re.error as e:
+                        logger.debug("skipping term %r (invalid regex): %s", term, e)
                         continue
         writeout.append(text)
         writeout.append("<br />\n<br />\n")  # add 2 hard returns

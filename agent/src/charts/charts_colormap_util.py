@@ -457,22 +457,26 @@ def timechart(
         for i in range(0, len(data[date_field])):
             try:
                 date.append(re.search(r"\d.*\d", data[date_field][i])[0])
-            except (TypeError, IndexError):
+            except (TypeError, IndexError) as e:
+                logger.debug("no date in row %d: %s", i, e)
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 year.append(re.search(r"\d{4}", date[i])[0])
-            except (TypeError, IndexError):
+            except (TypeError, IndexError) as e:
+                logger.debug("no year in row %d: %s", i, e)
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 month.append(year[i] + "-" + date[i][0:2])
-            except (TypeError, IndexError):
+            except (TypeError, IndexError) as e:
+                logger.debug("no month in row %d: %s", i, e)
                 continue
         for i in range(0, len(data[date_field])):
             try:
                 day.append(month[i] + "-" + date[i][3:5])
-            except (TypeError, IndexError):
+            except (TypeError, IndexError) as e:
+                logger.debug("no day in row %d: %s", i, e)
                 continue
         data["year"] = year
         data["month"] = month

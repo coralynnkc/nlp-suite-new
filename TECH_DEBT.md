@@ -11,12 +11,6 @@ Fix one entry per PR (see CLAUDE.md). Tags: **P1** do next, **P2** after the P1s
 
 ## Active queue (user-visible bugs — work in order)
 
-- **[P1] ~16 error-swallowing `except Exception: pass`/`continue`** in `agent/src`
-  hide real failures — e.g. `core/reminders_util.py:471`,
-  `analysis/statistics_csv_util.py:190`, `charts/charts_Plotly_util.py:98`,
-  `io/IO_files_util.py:319`, `stories/shape_of_stories_vectorizer_util.py`. Narrow
-  the except clause or log at warning so failures are diagnosable. **Do this first:**
-  until failures surface, every other bug here is harder to find.
 - **[P1] `/gis` is broken on two real paths.** (1) csv-file input does nothing:
   `GIS_main.py` passes placeholder `NER_StanfordCoreNLP_output` to `GIS_pipeline` when
   `NER_extractor` is off, so it bails on a nonexistent file (`tests/test_gis.py`).
