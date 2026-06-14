@@ -34,11 +34,14 @@ is pyright (clear the backlog → gate in CI).
 
 - **~1030 legacy `agent/src` pyright findings.** Standard-mode findings from research
   code (`reportPossiblyUnbound` ~400, `reportArgumentType` ~220,
-  `reportAttributeAccessIssue` ~150, optional/call/operator). The blocking pre-commit
-  hook surfaces them per-file on touch. Pyright runs in pre-commit only, not CI
-  (`lint.yml` is ruff-only) — it can't gate until this backlog is zero or baselined, else
-  every PR fails. **End-goal:** once cleared, add a pyright step to `lint.yml` so
-  contributors without hooks installed don't bypass the check.
+  `reportAttributeAccessIssue` ~150, optional/call/operator). The pre-commit pyright
+  hook (`.pre-commit-config.yaml`, scoped to `^agent/`) runs **per changed file on
+  commit and blocks** — so touching a file forces clearing *that whole file's* backlog
+  before you can commit. This is the ratchet that draws the backlog down file-by-file as
+  code is touched. Pyright is pre-commit only, not CI (`lint.yml` is ruff-only): it can't
+  gate the whole tree in CI until the backlog is zero or baselined, else every PR fails.
+  **End-goal:** once cleared, add a pyright step to `lint.yml` so contributors without
+  hooks installed don't bypass the check.
 - **ruff `PL` (pylint-port) baseline.** `pyproject.toml` enables ruff's `PL` family but
   ignores every code currently firing on legacy code: design metrics (`PLR09xx`,
   `PLR2004`), intentional patterns (`PLC0415` lazy imports, `PLW0603` globals), a few real
