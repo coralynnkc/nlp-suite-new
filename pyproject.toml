@@ -1,21 +1,44 @@
 [tool.ruff]
-# Lint everything except the vendored NLP-Suite source and migration artifacts
+# Exclude non-code or third-party/data directories
 exclude = [
-    "NLP-Suite/",
-    "nlp-suite-runner/",
-    ".venv",
-    "venv",
-    "__pycache__",
+    "corenlp/",
+    "mallet/",
+    "input/",
+    "output/",
+    "csvInput/",
 ]
+
 line-length = 120
-# The agent container runs Python 3.9 (ubuntu:20.04); keep UP rules from
-# suggesting 3.10+ syntax like X | None annotations.
+
+# Python 3.9 runtime constraint
 target-version = "py39"
 
+
 [tool.ruff.lint]
-# E/W = pycodestyle  F = pyflakes  I = isort  UP = pyupgrade  B = bugbear
-select = ["E", "W", "F", "I", "UP", "B"]
+# Core linting families:
+# E/W   = pycodestyle (formatting / style issues)
+# F     = pyflakes (unused/undefined/import issues)
+# I     = import sorting (isort behavior)
+# UP    = pyupgrade (modern Python syntax suggestions)
+# B     = bugbear (common bugs + design issues)
+# SIM   = code simplification (Pylint-like refactoring hints)
+# N     = naming conventions
+# T20   = print/debug statement detection (Pylint-style hygiene)
+# C90   = complexity analysis (McCabe-style, Pylint-like "too complex")
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "N", "T20", "C90"]
+
 ignore = [
-    "E501",   # line too long — reported but not a blocker for research code
-    "E402",   # module import not at top — legacy pattern in research scripts
+    "E501",  # line too long (allowed in research / readability-first code)
+    "E402",  # imports not at top (legacy scripts / experimental structure)
 ]
+
+
+[tool.ruff.lint.mccabe]
+# Pylint-style complexity control
+max-complexity = 10
+
+
+[tool.ruff.lint.isort]
+# Optional but improves deterministic import grouping
+combine-as-imports = true
+force-sort-within-sections = true
