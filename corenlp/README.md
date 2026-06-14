@@ -1,55 +1,36 @@
-stanford-corenlp-docker
-=======================
+# Dockerized Stanford CoreNLP
 
-This Dockerfile will build and run the most current release of the
-[Stanford CoreNLP server](http://stanfordnlp.github.io/CoreNLP/corenlp-server.html) in a docker container.
+This directory builds a Docker image that runs the [Stanford CoreNLP server](https://stanfordnlp.github.io/CoreNLP/corenlp-server.html). It removes the need to install Java + CoreNLP locally — one of the most common install pain points reported by NLP-Suite users.
 
-Usage
-=====
+The Dockerfile is adapted from [NLPbox/stanford-corenlp-docker](https://github.com/NLPbox/stanford-corenlp-docker) (MIT-licensed). It downloads the latest CoreNLP release and the English language model at build time.
 
-To download and run a [prebuilt version of the CoreNLP server](https://hub.docker.com/r/nlpbox/corenlp/)
-from Docker Hub locally at ``http://localhost:9000``, just type:
+## Run it
 
-```
-docker run -p 9000:9000 nlpbox/corenlp
+From the repository root:
+
+```bash
+docker compose -f docker-compose.corenlp-mallet.yml up -d corenlp
 ```
 
-By default, CoreNLP will use up to 4GB of RAM. You can change this by setting
-the `JAVA_XMX` environment variable. Here, we're giving it 3GB:
+CoreNLP will be available at `http://localhost:9000`.
 
-```
-docker run -e JAVA_XMX=3g -p 9000:9000 -ti nlpbox/corenlp
-```
+## Test it
 
-
-In order to build and run the container from scratch (e.g. if you want to use the most current release of Stanford CoreNLP, type:
-
-```
-docker build -t corenlp https://github.com/NLPbox/stanford-corenlp-docker.git
-docker run -p 9000:9000 corenlp
+```bash
+curl -s --data "Stanford CoreNLP is running." \
+  'http://localhost:9000/?properties={"annotators":"tokenize,ssplit,pos","outputFormat":"json"}'
 ```
 
-In another console, you can now query the CoreNLP REST API like this:
+You should see a JSON response with tokens, sentences, and POS tags.
 
-```
-wget -q --post-data "Although they didn't like it, they accepted the offer." \
-  'localhost:9000/?properties={"annotators":"parse","outputFormat":"json"}' \
-  -O - | jq ".sentences[0].parse"
-```
+## Memory
 
-which will return this parse tree:
+By default CoreNLP gets 4 GB of RAM. Override with:
 
-```
-"(ROOT\n  (S\n    (SBAR (IN Although)\n      (S\n        (NP (PRP they))\n        (VP (VBD did) (RB n't)\n          (PP (IN like)\n            (NP (PRP it))))))\n    (, ,)\n    (NP (PRP they))\n    (VP (VBD accepted)\n      (NP (DT the) (NN offer)))\n    (. .)))"
+```bash
+JAVA_XMX=2g docker compose -f docker-compose.corenlp-mallet.yml up -d corenlp
 ```
 
-If you need the full xml output and want to configure more parameters, try:
+## Why this is useful
 
-```
-wget -q --post-data "Although they didn't like it, they accepted the offer." \
-  'localhost:9000/?properties={ \
-    "annotators":"tokenize,ssplit,pos,lemma,ner,parse", \
-    "ssplit.eolonly":"false", "tokenize.whitespace":"true", \
-    "outputFormat":"xml"}' \
-  -O results.xml
-```
+Today, NLP-Suite tools that depend on CoreNLP (parser, NER, SVO, coreference, etc.) require the user to download and extract the Stanford CoreNLP archive, install a matching Java runtime, and configure paths. This container packages all of that. The container is consumed by the web UI (see [PR #2](../README.md)), and future work can let the existing tkinter tools query it instead of spawning their own Java process.
