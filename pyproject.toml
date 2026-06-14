@@ -21,25 +21,45 @@ target-version = "py39"
 # I     = import sorting (isort behavior)
 # UP    = pyupgrade (modern Python syntax suggestions)
 # B     = bugbear (common bugs + design issues)
-# SIM   = code simplification (Pylint-like refactoring hints)
-# N     = naming conventions
 # T20   = print/debug statement detection (Pylint-style hygiene)
-# C90   = complexity analysis (McCabe-style, Pylint-like "too complex")
-select = ["E", "W", "F", "I", "UP", "B", "SIM", "N", "T20", "C90"]
+# PL    = Pylint port (PLC/PLE/PLR/PLW) — covers the useful pylint checks at
+#         ruff speed; pylint itself was evaluated and declined (see tech_debt.md).
+select = ["E", "W", "F", "I", "UP", "B", "T20", "PL"]
 
 ignore = [
-    "E501",  # line too long (allowed in research / readability-first code)
-    "E402",  # imports not at top (legacy scripts / experimental structure)
-    "N",     # naming conventions (too noisy on legacy camelCase code)
-    "C901",  # function too complex (can't auto-fix; visible in `ruff check` for manual review)
-    "SIM",   # code simplification (style nitpicks; visible for incremental cleanup)
-    "T203",  # pprint found (common in research debugging; suppress)
+    "E501",    # line too long (allowed in research / readability-first code)
+    "E402",    # imports not at top (legacy scripts / experimental structure)
+    "T203",    # pprint found (common in research debugging; suppress)
+    # Pylint design-metric checks: too noisy on legacy research functions.
+    "PLR0911", # too-many-return-statements
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "PLR0915", # too-many-statements
+    "PLR2004", # magic-value-comparison
+    "PLW2901", # redefined-loop-name
+    # Intentional patterns in this codebase (see CLAUDE.md / tech_debt.md).
+    "PLC0415", # import-outside-top-level — deliberate lazy imports (cycles / heavy deps)
+    "PLW0603", # global-statement — research code keeps module-level state
+    # Residual legacy findings, deferred to incremental boy-scout cleanup.
+    "PLR1714", # repeated-equality-comparison
+    "PLR1704", # redefined-argument-from-local
+    "PLR1722", # sys-exit-alias
+    "PLR1730", # if-stmt-min-max
+    "PLR0133", # comparison-of-constant
+    "PLC0206", # dict-index-missing-items
+    "PLW0127", # self-assigning-variable
+    "PLW0128", # redeclared-assigned-name
+    "PLW0406", # import-self
+    "PLW1510", # subprocess-run-without-check
+    # Auto-fixable simplifications firing on legacy code; clear in a dedicated
+    # `ruff check --fix` pass, then drop these so the rules gate new code.
+    "PLR5501", # collapsible-else-if
+    "PLR1736", # unnecessary-list-index-lookup
+    "PLR2044", # empty-comment
+    "PLR1711", # useless-return
+    "PLR0402", # manual-from-import
+    "PLR1733", # unnecessary-dict-index-lookup
 ]
-
-
-[tool.ruff.lint.mccabe]
-# Pylint-style complexity control
-max-complexity = 10
 
 
 [tool.ruff.lint.isort]
