@@ -1,7 +1,12 @@
 import os
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.shortcuts import render
 from django.template import loader
 import requests
@@ -82,7 +87,7 @@ def sentiment_analysis(request: HttpRequest):
     return _proxy_post(request, "/sentiment_analysis", "sentiment_analysis.html")
 
 
-def svo(request: HttpRequest):
+def SVO(request: HttpRequest):
     return _proxy_post(request, "/svo", "SVO.html")
 
 
@@ -98,7 +103,7 @@ def topic_modeling(request: HttpRequest):
     return _proxy_post(request, "/topic_modeling", "topic_modeling.html")
 
 
-def ngrams_cooccurrences(request: HttpRequest):
+def NGrams_CoOccurrences(request: HttpRequest):
     return _proxy_post(request, "/ngrams", "NGrams_CoOccurrences.html")
 
 
@@ -130,7 +135,7 @@ def genderanalysis(request: HttpRequest):
     return _proxy_post(request, "/gender", "gender_analysis.html")
 
 
-def ner(request: HttpRequest):
+def NER(request: HttpRequest):
     return _proxy_post(request, "/ner", "NER.html")
 
 
