@@ -81,18 +81,19 @@ def test_k_sentences(conll_input_dir, tmp_output):
     assert csvs, "expected output under a CoNLL_1-1-sent subdirectory"
 
 
-def test_k_sentences_short_documents_crash(conll_input_dir, tmp_output):
-    # CoNLL_k_sentences_util.k_sent:181 truth-tests a pandas Series whenever a
-    # document has <= 2*K sentences, so short documents always crash; see
-    # TECH_DEBT.md. The fixture docs have 3 sentences, so K=2 hits the bug.
-    with pytest.raises(ValueError, match="truth value of a Series is ambiguous"):
-        _run(
-            conll_input_dir,
-            tmp_output,
-            k_sentences_var=True,
-            Begin_K_sent_var=2,
-            End_K_sent_var=2,
-        )
+def test_k_sentences_short_documents(conll_input_dir, tmp_output):
+    # The fixture docs have 3 sentences, so K=2 (2*K=4 >= 3) exercises the short-doc
+    # path that used to truth-test a pandas Series and crash; see TECH_DEBT.md. The
+    # first/last K windows now overlap and the run produces output without raising.
+    _run(
+        conll_input_dir,
+        tmp_output,
+        k_sentences_var=True,
+        Begin_K_sent_var=2,
+        End_K_sent_var=2,
+    )
+    csvs = [f for f in _result_csvs(tmp_output) if "CoNLL_2-2-sent" in f]
+    assert csvs, "expected output under a CoNLL_2-2-sent subdirectory"
 
 
 def test_k_sentences_zero_k_returns_none(conll_input_dir, tmp_output):

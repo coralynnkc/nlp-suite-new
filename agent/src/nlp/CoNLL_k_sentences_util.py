@@ -99,6 +99,7 @@ def k_sent(
         sent = sentences = sentence_split_stanza_text(stanzaPipeLine(txt))
         sentenceID = 0
 
+        DOC = ""
         for doc in doc_conll["Document"]:
             DOC = doc
             break
@@ -178,16 +179,11 @@ def k_sent(
         outputFilename = IO_files_util.generate_output_file_name(
             inputFilename, "", outputDir, ".csv", label, "", "", "", "", False, True
         )
-        if max(doc_conll["Sentence ID"]) <= 2 * Begin_K_sent_var:
-            if doc_conll["Sentence ID"] <= Begin_K_sent_var:
-                ksentences_first = doc_conll.loc[doc_conll["Sentence ID"]]
-
-            else:
-                ksentences_last = doc_conll.loc[doc_conll["Sentence ID"]]
-
-        else:
-            ksentences_first = doc_conll.loc[(doc_conll["Sentence ID"] <= Begin_K_sent_var)]
-            ksentences_last = doc_conll.loc[(doc_conll["Sentence ID"] > max(doc_conll["Sentence ID"]) - End_K_sent_var)]
+        # First and last K windows; for short docs (<= 2*K sentences) they overlap,
+        # which is the natural semantics. The old <= 2*K special case truth-tested a
+        # Series (ValueError) and left one window unbound (see TECH_DEBT.md).
+        ksentences_first = doc_conll.loc[doc_conll["Sentence ID"] <= Begin_K_sent_var]
+        ksentences_last = doc_conll.loc[doc_conll["Sentence ID"] > max(doc_conll["Sentence ID"]) - End_K_sent_var]
 
         word_count_first = len(ksentences_first["POS"]) - ksentences_first["DepRel"].value_counts()["punct"]
         verb_count_first = 0
@@ -209,6 +205,7 @@ def k_sent(
                 verb_count_first += 1
             elif "JJ" in pos:  # adjectives
                 adj_count_first += 1
+        DOC = ""
         for doc in ksentences_first["Document"]:
             DOC = doc  # as doc is in CoNLL table, doc already as the hyperlink
             break
@@ -222,6 +219,7 @@ def k_sent(
                 verb_count_last += 1
             elif "JJ" in pos:  # adjectives
                 adj_count_last += 1
+        DOC = ""
         for doc in ksentences_last["Document"]:
             DOC = doc  # as doc is in CoNLL table, doc already as the hyperlink
             break
