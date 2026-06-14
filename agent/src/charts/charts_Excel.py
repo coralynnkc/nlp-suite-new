@@ -1,11 +1,10 @@
 import logging
 
+from ..io import IO_csv_util, IO_files_util
+
 # Written by Yuhang Feng November 2019
 # Edited by Roberto Franzosi
-import charts_Excel_util
-import charts_util
-import IO_csv_util
-import IO_files_util
+from . import charts_Excel_util, charts_util
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +29,6 @@ def run_excelCharts(
     hover_var_list,
     hover_info_column_list,
 ):
-
     filesToOpen = []  # Store all files that are to be opened once finished
 
     if len(chart_type) == 0:

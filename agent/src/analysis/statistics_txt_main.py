@@ -1,6 +1,6 @@
 import logging
 
-from util import collect
+from ..core.util import collect
 
 logger = logging.getLogger(__name__)
 # written by Roberto Franzosi (Spring/summer 2020)
@@ -42,7 +42,7 @@ def run_statistics(
         if "stopwords" in corpus_text_options_menu_var:
             stopwords_var = True
         if "*" in corpus_statistics_options_menu_var or "frequencies" in corpus_statistics_options_menu_var:
-            import statistics_txt_util
+            from . import statistics_txt_util
 
             outputFiles, outputDir = statistics_txt_util.compute_corpus_statistics(
                 inputFilename,
@@ -58,7 +58,7 @@ def run_statistics(
             if outputFiles is not None:
                 collect(filesToOpen, outputFiles)
         if "Compute sentence length" in corpus_statistics_options_menu_var or "*" in corpus_statistics_options_menu_var:
-            import statistics_txt_util
+            from . import statistics_txt_util
 
             outputFiles = statistics_txt_util.compute_sentence_length(
                 inputFilename, inputDir, outputDir, config_filename, chartPackage, dataTransformation
@@ -67,7 +67,7 @@ def run_statistics(
                 collect(filesToOpen, outputFiles)
 
         if "Compute line length" in corpus_statistics_options_menu_var or "*" in corpus_statistics_options_menu_var:
-            import statistics_txt_util
+            from . import statistics_txt_util
 
             outputFiles = statistics_txt_util.compute_line_length(
                 config_filename, inputFilename, inputDir, outputDir, False, chartPackage, dataTransformation
@@ -76,8 +76,8 @@ def run_statistics(
                 collect(filesToOpen, outputFiles)
 
     if corpus_statistics_byPOS_var:
-        import config_util
-        import Stanza_util
+        from ..core import config_util
+        from ..nlp import Stanza_util
 
         # get the NLP package and language options
         (

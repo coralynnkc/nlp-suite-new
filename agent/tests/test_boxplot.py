@@ -2,7 +2,7 @@ import pytest
 
 try:
     import pandas as pd
-    from boxplot_chart import run as run_boxplot
+    from src.charts.boxplot_chart import run as run_boxplot
 except (ImportError, SystemExit):
     pytest.skip("boxplot_chart dependencies not available", allow_module_level=True)
 

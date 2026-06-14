@@ -4,9 +4,8 @@
 
 import logging
 
-import config_util
-import html_annotator_dictionary_util
-import Stanford_CoreNLP_util
+from ..core import config_util
+from . import Stanford_CoreNLP_util, html_annotator_dictionary_util
 
 logger = logging.getLogger(__name__)
 

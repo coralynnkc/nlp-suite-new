@@ -9,7 +9,6 @@ from sys import platform
 # Gensim
 import gensim
 import gensim.corpora as corpora
-import IO_libraries_util
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -21,7 +20,9 @@ import pyLDAvis.gensim
 import spacy
 from gensim.models import CoherenceModel
 from gensim.utils import simple_preprocess
-from model_cache import get_spacy_model
+
+from ..core.model_cache import get_spacy_model
+from ..io import IO_libraries_util
 
 # Quiet gensim's very chatty INFO logging without capping the root logger
 # (logging is configured app-wide in main.py).
@@ -30,10 +31,9 @@ import warnings
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-import charts_util
-import IO_files_util
-import IO_user_interface_util
-import reminders_util
+from ..charts import charts_util
+from ..core import reminders_util
+from ..io import IO_files_util, IO_user_interface_util
 
 # whether stopwordst were already downloaded can be tested, see stackoverflow
 # https://stackoverflow.com/questions/23704510/how-do-i-test-whether-an-nltk-resource-is-already-installed-on-the-machine-runni
@@ -42,7 +42,8 @@ import reminders_util
 IO_libraries_util.import_nltk_resource("corpora/stopwords", "stopwords")
 
 from nltk.corpus import stopwords
-from util import collect
+
+from ..core.util import collect
 
 logger = logging.getLogger(__name__)
 

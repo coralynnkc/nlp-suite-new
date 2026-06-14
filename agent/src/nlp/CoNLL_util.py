@@ -6,10 +6,10 @@ import logging
 import os
 import time
 
-import IO_csv_util
-import IO_user_interface_util
 import pandas as pd
-import Stanford_CoreNLP_tags_util
+
+from ..io import IO_csv_util, IO_user_interface_util
+from . import Stanford_CoreNLP_tags_util
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +68,6 @@ def check_CoNLL(filename, skipWarning=False):
 
 # The function builds a double list of all records in the CoNLL table
 def CoNLL_record_division(list_csv_rows):
-
     try:
         list_sentences = []
         Sentence_ID_prev = 1  # Sentence_ID of previous row
@@ -116,7 +115,6 @@ def CoNLL_record_division(list_csv_rows):
 # [['The','President',...]['Ladies','and','Gentlemen']...]]
 # searchedCoNLLField FORM or LEMMA
 def sentence_division(list_csv_rows, searchedCoNLLField):
-
     try:
         list_sentences = []
         Sentence_ID_prev = 1  # Sentence_ID of previous row
@@ -388,7 +386,6 @@ def compute_sentence_table(CoNLL_table, output_path):
 # the function extracts DISTINCT nouns and verbs from the CoNLL table in both form and lemma
 # inputFilename contains path
 def get_nouns_verbs_CoNLL(inputFilename, output_dir):
-
     conll_table = pd.read_csv(inputFilename, encoding="utf-8", on_bad_lines="skip")
 
     verb_form_set = set()

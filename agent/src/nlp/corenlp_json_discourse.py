@@ -21,11 +21,11 @@ WE DO NOT USE ANY OF THESE RECOMMENDATIONS
 import logging
 import string
 
-import IO_csv_util
+from ..io import IO_csv_util
+from ..io.IO_files_util import date_in_filename
 
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
-from corenlp_json_common import build_sentence_string, check_sentence_length
-from IO_files_util import date_in_filename
+from .corenlp_json_common import build_sentence_string, check_sentence_length
 
 logger = logging.getLogger(__name__)
 
@@ -168,7 +168,6 @@ def process_json_coref_table(config_filename, documentID, document, sentenceID, 
 
 # December.10 Yi: Modify process_json_gender to provide one more column(complete sentence)
 def process_json_gender(config_filename, documentID, document, start_sentenceID, json, **kwargs):
-
     logger.info("   Processing Json output file for GENDER annotator")
     filename_embeds_date_var = False
     for key, value in kwargs.items():

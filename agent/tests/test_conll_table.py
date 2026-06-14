@@ -2,7 +2,7 @@ import pytest
 from conftest import output_csvs, read_rows
 
 try:
-    from CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
+    from src.nlp.CoNLL_table_analyzer_main import run_CoNLL_table_analyzer
 except (ImportError, SystemExit):
     pytest.skip("CoNLL analyzer dependencies not available", allow_module_level=True)
 

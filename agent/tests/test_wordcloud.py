@@ -7,7 +7,7 @@ import pytest
 
 pytest.importorskip("wordcloud")
 
-from wordclouds_util import (
+from src.analysis.wordclouds_util import (
     GroupedColorFunc,
     display_wordCloud,
     get_font_path,

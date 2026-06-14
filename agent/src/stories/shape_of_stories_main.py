@@ -7,18 +7,13 @@ import logging
 # tqdm provides a progress bar (used in clustering_util)
 import os
 
-import config_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
-import IO_user_interface_util
-import shape_of_stories_clustering_util as cl
-import shape_of_stories_vectorizer_util as vec
-import shape_of_stories_visualization_util as viz
-import spaCy_util
-import Stanford_CoreNLP_util
-import Stanza_util
-import statistics_txt_util
+from ..analysis import statistics_txt_util
+from ..core import config_util
+from ..io import IO_csv_util, IO_files_util, IO_libraries_util, IO_user_interface_util
+from ..nlp import Stanford_CoreNLP_util, Stanza_util, spaCy_util
+from . import shape_of_stories_clustering_util as cl
+from . import shape_of_stories_vectorizer_util as vec
+from . import shape_of_stories_visualization_util as viz
 
 logger = logging.getLogger(__name__)
 
@@ -168,7 +163,7 @@ def run(
         # BERT ---------------------------------------------------------
 
         if "BERT" in sentimentAnalysisMethod:
-            import BERT_util
+            from ..nlp import BERT_util
 
             if "Multilingual" in sentimentAnalysisMethod:
                 model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"  # multilingual model
@@ -194,7 +189,7 @@ def run(
 
         elif "spaCy" in sentimentAnalysisMethod:
             # check internet connection
-            import IO_internet_util
+            from ..io import IO_internet_util
 
             if not IO_internet_util.check_internet_availability_warning("spaCy Sentiment Analysis"):
                 return
@@ -236,7 +231,7 @@ def run(
 
         elif "CoreNLP" in sentimentAnalysisMethod:
             # check internet connection
-            import IO_internet_util
+            from ..io import IO_internet_util
 
             if not IO_internet_util.check_internet_availability_warning("Stanford CoreNLP Sentiment Analysis"):
                 return
@@ -267,7 +262,7 @@ def run(
 
         elif "Stanza" in sentimentAnalysisMethod:
             # check internet connection
-            import IO_internet_util
+            from ..io import IO_internet_util
 
             if not IO_internet_util.check_internet_availability_warning("Stanza Sentiment Analysis"):
                 return

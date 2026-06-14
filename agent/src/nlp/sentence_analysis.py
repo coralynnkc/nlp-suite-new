@@ -3,9 +3,8 @@ import logging
 # written by Roberto Franzosi (Spring/summer 2020)
 import os
 
-import IO_files_util
-import IO_libraries_util
-import statistics_txt_util
+from ..analysis import statistics_txt_util
+from ..io import IO_files_util, IO_libraries_util
 
 logger = logging.getLogger(__name__)
 

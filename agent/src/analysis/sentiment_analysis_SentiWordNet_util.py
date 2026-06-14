@@ -15,10 +15,8 @@ import csv
 import logging
 import os
 
-import charts_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
+from ..charts import charts_util
+from ..io import IO_csv_util, IO_files_util, IO_libraries_util
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +61,7 @@ def analyzefile(inputFilename, writer, Document_ID, Document):
         logger.warning("Empty file %s", inputFilename)
         return
 
-    from Stanza_functions_util import lemmatize_stanza_word, sentence_split_stanza_text, stanzaPipeLine
+    from ..nlp.Stanza_functions_util import lemmatize_stanza_word, sentence_split_stanza_text, stanzaPipeLine
 
     sentences = sentence_split_stanza_text(stanzaPipeLine(fulltext))
 

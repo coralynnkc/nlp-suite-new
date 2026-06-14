@@ -6,16 +6,13 @@ import logging
 import os
 import subprocess
 
-import charts_util
-import data_manipulation_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
-import IO_user_interface_util
 import pandas as pd
-import reminders_util
-import statistics_csv_util
-from util import collect
+
+from ..charts import charts_util
+from ..core import data_manipulation_util, reminders_util
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util, IO_libraries_util, IO_user_interface_util
+from . import statistics_csv_util
 
 logger = logging.getLogger(__name__)
 

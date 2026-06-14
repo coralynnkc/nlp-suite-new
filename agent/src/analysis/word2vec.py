@@ -1,7 +1,7 @@
 import logging
 
-import IO_files_util
-import reminders_util
+from ..core import reminders_util
+from ..io import IO_files_util
 
 logger = logging.getLogger(__name__)
 
@@ -79,9 +79,7 @@ def run_word2vec(
             )
             return
 
-        import WSI_keyterms
-        import WSI_util
-        import WSI_viz
+        from . import WSI_keyterms, WSI_util, WSI_viz
 
         # Load WSI data with the specified keyword list and k-means range
         all_sent, all_vocab, Word2Vec_Dir, docs, paths = WSI_util.get_data(
@@ -118,7 +116,7 @@ def run_word2vec(
             reminders_util.message_BERT_Word2Vec_timing,
             True,
         )
-        import BERT_util
+        from ..nlp import BERT_util
 
         BERT_output = BERT_util.word_embeddings_BERT(
             inputFilename,
@@ -144,7 +142,7 @@ def run_word2vec(
         #                              reminders_util.title_options_Gensim_Word2Vec_timing,
         #                              reminders_util.message_Gensim_Word2Vec_timing,
         #                              True)
-        import word2vec_Gensim_util
+        from . import word2vec_Gensim_util
 
         Gensim_output = word2vec_Gensim_util.run_Gensim_word2vec(
             inputFilename,

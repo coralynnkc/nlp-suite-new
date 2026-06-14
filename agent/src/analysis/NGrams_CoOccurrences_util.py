@@ -5,23 +5,23 @@ import csv
 import logging
 import os
 
-import constants_util
-import IO_csv_util
-import IO_files_util
 import numpy as np
 import pandas as pd
+
+from ..core import constants_util
+from ..io import IO_csv_util, IO_files_util
 
 """
 NGramsCoOccurrences implements the ability to generate NGram and CoOccurrences data
 """
 
-from Stanza_functions_util import (
+from ..core.util import collect
+from ..nlp.Stanza_functions_util import (
     lemmatize_stanza_doc,
     lemmatize_stanza_word,
     sentence_split_stanza_text,
     stanzaPipeLine,
 )
-from util import collect
 
 logger = logging.getLogger(__name__)
 
@@ -316,7 +316,6 @@ def process_word_search(
     yearList,
     within_sentence_co_occurrence_search_var=True,
 ):
-
     if CoOcc_Viewer:
         for search_word in search_keywords_list:
             search_word_frequency = get_search_word_from_text(
@@ -437,7 +436,6 @@ def search_ngrams_csv_file(
     chartPackage,
     dataTransformation,
 ):
-
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'N-Grams start',
     #                                                'Started running Words/Characters N-Grams csv file SEARCH at',
     #                                                True, '', True, '', False)
@@ -535,7 +533,7 @@ def search_ngrams_csv_file(
                 columns_to_be_plotted_yAxis.append([doc_pos, word_pos])
             # remove last ,
             title_string = title_string.rstrip()[:-1]
-            import charts_util
+            from ..charts import charts_util
 
             outputFiles = charts_util.run_all(
                 columns_to_be_plotted_yAxis,
@@ -574,7 +572,7 @@ def search_ngrams_csv_file(
             with open(NgramsSearchFileName_txt, "w", encoding="utf-8") as f:
                 f.write(q)
 
-            import charts_util
+            from ..charts import charts_util
 
             headers = IO_csv_util.get_csvfile_headers(NgramsSearchFileName_Sankey)
             Sankey_limit1_var = 30
@@ -680,8 +678,7 @@ def NGrams_coOccurrences_VIEWER(
     csv_file_var=None,
     within_sentence_co_occurrence_search_var=True,
 ):
-
-    from Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
+    from ..nlp.Stanza_functions_util import sentence_split_stanza_text, stanzaPipeLine
 
     if viewer_options_list is None:
         viewer_options_list = []
@@ -959,7 +956,7 @@ def NGrams_coOccurrences_VIEWER(
     NgramsFileName = ""
     coOccFileName = ""
 
-    import charts_util
+    from ..charts import charts_util
 
     if n_grams_viewer:
         if byQuarter:
@@ -1019,7 +1016,7 @@ def NGrams_coOccurrences_VIEWER(
         # plot co-occurrences -----------------------------------------------------------------------------
 
         if chartPackage != "No charts" and coOccFileName != "":
-            import charts_util
+            from ..charts import charts_util
 
             xlsxFilename = coOccFileName
             if within_sentence_co_occurrence_search_var:

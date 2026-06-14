@@ -22,19 +22,15 @@ import logging
 import os
 import time
 
-import file_splitter_ByLength_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
-import IO_user_interface_util
-
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
 import pandas as pd
-import parsers_annotators_visualization_util
-import reminders_util
-from app_constants import CORENLP_URL
 from pycorenlp import StanfordCoreNLP
+
+from ..core import reminders_util
+from ..core.app_constants import CORENLP_URL
+from ..file_ops import file_splitter_ByLength_util
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_libraries_util, IO_user_interface_util
+from . import parsers_annotators_visualization_util
 
 logger = logging.getLogger(__name__)
 
@@ -261,7 +257,6 @@ def CoreNLP_annotate(
     silent=False,
     **kwargs,
 ):
-
     # These values can be zero if the setup has specified e.g., spaCy but in SVO or other annotators, the user selects to run CoreNLP
     if memory_var < 4:
         memory_var = 4
@@ -1344,21 +1339,22 @@ def language_models(CoreNLPdir, language: str):
 date_in_filename = IO_files_util.date_in_filename
 
 
-from corenlp_json_discourse import (
+from ..core.util import collect
+from .corenlp_json_discourse import (
     process_json_coref,
     process_json_coref_table,
     process_json_gender,
     process_json_quote,
 )
-from corenlp_json_gis import (
+from .corenlp_json_gis import (
     count_pronouns,
 )
-from corenlp_json_ner import (
+from .corenlp_json_ner import (
     process_json_ner,
     process_json_normalized_date,
     process_json_sentiment,
 )
-from corenlp_json_syntax import (
+from .corenlp_json_syntax import (
     exportJson,
     process_json_all_postag,
     process_json_deprel,
@@ -1369,4 +1365,3 @@ from corenlp_json_syntax import (
     process_json_sentence,
     process_json_SVO_enhanced_dependencies,
 )
-from util import collect

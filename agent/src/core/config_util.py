@@ -10,9 +10,9 @@ import logging
 import os
 from subprocess import call
 
-import GUI_IO_util
-import IO_user_interface_util
 import pandas as pd
+
+from ..io import GUI_IO_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
@@ -526,7 +526,6 @@ def write_IO_config_file(
 
 
 def get_date_options(config_filename, config_input_output_numeric_options):
-
     # in the NLP_setup_IO_config there are 6 columns and 4 rows (each row for input file, input dir1, input dir2, output dir):
     # 5 fields: label/path + sort order + 3 date items (Item separator character(s), Date format, Date position)
     config_input_output_alphabetic_options, missing_IO, config_file_exists = read_config_file(

@@ -1,13 +1,11 @@
 import logging
 
-import config_util
-import file_spell_checker_util
-import IO_files_util
-import IO_libraries_util
-import Stanza_util
-import statistics_txt_util
-import style_analysis_abstract_concreteness_analysis_util
-from util import collect
+from ..core import config_util
+from ..core.util import collect
+from ..file_ops import file_spell_checker_util
+from ..io import IO_files_util, IO_libraries_util
+from ..nlp import Stanza_util
+from . import statistics_txt_util, style_analysis_abstract_concreteness_analysis_util
 
 logger = logging.getLogger(__name__)
 

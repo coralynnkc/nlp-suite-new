@@ -11,14 +11,12 @@ import os
 #                                           ['os', 'tkinter', 'enum', 'typing']) == False:
 from enum import Enum
 
-import charts_util
-import CoNLL_util
-import Gephi_util
-import IO_csv_util
-import IO_files_util
 import pandas as pd
-import Stanford_CoreNLP_tags_util
-from util import collect
+
+from ..charts import Gephi_util, charts_util
+from ..core.util import collect
+from ..io import IO_csv_util, IO_files_util
+from . import CoNLL_util, Stanford_CoreNLP_tags_util
 
 logger = logging.getLogger(__name__)
 
@@ -425,7 +423,6 @@ def search_CoNLL_table(
     _tok_postag_="*",
     _tok_deprel_="*",
 ):
-
     # create a subdirectory of the output directory
     outputDir = IO_files_util.make_output_subdirectory(inputFilename, "", outputDir, label="CoNLL_search", silent=True)
     if outputDir == "":

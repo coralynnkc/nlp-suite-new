@@ -5,12 +5,13 @@ import logging
 import math
 import os
 
-import IO_csv_util
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+from ..io import IO_csv_util
 
 logger = logging.getLogger(__name__)
 

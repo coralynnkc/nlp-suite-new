@@ -11,13 +11,13 @@ from collections import Counter, defaultdict
 import matplotlib
 
 matplotlib.use("Agg")  # headless container: no display
-import IO_files_util
-import IO_user_interface_util
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from PIL import Image
 from wordcloud import STOPWORDS, WordCloud
+
+from ..io import IO_files_util, IO_user_interface_util
 
 # The script uses Andreas Christian Mueller WordCloud package
 # https://amueller.github.io/word_cloud/
@@ -660,7 +660,7 @@ def python_wordCloud(
     stannlp = None
     if fileType == ".txt":
         # imported here so that the csv/CoNLL path works without stanza installed
-        from model_cache import get_stanza_pipeline
+        from ..core.model_cache import get_stanza_pipeline
 
         # always tokenize to convert each token to lowercase
         #   to avoid the same improper word to appear with lower and upper case at the beginning of a sentence
@@ -705,7 +705,7 @@ def python_wordCloud(
                 "",
                 False,
             )
-            import CoNLL_util
+            from ..nlp import CoNLL_util
 
             # check that input file is a CoNLL table
             if not CoNLL_util.check_CoNLL(doc, True):

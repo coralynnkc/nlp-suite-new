@@ -3,7 +3,7 @@ import logging
 import os
 import time
 
-import IO_csv_util
+from . import IO_csv_util
 
 logger = logging.getLogger()
 

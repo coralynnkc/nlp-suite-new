@@ -22,11 +22,11 @@ import logging
 import re
 import string
 
-import IO_csv_util
+from ..io import IO_csv_util
+from ..io.IO_files_util import date_in_filename
 
 # not using stanfordcorenlp because it is not recognizing sentiment annotator
-from corenlp_json_common import check_sentence_length
-from IO_files_util import date_in_filename
+from .corenlp_json_common import check_sentence_length
 
 logger = logging.getLogger(__name__)
 

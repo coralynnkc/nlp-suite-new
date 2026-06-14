@@ -5,21 +5,17 @@ import logging
 # Edited by Roberto Franzosi, Tony May 2022
 import os
 
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
-import IO_user_interface_util
 import openpyxl
-import reminders_util
 from openpyxl import Workbook
+
+from ..core import reminders_util
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_libraries_util, IO_user_interface_util
 
 logger = logging.getLogger(__name__)
 
 
 # ensure filename extension is correct for hover_over effects (xlxm) and no effects (xlsx)
 def checkExcel_extension(output_file_name, hover_info_column_list):
-
     filename, file_extension = os.path.splitext(str(output_file_name))
     if filename != "":
         if len(hover_info_column_list) > 0:  # there are hover over effects; must be an xlsm file

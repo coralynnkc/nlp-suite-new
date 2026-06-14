@@ -16,7 +16,7 @@ import pytest
 from conftest import output_csvs
 
 try:
-    from word2vec import run_word2vec
+    from src.analysis.word2vec import run_word2vec
 except (ImportError, SystemExit):
     pytest.skip("word2vec dependencies not available", allow_module_level=True)
 

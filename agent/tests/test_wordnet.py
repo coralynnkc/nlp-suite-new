@@ -4,7 +4,7 @@ import os
 import pytest
 
 try:
-    from knowledge_graphs_WordNet_main import run_kg_wordnet
+    from src.analysis.knowledge_graphs_WordNet_main import run_kg_wordnet
 except (ImportError, SystemExit):
     pytest.skip("knowledge_graphs_WordNet_main dependencies not available", allow_module_level=True)
 

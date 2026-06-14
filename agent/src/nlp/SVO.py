@@ -11,18 +11,11 @@ import os
 # to install stanfordnlp, first install
 #   pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
 #   pip3 install stanfordnlp
-import config_util
-import GIS_pipeline_util
-import GUI_IO_util
-import IO_csv_util
-import IO_files_util
-import IO_libraries_util
-import spaCy_util
-import Stanford_CoreNLP_coreference_util
-import Stanford_CoreNLP_util
-import Stanza_util
-import SVO_util
-from util import collect
+from ..core import config_util
+from ..core.util import collect
+from ..gis import GIS_pipeline_util
+from ..io import GUI_IO_util, IO_csv_util, IO_files_util, IO_libraries_util
+from . import Stanford_CoreNLP_coreference_util, Stanford_CoreNLP_util, Stanza_util, SVO_util, spaCy_util
 
 logger = logging.getLogger(__name__)
 
@@ -542,8 +535,7 @@ def run_svo(
             tempOutputDir = head
             # Gephi network graphs _________________________________________________
             if gephi_var:
-                import charts_util
-                import Gephi_util
+                from ..charts import Gephi_util, charts_util
 
                 # previous svo csv files can be entered in input to display networks, wordclouds or GIS maps
                 if inputFilename[-4:] == ".csv":

@@ -1,14 +1,14 @@
 import logging
 import os
 
-import charts_matplotlib_seaborn_util
-import charts_util
-import file_converter_util
-import IO_files_util
 import pandas as pd
 import requests
-from app_constants import MALLET_URL, NLP_SUITE_ROOT
-from util import collect
+
+from ..charts import charts_matplotlib_seaborn_util, charts_util
+from ..core.app_constants import MALLET_URL, NLP_SUITE_ROOT
+from ..core.util import collect
+from ..file_ops import file_converter_util
+from ..io import IO_files_util
 
 logger = logging.getLogger(__name__)
 

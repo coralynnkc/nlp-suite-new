@@ -1,8 +1,8 @@
 # written by Roberto April 2023
 
 
-import charts_util
-import IO_files_util
+from ..io import IO_files_util
+from . import charts_util
 
 
 def run(

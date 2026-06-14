@@ -9,10 +9,10 @@ import pandas as pd
 pd.options.mode.chained_assignment = None
 
 
-import config_util  # used for Google API
-import GIS_pipeline_util
-import IO_files_util
-import Stanford_CoreNLP_util
+from ..core import config_util  # used for Google API
+from ..io import IO_files_util
+from ..nlp import Stanford_CoreNLP_util
+from . import GIS_pipeline_util
 
 logger = logging.getLogger(__name__)
 
