@@ -30,6 +30,10 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM", "N", "T20", "C90"]
 ignore = [
     "E501",  # line too long (allowed in research / readability-first code)
     "E402",  # imports not at top (legacy scripts / experimental structure)
+    "N",     # naming conventions (too noisy on legacy camelCase code)
+    "C901",  # function too complex (can't auto-fix; visible in `ruff check` for manual review)
+    "SIM",   # code simplification (style nitpicks; visible for incremental cleanup)
+    "T203",  # pprint found (common in research debugging; suppress)
 ]
 
 
