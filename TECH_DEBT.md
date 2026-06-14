@@ -7,10 +7,6 @@ hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
 
 ## UI/UX
 
-- **[P2] Error messages rough.** Agent errors show as a Django flash (form page,
-  via `_proxy_post`) and as raw tracebacks in `#error-detail` (status page, via
-  `last_error`); neither is styled. Add an `.error-banner` to the base template;
-  truncate tracebacks to the final exception line with a "show full trace" toggle.
 - **[P3] No progress bars.** Jobs run opaquely until `busy=false`. Needs `run_*`
   functions to emit a `progress` field on `/status` at checkpoints (most are
   single synchronous calls with no natural hook) and a bar on the status page.
@@ -64,7 +60,10 @@ hosted deployment; `iterrows()` vectorization only when an endpoint feels slow.
   research code (`reportPossiblyUnbound` ~400, `reportArgumentType` ~220,
   `reportAttributeAccessIssue` ~150, optional/call/operator). Not fixed (wire-up
   only); the blocking pre-commit hook surfaces them per-file on touch (boy-scout
-  cleanup).
+  cleanup). Pyright runs in pre-commit only, not CI (`lint.yml` is ruff-only) —
+  it can't gate until this backlog is at zero or baselined, else every PR fails.
+  Once cleared, add a pyright step to `lint.yml` so contributors without hooks
+  installed don't bypass the check.
 - **[P3] `ui/` not type-checked.** Django app code excluded from pyright (would
   need `ui/.venv` or stubs via a second `executionEnvironments` root /
   `venvPath`); 11 unresolved-`django.*` errors.

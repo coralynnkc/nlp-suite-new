@@ -38,6 +38,15 @@
   </header>
 
   <main>
+    {% if messages %}
+      {% for message in messages %}
+        {% if message.tags == 'error' %}
+          <div class="error-banner" role="alert">
+            <div class="error-summary">{{ message }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
     {% block content %}
     {% include "homepage.html" %}
     {% endblock %}
@@ -51,8 +60,6 @@
         <script type="text/javascript">toastr.info('{{ message }}')</script>
       {% elif message.tags == 'warning' %}
         <script type="text/javascript">toastr.warning('{{ message }}')</script>
-      {% elif message.tags == 'error' %}
-        <script type="text/javascript">toastr.error('{{ message }}')</script>
       {% endif %}
     {% endfor %}
   {% endif %}
