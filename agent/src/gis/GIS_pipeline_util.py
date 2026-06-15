@@ -5,11 +5,12 @@
 import csv
 import logging
 import os
+from typing import cast
 
 import pandas as pd
 
 from ..charts import charts_util
-from ..core import config_util, reminders_util
+from ..core import reminders_util
 from ..core.app_constants import CONTINENTS
 from ..core.util import collect
 
@@ -22,48 +23,12 @@ logger = logging.getLogger(__name__)
 
 def getGoogleAPIkey(Google_config, display_key=False):
     configFilePath = os.path.join(GUI_IO_util.configPath, Google_config)
-    configAPIKey = []
     if os.path.isfile(configFilePath):
-        f_config = open(configFilePath, encoding="utf-8", errors="ignore")
-        configAPIKey = f_config.readlines()
-    if len(configAPIKey) == 0 or display_key:
-        if "Maps" in Google_config:
-            msg = "Maps"
-            config_file = "Google-Maps-API_config.csv"
-        else:
-            msg = "geocoder"
-            config_file = "Google-geocode-API_config.csv"
-        if len(configAPIKey) == 0:
-            message = (
-                "No config file "
-                + config_file
-                + " was found in the config subfolder of the NLP-SUIte.\n\nGoogle "
-                + msg
-                + " requires an API key (in fact, Google requires two separate free API keys, one for Google geocoder, the other for Google Maps)."
-            )
-            if "geocode" in Google_config:
-                message = (
-                    message + "\n\nWithout a Google geocoder API key you can only geocode locations with Nominatim."
-                )
-            if "Maps" in Google_config:
-                message = message + "\n\nWithout a Google Maps API key you can only map locations in Google Earth Pro."
-            message = (
-                message
-                + "\n\nPlease obtain free Google API keys from https://cloud.google.com/docs/authentication/api-keys"
-            )
-        config_type = "Maps" if "Maps" in Google_config else "geocoder"
-        key = configAPIKey[0] if display_key and len(configAPIKey) > 0 else ""
-        if key == "":
-            message = "Enter the Google " + config_type + " API key"
-        else:
-            message = "Enter a new Google " + config_type + " API key if you want to change the key"
-        key = ""
-        # save the API key
-        if key != "":
-            config_util.Google_API_Config_Save(Google_config, key)
-    else:
-        key = configAPIKey[0]
-    return key
+        with open(configFilePath, encoding="utf-8", errors="ignore") as f:
+            lines = f.readlines()
+        if lines:
+            return lines[0]
+    return ""
 
 
 # the list of arguments reflect the order of widgets in the Google_Earth_main GUI
@@ -257,8 +222,9 @@ def GIS_pipeline(
             for i, row in nom_df.iterrows():
                 # if i!=0 and row[0] in constants_util.continents and nom_df.at[i-1, 'Location'] in constants_util.directions:
                 if i != 0 and row[0] in CONTINENTS:
-                    nom_df.at[i, "Location"] = nom_df.at[i - 1, "Location"] + " " + row[0]
-                    drop_idx.append(i - 1)
+                    idx = cast(int, i)
+                    nom_df.at[i, "Location"] = nom_df.at[idx - 1, "Location"] + " " + row[0]
+                    drop_idx.append(idx - 1)
                     changed_idx[i] = nom_df.at[i, "Location"]
                     changed = True
             if changed:
@@ -316,6 +282,7 @@ def GIS_pipeline(
     locationsNotFoundoutputFilename = locationsNotFoundoutputFilename.replace("LOCATIONS", "LOCATIONS_not-found")
 
     geocodedLocationsOutputFilename = inputFilename
+    locationsNotFoundNonDistinctoutputFilename = ""
 
     kmloutputFilename = geocodedLocationsOutputFilename.replace(".csv", ".kml")
 

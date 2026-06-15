@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import time
+from typing import Union
 
 from . import IO_csv_util
 
@@ -46,14 +47,14 @@ def timed_alert(
     time_needed=False,
     extraLine="",
     printInCommandLine=True,
-    startTime="",
+    startTime: Union[float, str] = "",
     silent=False,
 ):
     if time_needed:
         # time has year [0], month [1], dat [2], hour [3], minute [4], second [5] & more
         time_report = time.localtime()
         message_text = message_text + " " + str(time_report[3]) + ":" + str(time_report[4])
-        if startTime != "":
+        if isinstance(startTime, float):
             endTime = time.time()
             totalTime = endTime - startTime  # in number of seconds
             hours, minutes, seconds, time_message = convert_time(totalTime)

@@ -11,9 +11,7 @@ Fix one entry per PR (see CLAUDE.md). Tags: **P1** do next, **P2** after the P1s
 
 ## Active queue (user-visible bugs — work in order)
 
-- **[P2] Dead branch in `gis/GIS_pipeline_util.py:54`** — `answer = print(...)`
-  then `if answer:`; `print` returns `None` so the branch never runs (it also
-  points at the removed Tips File). Drop it or restore a real prompt.
+*(empty)*
 
 ## Fix on touch (boy-scout — not separately scheduled)
 
