@@ -48,11 +48,6 @@ is pyright (clear the backlog → gate in CI).
   `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
   `file_ops/file_search_byWord_util.py:368`), `import GIS_folium_map_util`
   (`gis/GIS_pipeline_util.py:551`). Convert to relative imports (CLAUDE.md).
-- **Service-URL config drift** (do when next touching `core/app_constants.py` /
-  `ui/app/views.py`). `CORENLP_URL` uses the `corenlp` hostname + env override, but
-  `MALLET_URL` is a raw `172.16.0.13` IP with no override; `ui/app/views.py:14` likewise
-  defaults `AGENT_SERVER_URL` to a hardcoded `172.16.0.11`. Give MALLET and the agent the
-  same hostname + env treatment (CLAUDE.md: never hardcode `172.16.0.x`).
 - **`ui/` not type-checked.** Django app code excluded from pyright (would need `ui/.venv`
   or stubs via a second `executionEnvironments` root / `venvPath`); 11
   unresolved-`django.*` errors.
