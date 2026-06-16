@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from ..core import constants_util
-from ..io import IO_csv_util, IO_files_util
+from ..io import IO_csv_util, IO_files_util, IO_string_util
 
 """
 NGramsCoOccurrences implements the ability to generate NGram and CoOccurrences data
@@ -43,7 +43,7 @@ def one_text_res(
         co_occurring = False
         sentIndex += 1
         for search_word in search_keywords_list:
-            get_search_word_from_text(sentences, search_word, lemmatize, sentence, case_sensitive, exact_word_match)
+            get_search_word_from_text(sentence, search_word, lemmatize, case_sensitive, exact_word_match)
 
             if keywords_co_occurr(search_keywords_list, sentence):
                 co_occurring = True
@@ -78,7 +78,9 @@ def search_within_sentence_coOccurences(
     outputFilename = IO_files_util.generate_output_file_name(
         inputFilename, inputDir, outputDir, ".csv", "Stanza", "Co-occurrence_within_sentence"
     )
-    files = IO_files_util.getFileList(inputFilename, inputDir, ".txt", silent=False, configFileName=configFileName)
+    files = (
+        IO_files_util.getFileList(inputFilename, inputDir, ".txt", silent=False, configFileName=configFileName) or []
+    )
 
     # startTime = IO_user_interface_util.timed_alert(GUI_util.window, 3000, 'Within-sentence Co-Occurrences VIEWER start',
     #                                                'Started running within-sentence Co-Occurrences VIEWER at',
@@ -473,11 +475,11 @@ def search_ngrams_csv_file(
     pivot_dfs = []
     l_sankey = []
     for word in words:
-        try:
-            b, df2 = process_ngrams(data, word, minus_K_words_var, plus_K_words_var)
-        except Exception:
+        result = process_ngrams(data, word, minus_K_words_var, plus_K_words_var)
+        if result is None:
             logger.info(f'Warning: The selected input file does not contain the word "{word}".')
             return
+        b, df2 = result
         expanded_rows = []
         for _, row in df2.iterrows():
             new_row = row.copy()
@@ -516,7 +518,7 @@ def search_ngrams_csv_file(
         ngram_size = int(data.columns[0].split("-")[0])
         if ngram_size == 1:
             # these variables are used in charts_util.visualize_chart
-            headers = IO_csv_util.get_csvfile_headers(inputFilename)
+            headers = IO_csv_util.get_csvfile_headers(inputFilename) or []
             X_axis_label = ""
             if "Date" in headers:
                 X_axis_label = "Date"
@@ -703,6 +705,8 @@ def NGrams_coOccurrences_VIEWER(
     case_sensitive = False
     useLemma = False
     exact_word_match = True
+    aggregateBy = ""
+    filesToOpen = []
 
     if "sensitive" in str(viewer_options_list):
         case_sensitive = True
@@ -741,14 +745,12 @@ def NGrams_coOccurrences_VIEWER(
         aggregateBy = ""
         temporal_aggregation = ""
 
-    inputDocs = IO_files_util.getFileList(
-        "", inputDir, ".txt", silent=False, configFileName=configFileName
+    inputDocs = (
+        IO_files_util.getFileList("", inputDir, ".txt", silent=False, configFileName=configFileName) or []
     )  # get all input files
     nDocs = len(inputDocs)
     if nDocs == 0:
         return
-
-    import IO_string_util
 
     search_keywords_str, search_keywords_list = IO_string_util.process_comma_separated_string_list(
         search_keywords_list, case_sensitive
