@@ -3,7 +3,8 @@ from pathlib import Path
 
 NLP_SUITE_ROOT = os.path.join(os.path.expanduser("~"), "nlp-suite")
 
-MALLET_URL = "http://172.16.0.13:5050/run"
+# MALLET topic-modeling service; the default resolves via Docker network DNS.
+MALLET_URL = os.environ.get("MALLET_URL", "http://mallet:5050/run")
 
 # Stanford CoreNLP service; the default resolves via Docker network DNS.
 CORENLP_URL = os.environ.get("CORENLP_URL", "http://corenlp:9000")

@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.template import loader
 import requests
 
-AGENT_SERVER_URL = os.getenv("AGENT_SERVER_URL", "http://172.16.0.11:3000")
+AGENT_SERVER_URL = os.getenv("AGENT_SERVER_URL", "http://agent:3000")
 
 # The agent dispatches jobs to a background thread and responds immediately,
 # so this only needs to cover connection setup and form parsing.

@@ -13,8 +13,6 @@ services:
     networks:
       nlp-suite-network:
         ipv4_address: 172.16.0.10
-    environment:
-      - AGENT_SERVER_URL=http://172.16.0.11:3000
     depends_on:
       agent:
         condition: service_healthy
