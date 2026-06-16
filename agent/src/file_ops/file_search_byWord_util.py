@@ -18,7 +18,7 @@ import shutil  # for copy of files
 from ..charts import charts_util
 from ..core.model_cache import get_stanza_pipeline
 from ..core.util import collect
-from ..io import IO_csv_util, IO_files_util
+from ..io import IO_csv_util, IO_files_util, IO_string_util
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +101,7 @@ def get_words_minus_K_plus_K(
     lang,
 ):
     # convert string to list
+    words_ = []
     if isinstance(docText, str):
         from ..nlp.Stanza_functions_util import stanzaPipeLine, tokenize_stanza_text
 
@@ -360,12 +361,12 @@ def search_sentences_documents(
     corpus_to_copy = set()
 
     # loop through every txt file and annotate via request to YAGO
-    files = IO_files_util.getFileList(inputFilename, inputDir, ".txt", silent=False, configFileName=configFileName)
+    files = (
+        IO_files_util.getFileList(inputFilename, inputDir, ".txt", silent=False, configFileName=configFileName) or []
+    )
     nFile = len(files)
     if nFile == 0:
         return
-
-    import IO_string_util
 
     case_sensitive = "insensitive" not in str(search_options_list)
     # when processing an input csv file must create the search_keywords_list
@@ -455,6 +456,7 @@ def search_sentences_documents(
         )
         search_keywords_list = lemmatized_search_keywords_list
 
+    chart_title = ""
     for file in files:
         docIndex += 1
         _, tail = os.path.split(file)
@@ -462,7 +464,6 @@ def search_sentences_documents(
         # if search_by_dictionary:
         #     break
         if search_by_dictionary or search_by_search_keywords:
-            inputDir + os.sep + "search_result_csv"
             if file[-4:] != ".txt":
                 continue
         f_doc = open(file, encoding="utf-8", errors="ignore")

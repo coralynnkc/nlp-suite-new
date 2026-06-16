@@ -42,10 +42,12 @@ is pyright (clear the backlog → gate in CI).
 - **~129 inline TODO/FIXME** in `agent/src` (`grep -rn TODO agent/src`), mostly genuine
   limitations. Densest: `gis/GIS_geocode_util.py`, `nlp/corenlp_json_syntax.py`,
   `charts/`.
-- **3 stray bare lazy-imports** hidden by pyright `reportMissingImports: none`:
-  `import IO_string_util` (`analysis/NGrams_CoOccurrences_util.py:751`,
-  `file_ops/file_search_byWord_util.py:368`), `import GIS_folium_map_util`
-  (`gis/GIS_pipeline_util.py:551`). Convert to relative imports (CLAUDE.md).
+- **1 stray bare lazy-import** hidden by pyright `reportMissingImports: none`:
+  `import GIS_folium_map_util` (`gis/GIS_pipeline_util.py:530`). The module was
+  never ported, so the folium map path `ImportError`s if reached; porting it
+  needs `folium` added to `agent/requirements.txt` (image rebuild). (The
+  `IO_string_util` sites were the same — its module is now ported to
+  `io/IO_string_util.py` and the two imports made relative.)
 - **`ui/` not type-checked.** Django app code excluded from pyright (would need `ui/.venv`
   or stubs via a second `executionEnvironments` root / `venvPath`); 11
   unresolved-`django.*` errors.
