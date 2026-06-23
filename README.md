@@ -4,12 +4,22 @@ A monorepo for running a suite of text-analysis tools through a browser UI. Desi
 
 ## Quick start
 
-**Requirements:** Docker Desktop running, `git`, `bash`.
+**Requirements:** Docker Desktop running, `git`, and `bash` (macOS/Linux) or PowerShell (Windows).
+
+macOS / Linux:
 
 ```bash
 git clone https://github.com/coralynnkc/nlp-suite-new ~/nlp-suite-repo
 cd ~/nlp-suite-repo
 ./start.sh
+```
+
+Windows (PowerShell):
+
+```powershell
+git clone https://github.com/coralynnkc/nlp-suite-new $HOME\nlp-suite-repo
+cd $HOME\nlp-suite-repo
+.\start.ps1
 ```
 
 Opens `http://localhost:8000` automatically.
@@ -28,6 +38,12 @@ To use a different base directory, set `NLP_SUITE_DIR` before running:
 
 ```bash
 NLP_SUITE_DIR=/data/myproject ./start.sh
+```
+
+On Windows:
+
+```powershell
+$env:NLP_SUITE_DIR = 'D:\myproject'; .\start.ps1
 ```
 
 ### Stopping
@@ -99,7 +115,8 @@ agent/      FastAPI backend + NLP processing source
 ui/         Django frontend
 corenlp/    Stanford CoreNLP Docker container
 mallet/     MALLET Docker container
-start.sh    Start all services
+start.sh    Start all services (macOS/Linux)
+start.ps1   Start all services (Windows PowerShell)
 ```
 
 ### Running tests
